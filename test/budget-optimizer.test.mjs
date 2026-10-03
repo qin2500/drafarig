@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { cheapestSum, budgetSummary, affordability } from '../lib/budget.mjs';
-import { topRosters, buildPlans } from '../lib/optimizer.mjs';
+import { topRosters, buildPlans, checkPick } from '../lib/optimizer.mjs';
 import { buildLeague } from '../lib/league.mjs';
 import { rosterScore, roleCredit, weaknessMatrix, effectiveness, speedStat } from '../lib/analysis.mjs';
 
@@ -93,4 +93,21 @@ test('type matchups include Mega forms and single-ability immunities', () => {
   assert.equal(effectiveness(dex, 'Ground', dex.species.rotomwash.forms[0]), 0); // Levitate
   assert.equal(speedStat(102, 'max'), 169); // Garchomp, matches @smogon/calc Champions
   assert.equal(speedStat(30, 'min'), 45);
+});
+
+test('check a pick: compares the best roster built around it with the best plan', () => {
+  const ids = anthony.picks.map((p) => p.id);
+  const opponents = L.coaches.filter((c) => c !== anthony).map((c) => ({ coach: c.name, ids: c.picks.map((p) => p.id).filter(Boolean) }));
+  const rosterCosts = Object.fromEntries(anthony.picks.map((p) => [p.id, p.points]));
+  const best = buildPlans(dex, ids, avail, 6, 29, { opponents, rosterCosts });
+  const check = (id) => checkPick(dex, ids, avail, 6, 29, id, { best, opponents, rosterCosts });
+  // Each plan's first pick is, by construction, about as good as the best plan.
+  assert.equal(check(best.plans[0].picks[0].id).verdict, 'great');
+  const r = check('kingambit');
+  assert.equal(r.rest.length, 5);
+  assert.ok(r.cost + r.rest.reduce((s, p) => s + p.cost, 0) <= 29);
+  assert.ok(!r.rest.some((p) => p.id === 'kingambit'));
+  assert.ok(r.why.length > 0 && r.rank >= 1);
+  assert.equal(check('garchomp').verdict, 'unavailable'); // drafted by Hex
+  assert.equal(checkPick(dex, ids, [{ id: 'kingambit', cost: 18 }, { id: 'pikachu', cost: 1 }], 2, 18, 'kingambit').verdict, 'breaks');
 });

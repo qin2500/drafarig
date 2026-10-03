@@ -1,7 +1,7 @@
 // Drafarig front end. Plain ES modules, no build step. Shared logic lives in /lib (also used by the server and tests).
 import { buildLeague, computeTurn, picksUntil, ROSTER_SIZE, BUDGET } from '/lib/league.mjs';
 import { budgetSummary, affordability } from '/lib/budget.mjs';
-import { buildPlans } from '/lib/optimizer.mjs';
+import { buildPlans, checkPick } from '/lib/optimizer.mjs';
 import { weaknessMatrix, roleChecklist, speedRows, threatList } from '/lib/analysis.mjs';
 import { GLOSSARY } from '/glossary.js';
 
@@ -12,7 +12,7 @@ const store = {
 };
 const S = {
   coach: store.get('coach', 'Anthony'), order: store.get('order', 'snake'), explain: store.get('explain', true),
-  mode: store.get('mode', 'draft'), aliases: store.get('aliases', {}), draftTab: 'plans', showForms: false,
+  mode: store.get('mode', 'draft'), aliases: store.get('aliases', {}), draftTab: 'plans', check: '', showForms: false,
   tailwind: false, trickRoom: false, speedOpp: '', threatScope: 'all', boardFilter: { q: '', role: '', type: '', hideTaken: false, affordable: false },
 };
 
@@ -118,6 +118,36 @@ function budgetPanel(c) {
 function reasonList(why) { return why.map((w) => `<span class="reason ${w.startsWith('−') ? 'neg' : ''}">${esc(w)}</span>`).join(''); }
 function pickMsg(id, cost) { return `Pick: ${sp(id).name} ${zhOf(id)} (${cost} pts)`; }
 
+const VERDICT = { great: ['ok', 'Great pick'], good: ['ok', 'Good pick'], okay: ['tight', 'Okay pick'], weak: ['unc', 'Weak pick'], breaks: ['breaks', 'Breaks your budget'], unavailable: ['unc', 'Already taken'] };
+function checkPanel(c) {
+  const opts = available().filter((m) => sp(m.id)).sort((a, b) => b.cost - a.cost || sp(a.id).name.localeCompare(sp(b.id).name))
+    .map((m) => `<option value="${m.id}" ${m.id === S.check ? 'selected' : ''}>${esc(sp(m.id).name)} ${esc(zhOf(m.id))} (${m.cost})</option>`).join('');
+  let body = '<p class="explainer">Thinking about a mon? Pick it here. The app builds the best complete roster that starts with it and compares that with your best plan.</p>';
+  if (S.check) {
+    const P = plans();
+    planCache.checks ??= {};
+    const r = planCache.checks[S.check] ??= checkPick(dex, myIds(c), available(), c.slotsLeft, c.pointsLeft, S.check, {
+      best: P, opponents: opponents(c), rosterCosts: Object.fromEntries(c.picks.filter((p) => p.id).map((p) => [p.id, p.points])),
+    });
+    const [cls, label] = VERDICT[r.verdict];
+    if (r.verdict === 'unavailable') body = `<p class="verdict"><span class="chip ${cls}">${label}</span></p>`;
+    else if (r.verdict === 'breaks') body = `<p class="verdict"><span class="chip ${cls}">${label}</span></p><p>${esc(r.reason)}</p>`;
+    else {
+      const vs = r.delta > 1 ? `The best roster with it scores ${r.delta.toFixed(1)} above the plans below (the planner hadn't tried starting with it).`
+        : r.delta >= -1 ? 'About as good as your best plan.'
+        : `The best roster with it scores ${(-r.delta).toFixed(1)} below your best plan${r.bestFirst ? ` (which starts with ${esc(sp(r.bestFirst).name)})` : ''}.`;
+      body = `<p class="verdict"><span class="chip ${cls}">${label}</span> ${vs}</p>
+        ${monLine(r.id, `<span class="chip">${r.cost} pts</span>`)} ${reasonList(r.why)}
+        ${r.rest.length ? `<p class="small">Then fill the rest with: ${r.rest.map((x) => `<span class="chip">${esc(sp(x.id).name)} ${x.cost}</span>`).join('')} (${r.left ? `${r.left} pts spare` : 'uses every point'})</p>` : ''}
+        <p class="small muted">${r.inPlans.length ? `It's in plan ${r.inPlans.join(', ')}. ` : ''}Ranks #${r.rank} of ${r.of} for what it adds to your team right now.</p>
+        <p class="explainer">Great: within 1 point of your best plan. Good: within 3. Okay: within 6. Weak: more than 6 below. The score adds up meta tier, roles, shared weaknesses, answers to opponents' top threats and points spent (see "Why?" on a plan). It's an estimate, not a damage calc.</p>
+        <button data-copy="${esc(pickMsg(r.id, r.cost))}">Copy pick message</button>`;
+    }
+  }
+  return `<div class="panel"><h2>Check a pick</h2><div class="filters"><select id="checkPick" aria-label="Mon to check"><option value="">Choose a mon…</option>${opts}</select>
+    ${S.check ? '<button data-check="">Clear</button>' : ''}</div>${body}</div>`;
+}
+
 function renderDraft() {
   const c = me();
   if (!c.slotsLeft) return `${budgetPanel(c)}<div class="panel"><h2>Roster complete</h2><p>${esc(c.name)} has all ${ROSTER_SIZE} picks. See My team and League for matchup prep.</p></div>`;
@@ -140,10 +170,10 @@ function renderDraft() {
     const a = aff.get(s.id); const [cls, label] = AFF[a?.status || 'ok'];
     return `<tr><td>${monLine(s.id, `<span class="chip">${s.cost} pts</span>`)}</td><td><span class="chip ${cls}">${label}</span><div class="small muted">${esc(a?.reason)}</div></td>
       <td>${reasonList(s.why)}${s.inPlans.length ? `<span class="small muted">In plan ${s.inPlans.join(', ')}</span>` : ''}</td>
-      <td>${a?.status === 'breaks' ? '<button disabled title="This pick makes a 10-mon roster impossible">Blocked</button>' : `<button data-copy="${esc(pickMsg(s.id, s.cost))}">Copy pick</button>`}</td></tr>`;
+      <td>${a?.status === 'breaks' ? '<button disabled title="This pick makes a 10-mon roster impossible">Blocked</button>' : `<button data-check="${s.id}">Check</button> <button data-copy="${esc(pickMsg(s.id, s.cost))}">Copy pick</button>`}</td></tr>`;
   };
   const singles = ok.map(row).join('') + (over.length ? `<tr><td colspan="4" class="small muted"><b>Can't afford without breaking your roster</b></td></tr>${over.map(row).join('')}` : '');
-  return `<div class="cols"><div>
+  return `<div class="cols"><div>${checkPanel(c)}
     <div class="panel"><div class="tabs"><button data-dtab="plans" class="${tab === 'plans' ? 'active' : ''}">Roster plans</button><button data-dtab="singles" class="${tab === 'singles' ? 'active' : ''}">Best single picks</button></div>
       <p class="explainer">Suggestions, not orders. Each plan is a complete, affordable set for all ${c.slotsLeft} remaining slots, built only from mons still available. "Now" is the pick to make first. Plans start with different picks so you get real alternatives. They recompute on every reload.</p>
       ${tab === 'plans' ? planHtml : `<div class="scroll"><table><tr><th>Mon</th><th>${term('Budget', 'Affordable / Tight / Breaks budget')}</th><th>Why</th><th></th></tr>${singles}</table></div>`}
@@ -305,7 +335,7 @@ function openDrawer(id, formIdx = 0) {
   d.hidden = false; document.querySelector('.layout').classList.remove('nodrawer');
   d.innerHTML = `<button class="close" aria-label="Close">✕</button>
     <div class="mon">${sprite(f)}<div><b>${esc(m.name)}</b> <span lang="zh">${esc(zhOf(id))}</span><br>${f.types.map(typeTag).join('')}</div></div>
-    <p>${b ? `${b.points} pts · ${b.taken ? `taken by ${esc(b.takenBy || 'unknown')}` : a ? `<span class="chip ${AFF[a.status][0]}">${AFF[a.status][1]}</span> <span class="small">${esc(a.reason)}</span>` : ''}` : ''} · ${term('Meta tier', 'Meta tier (S–D)')} <b>${m.tier}</b></p>
+    <p>${b ? `${b.points} pts · ${b.taken ? `taken by ${esc(b.takenBy || 'unknown')}` : a ? `<span class="chip ${AFF[a.status][0]}">${AFF[a.status][1]}</span> <span class="small">${esc(a.reason)}</span> <button data-check="${id}">Check this pick</button>` : ''}` : ''} · ${term('Meta tier', 'Meta tier (S–D)')} <b>${m.tier}</b></p>
     <div>${m.forms.map((x, i) => `<span class="chip form ${i === formIdx ? 'on' : ''}" data-mon="${id}" data-form="${i}">${i === 0 ? 'Base' : esc(x.name.replace(m.name + '-', ''))}</span>`).join('')}</div>
     ${f.mega ? `<p class="small">Holds ${esc(f.stone)}. ${term('Mega Evolution')}: one per battle.</p>` : ''}
     <p class="small">Abilities: ${esc(f.abilities.join(' / '))}</p>
@@ -340,6 +370,7 @@ document.addEventListener('click', async (e) => {
   if (t.dataset.mode) { S.mode = t.dataset.mode; history.replaceState(null, '', '#' + S.mode); save(); render(); }
   else if (t.dataset.goto) { S.mode = t.dataset.goto; save(); render(); }
   else if (t.dataset.dtab) { S.draftTab = t.dataset.dtab; render(); }
+  else if (t.dataset.check !== undefined) { S.check = t.dataset.check; if (S.check) { S.mode = 'draft'; $('#drawer').hidden = true; document.querySelector('.layout').classList.add('nodrawer'); } render(); if (S.check) window.scrollTo(0, 0); }
   else if (t.id === 'sync' || t.id === 'retry') location.reload();
   else if (t.dataset.copy) { try { await navigator.clipboard.writeText(t.dataset.copy); toast('Copied: ' + t.dataset.copy); } catch { prompt('Copy this message:', t.dataset.copy); } }
   else if (t.dataset.accept) { const sel = document.querySelector(`select[data-alias="${CSS.escape(t.dataset.accept)}"]`); S.aliases[t.dataset.accept] = sel.value; save(); rebuild(); render(); toast('Saved name fix'); }
@@ -351,7 +382,8 @@ document.addEventListener('click', async (e) => {
 });
 document.addEventListener('change', (e) => {
   const t = e.target;
-  if (t.id === 'coach') { S.coach = t.value; S.speedOpp = ''; S.threatScope = 'all'; planCache = null; }
+  if (t.id === 'coach') { S.coach = t.value; S.speedOpp = ''; S.threatScope = 'all'; S.check = ''; planCache = null; }
+  else if (t.id === 'checkPick') S.check = t.value;
   else if (t.id === 'explain') S.explain = t.checked;
   else if (t.id === 'order') S.order = t.value;
   else if (t.id === 'showForms') S.showForms = t.checked;

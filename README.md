@@ -40,6 +40,13 @@ The tests use a saved copy of the real sheet in `test/fixtures/`, so they run of
 
 `lib/` is shared by the server, the browser and the tests.
 
+## Check a pick
+
+On the Draft screen, choose any available mon in **Check a pick** (or press **Check** in Best single picks or the mon's
+detail panel). The app builds the best complete roster that starts with that mon, compares it with your best plan and
+gives a verdict: Great (within 1 point), Good (within 3), Okay (within 6), Weak, or Breaks your budget. It also shows the reasons
+and the rest of the roster that would go with it.
+
 ## League rules built in
 
 - Exactly 10 Pokémon per coach on 100 points. A pick is blocked if `points left − cost` is less than the cheapest
