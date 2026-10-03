@@ -1,0 +1,2261 @@
+{
+ "version": 3,
+ "revision": 4,
+ "generated": "2026-10-03",
+ "format": "Pokemon Champions VGC Reg M-C doubles (bring 6, pick 4, one Mega per battle, species clause) inside Anthony's 10-pick / 100-point draft league",
+ "dataModel": {
+  "moveTags": {
+   "Trick Room": "trick-room",
+   "Tailwind": "tailwind",
+   "Fake Out": "fake-out",
+   "Follow Me": "redirection",
+   "Rage Powder": "redirection",
+   "Wide Guard": "wide-guard",
+   "Quick Guard": "quick-guard",
+   "Perish Song": "perish-trap",
+   "Icy Wind": "speed-drop",
+   "Electroweb": "speed-drop",
+   "Reflect": "screens",
+   "Light Screen": "screens",
+   "Aurora Veil": "screens",
+   "U-turn": "pivot",
+   "Volt Switch": "pivot",
+   "Flip Turn": "pivot",
+   "Parting Shot": "pivot"
+  },
+  "techMoves": [
+   "Imprison",
+   "Taunt",
+   "Encore",
+   "Wide Guard",
+   "Quick Guard",
+   "Ally Switch",
+   "Trick Room",
+   "Tailwind",
+   "Icy Wind",
+   "Electroweb",
+   "Rain Dance",
+   "Sunny Day",
+   "Sandstorm",
+   "Snowscape",
+   "Brick Break",
+   "Psychic Fangs",
+   "Raging Bull",
+   "Defog",
+   "Haze",
+   "Clear Smog",
+   "Perish Song",
+   "Mean Look",
+   "Block",
+   "Spirit Shackle",
+   "Anchor Shot",
+   "Follow Me",
+   "Rage Powder",
+   "Fake Out",
+   "Snarl",
+   "Will-O-Wisp",
+   "Thunder Wave",
+   "Parting Shot",
+   "U-turn",
+   "Volt Switch",
+   "Flip Turn",
+   "Feint",
+   "Grassy Terrain",
+   "Electric Terrain",
+   "Psychic Terrain",
+   "Misty Terrain"
+  ]
+ },
+ "statusRule": {
+  "names": {
+   "has": "Has answers",
+   "thin": "Thin",
+   "none": "No answer found"
+  }
+ },
+ "cores": [
+  {
+   "id": "trick-room",
+   "name": "Trick Room + slow hitters",
+   "oneLineWhy": "Reverses speed order for 5 turns (the setting turn is one of them). Champions has no Choice Band or Specs and no Assault Vest, so bulky slow hitters stay strong.",
+   "detection": {
+    "slots": [
+     {
+      "name": "setter",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "move",
+        "value": "Trick Room"
+       }
+      ]
+     },
+     {
+      "name": "slow hitter",
+      "min": 2,
+      "anyOf": [
+       {
+        "kind": "stats",
+        "spe": {
+         "<=": 60
+        },
+        "atkOrSpa": {
+         ">=": 100
+        }
+       },
+       {
+        "allOf": [
+         {
+          "kind": "stats",
+          "spe": {
+           "<=": 30
+          }
+         },
+         {
+          "kind": "move",
+          "value": [
+           "Eruption",
+           "Water Spout",
+           "Body Press"
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "minDistinct": 2,
+    "maxMembers": 4
+   },
+   "answers": [
+    {
+     "id": "tr-own",
+     "label": "Own Trick Room",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": "Trick Room"
+     },
+     "note": "Setting your own Trick Room while theirs is up ends it. You need the setter alive and able to move.",
+     "failsTo": "Fake Out or Taunt on your setter. Their Imprison.",
+     "blockedBy": [
+      {
+       "kind": "move",
+       "value": "Imprison",
+       "minEvidence": "usage"
+      },
+      {
+       "kind": "move",
+       "value": "Taunt",
+       "minEvidence": "usage"
+      }
+     ],
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "tr-imprison",
+     "label": "Imprison + Trick Room",
+     "kind": "move",
+     "test": {
+      "allOf": [
+       {
+        "kind": "move",
+        "value": "Imprison"
+       },
+       {
+        "kind": "move",
+        "value": "Trick Room"
+       }
+      ]
+     },
+     "note": "Imprison (priority 0) goes before Trick Room (-7) and stops foes using any move the user knows, Trick Room included.",
+     "failsTo": "Taunt on your Imprison user first. They can also leave Trick Room at home once they see Imprison is possible.",
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "tr-taunt",
+     "label": "Taunt the setter",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": "Taunt"
+     },
+     "note": "Taunt (priority 0) lands before Trick Room (priority -7) if the setter hasn't already been Taunt-proofed.",
+     "failsTo": "Mental Herb (in the M-C item pool), Oblivious or Aroma Veil, Good as Gold, Magic Bounce (Taunt is reflectable), a Dark-type setter or Armor Tail / Psychic Terrain if your Taunt is Prankster-boosted, redirection (Follow Me / Rage Powder).",
+     "blockedBy": [
+      {
+       "kind": "move",
+       "value": [
+        "Follow Me",
+        "Rage Powder"
+       ],
+       "minEvidence": "usage"
+      },
+      {
+       "kind": "ability",
+       "value": [
+        "Aroma Veil"
+       ]
+      }
+     ],
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false,
+     "setterBlockedBy": {
+      "slot": "setter",
+      "anyOf": [
+       {
+        "kind": "ability",
+        "value": [
+         "Good as Gold",
+         "Magic Bounce",
+         "Oblivious"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "id": "tr-fakeout",
+     "label": "Fake Out the setter",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": "Fake Out"
+     },
+     "note": "Buys one turn on the first turn the user is on the field.",
+     "failsTo": "Armor Tail (Farigiraf), Psychic Terrain on a grounded setter, Inner Focus, Ghost-type setters (Sinistcha), redirection. Champions makes Fake Out unselectable after the user's first action.",
+     "blockedBy": [
+      {
+       "kind": "ability",
+       "value": [
+        "Armor Tail",
+        "Psychic Surge",
+        "Queenly Majesty",
+        "Dazzling"
+       ]
+      },
+      {
+       "kind": "move",
+       "value": [
+        "Follow Me",
+        "Rage Powder"
+       ],
+       "minEvidence": "usage"
+      }
+     ],
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false,
+     "setterBlockedBy": {
+      "slot": "setter",
+      "anyOf": [
+       {
+        "kind": "type",
+        "value": [
+         "Ghost"
+        ]
+       },
+       {
+        "kind": "ability",
+        "value": [
+         "Inner Focus"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "id": "tr-slow",
+     "label": "Slow hitter of your own",
+     "kind": "stats",
+     "test": {
+      "kind": "stats",
+      "spe": {
+       "<=": 60
+      },
+      "atkOrSpa": {
+       ">=": 100
+      }
+     },
+     "partial": true,
+     "note": "Their Trick Room also speeds up your slow hitter, so the board doesn't fully flip against you.",
+     "failsTo": "Their slower abusers still move first (Torkoal base 20).",
+     "robust": true,
+     "conditional": false,
+     "counts": true
+    },
+    {
+     "id": "tr-tailwind",
+     "label": "Tailwind doesn't help",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": "Tailwind"
+     },
+     "counts": false,
+     "note": "Under Trick Room, Tailwind makes your mons move later.",
+     "robust": false,
+     "conditional": true,
+     "partial": false
+    }
+   ],
+   "prepSensitivity": {
+    "A": "Low",
+    "B": "Low"
+   },
+   "prepReasoning": {
+    "A": "The setter is visible in the pool, but whether they bring Trick Room, and their Mental Herb / Armor Tail / redirection protection, isn't. Most ways to stop it (Taunt, Imprison) are themselves tech you have to commit to in your 6.",
+    "B": "You see Mental Herb, Imprison and Taunt at preview, and so do they. The core still functions. Visibility mostly shifts who leads what."
+   },
+   "prepReasoningDisplaySafe": {
+    "A": true,
+    "B": true
+   }
+  },
+  {
+   "id": "tailwind",
+   "name": "Tailwind + strong attackers",
+   "oneLineWhy": "Doubles their side's Speed for 4 turns including the setting turn. Base-100 Megas then outspeed every non-Tailwind mon in the format.",
+   "detection": {
+    "slots": [
+     {
+      "name": "setter",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "move",
+        "value": "Tailwind"
+       }
+      ]
+     },
+     {
+      "name": "attacker",
+      "min": 2,
+      "anyOf": [
+       {
+        "kind": "stats",
+        "spe": {
+         ">=": 60
+        },
+        "atkOrSpa": {
+         ">=": 110
+        }
+       }
+      ]
+     }
+    ],
+    "minDistinct": 2,
+    "maxMembers": 4
+   },
+   "answers": [
+    {
+     "id": "tw-tr",
+     "label": "Trick Room flips it",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": "Trick Room"
+     },
+     "note": "Under Trick Room, doubled Speed makes them move last.",
+     "failsTo": "Prankster Taunt (+1) lands before Trick Room (-7). Prankster Encore once Trick Room is up: in Champions, Encore changes the setter's not-yet-used move into Trick Room on the turn it lands (Mental Herb stops this), and using Trick Room while it is active ends it (a secondary source says so; not confirmed in the simulator). Switching the setter out avoids it. Imprison + Trick Room on their side; their own Trick Room re-use; Fake Out on the setter; the slow setter being knocked out before it moves.",
+     "blockedBy": [
+      {
+       "allOf": [
+        {
+         "kind": "ability",
+         "value": [
+          "Prankster"
+         ]
+        },
+        {
+         "kind": "move",
+         "value": [
+          "Taunt",
+          "Encore"
+         ]
+        }
+       ]
+      },
+      {
+       "kind": "move",
+       "value": "Taunt",
+       "minEvidence": "usage"
+      },
+      {
+       "allOf": [
+        {
+         "kind": "move",
+         "value": "Imprison"
+        },
+        {
+         "kind": "move",
+         "value": "Trick Room"
+        }
+       ]
+      }
+     ],
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "tw-own",
+     "label": "Own Tailwind",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": "Tailwind"
+     },
+     "note": "Mirror Tailwind returns the game to base Speed comparisons.",
+     "failsTo": "Losing the setter first. Their faster base Speed in the mirror.",
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "tw-speeddrop",
+     "label": "Icy Wind / Electroweb",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": [
+       "Icy Wind",
+       "Electroweb"
+      ]
+     },
+     "partial": true,
+     "note": "-1 Speed on both foes. Doesn't undo a doubling alone.",
+     "failsTo": "Clear Body; Mirror Armor reflects the drop (Corviknight); Contrary turns it into a Speed boost (Mega Staraptor); Defiant / Competitive (they gain stats); Wide Guard; Protect.",
+     "robust": false,
+     "conditional": true,
+     "counts": true
+    },
+    {
+     "id": "tw-priority",
+     "label": "Priority attacks",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": [
+       "Fake Out",
+       "Sucker Punch",
+       "Extreme Speed",
+       "Grassy Glide",
+       "Shadow Sneak",
+       "Aqua Jet",
+       "Bullet Punch",
+       "Quick Attack",
+       "Ice Shard",
+       "Mach Punch",
+       "Vacuum Wave",
+       "First Impression"
+      ]
+     },
+     "partial": true,
+     "note": "Moves before Speed order, but usually for low damage.",
+     "failsTo": "Psychic Terrain (grounded targets), Armor Tail, Quick Guard.",
+     "blockedBy": [
+      {
+       "kind": "ability",
+       "value": [
+        "Psychic Surge",
+        "Armor Tail",
+        "Queenly Majesty",
+        "Dazzling"
+       ]
+      },
+      {
+       "kind": "move",
+       "value": "Quick Guard",
+       "minEvidence": "usage"
+      }
+     ],
+     "robust": false,
+     "conditional": true,
+     "counts": true
+    },
+    {
+     "id": "tw-fakeout",
+     "label": "Fake Out the setter",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": "Fake Out"
+     },
+     "note": "Stops a non-Prankster setter for a turn.",
+     "failsTo": "Ghost-type or Inner Focus setters, Psychic Terrain / Armor Tail / redirection protecting the setter. Fake Out (+3) does go before Prankster Tailwind (+1).",
+     "blockedBy": [
+      {
+       "kind": "ability",
+       "value": [
+        "Psychic Surge",
+        "Armor Tail",
+        "Queenly Majesty",
+        "Dazzling"
+       ]
+      },
+      {
+       "kind": "move",
+       "value": [
+        "Follow Me",
+        "Rage Powder"
+       ],
+       "minEvidence": "usage"
+      }
+     ],
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false,
+     "setterBlockedBy": {
+      "slot": "setter",
+      "anyOf": [
+       {
+        "kind": "type",
+        "value": [
+         "Ghost"
+        ]
+       },
+       {
+        "kind": "ability",
+        "value": [
+         "Inner Focus"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "id": "tw-taunt",
+     "label": "Taunt the setter",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": "Taunt"
+     },
+     "note": "Works on non-Prankster setters that move after your Taunt.",
+     "failsTo": "A Prankster setter (+1) sets Tailwind before Taunt (0). Taunt is priority 0, so against a priority-0 setter it lands first only if your Taunt user is faster (Morpeko 105-163 vs Salamence / Staraptor 108-167); otherwise it only stops a re-set. Mental Herb. Magic Bounce. Redirection (Follow Me / Rage Powder).",
+     "blockedBy": [
+      {
+       "kind": "move",
+       "value": [
+        "Follow Me",
+        "Rage Powder"
+       ],
+       "minEvidence": "usage"
+      },
+      {
+       "kind": "ability",
+       "value": [
+        "Aroma Veil"
+       ]
+      }
+     ],
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false,
+     "setterBlockedBy": {
+      "slot": "setter",
+      "anyOf": [
+       {
+        "kind": "ability",
+        "value": [
+         "Prankster",
+         "Good as Gold",
+         "Magic Bounce",
+         "Oblivious"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "id": "tw-intimidate",
+     "label": "Intimidate",
+     "kind": "ability",
+     "test": {
+      "kind": "ability",
+      "value": [
+       "Intimidate"
+      ]
+     },
+     "partial": true,
+     "note": "Softens physical Tailwind attackers.",
+     "failsTo": "Special attackers, Defiant / Competitive / Inner Focus / Clear Body / Mirror Armor.",
+     "robust": true,
+     "conditional": false,
+     "counts": true
+    }
+   ],
+   "prepSensitivity": {
+    "A": "Low",
+    "B": "Low"
+   },
+   "prepReasoning": {
+    "A": "Every competitive roster has speed control. Knowing it's coming lets you Protect or switch for 4 turns, but that costs your tempo too.",
+    "B": "Same. Open sheets also show the setter's Prankster (its Tailwind goes before a normal-priority Taunt), Inner Focus (no flinch from Fake Out) or Focus Sash (it survives one hit)."
+   },
+   "prepReasoningDisplaySafe": {
+    "A": true,
+    "B": true
+   }
+  },
+  {
+   "id": "sun",
+   "name": "Sun + abusers",
+   "oneLineWhy": "Sun boosts Fire 1.5x and halves Water. Mega Charizard-Y (159 SpA) and Torkoal's Eruption are the payoff, with Chlorophyll users as speed.",
+   "detection": {
+    "slots": [
+     {
+      "name": "setter",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "ability",
+        "value": [
+         "Drought"
+        ]
+       },
+       {
+        "kind": "move",
+        "value": "Sunny Day",
+        "minEvidence": "usage"
+       }
+      ]
+     },
+     {
+      "name": "abuser",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "ability",
+        "value": [
+         "Chlorophyll",
+         "Solar Power",
+         "Mega Sol",
+         "Flower Gift",
+         "Protosynthesis"
+        ]
+       },
+       {
+        "kind": "stab",
+        "type": "Fire",
+        "minStat": 100
+       },
+       {
+        "kind": "move",
+        "value": [
+         "Eruption",
+         "Solar Beam",
+         "Weather Ball"
+        ]
+       }
+      ]
+     }
+    ],
+    "minDistinct": 2,
+    "maxMembers": 4
+   },
+   "answers": [
+    {
+     "id": "sun-override",
+     "label": "Own weather setter",
+     "kind": "ability",
+     "test": {
+      "kind": "ability",
+      "value": [
+       "Drizzle",
+       "Sand Stream",
+       "Snow Warning"
+      ]
+     },
+     "note": "The last weather set stays. A Mega's weather starts when it Mega Evolves (before moves), so it overrides a lead setter on turn 1.",
+     "failsTo": "Their switching or re-Mega timing. Losing the setter. Your own weather-dependent mons if you swap weathers.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "sun-resist",
+     "label": "Resists Fire",
+     "kind": "defense",
+     "test": {
+      "kind": "defense",
+      "attackType": "Fire",
+      "maxMult": 0.5
+     },
+     "note": "Takes sun-boosted Fire for half or less.",
+     "failsTo": "Coverage (Solar Beam into Water/Rock, Ancient Power, Earth Power), spread damage on the partner.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "sun-flashfire",
+     "label": "Flash Fire / Heatproof",
+     "kind": "ability",
+     "test": {
+      "kind": "ability",
+      "value": [
+       "Flash Fire",
+       "Heatproof",
+       "Thick Fat",
+       "Water Bubble",
+       "Well-Baked Body"
+      ]
+     },
+     "note": "Blocks or halves Fire damage.",
+     "failsTo": "Non-Fire coverage. Heatproof is an alternative ability: Sinistcha with Heatproof gives up Hospitality.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "sun-wideguard",
+     "label": "Wide Guard vs Heat Wave",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": "Wide Guard"
+     },
+     "note": "Blocks spread Heat Wave and Eruption for one turn.",
+     "failsTo": "Single-target Weather Ball / Solar Beam. Taunt.",
+     "blockedBy": [
+      {
+       "kind": "move",
+       "value": "Taunt",
+       "minEvidence": "usage"
+      }
+     ],
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "sun-rockstab",
+     "label": "Rock or Water attacker",
+     "kind": "stab",
+     "test": {
+      "kind": "stab",
+      "type": "Rock",
+      "minStat": 100
+     },
+     "partial": true,
+     "note": "Rock hits Charizard 4x. Water is halved in sun, so only Rock is listed.",
+     "failsTo": "Intimidate, Protect, Wide Guard on Rock Slide.",
+     "robust": true,
+     "conditional": false,
+     "counts": true
+    }
+   ],
+   "prepSensitivity": {
+    "A": "Low",
+    "B": "Low"
+   },
+   "prepReasoning": {
+    "A": "The setter is public and the mechanic needs no surprise. Your answer is roster structure (an override or resists), which you'd bring anyway.",
+    "B": "Same. Preview shows the Mega stone, which tells you whether sun comes from Charizard-Y."
+   },
+   "prepReasoningDisplaySafe": {
+    "A": true,
+    "B": true
+   }
+  },
+  {
+   "id": "rain",
+   "name": "Rain + abusers",
+   "oneLineWhy": "Rain gives 1.5x Water, Swift Swim doubling, Thunder / Hurricane that can't miss and a one-turn Electro Shot, and it shuts off opposing sun.",
+   "detection": {
+    "slots": [
+     {
+      "name": "setter",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "ability",
+        "value": [
+         "Drizzle"
+        ]
+       },
+       {
+        "kind": "move",
+        "value": "Rain Dance",
+        "minEvidence": "usage"
+       }
+      ]
+     },
+     {
+      "name": "abuser",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "ability",
+        "value": [
+         "Swift Swim",
+         "Rain Dish",
+         "Dry Skin",
+         "Hydration"
+        ]
+       },
+       {
+        "kind": "stab",
+        "type": "Water",
+        "minStat": 100
+       },
+       {
+        "kind": "move",
+        "value": [
+         "Electro Shot",
+         "Thunder",
+         "Hurricane",
+         "Weather Ball"
+        ]
+       }
+      ]
+     }
+    ],
+    "minDistinct": 2,
+    "maxMembers": 4
+   },
+   "answers": [
+    {
+     "id": "rain-override",
+     "label": "Own weather setter",
+     "kind": "ability",
+     "test": {
+      "kind": "ability",
+      "value": [
+       "Drought",
+       "Sand Stream",
+       "Snow Warning"
+      ]
+     },
+     "note": "Replaces rain. The last weather set stays.",
+     "failsTo": "Re-entry of their setter. Prankster Rain Dance (Sableye, Klefki) re-sets it.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "rain-resistwater",
+     "label": "Resists Water",
+     "kind": "defense",
+     "test": {
+      "kind": "defense",
+      "attackType": "Water",
+      "maxMult": 0.5
+     },
+     "note": "Takes boosted Water for half or less.",
+     "failsTo": "Electric / Hurricane / Ice coverage.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "rain-absorb",
+     "label": "Absorbs Water or Electric",
+     "kind": "ability",
+     "test": {
+      "kind": "ability",
+      "value": [
+       "Water Absorb",
+       "Storm Drain",
+       "Dry Skin",
+       "Lightning Rod",
+       "Volt Absorb",
+       "Motor Drive"
+      ]
+     },
+     "note": "Immune to (and redirects, for Storm Drain / Lightning Rod) rain's main attacks.",
+     "failsTo": "Mold Breaker (Basculegion-F can have it), spread moves aren't redirected.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "rain-electricimmune",
+     "label": "Ground: Electric-immune",
+     "kind": "defense",
+     "test": {
+      "kind": "defense",
+      "attackType": "Electric",
+      "maxMult": 0
+     },
+     "partial": true,
+     "note": "Shrugs off Thunder and Electro Shot.",
+     "failsTo": "Water is super-effective on most Ground types.",
+     "robust": true,
+     "conditional": false,
+     "counts": true
+    }
+   ],
+   "prepSensitivity": {
+    "A": "Low",
+    "B": "Low"
+   },
+   "prepReasoning": {
+    "A": "Mechanical and public.",
+    "B": "Same."
+   },
+   "prepReasoningDisplaySafe": {
+    "A": true,
+    "B": true
+   }
+  },
+  {
+   "id": "sand",
+   "name": "Sand + abusers",
+   "oneLineWhy": "Sand Rush doubles Speed, Rock-types get 1.5x SpD, and it overrides sun/rain. Mega Tyranitar keeps Sand Stream.",
+   "detection": {
+    "slots": [
+     {
+      "name": "setter",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "ability",
+        "value": [
+         "Sand Stream",
+         "Sand Spit"
+        ]
+       }
+      ]
+     },
+     {
+      "name": "abuser",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "ability",
+        "value": [
+         "Sand Rush",
+         "Sand Force"
+        ]
+       }
+      ]
+     }
+    ],
+    "minDistinct": 2,
+    "maxMembers": 4
+   },
+   "answers": [
+    {
+     "id": "sand-override",
+     "label": "Own weather setter",
+     "kind": "ability",
+     "test": {
+      "kind": "ability",
+      "value": [
+       "Drought",
+       "Drizzle",
+       "Snow Warning"
+      ]
+     },
+     "note": "Turns off Sand Rush.",
+     "failsTo": "Tyranitar re-entering. Mega timing.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "sand-resistrock",
+     "label": "Resists Rock",
+     "kind": "defense",
+     "test": {
+      "kind": "defense",
+      "attackType": "Rock",
+      "maxMult": 0.5
+     },
+     "note": "Blunts Rock Slide spam.",
+     "failsTo": "Earthquake / Iron Head coverage.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "sand-waterstab",
+     "label": "Strong Water / Fighting hitter",
+     "kind": "stab",
+     "test": {
+      "kind": "stab",
+      "type": "Water",
+      "minStat": 95
+     },
+     "partial": true,
+     "note": "Super-effective on Tyranitar and Excadrill.",
+     "failsTo": "Doesn't stop the speed advantage.",
+     "robust": true,
+     "conditional": false,
+     "counts": true
+    },
+    {
+     "id": "sand-tr",
+     "label": "Trick Room",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": "Trick Room"
+     },
+     "note": "Turns Sand Rush into a liability.",
+     "failsTo": "Same as any Trick Room: Taunt, Fake Out, or the setter being knocked out before it moves.",
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "sand-wideguard",
+     "label": "Wide Guard",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": "Wide Guard"
+     },
+     "note": "Blocks Rock Slide and Earthquake for a turn.",
+     "failsTo": "Single-target moves, Taunt.",
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false
+    }
+   ],
+   "prepSensitivity": {
+    "A": "Low",
+    "B": "Low"
+   },
+   "prepReasoning": {
+    "A": "Mechanical. Prep changes your leads, not whether sand works.",
+    "B": "Same."
+   },
+   "prepReasoningDisplaySafe": {
+    "A": true,
+    "B": true
+   }
+  },
+  {
+   "id": "snow-veil",
+   "name": "Snow + Aurora Veil",
+   "oneLineWhy": "Snow Warning enables Aurora Veil (cuts physical and special damage, about 0.67x in doubles), Blizzard that can't miss and 1.5x Defense for Ice-types. Veil is the real payoff.",
+   "detection": {
+    "slots": [
+     {
+      "name": "setter",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "ability",
+        "value": [
+         "Snow Warning"
+        ]
+       }
+      ]
+     },
+     {
+      "name": "payoff",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "move",
+        "value": [
+         "Aurora Veil",
+         "Blizzard"
+        ],
+        "minEvidence": "usage"
+       },
+       {
+        "kind": "ability",
+        "value": [
+         "Slush Rush",
+         "Ice Body",
+         "Snow Cloak"
+        ]
+       }
+      ]
+     }
+    ],
+    "minDistinct": 1,
+    "maxMembers": 4
+   },
+   "answers": [
+    {
+     "id": "snow-override",
+     "label": "Own weather setter",
+     "kind": "ability",
+     "test": {
+      "kind": "ability",
+      "value": [
+       "Drought",
+       "Drizzle",
+       "Sand Stream"
+      ]
+     },
+     "note": "No snow means no new Veil.",
+     "failsTo": "A Veil that's already up stays for its 5 turns.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "snow-breaker",
+     "label": "Screen breaker",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": [
+       "Brick Break",
+       "Psychic Fangs",
+       "Raging Bull",
+       "Defog"
+      ]
+     },
+     "note": "Removes Veil/screens from their side.",
+     "failsTo": "Brick Break removes screens only when it hits a target that isn't immune: aimed at a Ghost-type it fails and the screens stay, unless the user has Scrappy. Kangaskhan has Scrappy only in its base form, so that works only on turns before it Mega Evolves (Mega Evolution happens before moves on that turn). Psychic Fangs aimed at a Dark-type is presumed to fail the same way (not confirmed). Screens cover their whole side, so aim at any of their mons on the field that isn't immune. Raging Bull's type depends on the Tauros form, and whether it removes screens when aimed at an immune target is not confirmed. Protect on the target: not checked.",
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "snow-infiltrator",
+     "label": "Infiltrator",
+     "kind": "ability",
+     "test": {
+      "kind": "ability",
+      "value": [
+       "Infiltrator"
+      ]
+     },
+     "note": "Ignores screens and Veil.",
+     "failsTo": "Nothing specific to Veil.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "snow-firestab",
+     "label": "Strong Fire / Steel hitter",
+     "kind": "stab",
+     "test": {
+      "kind": "stab",
+      "type": "Fire",
+      "minStat": 100
+     },
+     "partial": true,
+     "note": "Super-effective into Ice-types.",
+     "failsTo": "Veil cuts it to about 0.67x in doubles.",
+     "robust": true,
+     "conditional": false,
+     "counts": true
+    },
+    {
+     "id": "snow-taunt",
+     "label": "Taunt the setter",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": "Taunt"
+     },
+     "note": "Prevents Veil if it lands first.",
+     "failsTo": "A faster setter. Mental Herb. Focus Sash setters still get it up the next turn.",
+     "blockedBy": [
+      {
+       "kind": "move",
+       "value": [
+        "Follow Me",
+        "Rage Powder"
+       ],
+       "minEvidence": "usage"
+      },
+      {
+       "kind": "ability",
+       "value": [
+        "Aroma Veil"
+       ]
+      }
+     ],
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false,
+     "setterBlockedBy": {
+      "slot": "payoff",
+      "anyOf": [
+       {
+        "kind": "ability",
+        "value": [
+         "Prankster",
+         "Good as Gold",
+         "Magic Bounce",
+         "Oblivious"
+        ]
+       }
+      ]
+     }
+    }
+   ],
+   "prepSensitivity": {
+    "A": "Med",
+    "B": "Med"
+   },
+   "prepReasoning": {
+    "A": "Veil's value is front-loaded and the setter is public. A screen breaker or weather override in your 6 cuts most of it.",
+    "B": "Preview confirms Veil and Light Clay. Same answers."
+   },
+   "prepReasoningDisplaySafe": {
+    "A": true,
+    "B": true
+   }
+  },
+  {
+   "id": "psychic-terrain",
+   "name": "Psychic Terrain spam",
+   "oneLineWhy": "Psychic Surge blocks all priority (Fake Out, Prankster, Sucker Punch) aimed at grounded mons and turns Expanding Force into a boosted spread move.",
+   "detection": {
+    "slots": [
+     {
+      "name": "setter",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "ability",
+        "value": [
+         "Psychic Surge"
+        ]
+       }
+      ]
+     },
+     {
+      "name": "abuser",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "move",
+        "value": "Expanding Force"
+       },
+       {
+        "allOf": [
+         {
+          "kind": "type",
+          "value": [
+           "Psychic"
+          ]
+         },
+         {
+          "kind": "stats",
+          "spa": {
+           ">=": 110
+          }
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "minDistinct": 2,
+    "maxMembers": 4
+   },
+   "answers": [
+    {
+     "id": "pt-dark",
+     "label": "Dark-type: Psychic-immune",
+     "kind": "defense",
+     "test": {
+      "kind": "defense",
+      "attackType": "Psychic",
+      "maxMult": 0
+     },
+     "note": "Immune to Expanding Force.",
+     "failsTo": "Fighting / Bug / Fairy coverage. Psychic Terrain still blocks its priority.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "pt-resist",
+     "label": "Resists Psychic",
+     "kind": "defense",
+     "test": {
+      "kind": "defense",
+      "attackType": "Psychic",
+      "maxMult": 0.5
+     },
+     "note": "Steel / Psychic halve it.",
+     "failsTo": "Fire coverage (Armarouge) into Steel.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "pt-terrain",
+     "label": "Own terrain setter",
+     "kind": "ability",
+     "test": {
+      "kind": "ability",
+      "value": [
+       "Grassy Surge",
+       "Electric Surge",
+       "Misty Surge"
+      ]
+     },
+     "note": "Replaces Psychic Terrain on entry.",
+     "failsTo": "Their setter switching back in.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "pt-wideguard",
+     "label": "Wide Guard",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": "Wide Guard"
+     },
+     "note": "Blocks terrain-boosted spread Expanding Force.",
+     "failsTo": "Single-target Psychic moves.",
+     "blockedBy": [
+      {
+       "kind": "move",
+       "value": "Taunt",
+       "minEvidence": "usage"
+      }
+     ],
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "pt-fakeout",
+     "label": "Fake Out doesn't work here",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": "Fake Out"
+     },
+     "counts": false,
+     "note": "Psychic Terrain blocks priority against grounded targets, so Fake Out and Prankster moves fail.",
+     "robust": false,
+     "conditional": true,
+     "partial": false
+    },
+    {
+     "id": "pt-terrainmove",
+     "label": "Own terrain move",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": [
+       "Grassy Terrain",
+       "Electric Terrain",
+       "Misty Terrain"
+      ]
+     },
+     "note": "Setting a different terrain replaces Psychic Terrain (5 turns). The move has priority 0, so Psychic Terrain does not block it. Setting a terrain that is already up does nothing.",
+     "failsTo": "Their setter switching back in (Surge re-triggers); Taunt; a seed already consumed; it costs a move slot.",
+     "blockedBy": [
+      {
+       "kind": "move",
+       "value": "Taunt",
+       "minEvidence": "usage"
+      }
+     ],
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false
+    }
+   ],
+   "prepSensitivity": {
+    "A": "Med",
+    "B": "Med"
+   },
+   "prepReasoning": {
+    "A": "A Dark-type or a second terrain is easy to bring once you've seen Indeedee in the pool. The core still functions; you're cutting its damage, not stopping it.",
+    "B": "Same, plus preview shows whether Indeedee is built for Trick Room or for spam."
+   },
+   "prepReasoningDisplaySafe": {
+    "A": true,
+    "B": true
+   }
+  },
+  {
+   "id": "electric-terrain",
+   "name": "Electric Terrain offense",
+   "oneLineWhy": "Electric Surge (Raichu-Mega-X, Pincurchin) gives 1.3x Electric to grounded attackers and stops sleep.",
+   "detection": {
+    "slots": [
+     {
+      "name": "setter",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "ability",
+        "value": [
+         "Electric Surge",
+         "Hadron Engine"
+        ]
+       }
+      ]
+     },
+     {
+      "name": "abuser",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "stab",
+        "type": "Electric",
+        "minStat": 100
+       },
+       {
+        "allOf": [
+         {
+          "kind": "move",
+          "value": [
+           "Electro Shot",
+           "Rising Voltage",
+           "Thunderbolt",
+           "Discharge"
+          ]
+         },
+         {
+          "kind": "stats",
+          "atkOrSpa": {
+           ">=": 100
+          }
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "minDistinct": 2,
+    "maxMembers": 4
+   },
+   "answers": [
+    {
+     "id": "et-ground",
+     "label": "Ground: Electric-immune",
+     "kind": "defense",
+     "test": {
+      "kind": "defense",
+      "attackType": "Electric",
+      "maxMult": 0
+     },
+     "note": "Immune to every Electric move.",
+     "failsTo": "Grass / Water / Ice coverage (Raichu-Y's Focus Blast is Fighting).",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "et-absorb",
+     "label": "Lightning Rod / Volt Absorb",
+     "kind": "ability",
+     "test": {
+      "kind": "ability",
+      "value": [
+       "Lightning Rod",
+       "Volt Absorb",
+       "Motor Drive"
+      ]
+     },
+     "note": "Absorbs Electric. Lightning Rod also redirects it.",
+     "failsTo": "Spread Discharge isn't redirected. Mold Breaker.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "et-resist",
+     "label": "Resists Electric",
+     "kind": "defense",
+     "test": {
+      "kind": "defense",
+      "attackType": "Electric",
+      "maxMult": 0.5
+     },
+     "note": "Grass / Electric / Dragon halve it.",
+     "failsTo": "Coverage.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "et-terrain",
+     "label": "Own terrain setter",
+     "kind": "ability",
+     "test": {
+      "kind": "ability",
+      "value": [
+       "Grassy Surge",
+       "Psychic Surge",
+       "Misty Surge"
+      ]
+     },
+     "note": "Replaces Electric Terrain.",
+     "failsTo": "Re-entry.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "et-terrainmove",
+     "label": "Own terrain move",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": [
+       "Grassy Terrain",
+       "Psychic Terrain",
+       "Misty Terrain"
+      ]
+     },
+     "note": "Setting a different terrain replaces Electric Terrain (5 turns). Setting a terrain that is already up does nothing.",
+     "failsTo": "Their setter switching back in (Surge re-triggers); Taunt; a seed already consumed; it costs a move slot.",
+     "blockedBy": [
+      {
+       "kind": "move",
+       "value": "Taunt",
+       "minEvidence": "usage"
+      }
+     ],
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false
+    }
+   ],
+   "prepSensitivity": {
+    "A": "Low",
+    "B": "Low"
+   },
+   "prepReasoning": {
+    "A": "It's a damage boost on visible Electric attackers. Answers are typing.",
+    "B": "Same."
+   },
+   "prepReasoningDisplaySafe": {
+    "A": true,
+    "B": true
+   }
+  },
+  {
+   "id": "grassy-terrain",
+   "name": "Grassy Terrain (Rillaboom) core",
+   "oneLineWhy": "Rillaboom is the most-used mon in M-C ladder data (usage about 35 in 100). Grassy Terrain powers priority Grassy Glide, heals and halves Earthquake. Grassy Seed adds Unburden or +1 Def.",
+   "detection": {
+    "slots": [
+     {
+      "name": "setter",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "ability",
+        "value": [
+         "Grassy Surge"
+        ]
+       }
+      ]
+     },
+     {
+      "name": "partner",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "ability",
+        "value": [
+         "Unburden",
+         "Grass Pelt"
+        ]
+       },
+       {
+        "kind": "stab",
+        "type": "Grass",
+        "minStat": 100
+       }
+      ]
+     }
+    ],
+    "minDistinct": 2,
+    "maxMembers": 4
+   },
+   "answers": [
+    {
+     "id": "gt-resist",
+     "label": "Resists Grass",
+     "kind": "defense",
+     "test": {
+      "kind": "defense",
+      "attackType": "Grass",
+      "maxMult": 0.5
+     },
+     "note": "Blunts Grassy Glide / Wood Hammer.",
+     "failsTo": "U-turn / High Horsepower coverage.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "gt-terrain",
+     "label": "Own terrain setter",
+     "kind": "ability",
+     "test": {
+      "kind": "ability",
+      "value": [
+       "Psychic Surge",
+       "Electric Surge",
+       "Misty Surge"
+      ]
+     },
+     "note": "Removes Grassy Glide priority and the seed triggers.",
+     "failsTo": "Re-entry.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "gt-firestab",
+     "label": "Strong Fire / Flying hitter",
+     "kind": "stab",
+     "test": {
+      "kind": "stab",
+      "type": "Fire",
+      "minStat": 100
+     },
+     "partial": true,
+     "note": "Super-effective on Rillaboom.",
+     "failsTo": "Intimidate, Fake Out.",
+     "robust": true,
+     "conditional": false,
+     "counts": true
+    },
+    {
+     "id": "gt-terrainmove",
+     "label": "Own terrain move",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": [
+       "Psychic Terrain",
+       "Electric Terrain",
+       "Misty Terrain"
+      ]
+     },
+     "note": "Setting a different terrain replaces Grassy Terrain (5 turns). Setting a terrain that is already up does nothing.",
+     "failsTo": "Their setter switching back in (Surge re-triggers); Taunt; a seed already consumed; it costs a move slot.",
+     "blockedBy": [
+      {
+       "kind": "move",
+       "value": "Taunt",
+       "minEvidence": "usage"
+      }
+     ],
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false
+    }
+   ],
+   "prepSensitivity": {
+    "A": "Low",
+    "B": "Low"
+   },
+   "prepReasoning": {
+    "A": "Rillaboom does its job regardless of what you know.",
+    "B": "Same."
+   },
+   "prepReasoningDisplaySafe": {
+    "A": true,
+    "B": true
+   }
+  },
+  {
+   "id": "support-shell",
+   "name": "Fake Out + redirection shell",
+   "oneLineWhy": "Two support slots buy the partner free turns to set speed control, set up or Mega Evolve.",
+   "detection": {
+    "slots": [
+     {
+      "name": "fake out",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "move",
+        "value": "Fake Out"
+       }
+      ]
+     },
+     {
+      "name": "redirection",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "move",
+        "value": [
+         "Follow Me",
+         "Rage Powder"
+        ]
+       }
+      ]
+     }
+    ],
+    "minDistinct": 2,
+    "maxMembers": 4
+   },
+   "answers": [
+    {
+     "id": "ss-spread",
+     "label": "Spread attacks",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": [
+       "Heat Wave",
+       "Rock Slide",
+       "Earthquake",
+       "Hyper Voice",
+       "Dazzling Gleam",
+       "Muddy Water",
+       "Surf",
+       "Discharge",
+       "Blizzard",
+       "Expanding Force",
+       "Make It Rain",
+       "Matcha Gotcha",
+       "Sludge Wave",
+       "Eruption",
+       "Water Spout",
+       "Breaking Swipe",
+       "Snarl",
+       "Icy Wind",
+       "Electroweb"
+      ]
+     },
+     "note": "Spread moves ignore redirection.",
+     "failsTo": "Wide Guard. Spread damage is 0.75x.",
+     "blockedBy": [
+      {
+       "kind": "move",
+       "value": "Wide Guard",
+       "minEvidence": "usage"
+      }
+     ],
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "ss-ghost",
+     "label": "Ghost: Fake Out-immune",
+     "kind": "type",
+     "test": {
+      "kind": "type",
+      "value": [
+       "Ghost"
+      ]
+     },
+     "note": "Normal-type Fake Out can't touch it.",
+     "failsTo": "Scrappy Fake Out (Kangaskhan).",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "ss-innerfocus",
+     "label": "Inner Focus",
+     "kind": "ability",
+     "test": {
+      "kind": "ability",
+      "value": [
+       "Inner Focus"
+      ]
+     },
+     "note": "Can't flinch.",
+     "failsTo": "Takes the chip damage anyway.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "ss-ragepowderimmune",
+     "label": "Grass: ignores Rage Powder",
+     "kind": "type",
+     "test": {
+      "kind": "type",
+      "value": [
+       "Grass"
+      ]
+     },
+     "partial": true,
+     "note": "Grass-types and Overcoat ignore Rage Powder (not Follow Me).",
+     "failsTo": "Follow Me users.",
+     "robust": true,
+     "conditional": false,
+     "counts": true
+    },
+    {
+     "id": "ss-ignoreredirect",
+     "label": "Ignores redirection",
+     "kind": "ability",
+     "test": {
+      "kind": "ability",
+      "value": [
+       "Stalwart",
+       "Propeller Tail"
+      ]
+     },
+     "note": "Single-target moves go where you aimed them.",
+     "failsTo": "Protect.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    }
+   ],
+   "prepSensitivity": {
+    "A": "Low",
+    "B": "Low"
+   },
+   "prepReasoning": {
+    "A": "Its value comes from turn order, not secrecy.",
+    "B": "Same."
+   },
+   "prepReasoningDisplaySafe": {
+    "A": true,
+    "B": true
+   }
+  },
+  {
+   "id": "perish-trap",
+   "name": "Perish trap",
+   "oneLineWhy": "Perish Song plus trapping makes mons that can't switch out faint three turns later, even through Protect; usually built around Mega Gengar's Shadow Tag.",
+   "detection": {
+    "slots": [
+     {
+      "name": "perish",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "move",
+        "value": "Perish Song"
+       }
+      ]
+     },
+     {
+      "name": "trap",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "ability",
+        "value": [
+         "Shadow Tag",
+         "Arena Trap"
+        ]
+       },
+       {
+        "kind": "move",
+        "value": [
+         "Mean Look",
+         "Block",
+         "Spirit Shackle",
+         "Anchor Shot"
+        ]
+       }
+      ]
+     }
+    ],
+    "minDistinct": 1,
+    "maxMembers": 4
+   },
+   "answers": [
+    {
+     "id": "pe-ghost",
+     "label": "Ghost: can't be trapped",
+     "kind": "type",
+     "test": {
+      "kind": "type",
+      "value": [
+       "Ghost"
+      ]
+     },
+     "note": "Ghost-types switch out of any trap.",
+     "failsTo": "Perish still counts down while it stays in.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "pe-pivot",
+     "label": "Pivot out",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": [
+       "U-turn",
+       "Volt Switch",
+       "Flip Turn",
+       "Parting Shot"
+      ]
+     },
+     "note": "Pivot moves escape trapping and reset the Perish count.",
+     "failsTo": "Protect on the target (U-turn fails). Parting Shot is Taunt-able.",
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "pe-taunt",
+     "label": "Taunt the singer",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": "Taunt"
+     },
+     "note": "Perish Song is a status move, so Taunt stops it.",
+     "failsTo": "Mental Herb, a faster singer.",
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false,
+     "blockedBy": [
+      {
+       "kind": "move",
+       "value": [
+        "Follow Me",
+        "Rage Powder"
+       ],
+       "minEvidence": "usage"
+      },
+      {
+       "kind": "ability",
+       "value": [
+        "Aroma Veil"
+       ]
+      }
+     ],
+     "setterBlockedBy": {
+      "slot": "perish",
+      "anyOf": [
+       {
+        "kind": "ability",
+        "value": [
+         "Prankster",
+         "Good as Gold",
+         "Magic Bounce",
+         "Oblivious"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "id": "pe-soundproof",
+     "label": "Soundproof / Run Away",
+     "kind": "ability",
+     "test": {
+      "kind": "ability",
+      "value": [
+       "Soundproof",
+       "Run Away"
+      ]
+     },
+     "note": "Soundproof is immune to Perish Song. Champions' Run Away escapes trapping.",
+     "failsTo": "Partners without it.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    }
+   ],
+   "prepSensitivity": {
+    "A": "High",
+    "B": "High"
+   },
+   "prepReasoning": {
+    "A": "The core relies on the opponent not having a way out. Perish Song and trapping users are few and visible in the pool, so if you know your opponent before you build your 6, you can include Ghosts, pivots or Taunt. How far ahead opponents are known is not confirmed for this league.",
+    "B": "Preview confirms Perish Song. Even stronger for the defender."
+   },
+   "prepReasoningDisplaySafe": {
+    "A": true,
+    "B": true
+   }
+  },
+  {
+   "id": "intimidate-cycle",
+   "name": "Intimidate cycling",
+   "oneLineWhy": "Two Intimidate users plus pivoting keep physical attackers at -1, -2.",
+   "detection": {
+    "slots": [
+     {
+      "name": "intimidate",
+      "min": 2,
+      "anyOf": [
+       {
+        "kind": "ability",
+        "value": [
+         "Intimidate"
+        ]
+       }
+      ]
+     },
+     {
+      "name": "pivot",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "move",
+        "value": [
+         "U-turn",
+         "Volt Switch",
+         "Flip Turn",
+         "Parting Shot",
+         "Fake Out"
+        ]
+       }
+      ]
+     }
+    ],
+    "minDistinct": 2,
+    "maxMembers": 4
+   },
+   "answers": [
+    {
+     "id": "ic-special",
+     "label": "Special attacker",
+     "kind": "stats",
+     "test": {
+      "kind": "stats",
+      "spa": {
+       ">=": 100
+      },
+      "spaOverAtk": true
+     },
+     "note": "Intimidate doesn't touch Special Attack.",
+     "failsTo": "Snarl.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "ic-immune",
+     "label": "Intimidate-proof ability",
+     "kind": "ability",
+     "test": {
+      "kind": "ability",
+      "value": [
+       "Competitive",
+       "Defiant",
+       "Clear Body",
+       "Inner Focus",
+       "Own Tempo",
+       "Oblivious",
+       "Scrappy",
+       "Guard Dog",
+       "Hyper Cutter",
+       "White Smoke",
+       "Full Metal Body",
+       "Mirror Armor",
+       "Contrary",
+       "Rattled"
+      ]
+     },
+     "note": "Blocks the drop, or benefits from it.",
+     "failsTo": "Reliable against Intimidate itself. Doesn't help against other stat drops (Parting Shot, Snarl).",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    }
+   ],
+   "prepSensitivity": {
+    "A": "Low",
+    "B": "Low"
+   },
+   "prepReasoning": {
+    "A": "The answer is roster structure, not tech.",
+    "B": "Same."
+   },
+   "prepReasoningDisplaySafe": {
+    "A": true,
+    "B": true
+   }
+  },
+  {
+   "id": "screens",
+   "name": "Screens + attackers",
+   "oneLineWhy": "Prankster Reflect / Light Screen cut damage to their side for 5 turns (8 with Light Clay) while attackers set up: about 0.67x (2732/4096) in doubles, 0.5x in singles.",
+   "detection": {
+    "slots": [
+     {
+      "name": "screens",
+      "min": 1,
+      "anyOf": [
+       {
+        "kind": "move",
+        "value": [
+         "Reflect",
+         "Light Screen"
+        ],
+        "minEvidence": "usage"
+       }
+      ]
+     },
+     {
+      "name": "attacker",
+      "min": 2,
+      "anyOf": [
+       {
+        "kind": "stats",
+        "atkOrSpa": {
+         ">=": 110
+        }
+       }
+      ]
+     }
+    ],
+    "minDistinct": 2,
+    "maxMembers": 4
+   },
+   "answers": [
+    {
+     "id": "sc-breaker",
+     "label": "Screen breaker",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": [
+       "Brick Break",
+       "Psychic Fangs",
+       "Raging Bull",
+       "Defog"
+      ]
+     },
+     "note": "Removes screens from their side.",
+     "failsTo": "Brick Break removes screens only when it hits a target that isn't immune: aimed at a Ghost-type it fails and the screens stay, unless the user has Scrappy. Kangaskhan has Scrappy only in its base form, so that works only on turns before it Mega Evolves (Mega Evolution happens before moves on that turn). Psychic Fangs aimed at a Dark-type is presumed to fail the same way (not confirmed). Screens cover their whole side, so aim at any of their mons on the field that isn't immune. Raging Bull's type depends on the Tauros form, and whether it removes screens when aimed at an immune target is not confirmed. Protect on the target: not checked.",
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "sc-infiltrator",
+     "label": "Infiltrator",
+     "kind": "ability",
+     "test": {
+      "kind": "ability",
+      "value": [
+       "Infiltrator"
+      ]
+     },
+     "note": "Ignores screens.",
+     "failsTo": "Nothing specific.",
+     "robust": true,
+     "conditional": false,
+     "counts": true,
+     "partial": false
+    },
+    {
+     "id": "sc-taunt",
+     "label": "Taunt the setter",
+     "kind": "move",
+     "test": {
+      "kind": "move",
+      "value": "Taunt"
+     },
+     "note": "Stops screens if it lands first.",
+     "failsTo": "Prankster screens (+1) go first. Mental Herb.",
+     "blockedBy": [
+      {
+       "kind": "move",
+       "value": [
+        "Follow Me",
+        "Rage Powder"
+       ],
+       "minEvidence": "usage"
+      },
+      {
+       "kind": "ability",
+       "value": [
+        "Aroma Veil"
+       ]
+      }
+     ],
+     "robust": false,
+     "conditional": true,
+     "counts": true,
+     "partial": false,
+     "setterBlockedBy": {
+      "slot": "screens",
+      "anyOf": [
+       {
+        "kind": "ability",
+        "value": [
+         "Prankster",
+         "Good as Gold",
+         "Magic Bounce",
+         "Oblivious"
+        ]
+       }
+      ]
+     }
+    }
+   ],
+   "prepSensitivity": {
+    "A": "Med",
+    "B": "Low"
+   },
+   "prepReasoning": {
+    "A": "Screens are visible in the pool, and breakers (Brick Break, Psychic Fangs, Raging Bull) are a free move slot on many physical mons. A hidden breaker can catch them out.",
+    "B": "At preview the screens player sees your breaker or Infiltrator and can target it, delay screens or not bring the core. The defender's tech still deters, but it no longer surprises, so the core loses less to prep."
+   },
+   "prepReasoningDisplaySafe": {
+    "A": true,
+    "B": true
+   }
+  }
+ ],
+ "responseConcentration": {
+  "coFailure": {
+   "minMult": 2,
+   "minStat": 100
+  }
+ }
+}

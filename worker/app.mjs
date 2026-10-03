@@ -1,7 +1,7 @@
 // Drafarig as a Sites (Cloudflare Workers) app: the Worker version of server.mjs. Zero dependencies.
 // scripts/build.mjs inlines this file and the lib/ modules it imports into dist/server/index.js, with the
 // static files embedded (Sites Worker builds ship no asset files). Same routes as server.mjs:
-//   public/ and lib/ (shared ES modules), data/dex.json, and:
+//   public/ and lib/ (shared ES modules), data/dex.json, data/cores.json (the public Cores spec), and:
 //   GET /api/sheet  live league sheet on every call (cache-busting); falls back to the last good snapshot in R2
 //   GET /api/usage  Smogon chaos stats for gen9championsvgc2026regmc, slimmed + cached 24 h in R2
 // The R2 binding BUCKET holds only those two JSON blobs and is never served. Without it the API still works,
@@ -102,7 +102,7 @@ async function getUsage(env) {
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml' };
 // URL prefix -> embedded directory (keys of `files` are project-relative paths). lib/ is shared with the browser.
-const STATIC = [['/lib/', 'lib'], ['/data/dex.json', 'data/dex.json'], ['/', 'public']];
+const STATIC = [['/lib/', 'lib'], ['/data/dex.json', 'data/dex.json'], ['/data/cores.json', 'data/cores.json'], ['/', 'public']];
 
 // path.posix.normalize for the relative keys above, so the containment check below matches server.mjs.
 function normalize(p) {
@@ -116,7 +116,7 @@ function normalize(p) {
 
 const json = (value, status, headers = {}) => new Response(JSON.stringify(value), { status, headers: { 'content-type': TYPES['.json'], ...headers } });
 
-/** @param {Record<string, string>} files  project-relative path -> file text (public/*, lib/*, data/dex.json) */
+/** @param {Record<string, string>} files  project-relative path -> file text (public/*, lib/*, data/dex.json, data/cores.json) */
 export function createApp(files) {
   const FILES = new Map(Object.entries(files));
   let dex, warned = false;

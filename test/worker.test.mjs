@@ -99,7 +99,10 @@ function assertSanitized(r, expected) {
 }
 
 const STATIC_FILES = [...readdirSync(new URL('public/', ROOT)).map((f) => [`/${f}`, `public/${f}`]),
-  ...readdirSync(new URL('lib/', ROOT)).map((f) => [`/lib/${f}`, `lib/${f}`]), ['/data/dex.json', 'data/dex.json'], ['/', 'public/index.html']];
+  ...readdirSync(new URL('lib/', ROOT)).map((f) => [`/lib/${f}`, `lib/${f}`]), ['/data/dex.json', 'data/dex.json'], ['/data/cores.json', 'data/cores.json'],
+  ['/', 'public/index.html']];
+// Everything the Worker may serve: public/, lib/ and exactly two data files. Anything else embedded would be an exposure.
+const ALLOWED_ASSETS = STATIC_FILES.filter(([p]) => p !== '/').map(([, f]) => f).sort();
 const TYPES = { html: 'text/html; charset=utf-8', js: 'text/javascript; charset=utf-8', mjs: 'text/javascript; charset=utf-8', css: 'text/css; charset=utf-8', json: 'application/json; charset=utf-8' };
 
 test('static routes serve the embedded files byte-for-byte with the original headers', async (t) => {
@@ -112,7 +115,8 @@ test('static routes serve the embedded files byte-for-byte with the original hea
     assert.equal(res.headers.get('content-type'), TYPES[file.split('.').pop()], path);
     assert.equal(res.headers.get('cache-control'), 'no-store', path);
   }
-  assert.ok(STATIC_FILES.length >= 13);
+  assert.ok(STATIC_FILES.length >= 17);
+  for (const p of ['/lib/cores.mjs', '/lib/cores-view.mjs', '/lib/rerender.mjs', '/data/cores.json']) assert.ok(STATIC_FILES.some(([x]) => x === p), p);
   assert.equal(calls.length, 0);
 });
 
@@ -124,7 +128,13 @@ test('unknown paths, directories, source/config files and the R2 cache blobs are
   const worker = await freshWorker();
   for (const path of ['/nope', '/lib', '/lib/', '/lib/nope.mjs', '/data', '/data/', '/data/dex.json/', '/index.html/', '/server.mjs', '/package.json',
     '/.openai/hosting.json', '/worker/app.mjs', '/scripts/build.mjs', '/dist/server/index.js', '/test/fixtures/board.csv', '/api', '/api/', '/api/sheet/',
-    `/${SHEET_KEY}`, `/data/cache/${SHEET_KEY}`, `/${USAGE_KEY}`, `/data/cache/${USAGE_KEY}`, '/lib/%00', '/%2e%2e/server.mjs', '/lib/%2e%2e/package.json']) {
+    `/${SHEET_KEY}`, `/data/cache/${SHEET_KEY}`, `/${USAGE_KEY}`, `/data/cache/${USAGE_KEY}`, '/lib/%00', '/%2e%2e/server.mjs', '/lib/%2e%2e/package.json',
+    // the Cores research / verification inputs and repo internals are never served
+    '/data/cores.json/', '/data/cores-full.json', '/docs/research/strategy/cores.json', '/docs/research/reviews/research-review-2026-10-03.md',
+    '/tools/build-data.mjs', '/tools/cores-report.mjs', '/test/cores.test.mjs', '/test/fixtures/cores-check-2026-10-03.json',
+    '/test/fixtures/league-snapshot-2026-10-03.json', '/node_modules/.cache/drafarig-core-source-b09fbab/data/cores.json',
+    '/node_modules/.cache/drafarig-core-source-b09fbab/SOURCE-MANIFEST.json', '/.git/config', '/.git/HEAD', '/mobile-carry-forward.patch',
+    '/MOBILE-INTEGRATION-HANDOFF.md', '/lib/cores.json', '/data/']) {
     const r = await get(worker, path, { BUCKET: bucket });
     assert.equal(r.status, 404, path);
     assertSanitized(r, NOT_FOUND);
@@ -135,7 +145,8 @@ test('encoded path traversal is refused like server.mjs (403), and stays inside 
   setup(t);
   const worker = await freshWorker();
   for (const path of ['/lib/..%2fserver.mjs', '/lib/..%2f..%2f..%2fetc%2fpasswd', '/..%2fpackage.json', '/..%2f.openai%2fhosting.json',
-    '/%2e%2e%2fserver.mjs', '/lib/..%2fpublic%2findex.html', '/..%2flib%2fsheet.mjs', '/..%2fdata%2fdex.json']) {
+    '/%2e%2e%2fserver.mjs', '/lib/..%2fpublic%2findex.html', '/..%2flib%2fsheet.mjs', '/..%2fdata%2fdex.json', '/..%2fdata%2fcores.json',
+    '/lib/..%2fnode_modules%2f.cache%2fdrafarig-core-source-b09fbab%2fdata%2fcores.json', '/..%2f.git%2fconfig']) {
     const r = await get(worker, path, {});
     assert.deepEqual([r.status, r.text], [403, 'Forbidden'], path);
   }
@@ -171,7 +182,8 @@ test('HEAD returns the GET status and headers with no body', async (t) => {
   const { count } = setup(t);
   const bucket = new FakeR2();
   const worker = await freshWorker();
-  for (const [path, status, type] of [['/', 200, TYPES.html], ['/lib/league.mjs', 200, TYPES.mjs], ['/data/dex.json', 200, TYPES.json], ['/nope', 404, TYPES.json], ['/api/sheet', 200, TYPES.json]]) {
+  for (const [path, status, type] of [['/', 200, TYPES.html], ['/lib/league.mjs', 200, TYPES.mjs], ['/lib/cores.mjs', 200, TYPES.mjs], ['/data/dex.json', 200, TYPES.json],
+    ['/data/cores.json', 200, TYPES.json], ['/nope', 404, TYPES.json], ['/api/sheet', 200, TYPES.json]]) {
     const r = await get(worker, path, { BUCKET: bucket }, 'HEAD');
     assert.deepEqual([r.status, r.headers['content-type'], r.hasBody, r.text], [status, type, false, ''], path);
   }
@@ -386,6 +398,9 @@ test('build artifact: self-contained ESM, deterministic, Worker manifest with th
   assert.deepEqual(JSON.parse(read('.openai/hosting.json')), { project_id: 'appgprj_6ac16dd56abc8191915b96602b56e117', r2: 'BUCKET' });
   const source = read('worker/app.mjs').toString('utf8');
   assert.deepEqual(source.match(/^import .+$/gm).map((l) => l.match(/'(.+)'/)[1]), ['../lib/sheet.mjs', '../lib/league.mjs', '../lib/usage.mjs']);
+  // Safe-asset exposure: the embedded files are exactly public/, lib/, data/dex.json and data/cores.json.
+  const files = bundle.slice(bundle.indexOf('\nconst FILES = {\n'), bundle.indexOf('\n};\n', bundle.indexOf('\nconst FILES = {\n')));
+  assert.deepEqual([...files.matchAll(/^ {2}("(?:[^"\\]|\\.)*"): /gm)].map((m) => JSON.parse(m[1])).sort(), ALLOWED_ASSETS);
   const sha = () => createHash('sha256').update(read('dist/server/index.js')).digest('hex');
   const before = sha();
   execFileSync(process.execPath, [new URL('scripts/build.mjs', ROOT).pathname], { stdio: 'pipe' });

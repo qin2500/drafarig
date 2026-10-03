@@ -3,6 +3,9 @@ import { buildLeague, computeTurn, picksUntil, ROSTER_SIZE, BUDGET } from '/lib/
 import { budgetSummary, affordability } from '/lib/budget.mjs';
 import { buildPlans, checkPick } from '/lib/optimizer.mjs';
 import { weaknessMatrix, roleChecklist, speedRows, threatList, synergies, SYNERGY_MODES } from '/lib/analysis.mjs';
+import { coreContext } from '/lib/cores.mjs';
+import { buildCoresView, createCoresCache, renderCoresPanel, renderCoresError, renderThinPanel, renderCarriesPanel, sheetReadText } from '/lib/cores-view.mjs';
+import { focusKey, focusCandidates, scrollAfterRender } from '/lib/rerender.mjs';
 import { GLOSSARY } from '/glossary.js';
 
 // ---------- settings (per browser) ----------
@@ -14,9 +17,27 @@ const S = {
   coach: store.get('coach', 'Anthony'), order: store.get('order', 'snake'), explain: store.get('explain', true),
   mode: store.get('mode', 'draft'), aliases: store.get('aliases', {}), draftTab: 'plans', check: '', showForms: false,
   tailwind: false, trickRoom: false, speedOpp: '', threatScope: 'all', boardFilter: { q: '', role: '', type: '', hideTaken: false, affordable: false },
+  cores: { open: {}, more: false, showAll: {} }, // Cores panels: expand state per card / mon key (not persisted)
 };
 
 let dex, sheet, L, usage = null, usageError = null, planCache = null;
+// Cores to fear: the spec context is built once at boot; the per-coach view is cached and recomputed only by rebuild()
+// (new sheet data or name fixes) or a coach change, never on a re-render (UX §11.1). The sheet read time isn't part of
+// the cached view: it's passed at render time (QA S6).
+let coreCx = null;
+const coreCache = createCoresCache(() => buildCoresView(coreCx, {
+  me: me(), opponents: L.coaches.filter((x) => x.name !== S.coach), available: available(),
+}));
+// A throw while building a Cores panel must not take the rest of the screen (Threats, Board) down with it (code review n2).
+function coresSafe(build, fallback) {
+  try { return build(); } catch (e) { console.error('Cores panel failed:', e); return fallback; }
+}
+// Phones (UX §3.4 / §9, the same breakpoint as styles.css): single-opponent "Close to forming" rows fold when there are > 5.
+const narrowScreen = matchMedia('(max-width: 767px)');
+function coresView() {
+  if (!coreCx) return null;
+  try { return coreCache.get(S.coach); } catch (e) { console.error('Cores to fear failed:', e); return null; }
+}
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const sp = (id) => dex.species[id];
@@ -60,16 +81,21 @@ async function refreshSheet() {
     const changed = body.raw.draftsCsv !== sheet.raw.draftsCsv || body.raw.boardCsv !== sheet.raw.boardCsv;
     const before = L.coaches.reduce((s, c) => s + c.picks.length, 0);
     sheet = body;
-    if (!changed) return renderTop();
+    if (!changed) { renderTop(); showReadTime(); return; }
     rebuild(); render();
     const n = L.coaches.reduce((s, c) => s + c.picks.length, 0) - before;
     toast(n > 0 ? `Sheet updated: ${n} new pick${n > 1 ? 's' : ''}` : 'Sheet updated');
   } catch {} finally { refreshing = false; }
 }
+// A re-read with unchanged picks doesn't redraw #main, but the Cores Sources line must still show the new read time (QA S6).
+function showReadTime() {
+  for (const el of document.querySelectorAll('#main .sources .sheet-read')) el.textContent = sheetReadText(sheet.fetchedAt);
+}
 
 function rebuild() {
   L = buildLeague(sheet.raw, dex, S.aliases);
   planCache = null;
+  coreCache.reset();
   if (!L.coaches.some((c) => c.name === S.coach)) S.coach = L.coaches.find((c) => c.order === 5)?.name || L.coaches[0].name;
 }
 async function loadUsage() {
@@ -184,19 +210,20 @@ function renderDraft() {
         <p class="explainer">Value = meta tier of the 6 you'd bring most (the rest count 35%). Roles = the checklist, with less credit for each extra holder. Defense = shared weaknesses, judged per form. Threat coverage = −3 for each opponent A/S-tier mon nobody on your team resists. Synergy = partners that use your sun, rain, sand, snow or Trick Room. Price = 0.5 × board points (unspent points are wasted).</p></details>
     </div>`).join('') : '<p>No feasible plan found.</p>';
   // Affordable picks first; picks that break the budget stay visible below a divider.
+  // The pick-* classes let phones show each row as a card (styles.css .picks): full-width Why, then the actions.
   const ok = P.singles.filter((x) => aff.get(x.id)?.status !== 'breaks').slice(0, 12);
   const over = P.singles.filter((x) => aff.get(x.id)?.status === 'breaks').slice(0, 5);
   const row = (s) => {
     const a = aff.get(s.id); const [cls, label] = AFF[a?.status || 'ok'];
-    return `<tr><td>${monLine(s.id, `<span class="chip">${s.cost} pts</span>`)}</td><td><span class="chip ${cls}">${label}</span><div class="small muted">${esc(a?.reason)}</div></td>
-      <td>${reasonList(s.why)}${s.inPlans.length ? `<span class="small muted">In plan ${s.inPlans.join(', ')}</span>` : ''}</td>
-      <td>${a?.status === 'breaks' ? '<button disabled title="This pick makes a 10-mon roster impossible">Blocked</button>' : `<button data-check="${s.id}">Check</button> <button data-copy="${esc(pickMsg(s.id, s.cost))}">Copy pick</button>`}</td></tr>`;
+    return `<tr class="pick-row"><td class="pick-mon">${monLine(s.id, `<span class="chip">${s.cost} pts</span>`)}</td><td class="pick-budget"><span class="chip ${cls}">${label}</span><div class="small muted">${esc(a?.reason)}</div></td>
+      <td class="pick-why">${reasonList(s.why)}${s.inPlans.length ? `<span class="small muted">In plan ${s.inPlans.join(', ')}</span>` : ''}</td>
+      <td class="pick-act">${a?.status === 'breaks' ? '<button disabled title="This pick makes a 10-mon roster impossible">Blocked</button>' : `<button data-check="${s.id}">Check</button> <button data-copy="${esc(pickMsg(s.id, s.cost))}">Copy pick</button>`}</td></tr>`;
   };
-  const singles = ok.map(row).join('') + (over.length ? `<tr><td colspan="4" class="small muted"><b>Can't afford without breaking your roster</b></td></tr>${over.map(row).join('')}` : '');
+  const singles = ok.map(row).join('') + (over.length ? `<tr class="picks-divider"><td colspan="4" class="small muted"><b>Can't afford without breaking your roster</b></td></tr>${over.map(row).join('')}` : '');
   return `<div class="cols"><div>${checkPanel(c)}
     <div class="panel"><div class="tabs"><button data-dtab="plans" class="${tab === 'plans' ? 'active' : ''}">Roster plans</button><button data-dtab="singles" class="${tab === 'singles' ? 'active' : ''}">Best single picks</button></div>
       <p class="explainer">Suggestions, not orders. Each plan is a complete, affordable set for all ${c.slotsLeft} remaining slots, built only from mons still available. "Now" is the pick to make first. Plans start with different picks so you get real alternatives. They recompute on every reload.</p>
-      ${tab === 'plans' ? planHtml : `<div class="scroll"><table><tr><th>Mon</th><th>${term('Budget', 'Affordable / Tight / Breaks budget')}</th><th>Why</th><th></th></tr>${singles}</table></div>`}
+      ${tab === 'plans' ? planHtml : `<div class="scroll"><table class="picks"><tr class="picks-head"><th>Mon</th><th>${term('Budget', 'Affordable / Tight / Breaks budget')}</th><th>Why</th><th></th></tr>${singles}</table></div>`}
     </div></div><div>${budgetPanel(c)}${synergyPanel(myIds(c))}${checklistPanel(myIds(c), true)}${weaknessSnapshot(myIds(c))}</div></div>`;
 }
 
@@ -228,7 +255,12 @@ function renderTeam() {
       ${megaMons.length > 1 ? `<p class="explainer">${megaMons.length} of these can Mega Evolve, but only <b>one</b> Mega per battle (${term('Mega Evolution')}). Pick the Mega per matchup.</p>` : ''}
       ${dup.length ? `<p class="banner warn">${term('Species clause')}: ${dup.map((d) => d.join(' + ')).join('; ')} can't be on the same team of 6.</p>` : ''}
       <div class="coach-grid">${cards}</div></div>
-    ${synergyPanel(ids)}${matrixPanel(ids)}${checklistPanel(ids)}${speedPanel(ids)}`;
+    ${synergyPanel(ids)}${coresTeamPanels()}${matrixPanel(ids)}${checklistPanel(ids)}${speedPanel(ids)}`;
+}
+// My team: "Cores with thin or no answers" and "Who carries your answers" (hidden when the core data failed to load).
+function coresTeamPanels() {
+  const v = coresView();
+  return v ? coresSafe(() => renderThinPanel(v), '') + coresSafe(() => renderCarriesPanel(v, { state: S.cores }), '') : '';
 }
 
 // ---------- Synergy ----------
@@ -327,10 +359,13 @@ function renderLeague() {
   const threats = threatList(dex, myIds(c), opp);
   const st = { Answered: 'ans', Thin: 'thin', Unchecked: 'unc' };
   const counts = Object.fromEntries(['Answered', 'Thin', 'Unchecked'].map((k) => [k, threats.filter((t) => t.status === k).length]));
+  const coresV = coresView();
+  const cores = coresV ? coresSafe(() => renderCoresPanel(coresV, { scope: S.threatScope, state: S.cores, narrow: narrowScreen.matches, fetchedAt: sheet.fetchedAt }), renderCoresError()) : renderCoresError();
   return `<div class="panel"><h2>Coaches</h2><p class="explainer">Budget math is the same 10-mon feasibility rule for everyone. A coach can't snipe a mon priced above their max next pick.</p><div class="coach-grid">${coaches}</div></div>
+    ${cores}
     <div class="panel"><h2>Threats to ${esc(c.name)}</h2>
       <p class="verdict">${counts.Unchecked} unchecked, ${counts.Thin} thin, ${counts.Answered} answered.</p>
-      <div class="filters">Scope <select id="threatScope"><option value="all">All ${L.coaches.length - 1} opponents</option>${L.coaches.filter((x) => x.name !== c.name).map((x) => `<option ${S.threatScope === x.name ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select></div>
+      <div class="filters">Scope <select id="threatScope"><option value="all">All ${L.coaches.length - 1} opponents</option>${L.coaches.filter((x) => x.name !== c.name).map((x) => `<option value="${esc(x.name)}" ${S.threatScope === x.name ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select></div>
       <p class="explainer">${term('Answered / Thin / Unchecked')}. Estimate from types and speed (no damage calc). Each threat is judged by its most dangerous form, Megas included.</p>
       <div class="scroll"><table><tr><th>Threat</th><th>Coach</th><th>Why (estimate)</th><th>Your answers</th><th>Status</th></tr>
       ${threats.map((t) => `<tr><td>${monLine(t.id)}</td><td>${esc(t.coach)}</td><td class="small">${esc(t.why)}</td><td>${t.answers.map((a) => `<span class="chip">${esc(a)}</span>`).join('') || '—'}</td><td><span class="chip ${st[t.status]}">${t.status}</span></td></tr>`).join('')}</table></div></div>
@@ -396,24 +431,40 @@ function openDrawer(id, formIdx = 0) {
 }
 
 // ---------- render + events ----------
+let shownMode = null; // the screen #main shows now
 function render() {
   if (!L) return;
   document.body.classList.toggle('facts', !S.explain);
   $('#explain').checked = S.explain;
   renderTop();
   const views = { draft: renderDraft, team: renderTeam, league: renderLeague, learn: renderLearn, setup: renderSetup };
-  const scroll = window.scrollY;
-  $('#main').innerHTML = (views[S.mode] || renderDraft)();
+  const main = $('#main'), sameScreen = shownMode === S.mode;
+  // Same screen: keep the scroll position and put keyboard focus back on the same control (UX §10; QA S1, S2).
+  // A screen change starts at the top with no refocus (QA S4); go-to buttons then scroll to their target.
+  const scroll = scrollAfterRender(shownMode, S.mode, window.scrollY);
+  const focused = sameScreen ? focusKey(document.activeElement, main) : null;
+  main.innerHTML = (views[S.mode] || renderDraft)();
+  shownMode = S.mode;
   window.scrollY !== scroll && window.scrollTo(0, scroll);
+  for (const el of focusCandidates(main, focused)) { el.focus?.({ preventScroll: true }); if (document.activeElement === el) break; }
 }
+// Switch screens. The URL hash follows, so a reload or a copied link opens the same screen (QA S3).
+function goTo(mode) { S.mode = mode; history.replaceState(null, '', '#' + mode); save(); render(); }
 const save = () => { store.set('coach', S.coach); store.set('order', S.order); store.set('explain', S.explain); store.set('mode', S.mode); store.set('aliases', S.aliases); };
 function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 2500); }
 
 document.addEventListener('click', async (e) => {
   const t = e.target.closest('button, .nm, .cell, .chip.form, .term');
   if (!t) return;
-  if (t.dataset.mode) { S.mode = t.dataset.mode; history.replaceState(null, '', '#' + S.mode); save(); render(); }
-  else if (t.dataset.goto) { S.mode = t.dataset.goto; save(); render(); }
+  if (t.dataset.mode) goTo(t.dataset.mode);
+  else if (t.dataset.goto) {
+    goTo(t.dataset.goto);
+    // The target heading has scroll-margin-top, so it lands below the sticky top bar (QA S5).
+    const target = t.dataset.focus && document.getElementById(t.dataset.focus);
+    if (target) { target.scrollIntoView({ block: 'start' }); target.focus({ preventScroll: true }); }
+  }
+  else if (t.dataset.coresMore !== undefined) { S.cores.more = !S.cores.more; render(); document.querySelector('[data-cores-more]')?.focus(); }
+  else if (t.dataset.coresAll) { const k = t.dataset.coresAll; S.cores.showAll[k] = !S.cores.showAll[k]; render(); document.querySelector(`[data-cores-all="${CSS.escape(k)}"]`)?.focus(); }
   else if (t.dataset.dtab) { S.draftTab = t.dataset.dtab; render(); }
   else if (t.dataset.check !== undefined) { S.check = t.dataset.check; if (S.check) { S.mode = 'draft'; $('#drawer').hidden = true; document.querySelector('.layout').classList.add('nodrawer'); } render(); if (S.check) window.scrollTo(0, 0); }
   else if (t.id === 'sync' || t.id === 'retry') location.reload();
@@ -427,7 +478,7 @@ document.addEventListener('click', async (e) => {
 });
 document.addEventListener('change', (e) => {
   const t = e.target;
-  if (t.id === 'coach') { S.coach = t.value; S.speedOpp = ''; S.threatScope = 'all'; S.check = ''; planCache = null; }
+  if (t.id === 'coach') { S.coach = t.value; S.speedOpp = ''; S.threatScope = 'all'; S.check = ''; planCache = null; S.cores = { open: {}, more: false, showAll: {} }; }
   else if (t.id === 'checkPick') S.check = t.value;
   else if (t.id === 'explain') S.explain = t.checked;
   else if (t.id === 'order') S.order = t.value;
@@ -435,7 +486,7 @@ document.addEventListener('change', (e) => {
   else if (t.id === 'tw') S.tailwind = t.checked;
   else if (t.id === 'tr') S.trickRoom = t.checked;
   else if (t.id === 'speedOpp') S.speedOpp = t.value;
-  else if (t.id === 'threatScope') S.threatScope = t.value;
+  else if (t.id === 'threatScope' || t.id === 'coreScope') S.threatScope = t.value;
   else if (t.id === 'brole') S.boardFilter.role = t.value;
   else if (t.id === 'btype') S.boardFilter.type = t.value;
   else if (t.id === 'bhide') S.boardFilter.hideTaken = t.checked;
@@ -443,6 +494,11 @@ document.addEventListener('change', (e) => {
   else return;
   save(); render();
 });
+// Remember which cores cards, mon rows and folds are open so a re-render (e.g. a sheet refresh) restores them.
+document.addEventListener('toggle', (e) => {
+  const d = e.target;
+  if (d.tagName === 'DETAILS' && d.dataset.key && d.closest('.cores, .carries')) S.cores.open[d.dataset.key] = d.open;
+}, true);
 document.addEventListener('input', (e) => {
   if (e.target.id !== 'bq') return;
   S.boardFilter.q = e.target.value;
@@ -466,18 +522,36 @@ document.addEventListener('focusin', (e) => { const t = e.target.closest('.term'
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { hidePop(); $('#drawer').hidden = true; document.querySelector('.layout').classList.add('nodrawer'); } });
 
 // ---------- boot ----------
+// The sticky top bar wraps on phones. Keep --topbar-h equal to its real height so the scroll-margin-top on the headings
+// the app scrolls to (styles.css) clears it (QA S5).
+function trackTopbarHeight() {
+  const bar = document.querySelector('.topbar');
+  const set = () => document.documentElement.style.setProperty('--topbar-h', `${Math.ceil(bar.getBoundingClientRect().height)}px`);
+  set();
+  if (typeof ResizeObserver === 'function') new ResizeObserver(set).observe(bar); else addEventListener('resize', set);
+}
+
 (async function boot() {
   document.querySelector('.layout').classList.add('nodrawer');
+  trackTopbarHeight();
   const h = location.hash.slice(1); // deep link: #draft, #team, #league, #learn, #setup
   if (['draft', 'team', 'league', 'learn', 'setup'].includes(h)) S.mode = h;
   try {
+    const coresSpec = fetch('/data/cores.json').then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`)))).catch((e) => e);
     dex = await (await fetch('/data/dex.json')).json();
+    try { // validateSpec refuses an unsupported or malformed spec; the League panel then shows the error and Threats still works
+      const spec = await coresSpec;
+      if (spec instanceof Error) throw spec;
+      coreCx = coreContext(dex, spec);
+    } catch (e) { console.error('Core data unavailable:', e); }
     await loadSheet();
     render();
     loadUsage();
     setInterval(() => sheet && renderTop(), 15000); // keep "Synced Ns ago" honest
     setInterval(refreshSheet, 45000);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshSheet(); });
+    // Crossing the phone breakpoint changes only the single-opponent forming fold; the cores view is cached, so this is cheap.
+    narrowScreen.addEventListener?.('change', () => { if (S.mode === 'league' && S.threatScope !== 'all') render(); });
   } catch (e) {
     $('#sync').textContent = '⚠ Sheet unreachable';
     $('#main').innerHTML = `<div class="panel"><h2>Couldn't load the league sheet</h2><p>${esc(e.message)}</p><p>Check your internet connection and that the sheet is still published to the web.</p><button class="primary" id="retry">Retry</button></div>`;

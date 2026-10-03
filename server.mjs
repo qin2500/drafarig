@@ -1,5 +1,5 @@
 // Drafarig local server. Zero dependencies. Run:  node server.mjs   (or npm start)
-// Serves public/ and lib/ (shared ES modules), data/dex.json, and:
+// Serves public/ and lib/ (shared ES modules), data/dex.json, data/cores.json (the public Cores spec), and:
 //   GET /api/sheet  live league sheet on every call (no-store + cache-busting); falls back to the last good snapshot
 //   GET /api/usage  Smogon chaos stats for gen9championsvgc2026regmc, slimmed + cached 24 h in data/cache/
 import { createServer } from 'node:http';
@@ -86,7 +86,7 @@ async function getUsage() {
 const API = { '/api/sheet': getSheet, '/api/usage': getUsage };
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml' };
 // URL prefix -> directory. lib/ is shared with the browser.
-const STATIC = [['/lib/', join(ROOT, 'lib')], ['/data/dex.json', join(ROOT, 'data', 'dex.json')], ['/', join(ROOT, 'public')]];
+const STATIC = [['/lib/', join(ROOT, 'lib')], ['/data/dex.json', join(ROOT, 'data', 'dex.json')], ['/data/cores.json', join(ROOT, 'data', 'cores.json')], ['/', join(ROOT, 'public')]];
 
 createServer(async (req, res) => {
   if (req.method !== 'GET' && req.method !== 'HEAD') {
