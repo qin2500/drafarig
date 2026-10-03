@@ -2,9 +2,9 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { cheapestSum, budgetSummary, affordability } from '../lib/budget.mjs';
-import { topRosters, buildPlans, checkPick } from '../lib/optimizer.mjs';
+import { topRosters, buildPlans, checkPick, whyChips } from '../lib/optimizer.mjs';
 import { buildLeague } from '../lib/league.mjs';
-import { rosterScore, roleCredit, weaknessMatrix, effectiveness, speedStat } from '../lib/analysis.mjs';
+import { rosterScore, roleCredit, weaknessMatrix, effectiveness, speedStat, synergies } from '../lib/analysis.mjs';
 
 const fx = (n) => readFileSync(new URL(`./fixtures/${n}`, import.meta.url), 'utf8');
 const dex = JSON.parse(readFileSync(new URL('../data/dex.json', import.meta.url), 'utf8'));
@@ -110,4 +110,17 @@ test('check a pick: compares the best roster built around it with the best plan'
   assert.ok(r.why.length > 0 && r.rank >= 1);
   assert.equal(check('garchomp').verdict, 'unavailable'); // drafted by Hex
   assert.equal(checkPick(dex, ids, [{ id: 'kingambit', cost: 18 }, { id: 'pikachu', cost: 1 }], 2, 18, 'kingambit').verdict, 'breaks');
+});
+
+test('synergy: setters need partners; built-for-it abilities count as strong partners', () => {
+  const base = ['charizard', 'sinistcha', 'pelipper', 'kangaskhan'];
+  const s = Object.fromEntries(synergies(dex, base).map((x) => [x.key, x]));
+  assert.deepEqual([s.sun.status, s.rain.status, s.tr.status, s.sand.status], ['none', 'none', 'none', 'off']);
+  const rain = synergies(dex, ['pelipper', 'basculegion']).find((x) => x.key === 'rain');
+  assert.deepEqual([rain.partners[0].why, rain.partners[0].strength], ['Swift Swim', 1]);
+  assert.equal(synergies(dex, ['sinistcha', 'snorlax']).find((x) => x.key === 'tr').partners[0].strength, 1); // base Speed 30
+  // A partner without its setter is worth nothing; with it, the roster score goes up.
+  assert.equal(synergies(dex, ['basculegion']).find((x) => x.key === 'rain').credit, 0);
+  assert.ok(rosterScore(dex, [...base, 'basculegion']).synergy > rosterScore(dex, base).synergy);
+  assert.match(whyChips(dex, base, 'basculegion').join(' '), /Uses your rain \(Swift Swim\)/);
 });

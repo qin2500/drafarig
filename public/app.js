@@ -2,7 +2,7 @@
 import { buildLeague, computeTurn, picksUntil, ROSTER_SIZE, BUDGET } from '/lib/league.mjs';
 import { budgetSummary, affordability } from '/lib/budget.mjs';
 import { buildPlans, checkPick } from '/lib/optimizer.mjs';
-import { weaknessMatrix, roleChecklist, speedRows, threatList } from '/lib/analysis.mjs';
+import { weaknessMatrix, roleChecklist, speedRows, threatList, synergies, SYNERGY_MODES } from '/lib/analysis.mjs';
 import { GLOSSARY } from '/glossary.js';
 
 // ---------- settings (per browser) ----------
@@ -160,8 +160,8 @@ function renderDraft() {
       <div class="small">${p.fixes.length ? `Fixes: ${p.fixes.map((f) => `<span class="chip ok">${esc(f)} ✓</span>`).join('')}` : ''}
         ${p.missing.length ? ` Still missing: ${p.missing.map((f) => `<span class="chip">${esc(f)}</span>`).join('')}` : ''}
         ${p.stacked.length ? ` ${term('Stacked weakness')}: ${p.stacked.map((t) => `<span class="chip unc">${t}</span>`).join('')}` : ''}</div>
-      <details class="small"><summary>Why? (score breakdown)</summary>Value ${p.score.value} · Roles ${p.score.roles} · Defense ${p.score.defense} · Threat coverage ${p.score.threats} · Price ${p.score.price} → total ${p.score.total} (+${p.gain} vs now).
-        <p class="explainer">Value = meta tier of the 6 you'd bring most (the rest count 35%). Roles = the checklist, with less credit for each extra holder. Defense = shared weaknesses, judged per form. Threat coverage = −3 for each opponent A/S-tier mon nobody on your team resists. Price = 0.5 × board points (unspent points are wasted).</p></details>
+      <details class="small"><summary>Why? (score breakdown)</summary>Value ${p.score.value} · Roles ${p.score.roles} · Defense ${p.score.defense} · Threat coverage ${p.score.threats} · Synergy ${p.score.synergy} · Price ${p.score.price} → total ${p.score.total} (+${p.gain} vs now).
+        <p class="explainer">Value = meta tier of the 6 you'd bring most (the rest count 35%). Roles = the checklist, with less credit for each extra holder. Defense = shared weaknesses, judged per form. Threat coverage = −3 for each opponent A/S-tier mon nobody on your team resists. Synergy = partners that use your sun, rain, sand, snow or Trick Room. Price = 0.5 × board points (unspent points are wasted).</p></details>
     </div>`).join('') : '<p>No feasible plan found.</p>';
   // Affordable picks first; picks that break the budget stay visible below a divider.
   const ok = P.singles.filter((x) => aff.get(x.id)?.status !== 'breaks').slice(0, 12);
@@ -177,7 +177,7 @@ function renderDraft() {
     <div class="panel"><div class="tabs"><button data-dtab="plans" class="${tab === 'plans' ? 'active' : ''}">Roster plans</button><button data-dtab="singles" class="${tab === 'singles' ? 'active' : ''}">Best single picks</button></div>
       <p class="explainer">Suggestions, not orders. Each plan is a complete, affordable set for all ${c.slotsLeft} remaining slots, built only from mons still available. "Now" is the pick to make first. Plans start with different picks so you get real alternatives. They recompute on every reload.</p>
       ${tab === 'plans' ? planHtml : `<div class="scroll"><table><tr><th>Mon</th><th>${term('Budget', 'Affordable / Tight / Breaks budget')}</th><th>Why</th><th></th></tr>${singles}</table></div>`}
-    </div></div><div>${budgetPanel(c)}${checklistPanel(myIds(c), true)}${weaknessSnapshot(myIds(c))}</div></div>`;
+    </div></div><div>${budgetPanel(c)}${synergyPanel(myIds(c))}${checklistPanel(myIds(c), true)}${weaknessSnapshot(myIds(c))}</div></div>`;
 }
 
 // ---------- My team ----------
@@ -208,7 +208,32 @@ function renderTeam() {
       ${megaMons.length > 1 ? `<p class="explainer">${megaMons.length} of these can Mega Evolve, but only <b>one</b> Mega per battle (${term('Mega Evolution')}). Pick the Mega per matchup.</p>` : ''}
       ${dup.length ? `<p class="banner warn">${term('Species clause')}: ${dup.map((d) => d.join(' + ')).join('; ')} can't be on the same team of 6.</p>` : ''}
       <div class="coach-grid">${cards}</div></div>
-    ${matrixPanel(ids)}${checklistPanel(ids)}${speedPanel(ids)}`;
+    ${synergyPanel(ids)}${matrixPanel(ids)}${checklistPanel(ids)}${speedPanel(ids)}`;
+}
+
+// ---------- Synergy ----------
+const SYN = { strong: ['ok', 'Strong'], thin: ['tight', 'Thin'], none: ['unc', 'No partners'] };
+function synergyPanel(ids) {
+  const on = synergies(dex, ids).filter((s) => s.status !== 'off');
+  if (!on.length) return `<div class="panel"><h2>Team synergies</h2><p class="small muted">Nobody on this roster sets weather or Trick Room yet.</p></div>`;
+  const c = me(), aff = c.slotsLeft ? affMap(c) : new Map();
+  const rows = on.map((s) => {
+    const mode = SYNERGY_MODES.find((m) => m.key === s.key);
+    const [cls, label] = SYN[s.status];
+    const partners = s.partners.map((p) => `<span class="chip ${p.strength === 1 ? 'ok' : ''}" title="${p.strength === 1 ? 'Strong partner' : 'Helps'}: ${esc(p.why)}">${esc(p.name)} · ${esc(p.why)}</span>`).join('') || '<span class="muted small">nobody uses it yet</span>';
+    // Board suggestions: affordable partners for modes that still need help, best value first.
+    const ideas = s.status === 'strong' || !c.slotsLeft ? [] : available()
+      .filter((m) => sp(m.id) && !mode.setter(sp(m.id)) && aff.get(m.id)?.status !== 'breaks')
+      .map((m) => ({ ...m, p: mode.partner(sp(m.id)) })).filter((m) => m.p)
+      .sort((a, b) => b.p.strength - a.p.strength || 'SABCD'.indexOf(sp(a.id).tier) - 'SABCD'.indexOf(sp(b.id).tier) || a.cost - b.cost).slice(0, 5);
+    return `<tr><td>${term(s.label, s.term)}<div class="small muted">set by ${esc(s.setters.join(', '))}</div></td><td><span class="chip ${cls}">${label}</span></td>
+      <td>${partners}${ideas.length ? `<div class="small" style="margin-top:4px">On the board: ${ideas.map((m) => `<button class="linkish" data-check="${m.id}" title="Check this pick">${esc(sp(m.id).name)} ${m.cost}</button>`).join(' ')}</div>` : ''}</td></tr>`;
+  }).join('');
+  const weak = on.filter((s) => s.status !== 'strong').map((s) => s.label);
+  return `<div class="panel"><h2>Team synergies</h2>
+    <p class="verdict">${weak.length ? `${weak.join(', ')} ${weak.length > 1 ? 'have' : 'has'} a setter but little or no one to use it.` : 'Every setter has partners that use it.'}</p>
+    <table>${rows}</table>
+    <p class="explainer">A setter is only worth its slot if teammates gain from it. Strong partners (green) have an ability built for it (Swift Swim in rain, Chlorophyll in sun) or are slow hitters under Trick Room (base Speed 45 or less). Others just hit harder. Plans give credit for up to 2 partners per setter. Click a board suggestion to check it as a pick.</p></div>`;
 }
 function matrixPanel(ids) {
   const rows = weaknessMatrix(dex, ids);
