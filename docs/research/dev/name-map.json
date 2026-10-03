@@ -1,0 +1,1510 @@
+{
+  "generatedAt": "2026-10-02T23:31:13.913Z",
+  "showdownFormat": "gen9championsvgc2026regmc",
+  "count": 259,
+  "unmatched": [],
+  "map": {
+    "Charizard": "charizard",
+    "Whimsicott": "whimsicott",
+    "Sinistcha": "sinistcha",
+    "Delphox": "delphox",
+    "Aegislash": "aegislash",
+    "Dragapult": "dragapult",
+    "Arcanine": "arcanine",
+    "Corviknight": "corviknight",
+    "Mamoswine": "mamoswine",
+    "Araquanid": "araquanid",
+    "Liepard": "liepard",
+    "Krookodile": "krookodile",
+    "Ceruledge": "ceruledge",
+    "Conkeldurr": "conkeldurr",
+    "Galarian Slowking": "slowkinggalar",
+    "Alolan Raichu": "raichualola",
+    "Alcremie": "alcremie",
+    "Audino": "audino",
+    "Arbok": "arbok",
+    "Appletun": "appletun",
+    "Floette": "floetteeternal",
+    "Sneasler": "sneasler",
+    "Annihilape": "annihilape",
+    "Blastoise": "blastoise",
+    "Farigiraf": "farigiraf",
+    "Hisuian Arcanine": "arcaninehisui",
+    "Hydreigon": "hydreigon",
+    "Excadrill": "excadrill",
+    "Alakazam": "alakazam",
+    "Klefki": "klefki",
+    "Hawlucha": "hawlucha",
+    "Altaria": "altaria",
+    "Aggron": "aggron",
+    "Empoleon": "empoleon",
+    "Victreebel": "victreebel",
+    "Cofagrigus": "cofagrigus",
+    "Bellibolt": "bellibolt",
+    "Aurorus": "aurorus",
+    "Bastiodon": "bastiodon",
+    "Avalugg": "avalugg",
+    "Gengar": "gengar",
+    "Gardevoir": "gardevoir",
+    "Indeedee-female": "indeedeef",
+    "Tyranitar": "tyranitar",
+    "Pelipper": "pelipper",
+    "Starmie": "starmie",
+    "Kommo-o": "kommoo",
+    "Politoed": "politoed",
+    "Gallade": "gallade",
+    "Skarmory": "skarmory",
+    "Manecri": "manectric",
+    "Chandelure": "chandelure",
+    "Chesnaught": "chesnaught",
+    "Galarian Slowbro": "slowbrogalar",
+    "Aromatisse": "aromatisse",
+    "Garganacl": "garganacl",
+    "Clawitzer": "clawitzer",
+    "Beartic": "beartic",
+    "Morpeko": "morpeko",
+    "Hisuian Avalugg": "avalugghisui",
+    "Metagross": "metagross",
+    "Rillaboom": "rillaboom",
+    "Mawile": "mawile",
+    "Grimmsnarl": "grimmsnarl",
+    "Glimmora": "glimmora",
+    "Prismarina": "primarina",
+    "Meganium": "meganium",
+    "Basculegion-female": "basculegionf",
+    "Greninja": "greninja",
+    "Mimikyu": "mimikyu",
+    "Oranguru": "oranguru",
+    "Feraligatr": "feraligatr",
+    "Drampa": "drampa",
+    "Hisuian Goodra": "goodrahisui",
+    "Diggersby": "diggersby",
+    "Glaceon": "glaceon",
+    "Ditto": "ditto",
+    "Decidueye": "decidueye",
+    "Rotom": "rotom",
+    "Castform": "castform",
+    "Staraptor": "staraptor",
+    "Froslass": "froslass",
+    "Raichu": "raichu",
+    "Kangaskhan": "kangaskhan",
+    "Dragonite": "dragonite",
+    "Talonflame": "talonflame",
+    "Scovillain": "scovillain",
+    "Eelektross": "eelektross",
+    "Medicham": "medicham",
+    "Ninetales": "ninetales",
+    "Salazzle": "salazzle",
+    "Noivern": "noivern",
+    "Emboar": "emboar",
+    "Florges": "florges",
+    "Hydrapple": "hydrapple",
+    "Gourgeist": "gourgeist",
+    "Heliolisk": "heliolisk",
+    "Flapple": "flapple",
+    "Rotom-fan": "rotomfan",
+    "Emolga": "emolga",
+    "Salamence": "salamence",
+    "Archaludon": "archaludon",
+    "Kingambit": "kingambit",
+    "Indeedee-male": "indeedee",
+    "Blaziken": "blaziken",
+    "Scizor": "scizor",
+    "Rotom-wash": "rotomwash",
+    "Sableye": "sableye",
+    "Meowscarada": "meowscarada",
+    "Paldean tauros-water": "taurospaldeaaqua",
+    "Vivillon": "vivillon",
+    "Paldean tauros-fire": "taurospaldeablaze",
+    "Slowbro": "slowbro",
+    "Infernape": "infernape",
+    "Kleavor": "kleavor",
+    "Hippowdon": "hippowdon",
+    "Hisuian Decidueye": "decidueyehisui",
+    "Flareon": "flareon",
+    "Sandaconda": "sandaconda",
+    "Dedenne": "dedenne",
+    "Golisopod": "golisopod",
+    "Garchomp": "garchomp",
+    "Basculegion-male": "basculegion",
+    "Lucario": "lucario",
+    "Maushold": "maushold",
+    "Clefable": "clefable",
+    "Milotic": "milotic",
+    "Palafin": "palafin",
+    "Rotom-mow": "rotommow",
+    "Dragalge": "dragalge",
+    "Weavile": "weavile",
+    "Reuniclus": "reuniclus",
+    "Heracross": "heracross",
+    "Houndoom": "houndoom",
+    "Leafeon": "leafeon",
+    "Machamp": "machamp",
+    "Gliscor": "gliscor",
+    "Tauros": "tauros",
+    "Forrestress": "forretress",
+    "Incineroar": "incineroar",
+    "Gholdengo": "gholdengo",
+    "Swampert": "swampert",
+    "Sylveon": "sylveon",
+    "Volcarona": "volcarona",
+    "Gyarados": "gyarados",
+    "Rotom-heat": "rotomheat",
+    "Tinkaton": "tinkaton",
+    "Meowstic-female": "meowsticf",
+    "Huisuian Zoroark": "zoroarkhisui",
+    "Snorlax": "snorlax",
+    "Pinsir": "pinsir",
+    "Steelix": "steelix",
+    "Lycanroc-midday": "lycanroc",
+    "Luxray": "luxray",
+    "Mr.Rime": "mrrime",
+    "Wigglytuff": "wigglytuff",
+    "Furfrou": "furfrou",
+    "Torkoal": "torkoal",
+    "Lopunny": "lopunny",
+    "Venusaur": "venusaur",
+    "Azumarill": "azumarill",
+    "Overqwil": "overqwil",
+    "Golurk": "golurk",
+    "Barbaracle": "barbaracle",
+    "Vanilluxe": "vanilluxe",
+    "Sharpedo": "sharpedo",
+    "Pangoro": "pangoro",
+    "Banette": "banette",
+    "Ampharos": "ampharos",
+    "Paldean tauros-fighting": "taurospaldeacombat",
+    "Gogoat": "gogoat",
+    "Stunfisk": "stunfisk",
+    "Baxcalibur": "baxcalibur",
+    "Alolan Ninetales": "ninetalesalola",
+    "Absol": "absol",
+    "Pawmot": "pawmot",
+    "Meowstic-male": "meowstic",
+    "Rhyperior": "rhyperior",
+    "Tsareena": "tsareena",
+    "Slowking": "slowking",
+    "Spritomb": "spiritomb",
+    "Mudsdale": "mudsdale",
+    "Glalie": "glalie",
+    "Passimian": "passimian",
+    "Thievul": "thievul",
+    "Galarian stunfisk": "stunfiskgalar",
+    "Aerodactyl": "aerodactyl",
+    "Hatterene": "hatterene",
+    "Armarouge": "armarouge",
+    "Cinderace": "cinderace",
+    "Sceptile": "sceptile",
+    "Alalan-Persian": "persianalola",
+    "Pidgeot": "pidgeot",
+    "Zoroark": "zoroark",
+    "Polteageist": "polteageist",
+    "Rampardos": "rampardos",
+    "Trevenant": "trevenant",
+    "Lycanroc-midnight": "lycanrocmidnight",
+    "Pyroar": "pyroar",
+    "Scrafty": "scrafty",
+    "Camerupt": "camerupt",
+    "Hisuian Typhlosion": "typhlosionhisui",
+    "Grapploct": "grapploct",
+    "Orthworm": "orthworm",
+    "Espathra": "espathra",
+    "Runerigus": "runerigus",
+    "Roserade": "roserade",
+    "Ariados": "ariados",
+    "pikachu": "pikachu",
+    "Crabominable": "crabominable",
+    "Chimecho": "chimecho",
+    "Malamar": "malamar",
+    "Falinks": "falinks",
+    "Beedrill": "beedrill",
+    "Rotom-frost": "rotomfrost",
+    "Musharna": "musharna",
+    "Samorott": "samurott",
+    "Sirfetch'd": "sirfetchd",
+    "Inteleon": "inteleon",
+    "Serperior": "serperior",
+    "Umbreon": "umbreon",
+    "Torterra": "torterra",
+    "Squawkability": "squawkabilly",
+    "Simipour": "simipour",
+    "Toxtricity": "toxtricity",
+    "Scolipede": "scolipede",
+    "Vaporeon": "vaporeon",
+    "Toxicroak": "toxicroak",
+    "Slurpuff": "slurpuff",
+    "Simisear": "simisear",
+    "Houndstone": "houndstone",
+    "Arboliva": "arboliva",
+    "Quaquaval": "quaquaval",
+    "Tyrantrum": "tyrantrum",
+    "Mr.Mime": "mrmime",
+    "Simisage": "simisage",
+    "Wyrdeer": "wyrdeer",
+    "Skeledirge": "skeledirge",
+    "Qwilfish": "qwilfish",
+    "Toxapex": "toxapex",
+    "Garbodor": "garbodor",
+    "Typhilosion": "typhlosion",
+    "Vileplume": "vileplume",
+    "Persian": "persian",
+    "Watchdog": "watchog",
+    "Espeon": "espeon",
+    "Jolteon": "jolteon",
+    "Mabosstiff": "mabosstiff",
+    "Toucannon": "toucannon",
+    "Lycanroc-dusk": "lycanrocdusk",
+    "Goodra": "goodra",
+    "Perrserker": "perrserker",
+    "Farfetch'd": "farfetchd",
+    "Abomasnow": "abomasnow",
+    "Hisuian Samorott": "samurotthisui",
+    "Pincurchin": "pincurchin",
+    "Swalot": "swalot",
+    "Rotom-Wash": "rotomwash",
+    "Politoad": "politoed"
+  },
+  "nonExact": [
+    {
+      "board": "Galarian Slowking",
+      "id": "slowkinggalar",
+      "name": "Slowking-Galar",
+      "how": "rule"
+    },
+    {
+      "board": "Alolan Raichu",
+      "id": "raichualola",
+      "name": "Raichu-Alola",
+      "how": "rule"
+    },
+    {
+      "board": "Floette",
+      "id": "floetteeternal",
+      "name": "Floette-Eternal",
+      "how": "rule"
+    },
+    {
+      "board": "Hisuian Arcanine",
+      "id": "arcaninehisui",
+      "name": "Arcanine-Hisui",
+      "how": "rule"
+    },
+    {
+      "board": "Indeedee-female",
+      "id": "indeedeef",
+      "name": "Indeedee-F",
+      "how": "rule"
+    },
+    {
+      "board": "Manecri",
+      "id": "manectric",
+      "name": "Manectric",
+      "how": "rule"
+    },
+    {
+      "board": "Galarian Slowbro",
+      "id": "slowbrogalar",
+      "name": "Slowbro-Galar",
+      "how": "rule"
+    },
+    {
+      "board": "Hisuian Avalugg",
+      "id": "avalugghisui",
+      "name": "Avalugg-Hisui",
+      "how": "rule"
+    },
+    {
+      "board": "Prismarina",
+      "id": "primarina",
+      "name": "Primarina",
+      "how": "rule"
+    },
+    {
+      "board": "Basculegion-female",
+      "id": "basculegionf",
+      "name": "Basculegion-F",
+      "how": "rule"
+    },
+    {
+      "board": "Hisuian Goodra",
+      "id": "goodrahisui",
+      "name": "Goodra-Hisui",
+      "how": "rule"
+    },
+    {
+      "board": "Indeedee-male",
+      "id": "indeedee",
+      "name": "Indeedee",
+      "how": "rule"
+    },
+    {
+      "board": "Paldean tauros-water",
+      "id": "taurospaldeaaqua",
+      "name": "Tauros-Paldea-Aqua",
+      "how": "rule"
+    },
+    {
+      "board": "Paldean tauros-fire",
+      "id": "taurospaldeablaze",
+      "name": "Tauros-Paldea-Blaze",
+      "how": "rule"
+    },
+    {
+      "board": "Hisuian Decidueye",
+      "id": "decidueyehisui",
+      "name": "Decidueye-Hisui",
+      "how": "rule"
+    },
+    {
+      "board": "Basculegion-male",
+      "id": "basculegion",
+      "name": "Basculegion",
+      "how": "rule"
+    },
+    {
+      "board": "Forrestress",
+      "id": "forretress",
+      "name": "Forretress",
+      "how": "rule"
+    },
+    {
+      "board": "Meowstic-female",
+      "id": "meowsticf",
+      "name": "Meowstic-F",
+      "how": "rule"
+    },
+    {
+      "board": "Huisuian Zoroark",
+      "id": "zoroarkhisui",
+      "name": "Zoroark-Hisui",
+      "how": "rule"
+    },
+    {
+      "board": "Lycanroc-midday",
+      "id": "lycanroc",
+      "name": "Lycanroc",
+      "how": "alias"
+    },
+    {
+      "board": "Paldean tauros-fighting",
+      "id": "taurospaldeacombat",
+      "name": "Tauros-Paldea-Combat",
+      "how": "rule"
+    },
+    {
+      "board": "Alolan Ninetales",
+      "id": "ninetalesalola",
+      "name": "Ninetales-Alola",
+      "how": "rule"
+    },
+    {
+      "board": "Meowstic-male",
+      "id": "meowstic",
+      "name": "Meowstic",
+      "how": "rule"
+    },
+    {
+      "board": "Spritomb",
+      "id": "spiritomb",
+      "name": "Spiritomb",
+      "how": "rule"
+    },
+    {
+      "board": "Galarian stunfisk",
+      "id": "stunfiskgalar",
+      "name": "Stunfisk-Galar",
+      "how": "rule"
+    },
+    {
+      "board": "Alalan-Persian",
+      "id": "persianalola",
+      "name": "Persian-Alola",
+      "how": "rule"
+    },
+    {
+      "board": "Hisuian Typhlosion",
+      "id": "typhlosionhisui",
+      "name": "Typhlosion-Hisui",
+      "how": "rule"
+    },
+    {
+      "board": "Samorott",
+      "id": "samurott",
+      "name": "Samurott",
+      "how": "rule"
+    },
+    {
+      "board": "Squawkability",
+      "id": "squawkabilly",
+      "name": "Squawkabilly",
+      "how": "rule"
+    },
+    {
+      "board": "Typhilosion",
+      "id": "typhlosion",
+      "name": "Typhlosion",
+      "how": "rule"
+    },
+    {
+      "board": "Watchdog",
+      "id": "watchog",
+      "name": "Watchog",
+      "how": "rule"
+    },
+    {
+      "board": "Hisuian Samorott",
+      "id": "samurotthisui",
+      "name": "Samurott-Hisui",
+      "how": "rule"
+    },
+    {
+      "board": "Politoad",
+      "id": "politoed",
+      "name": "Politoed",
+      "how": "rule"
+    }
+  ],
+  "notLegalInChampions": [],
+  "megas": {
+    "charizard": [
+      {
+        "id": "charizardmegax",
+        "item": "Charizardite X",
+        "types": [
+          "Fire",
+          "Dragon"
+        ],
+        "ability": "Tough Claws"
+      },
+      {
+        "id": "charizardmegay",
+        "item": "Charizardite Y",
+        "types": [
+          "Fire",
+          "Flying"
+        ],
+        "ability": "Drought"
+      }
+    ],
+    "delphox": [
+      {
+        "id": "delphoxmega",
+        "item": "Delphoxite",
+        "types": [
+          "Fire",
+          "Psychic"
+        ],
+        "ability": "Levitate"
+      }
+    ],
+    "audino": [
+      {
+        "id": "audinomega",
+        "item": "Audinite",
+        "types": [
+          "Normal",
+          "Fairy"
+        ],
+        "ability": "Healer"
+      }
+    ],
+    "floetteeternal": [
+      {
+        "id": "floettemega",
+        "item": "Floettite",
+        "types": [
+          "Fairy"
+        ],
+        "ability": "Fairy Aura"
+      }
+    ],
+    "blastoise": [
+      {
+        "id": "blastoisemega",
+        "item": "Blastoisinite",
+        "types": [
+          "Water"
+        ],
+        "ability": "Mega Launcher"
+      }
+    ],
+    "excadrill": [
+      {
+        "id": "excadrillmega",
+        "item": "Excadrite",
+        "types": [
+          "Ground",
+          "Steel"
+        ],
+        "ability": "Piercing Drill"
+      }
+    ],
+    "alakazam": [
+      {
+        "id": "alakazammega",
+        "item": "Alakazite",
+        "types": [
+          "Psychic"
+        ],
+        "ability": "Trace"
+      }
+    ],
+    "hawlucha": [
+      {
+        "id": "hawluchamega",
+        "item": "Hawluchanite",
+        "types": [
+          "Fighting",
+          "Flying"
+        ],
+        "ability": "No Guard"
+      }
+    ],
+    "altaria": [
+      {
+        "id": "altariamega",
+        "item": "Altarianite",
+        "types": [
+          "Dragon",
+          "Fairy"
+        ],
+        "ability": "Pixilate"
+      }
+    ],
+    "aggron": [
+      {
+        "id": "aggronmega",
+        "item": "Aggronite",
+        "types": [
+          "Steel"
+        ],
+        "ability": "Filter"
+      }
+    ],
+    "victreebel": [
+      {
+        "id": "victreebelmega",
+        "item": "Victreebelite",
+        "types": [
+          "Grass",
+          "Poison"
+        ],
+        "ability": "Innards Out"
+      }
+    ],
+    "gengar": [
+      {
+        "id": "gengarmega",
+        "item": "Gengarite",
+        "types": [
+          "Ghost",
+          "Poison"
+        ],
+        "ability": "Shadow Tag"
+      }
+    ],
+    "gardevoir": [
+      {
+        "id": "gardevoirmega",
+        "item": "Gardevoirite",
+        "types": [
+          "Psychic",
+          "Fairy"
+        ],
+        "ability": "Pixilate"
+      }
+    ],
+    "tyranitar": [
+      {
+        "id": "tyranitarmega",
+        "item": "Tyranitarite",
+        "types": [
+          "Rock",
+          "Dark"
+        ],
+        "ability": "Sand Stream"
+      }
+    ],
+    "starmie": [
+      {
+        "id": "starmiemega",
+        "item": "Starminite",
+        "types": [
+          "Water",
+          "Psychic"
+        ],
+        "ability": "Huge Power"
+      }
+    ],
+    "gallade": [
+      {
+        "id": "gallademega",
+        "item": "Galladite",
+        "types": [
+          "Psychic",
+          "Fighting"
+        ],
+        "ability": "Inner Focus"
+      }
+    ],
+    "skarmory": [
+      {
+        "id": "skarmorymega",
+        "item": "Skarmorite",
+        "types": [
+          "Steel",
+          "Flying"
+        ],
+        "ability": "Stalwart"
+      }
+    ],
+    "manectric": [
+      {
+        "id": "manectricmega",
+        "item": "Manectite",
+        "types": [
+          "Electric"
+        ],
+        "ability": "Intimidate"
+      }
+    ],
+    "chandelure": [
+      {
+        "id": "chandeluremega",
+        "item": "Chandelurite",
+        "types": [
+          "Ghost",
+          "Fire"
+        ],
+        "ability": "Infiltrator"
+      }
+    ],
+    "chesnaught": [
+      {
+        "id": "chesnaughtmega",
+        "item": "Chesnaughtite",
+        "types": [
+          "Grass",
+          "Fighting"
+        ],
+        "ability": "Bulletproof"
+      }
+    ],
+    "metagross": [
+      {
+        "id": "metagrossmega",
+        "item": "Metagrossite",
+        "types": [
+          "Steel",
+          "Psychic"
+        ],
+        "ability": "Tough Claws"
+      }
+    ],
+    "mawile": [
+      {
+        "id": "mawilemega",
+        "item": "Mawilite",
+        "types": [
+          "Steel",
+          "Fairy"
+        ],
+        "ability": "Huge Power"
+      }
+    ],
+    "glimmora": [
+      {
+        "id": "glimmoramega",
+        "item": "Glimmoranite",
+        "types": [
+          "Rock",
+          "Poison"
+        ],
+        "ability": "Adaptability"
+      }
+    ],
+    "meganium": [
+      {
+        "id": "meganiummega",
+        "item": "Meganiumite",
+        "types": [
+          "Grass",
+          "Fairy"
+        ],
+        "ability": "Mega Sol"
+      }
+    ],
+    "greninja": [
+      {
+        "id": "greninjamega",
+        "item": "Greninjite",
+        "types": [
+          "Water",
+          "Dark"
+        ],
+        "ability": "Protean"
+      }
+    ],
+    "feraligatr": [
+      {
+        "id": "feraligatrmega",
+        "item": "Feraligite",
+        "types": [
+          "Water",
+          "Dragon"
+        ],
+        "ability": "Dragonize"
+      }
+    ],
+    "drampa": [
+      {
+        "id": "drampamega",
+        "item": "Drampanite",
+        "types": [
+          "Normal",
+          "Dragon"
+        ],
+        "ability": "Berserk"
+      }
+    ],
+    "staraptor": [
+      {
+        "id": "staraptormega",
+        "item": "Staraptite",
+        "types": [
+          "Fighting",
+          "Flying"
+        ],
+        "ability": "Contrary"
+      }
+    ],
+    "froslass": [
+      {
+        "id": "froslassmega",
+        "item": "Froslassite",
+        "types": [
+          "Ice",
+          "Ghost"
+        ],
+        "ability": "Snow Warning"
+      }
+    ],
+    "raichu": [
+      {
+        "id": "raichumegax",
+        "item": "Raichunite X",
+        "types": [
+          "Electric"
+        ],
+        "ability": "Electric Surge"
+      },
+      {
+        "id": "raichumegay",
+        "item": "Raichunite Y",
+        "types": [
+          "Electric"
+        ],
+        "ability": "No Guard"
+      }
+    ],
+    "kangaskhan": [
+      {
+        "id": "kangaskhanmega",
+        "item": "Kangaskhanite",
+        "types": [
+          "Normal"
+        ],
+        "ability": "Parental Bond"
+      }
+    ],
+    "dragonite": [
+      {
+        "id": "dragonitemega",
+        "item": "Dragoninite",
+        "types": [
+          "Dragon",
+          "Flying"
+        ],
+        "ability": "Multiscale"
+      }
+    ],
+    "scovillain": [
+      {
+        "id": "scovillainmega",
+        "item": "Scovillainite",
+        "types": [
+          "Grass",
+          "Fire"
+        ],
+        "ability": "Spicy Spray"
+      }
+    ],
+    "eelektross": [
+      {
+        "id": "eelektrossmega",
+        "item": "Eelektrossite",
+        "types": [
+          "Electric"
+        ],
+        "ability": "Eelevate"
+      }
+    ],
+    "medicham": [
+      {
+        "id": "medichammega",
+        "item": "Medichamite",
+        "types": [
+          "Fighting",
+          "Psychic"
+        ],
+        "ability": "Pure Power"
+      }
+    ],
+    "emboar": [
+      {
+        "id": "emboarmega",
+        "item": "Emboarite",
+        "types": [
+          "Fire",
+          "Fighting"
+        ],
+        "ability": "Mold Breaker"
+      }
+    ],
+    "salamence": [
+      {
+        "id": "salamencemega",
+        "item": "Salamencite",
+        "types": [
+          "Dragon",
+          "Flying"
+        ],
+        "ability": "Aerilate"
+      }
+    ],
+    "blaziken": [
+      {
+        "id": "blazikenmega",
+        "item": "Blazikenite",
+        "types": [
+          "Fire",
+          "Fighting"
+        ],
+        "ability": "Speed Boost"
+      }
+    ],
+    "scizor": [
+      {
+        "id": "scizormega",
+        "item": "Scizorite",
+        "types": [
+          "Bug",
+          "Steel"
+        ],
+        "ability": "Technician"
+      }
+    ],
+    "sableye": [
+      {
+        "id": "sableyemega",
+        "item": "Sablenite",
+        "types": [
+          "Dark",
+          "Ghost"
+        ],
+        "ability": "Magic Bounce"
+      }
+    ],
+    "slowbro": [
+      {
+        "id": "slowbromega",
+        "item": "Slowbronite",
+        "types": [
+          "Water",
+          "Psychic"
+        ],
+        "ability": "Shell Armor"
+      }
+    ],
+    "golisopod": [
+      {
+        "id": "golisopodmega",
+        "item": "Golisopite",
+        "types": [
+          "Bug",
+          "Steel"
+        ],
+        "ability": "Tough Claws"
+      }
+    ],
+    "garchomp": [
+      {
+        "id": "garchompmega",
+        "item": "Garchompite",
+        "types": [
+          "Dragon",
+          "Ground"
+        ],
+        "ability": "Sand Force"
+      },
+      {
+        "id": "garchompmegaz",
+        "item": "Garchompite Z",
+        "types": [
+          "Dragon"
+        ],
+        "ability": "Levitate"
+      }
+    ],
+    "lucario": [
+      {
+        "id": "lucariomega",
+        "item": "Lucarionite",
+        "types": [
+          "Fighting",
+          "Steel"
+        ],
+        "ability": "Adaptability"
+      },
+      {
+        "id": "lucariomegaz",
+        "item": "Lucarionite Z",
+        "types": [
+          "Fighting",
+          "Steel"
+        ],
+        "ability": "Aura Guard"
+      }
+    ],
+    "clefable": [
+      {
+        "id": "clefablemega",
+        "item": "Clefablite",
+        "types": [
+          "Fairy",
+          "Flying"
+        ],
+        "ability": "Magic Bounce"
+      }
+    ],
+    "dragalge": [
+      {
+        "id": "dragalgemega",
+        "item": "Dragalgite",
+        "types": [
+          "Poison",
+          "Dragon"
+        ],
+        "ability": "Regenerator"
+      }
+    ],
+    "heracross": [
+      {
+        "id": "heracrossmega",
+        "item": "Heracronite",
+        "types": [
+          "Bug",
+          "Fighting"
+        ],
+        "ability": "Skill Link"
+      }
+    ],
+    "houndoom": [
+      {
+        "id": "houndoommega",
+        "item": "Houndoominite",
+        "types": [
+          "Dark",
+          "Fire"
+        ],
+        "ability": "Solar Power"
+      }
+    ],
+    "swampert": [
+      {
+        "id": "swampertmega",
+        "item": "Swampertite",
+        "types": [
+          "Water",
+          "Ground"
+        ],
+        "ability": "Swift Swim"
+      }
+    ],
+    "gyarados": [
+      {
+        "id": "gyaradosmega",
+        "item": "Gyaradosite",
+        "types": [
+          "Water",
+          "Dark"
+        ],
+        "ability": "Mold Breaker"
+      }
+    ],
+    "meowsticf": [
+      {
+        "id": "meowsticfmega",
+        "item": "Meowsticite",
+        "types": [
+          "Psychic"
+        ],
+        "ability": "Trace"
+      }
+    ],
+    "pinsir": [
+      {
+        "id": "pinsirmega",
+        "item": "Pinsirite",
+        "types": [
+          "Bug",
+          "Flying"
+        ],
+        "ability": "Aerilate"
+      }
+    ],
+    "steelix": [
+      {
+        "id": "steelixmega",
+        "item": "Steelixite",
+        "types": [
+          "Steel",
+          "Ground"
+        ],
+        "ability": "Sand Force"
+      }
+    ],
+    "lopunny": [
+      {
+        "id": "lopunnymega",
+        "item": "Lopunnite",
+        "types": [
+          "Normal",
+          "Fighting"
+        ],
+        "ability": "Scrappy"
+      }
+    ],
+    "venusaur": [
+      {
+        "id": "venusaurmega",
+        "item": "Venusaurite",
+        "types": [
+          "Grass",
+          "Poison"
+        ],
+        "ability": "Thick Fat"
+      }
+    ],
+    "golurk": [
+      {
+        "id": "golurkmega",
+        "item": "Golurkite",
+        "types": [
+          "Ground",
+          "Ghost"
+        ],
+        "ability": "Unseen Fist"
+      }
+    ],
+    "barbaracle": [
+      {
+        "id": "barbaraclemega",
+        "item": "Barbaracite",
+        "types": [
+          "Rock",
+          "Fighting"
+        ],
+        "ability": "Tough Claws"
+      }
+    ],
+    "sharpedo": [
+      {
+        "id": "sharpedomega",
+        "item": "Sharpedonite",
+        "types": [
+          "Water",
+          "Dark"
+        ],
+        "ability": "Strong Jaw"
+      }
+    ],
+    "banette": [
+      {
+        "id": "banettemega",
+        "item": "Banettite",
+        "types": [
+          "Ghost"
+        ],
+        "ability": "Prankster"
+      }
+    ],
+    "ampharos": [
+      {
+        "id": "ampharosmega",
+        "item": "Ampharosite",
+        "types": [
+          "Electric",
+          "Dragon"
+        ],
+        "ability": "Mold Breaker"
+      }
+    ],
+    "baxcalibur": [
+      {
+        "id": "baxcaliburmega",
+        "item": "Baxcalibrite",
+        "types": [
+          "Dragon",
+          "Ice"
+        ],
+        "ability": "Thermal Exchange"
+      }
+    ],
+    "absol": [
+      {
+        "id": "absolmega",
+        "item": "Absolite",
+        "types": [
+          "Dark"
+        ],
+        "ability": "Magic Bounce"
+      },
+      {
+        "id": "absolmegaz",
+        "item": "Absolite Z",
+        "types": [
+          "Dark",
+          "Ghost"
+        ],
+        "ability": "Sharpness"
+      }
+    ],
+    "meowstic": [
+      {
+        "id": "meowsticmmega",
+        "item": "Meowsticite",
+        "types": [
+          "Psychic"
+        ],
+        "ability": "Trace"
+      }
+    ],
+    "glalie": [
+      {
+        "id": "glaliemega",
+        "item": "Glalitite",
+        "types": [
+          "Ice"
+        ],
+        "ability": "Refrigerate"
+      }
+    ],
+    "aerodactyl": [
+      {
+        "id": "aerodactylmega",
+        "item": "Aerodactylite",
+        "types": [
+          "Rock",
+          "Flying"
+        ],
+        "ability": "Tough Claws"
+      }
+    ],
+    "sceptile": [
+      {
+        "id": "sceptilemega",
+        "item": "Sceptilite",
+        "types": [
+          "Grass",
+          "Dragon"
+        ],
+        "ability": "Lightning Rod"
+      }
+    ],
+    "pidgeot": [
+      {
+        "id": "pidgeotmega",
+        "item": "Pidgeotite",
+        "types": [
+          "Normal",
+          "Flying"
+        ],
+        "ability": "No Guard"
+      }
+    ],
+    "pyroar": [
+      {
+        "id": "pyroarmega",
+        "item": "Pyroarite",
+        "types": [
+          "Fire",
+          "Normal"
+        ],
+        "ability": "Fire Mane"
+      }
+    ],
+    "scrafty": [
+      {
+        "id": "scraftymega",
+        "item": "Scraftinite",
+        "types": [
+          "Dark",
+          "Fighting"
+        ],
+        "ability": "Intimidate"
+      }
+    ],
+    "camerupt": [
+      {
+        "id": "cameruptmega",
+        "item": "Cameruptite",
+        "types": [
+          "Fire",
+          "Ground"
+        ],
+        "ability": "Sheer Force"
+      }
+    ],
+    "crabominable": [
+      {
+        "id": "crabominablemega",
+        "item": "Crabominite",
+        "types": [
+          "Fighting",
+          "Ice"
+        ],
+        "ability": "Iron Fist"
+      }
+    ],
+    "chimecho": [
+      {
+        "id": "chimechomega",
+        "item": "Chimechite",
+        "types": [
+          "Psychic",
+          "Steel"
+        ],
+        "ability": "Levitate"
+      }
+    ],
+    "malamar": [
+      {
+        "id": "malamarmega",
+        "item": "Malamarite",
+        "types": [
+          "Dark",
+          "Psychic"
+        ],
+        "ability": "Contrary"
+      }
+    ],
+    "falinks": [
+      {
+        "id": "falinksmega",
+        "item": "Falinksite",
+        "types": [
+          "Fighting"
+        ],
+        "ability": "Defiant"
+      }
+    ],
+    "beedrill": [
+      {
+        "id": "beedrillmega",
+        "item": "Beedrillite",
+        "types": [
+          "Bug",
+          "Poison"
+        ],
+        "ability": "Adaptability"
+      }
+    ],
+    "scolipede": [
+      {
+        "id": "scolipedemega",
+        "item": "Scolipite",
+        "types": [
+          "Bug",
+          "Poison"
+        ],
+        "ability": "Shell Armor"
+      }
+    ],
+    "abomasnow": [
+      {
+        "id": "abomasnowmega",
+        "item": "Abomasite",
+        "types": [
+          "Grass",
+          "Ice"
+        ],
+        "ability": "Snow Warning"
+      }
+    ]
+  },
+  "chineseMismatch": [
+    {
+      "board": "Dragapult",
+      "id": "dragapult",
+      "zh": "多龙",
+      "zhSpecies": "多龙巴鲁托"
+    },
+    {
+      "board": "Arbok",
+      "id": "arbok",
+      "zh": "阿伯怪",
+      "zhSpecies": "阿柏怪"
+    },
+    {
+      "board": "Sneasler",
+      "id": "sneasler",
+      "zh": "大扭拉",
+      "zhSpecies": "大狃拉"
+    },
+    {
+      "board": "Hisuian Arcanine",
+      "id": "arcaninehisui",
+      "zh": "洗萃风狗",
+      "zhSpecies": "风速狗"
+    },
+    {
+      "board": "Galarian Slowbro",
+      "id": "slowbrogalar",
+      "zh": "伽勒尔呆呆兽",
+      "zhSpecies": "呆壳兽"
+    },
+    {
+      "board": "Garganacl",
+      "id": "garganacl",
+      "zh": "岩石巨灵",
+      "zhSpecies": "盐石巨灵"
+    },
+    {
+      "board": "Basculegion-female",
+      "id": "basculegionf",
+      "zh": "母玄鱼",
+      "zhSpecies": "幽尾玄鱼"
+    },
+    {
+      "board": "Greninja",
+      "id": "greninja",
+      "zh": "忍蛙",
+      "zhSpecies": "甲贺忍蛙"
+    },
+    {
+      "board": "Mimikyu",
+      "id": "mimikyu",
+      "zh": "迷拟丘",
+      "zhSpecies": "谜拟丘"
+    },
+    {
+      "board": "Castform",
+      "id": "castform",
+      "zh": "漂浮泡泡",
+      "zhSpecies": "飘浮泡泡"
+    },
+    {
+      "board": "Eelektross",
+      "id": "eelektross",
+      "zh": "鳗鱼王",
+      "zhSpecies": "麻麻鳗鱼王"
+    },
+    {
+      "board": "Hydrapple",
+      "id": "hydrapple",
+      "zh": "密集大蛇",
+      "zhSpecies": "蜜集大蛇"
+    },
+    {
+      "board": "Flapple",
+      "id": "flapple",
+      "zh": "苹果龙",
+      "zhSpecies": "苹裹龙"
+    },
+    {
+      "board": "Meowscarada",
+      "id": "meowscarada",
+      "zh": "草猫",
+      "zhSpecies": "魔幻假面喵"
+    },
+    {
+      "board": "Slowbro",
+      "id": "slowbro",
+      "zh": "呆呆兽",
+      "zhSpecies": "呆壳兽"
+    },
+    {
+      "board": "Garchomp",
+      "id": "garchomp",
+      "zh": "地龙",
+      "zhSpecies": "烈咬陆鲨"
+    },
+    {
+      "board": "Basculegion-male",
+      "id": "basculegion",
+      "zh": "公玄鱼",
+      "zhSpecies": "幽尾玄鱼"
+    },
+    {
+      "board": "Incineroar",
+      "id": "incineroar",
+      "zh": "咆哮虎",
+      "zhSpecies": "炽焰咆哮虎"
+    },
+    {
+      "board": "Vanilluxe",
+      "id": "vanilluxe",
+      "zh": "多多冰",
+      "zhSpecies": "双倍多多冰"
+    },
+    {
+      "board": "Absol",
+      "id": "absol",
+      "zh": "阿波梭鲁",
+      "zhSpecies": "阿勃梭鲁"
+    },
+    {
+      "board": "Pidgeot",
+      "id": "pidgeot",
+      "zh": "比雕",
+      "zhSpecies": "大比鸟"
+    },
+    {
+      "board": "Hisuian Typhlosion",
+      "id": "typhlosionhisui",
+      "zh": "洗萃火爆兽",
+      "zhSpecies": "火暴兽"
+    },
+    {
+      "board": "Umbreon",
+      "id": "umbreon",
+      "zh": "月伊布",
+      "zhSpecies": "月亮伊布"
+    },
+    {
+      "board": "Simipour",
+      "id": "simipour",
+      "zh": "水猴子",
+      "zhSpecies": "冷水猿"
+    },
+    {
+      "board": "Simisear",
+      "id": "simisear",
+      "zh": "火猴子",
+      "zhSpecies": "爆香猿"
+    },
+    {
+      "board": "Simisage",
+      "id": "simisage",
+      "zh": "草猴子",
+      "zhSpecies": "花椰猿"
+    },
+    {
+      "board": "Typhilosion",
+      "id": "typhlosion",
+      "zh": "火爆兽",
+      "zhSpecies": "火暴兽"
+    }
+  ]
+}
