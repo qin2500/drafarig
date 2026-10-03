@@ -47,6 +47,26 @@ async function loadSheet() {
   sheet = body;
   rebuild();
 }
+// While the page is open, re-read the sheet every 45 s (and when the tab comes back into view).
+// Only re-render when the picks actually changed, so an idle page isn't redrawn under the user.
+let refreshing = false;
+async function refreshSheet() {
+  if (refreshing || document.hidden || !sheet) return;
+  refreshing = true;
+  try {
+    const r = await fetch('/api/sheet', { cache: 'no-store' });
+    const body = await r.json();
+    if (!r.ok) return;
+    const changed = body.raw.draftsCsv !== sheet.raw.draftsCsv || body.raw.boardCsv !== sheet.raw.boardCsv;
+    const before = L.coaches.reduce((s, c) => s + c.picks.length, 0);
+    sheet = body;
+    if (!changed) return renderTop();
+    rebuild(); render();
+    const n = L.coaches.reduce((s, c) => s + c.picks.length, 0) - before;
+    toast(n > 0 ? `Sheet updated: ${n} new pick${n > 1 ? 's' : ''}` : 'Sheet updated');
+  } catch {} finally { refreshing = false; }
+}
+
 function rebuild() {
   L = buildLeague(sheet.raw, dex, S.aliases);
   planCache = null;
@@ -85,7 +105,7 @@ function renderTop() {
   const t = new Date(sheet.fetchedAt).toLocaleTimeString();
   sync.className = 'sync' + (sheet.stale ? ' stale' : '');
   sync.textContent = sheet.stale ? `⚠ Using data from ${t} (sheet unreachable) ⟳` : `● Synced ${ago(sheet.fetchedAt)} (${t}) ⟳`;
-  sync.title = sheet.stale ? `Last error: ${sheet.error}. Click to retry.` : 'Fresh copy of the league sheet, fetched on this page load. Click to reload. Google can lag about 5 minutes behind edits.';
+  sync.title = sheet.stale ? `Last error: ${sheet.error}. Click to retry.` : 'Fresh copy of the league sheet. It re-checks every 45 seconds while this tab is open; click to reload now. Google can lag a few minutes behind edits.';
   const turn = computeTurn(L.coaches, S.order);
   const until = picksUntil(L.coaches, S.coach, S.order);
   const el = $('#turn');
@@ -456,6 +476,8 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { hidePop(
     render();
     loadUsage();
     setInterval(() => sheet && renderTop(), 15000); // keep "Synced Ns ago" honest
+    setInterval(refreshSheet, 45000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshSheet(); });
   } catch (e) {
     $('#sync').textContent = '⚠ Sheet unreachable';
     $('#main').innerHTML = `<div class="panel"><h2>Couldn't load the league sheet</h2><p>${esc(e.message)}</p><p>Check your internet connection and that the sheet is still published to the web.</p><button class="primary" id="retry">Retry</button></div>`;

@@ -13,6 +13,7 @@ const PORT = +process.env.PORT || 4600;
 const HOST = '127.0.0.1';
 const ROOT = new URL('.', import.meta.url).pathname;
 const CACHE = join(ROOT, 'data', 'cache');
+const log = (msg) => console.log(`${new Date().toISOString()} ${msg}`);
 const FORMAT = 'gen9championsvgc2026regmc';
 // Optional override if the league re-publishes the sheet under a new link (the …/2PACX-… part, without /pub…).
 const SHEET = process.env.DRAFARIG_SHEET_URL || PUB;
@@ -33,19 +34,25 @@ function withLeague(snap) {
 async function getSheet() {
   const snapFile = join(CACHE, 'sheet-last-good.json');
   const bust = () => `&_=${Date.now()}`;
+  // Google occasionally takes 10 s+ to answer; one retry turns most of those into a fresh read instead of the fallback.
+  const get = (url) => fetchText(url + bust()).catch((e) => { log(`sheet retry after: ${e.message || e}`); return fetchText(url + bust()); });
+  const t0 = Date.now();
   try {
     if (process.env.DRAFARIG_OFFLINE) throw new Error('offline mode (DRAFARIG_OFFLINE is set)'); // for testing the fallback
     const [boardCsv, draftsCsv, boardHtml] = await Promise.all([
-      fetchText(csvUrl(GID.board, SHEET) + bust()),
-      fetchText(csvUrl(GID.drafts, SHEET) + bust()),
-      fetchText(htmlUrl(GID.board, SHEET) + bust()).catch(() => null), // colours are a cross-check only
+      get(csvUrl(GID.board, SHEET)),
+      get(csvUrl(GID.drafts, SHEET)),
+      get(htmlUrl(GID.board, SHEET)).catch(() => null), // colours are a cross-check only
     ]);
     const raw = { boardCsv, draftsCsv, boardHtml };
     buildLeague(raw, dex); // throws if the layout is unrecognisable: never save a bad snapshot
     const snap = { fetchedAt: new Date().toISOString(), raw };
     await writeJson(snapFile, snap);
-    return withLeague({ ...snap, stale: false });
+    const out = withLeague({ ...snap, stale: false });
+    log(`sheet ok in ${Date.now() - t0} ms: ${out.league.coaches.reduce((s, c) => s + c.picks.length, 0)} picks${boardHtml ? '' : ' (board colours unavailable)'}`);
+    return out;
   } catch (e) {
+    log(`sheet FAILED after ${Date.now() - t0} ms, serving last good copy: ${e.message || e}`);
     try {
       const snap = JSON.parse(await readFile(snapFile, 'utf8'));
       return withLeague({ ...snap, stale: true, error: String(e.message || e) });
