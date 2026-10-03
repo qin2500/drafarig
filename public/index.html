@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drafarig</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">DRAFARIG</div>
+  <button id="sync" class="sync" title="Reload the league sheet">Reading league sheet…</button>
+  <div id="turn" class="turn" aria-live="polite"></div>
+  <div id="budget" class="budget-pill"></div>
+  <label class="coach">Coach <select id="coach"></select></label>
+  <label class="explain"><input type="checkbox" id="explain" checked> Explain everything</label>
+</header>
+<div id="banners"></div>
+<div class="layout">
+  <nav class="modes" id="modes">
+    <button data-mode="draft">Draft</button>
+    <button data-mode="team">My team</button>
+    <button data-mode="league">League</button>
+    <button data-mode="learn">Rules &amp; glossary</button>
+    <button data-mode="setup">Setup</button>
+  </nav>
+  <main id="main"><div class="skeleton">Reading league sheet…</div></main>
+  <aside id="drawer" class="drawer" hidden></aside>
+</div>
+<div id="pop" class="pop" role="tooltip" hidden></div>
+<div id="toast" class="toast" hidden></div>
+<script type="module" src="/app.js"></script>
+</body>
+</html>
