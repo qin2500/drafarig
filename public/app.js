@@ -11,7 +11,8 @@ import { GLOSSARY } from '/glossary.js';
 // ---------- settings (per browser) ----------
 const store = {
   get(k, d) { try { const v = localStorage.getItem('drafarig.' + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
-  set(k, v) { try { localStorage.setItem('drafarig.' + k, JSON.stringify(v)); } catch {} },
+  // a setting that can't be saved (storage full or blocked) says so once instead of failing silently
+  set(k, v) { try { localStorage.setItem('drafarig.' + k, JSON.stringify(v)); } catch { if (!store.warned) { store.warned = true; toast("Settings couldn't be saved on this device (storage full or blocked)."); } } },
 };
 const S = {
   coach: store.get('coach', 'Anthony'), order: store.get('order', 'snake'), explain: store.get('explain', true),
@@ -38,8 +39,14 @@ function coresView() {
   if (!coreCx) return null;
   try { return coreCache.get(S.coach); } catch (e) { console.error('Cores to fear failed:', e); return null; }
 }
+// Prep: device-local opponent prep (public/prep.js). Its code loads on first use, so the other screens don't pay for it.
+// Nothing in Prep is sent anywhere; the app only hands it the league data it already has and a few browser helpers.
+const MODES = ['draft', 'team', 'league', 'learn', 'setup', 'prep'];
+const isPrepHash = (h) => h === 'prep' || h.startsWith('prep/');
+let prep = null, prepLoading = null, prepFailed = false, prepGlossary = {};
+let viewingAs = null; // {coach: your coach before "See it as they do", back()} while League shows an opponent's side
 const $ = (s) => document.querySelector(s);
-const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const esc =(s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const sp = (id) => dex.species[id];
 const SPRITE = 'https://play.pokemonshowdown.com/sprites';
 const sprite = (f) => `<img alt="" loading="lazy" src="${SPRITE}/gen5/${f.sprite}.png" onerror="this.onerror=null;this.src='${SPRITE}/ani/${f.sprite}.gif'">`;
@@ -82,7 +89,8 @@ async function refreshSheet() {
     const before = L.coaches.reduce((s, c) => s + c.picks.length, 0);
     sheet = body;
     if (!changed) { renderTop(); showReadTime(); return; }
-    rebuild(); render();
+    // Prep isn't redrawn under the user (they may be typing); it reads the new picks on its next screen.
+    rebuild(); if (S.mode === 'prep') renderTop(); else render();
     const n = L.coaches.reduce((s, c) => s + c.picks.length, 0) - before;
     toast(n > 0 ? `Sheet updated: ${n} new pick${n > 1 ? 's' : ''}` : 'Sheet updated');
   } catch {} finally { refreshing = false; }
@@ -141,9 +149,10 @@ function renderTop() {
   const c = me(), b = budgetSummary(c.pointsLeft, c.slotsLeft, available().map((a) => a.cost));
   $('#budget').innerHTML = `${c.pointsLeft} pts · ${c.slotsLeft} slots · ${term('max', 'Max this pick')} ${b.maxThisPick}`;
   $('#coach').innerHTML = L.coaches.map((x) => `<option ${x.name === S.coach ? 'selected' : ''}>${esc(x.name)}</option>`).join('');
-  document.querySelectorAll('#modes button').forEach((b) => b.classList.toggle('active', b.dataset.mode === S.mode));
+  markMode();
 
   const banners = [];
+  if (viewingAs) banners.push(`<div class="banner info" role="status">Viewing as ${esc(S.coach)} (from your prep). Your prep hasn't changed. <button class="primary" data-viewas-back="">Back to my prep</button></div>`);
   if (sheet.stale) banners.push(`<div class="banner warn">Couldn't reach the league sheet (${esc(sheet.error)}). Showing data from ${t} (${ago(sheet.fetchedAt)}). Picks made since then are missing. <button id="retry">Retry</button></div>`);
   if (L.unmatched.length) banners.push(`<div class="banner warn">${L.unmatched.length} name(s) couldn't be matched to a Pokémon. They still count toward points but are left out of the analysis. <button data-goto="setup">Fix names</button></div>`);
   if (L.warnings.length) banners.push(`<div class="banner info"><details><summary>${L.warnings.length} sheet note(s): Drafts tab is the source of truth; board red text is a cross-check.</summary><ul>${L.warnings.map((w) => `<li>${esc(w)}</li>`).join('')}</ul></details></div>`);
@@ -430,9 +439,123 @@ function openDrawer(id, formIdx = 0) {
     <p class="small"><a href="https://www.pikalytics.com/pokedex/gen9championsvgc2026regmc/${encodeURIComponent(f.name)}" target="_blank" rel="noopener">Pikalytics</a> · <a href="https://calc.pokemonshowdown.com/" target="_blank" rel="noopener">Damage calc</a></p>`;
 }
 
+// ---------- Prep ----------
+function markMode() {
+  document.body.dataset.mode = S.mode;
+  document.querySelectorAll('#modes button').forEach((b) => b.classList.toggle('active', b.dataset.mode === S.mode));
+}
+function download(name, text, type = 'text/plain') {
+  const url = URL.createObjectURL(new Blob([text], { type: `${type};charset=utf-8` }));
+  const a = document.createElement('a');
+  a.href = url; a.download = name; a.rel = 'noopener';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+}
+// This tab's session storage, for Prep's unfinished screen work (kept across a reload or a phone discarding the tab).
+const tabStorage = (() => { try { return sessionStorage; } catch { return null; } })();
+// localStorage itself can throw (storage blocked); Prep then reports that saving isn't possible instead of crashing.
+const deviceStorage = (() => {
+  try { return localStorage; } catch (e) {
+    const fail = () => { throw e; };
+    return { getItem: fail, setItem: fail, removeItem: fail, key: fail, get length() { return fail(); } };
+  }
+})();
+// What Prep may use. Clipboard, share and storage protection run only from a tap on the matching button.
+const prepApp = {
+  get dex() { return dex ?? { species: {}, types: [] }; },
+  league: () => L ?? null, sheet: () => sheet ?? null, usage: () => usage, coresCx: () => coreCx,
+  viewingCoach: () => (viewingAs ? viewingAs.coach : S.coach),
+  goMode: (m) => goTo(m), toast: (m) => toast(m), announce: (m) => announce(m), rerender: () => render(),
+  viewAs(coach, back) {
+    viewingAs = { coach: viewingAs?.coach ?? S.coach, back };
+    setCoach(coach); goTo('league');
+  },
+  storage: deviceStorage, session: tabStorage, crypto: globalThis.crypto, history, location, now: () => new Date().toISOString(),
+  loadMechanics: () => fetch('/data/mechanics.json').then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`)))),
+  download,
+  copyText: (text) => navigator.clipboard.writeText(text),
+  readClipboard: navigator.clipboard?.readText ? () => navigator.clipboard.readText() : null,
+  share: navigator.share ? (d) => navigator.share(d) : null,
+  persist: navigator.storage?.persist ? { persisted: () => navigator.storage.persisted(), persist: () => navigator.storage.persist() } : null,
+  appBuild: '',
+};
+function loadPrep() {
+  prepLoading ??= import('/prep.js').then((m) => {
+    prep = m.createPrep(prepApp);
+    prepGlossary = m.GLOSSARY_PREP ?? {};
+    prepFailed = false;
+    if (isPrepHash(location.hash.slice(1))) prep.applyHash(location.hash);
+    // navigator.storage.persisted() only reads the state; it never asks the user anything.
+    prepApp.persist?.persisted().then((v) => prep.setPersisted(v), () => {});
+    render();
+  }).catch((e) => { console.error('Prep failed to load:', e && e.message); prepFailed = true; prepLoading = null; render(); });
+  return prepLoading;
+}
+function renderPrep(main) {
+  if (!prep) {
+    main.innerHTML = prepFailed
+      ? `<div class="panel"><h2>Prep couldn't load</h2><p>Your saved prep is still on this device. Check your connection and try again.</p><button class="primary" data-prep-retry="">Try again</button></div>`
+      : '<div class="panel"><h2>Prep</h2><p class="skeleton">Opening your prep…</p></div>';
+    shownMode = null;
+    if (!prepFailed) loadPrep();
+    return;
+  }
+  // A Prep navigation starts at the top with focus on the new heading; a "go to this section" moves to that section; a
+  // re-render of the same screen keeps scroll and focus.
+  const target = prep.consumeFocus();
+  const nav = target === 'prep-h';
+  const same = shownMode === 'prep' && !nav;
+  const scroll = same ? window.scrollY : 0;
+  const focused = same && !target ? prepFocusKey(document.activeElement, main) : null;
+  const caret = focused ? document.activeElement?.selectionStart ?? null : null; // typing in a field that re-renders keeps its place
+  main.innerHTML = prep.render();
+  shownMode = 'prep';
+  window.scrollY !== scroll && window.scrollTo(0, scroll);
+  const el = target && document.getElementById(target);
+  if (el) { if (!nav) el.scrollIntoView?.({ block: 'start' }); el.focus?.({ preventScroll: true }); }
+  else for (const c of prepFocusCandidates(main, focused)) {
+    c.focus?.({ preventScroll: true });
+    if (document.activeElement === c) { if (caret !== null) try { c.setSelectionRange?.(caret, caret); } catch { /* not a text field */ } break; }
+  }
+}
+// Prep controls without an id are found again by their action and arguments (all their data-* attributes).
+const PREP_ATTRS = ['data-pa', 'data-pc', 'data-pi'];
+function prepFocusKey(el, root) {
+  if (el && !el.id && el.attributes && PREP_ATTRS.some((a) => el.hasAttribute?.(a)) && root.contains?.(el)) {
+    return { prep: [...el.attributes].filter((a) => a.name.startsWith('data-')).map((a) => [a.name, a.value]), tag: el.tagName };
+  }
+  return focusKey(el, root);
+}
+function prepFocusCandidates(root, k) {
+  if (!k?.prep) return focusCandidates(root, k);
+  const sel = k.prep.map(([n, v]) => `[${n}="${CSS.escape(v)}"]`).join('');
+  return [...root.querySelectorAll(`${k.tag.toLowerCase()}${sel}`)].slice(0, 1);
+}
+function setCoach(name) { S.coach = name; S.speedOpp = ''; S.threatScope = 'all'; S.check = ''; planCache = null; S.cores = { open: {}, more: false, showAll: {} }; }
+function endViewAs() {
+  const v = viewingAs;
+  viewingAs = null;
+  setCoach(v.coach); goTo('prep');
+  v.back?.();
+}
+function onHashChange() {
+  const h = location.hash.slice(1);
+  if (isPrepHash(h)) {
+    if (prep) prep.applyHash(location.hash);
+    if (S.mode !== 'prep') { S.mode = 'prep'; save(); }
+    render();
+  } else if (MODES.includes(h) && h !== S.mode) { S.mode = h; save(); render(); }
+}
+
 // ---------- render + events ----------
 let shownMode = null; // the screen #main shows now
 function render() {
+  if (S.mode === 'prep') {
+    document.body.classList.toggle('facts', !S.explain);
+    $('#explain').checked = S.explain;
+    if (L) renderTop(); else markMode();
+    return renderPrep($('#main'));
+  }
   if (!L) return;
   document.body.classList.toggle('facts', !S.explain);
   $('#explain').checked = S.explain;
@@ -448,15 +571,24 @@ function render() {
   window.scrollY !== scroll && window.scrollTo(0, scroll);
   for (const el of focusCandidates(main, focused)) { el.focus?.({ preventScroll: true }); if (document.activeElement === el) break; }
 }
-// Switch screens. The URL hash follows, so a reload or a copied link opens the same screen (QA S3).
-function goTo(mode) { S.mode = mode; history.replaceState(null, '', '#' + mode); save(); render(); }
-const save = () => { store.set('coach', S.coach); store.set('order', S.order); store.set('explain', S.explain); store.set('mode', S.mode); store.set('aliases', S.aliases); };
-function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 2500); }
+// Switch screens. The URL hash follows, so a reload or a copied link opens the same screen (QA S3). Prep comes back
+// to the Prep screen you were on; its hashes carry random ids only.
+function goTo(mode) { S.mode = mode; history.replaceState(null, '', mode === 'prep' && prep ? prep.hash() : '#' + mode); save(); render(); }
+// While viewing League as an opponent, your own coach is what stays saved.
+const save = () => { store.set('coach', viewingAs ? viewingAs.coach : S.coach); store.set('order', S.order); store.set('explain', S.explain); store.set('mode', S.mode); store.set('aliases', S.aliases); };
+// The toast is visual; screen readers get the same words from #live, a status region that stays in the page.
+// Longer messages stay up longer.
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; announce(msg); clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), Math.min(6000, 2500 + 30 * String(msg).length)); }
+function announce(msg) { const live = $('#live'); if (!live) return; live.textContent = ''; setTimeout(() => { live.textContent = msg; }, 30); }
 
 document.addEventListener('click', async (e) => {
+  const pa = e.target.closest('[data-pa]');
+  if (pa?.dataset.pa) { if (S.mode === 'prep' && prep && !pa.disabled) prep.click(pa); return; }
   const t = e.target.closest('button, .nm, .cell, .chip.form, .term');
   if (!t) return;
   if (t.dataset.mode) goTo(t.dataset.mode);
+  else if (t.dataset.viewasBack !== undefined) { if (viewingAs) endViewAs(); }
+  else if (t.dataset.prepRetry !== undefined) { prepFailed = false; render(); }
   else if (t.dataset.goto) {
     goTo(t.dataset.goto);
     // The target heading has scroll-margin-top, so it lands below the sticky top bar (QA S5).
@@ -478,7 +610,8 @@ document.addEventListener('click', async (e) => {
 });
 document.addEventListener('change', (e) => {
   const t = e.target;
-  if (t.id === 'coach') { S.coach = t.value; S.speedOpp = ''; S.threatScope = 'all'; S.check = ''; planCache = null; S.cores = { open: {}, more: false, showAll: {} }; }
+  if (t.dataset?.pc || t.dataset?.pi) { if (S.mode === 'prep' && prep) prep.change(t); return; }
+  if (t.id === 'coach') { viewingAs = null; setCoach(t.value); }
   else if (t.id === 'checkPick') S.check = t.value;
   else if (t.id === 'explain') S.explain = t.checked;
   else if (t.id === 'order') S.order = t.value;
@@ -500,6 +633,7 @@ document.addEventListener('toggle', (e) => {
   if (d.tagName === 'DETAILS' && d.dataset.key && d.closest('.cores, .carries')) S.cores.open[d.dataset.key] = d.open;
 }, true);
 document.addEventListener('input', (e) => {
+  if (e.target.dataset?.pi) { if (S.mode === 'prep' && prep) prep.input(e.target); return; }
   if (e.target.id !== 'bq') return;
   S.boardFilter.q = e.target.value;
   const pos = e.target.selectionStart; render();
@@ -508,7 +642,7 @@ document.addEventListener('input', (e) => {
 
 // Glossary popover: hover/focus on desktop, tap on touch.
 function showPop(el) {
-  const g = GLOSSARY[el.dataset.term]; if (!g) return;
+  const g = GLOSSARY[el.dataset.term] ?? prepGlossary[el.dataset.term]; if (!g) return;
   const p = $('#pop');
   p.innerHTML = `<b>${esc(el.dataset.term)}</b>${esc(g.def)}<div class="why">Why it matters: ${esc(g.why)}</div>`;
   p.hidden = false;
@@ -534,11 +668,19 @@ function trackTopbarHeight() {
 (async function boot() {
   document.querySelector('.layout').classList.add('nodrawer');
   trackTopbarHeight();
-  const h = location.hash.slice(1); // deep link: #draft, #team, #league, #learn, #setup
-  if (['draft', 'team', 'league', 'learn', 'setup'].includes(h)) S.mode = h;
+  const h = location.hash.slice(1); // deep link: #draft, #team, #league, #learn, #setup, #prep…
+  if (MODES.includes(h) || isPrepHash(h)) S.mode = isPrepHash(h) ? 'prep' : h;
+  if (!MODES.includes(S.mode)) S.mode = 'draft';
+  // Prep saves when the page is hidden or closed, follows Back/Forward, and notices edits made in another tab.
+  // (popstate also fires for typed-in hash changes, so hashchange isn't needed and would render twice.)
+  addEventListener('popstate', onHashChange);
+  addEventListener('storage', (e) => prep?.onStorage(e));
+  addEventListener('pagehide', () => prep?.onHidden());
+  document.addEventListener('visibilitychange', () => { if (document.hidden) prep?.onHidden(); });
   try {
     const coresSpec = fetch('/data/cores.json').then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`)))).catch((e) => e);
     dex = await (await fetch('/data/dex.json')).json();
+    if (S.mode === 'prep') render(); // prep doesn't wait for the league sheet
     try { // validateSpec refuses an unsupported or malformed spec; the League panel then shows the error and Threats still works
       const spec = await coresSpec;
       if (spec instanceof Error) throw spec;
@@ -554,6 +696,8 @@ function trackTopbarHeight() {
     narrowScreen.addEventListener?.('change', () => { if (S.mode === 'league' && S.threatScope !== 'all') render(); });
   } catch (e) {
     $('#sync').textContent = '⚠ Sheet unreachable';
-    $('#main').innerHTML = `<div class="panel"><h2>Couldn't load the league sheet</h2><p>${esc(e.message)}</p><p>Check your internet connection and that the sheet is still published to the web.</p><button class="primary" id="retry">Retry</button></div>`;
+    // Prep is saved on this device, so it still opens without the sheet (opponents aren't listed until it loads).
+    if (S.mode === 'prep') { render(); return; }
+    $('#main').innerHTML = `<div class="panel"><h2>Couldn't load the league sheet</h2><p>${esc(e.message)}</p><p>Check your internet connection and that the sheet is still published to the web.</p><button class="primary" id="retry">Retry</button> <button data-mode="prep">Open my prep anyway</button></div>`;
   }
 })();

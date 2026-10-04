@@ -21,45 +21,88 @@ class El {
   focus() {}
   setSelectionRange() {}
   getBoundingClientRect() { return { left: 0, top: 0, bottom: 0, height: 100 }; }
+  click() { El.clicked?.(this); }
+  remove() {}
+}
+
+/**
+ * A Storage with the browser's interface (getItem, setItem, removeItem, key, length). quota: a character budget past
+ * which setItem throws a QuotaExceededError, as browsers do. Shared by tests that drive lib/prep-store directly.
+ */
+export function memoryStorage(seed = {}, { quota = Infinity } = {}) {
+  const m = new Map(Object.entries(seed));
+  const used = () => [...m].reduce((t, [k, v]) => t + k.length + v.length, 0);
+  return {
+    map: m,
+    getItem: (k) => (m.has(k) ? m.get(k) : null),
+    setItem(k, v) {
+      const before = m.get(k);
+      m.set(k, String(v));
+      if (used() > quota) { if (before === undefined) m.delete(k); else m.set(k, before); const e = new Error('quota'); e.name = 'QuotaExceededError'; throw e; }
+    },
+    removeItem: (k) => { m.delete(k); },
+    key: (i) => [...m.keys()][i] ?? null,
+    get length() { return m.size; },
+    clear: () => m.clear(),
+  };
 }
 
 let instances = 0;
 
 /**
  * Boots public/app.js (or `source`, the text of another version of it) in this process with stub globals. Resolves once the
- * first screen is rendered and the usage request has settled. Returns { main, drawer, toast, click, change, clipboard, html }.
- * mode: the deep-link hash; narrow: what matchMedia('(max-width: 767px)') reports; files: extra (or replacement) fetchable
- * paths. data/dex.json and, when it exists, data/cores.json are served from the repo.
+ * first screen is rendered and the usage request has settled. Returns { main, drawer, toast, click, change, input, clipboard,
+ * html, storage, history, location, fetches, downloads, waitFor, fire }.
+ * mode: the deep-link hash (without '#'); narrow: what matchMedia('(max-width: 767px)') reports; files: extra (or
+ * replacement) fetchable paths; storage: a memoryStorage to start from (prep documents); sheet: false makes /api/sheet fail.
+ * data/dex.json, data/mechanics.json and, when it exists, data/cores.json are served from the repo.
  */
-export async function bootApp({ source = read('public/app.js').toString('utf8'), mode = 'draft', narrow = true, files = {} } = {}) {
+export async function bootApp({ source = read('public/app.js').toString('utf8'), mode = 'draft', narrow = true, files = {}, storage = memoryStorage(), session = memoryStorage(), sheet = true, clipboardText = null } = {}) {
   const els = Object.fromEntries(['#sync', '#turn', '#budget', '#coach', '#banners', '#main', '#explain', '#drawer', '#pop', '#toast', '.layout', '.topbar', '#bq']
     .map((s) => [s, new El(s.slice(1))]));
-  const listeners = {};
-  const clipboard = [];
-  const storage = new Map();
-  const served = { '/data/dex.json': read('data/dex.json').toString('utf8'), ...files };
+  const listeners = {}, winListeners = {};
+  const clipboard = [], fetches = [], downloads = [];
+  const served = { '/data/dex.json': read('data/dex.json').toString('utf8'), '/data/mechanics.json': read('data/mechanics.json').toString('utf8'), ...files };
   if (!('/data/cores.json' in served) && existsSync(new URL('data/cores.json', ROOT))) served['/data/cores.json'] = read('data/cores.json').toString('utf8');
   const respond = (body, status = 200) => new Response(typeof body === 'string' ? body : JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
+  const settle = async (n = 50) => { for (let i = 0; i < n; i++) await new Promise((r) => setImmediate(r)); };
+  const fire = async (type, ev = {}) => { for (const fn of winListeners[type] ?? []) fn({ type, ...ev }); await settle(5); };
+  // history as a stack of {state, hash}; back() moves the hash and fires popstate like a browser.
+  const location = { hash: `#${mode}`, reload() {} };
+  const stack = [{ state: null, hash: location.hash }];
+  let at = 0;
+  const history = {
+    get state() { return stack[at].state; },
+    get length() { return stack.length; },
+    entries: () => stack.map((e) => e.hash),
+    replaceState(state, _t, url) { stack[at] = { state, hash: url ?? stack[at].hash }; location.hash = stack[at].hash; },
+    pushState(state, _t, url) { stack.splice(at + 1); stack.push({ state, hash: url }); at++; location.hash = url; },
+    back() { if (at > 0) { at--; location.hash = stack[at].hash; setImmediate(() => fire('popstate', { state: stack[at].state })); } },
+  };
+  El.clicked = (el) => { if (el.download) downloads.push({ name: el.download, url: el.href }); };
+  const body = new El('body');
+  body.appendChild = () => {};
   const stubs = {
     document: {
-      hidden: false, activeElement: null, body: new El('body'), documentElement: new El('html'),
+      hidden: false, activeElement: null, body, documentElement: new El('html'),
       querySelector: (s) => els[s] ?? null, querySelectorAll: () => [], getElementById: () => null,
+      createElement: () => new El(),
       addEventListener: (type, fn) => (listeners[type] ??= []).push(fn),
     },
     window: { scrollY: 0, scrollTo() {} },
-    localStorage: { getItem: (k) => (storage.has(k) ? storage.get(k) : null), setItem: (k, v) => storage.set(k, String(v)) },
-    location: { hash: `#${mode}`, reload() {} },
-    history: { replaceState() {} },
-    navigator: { clipboard: { writeText: async (t) => { clipboard.push(t); } } },
+    localStorage: storage, sessionStorage: session,
+    location, history,
+    navigator: { clipboard: { writeText: async (t) => { clipboard.push(t); }, ...(clipboardText !== null ? { readText: async () => clipboardText } : {}) } },
     CSS: { escape: (s) => String(s).replace(/["\\]/g, '\\$&') },
     matchMedia: () => ({ matches: narrow, addEventListener() {} }),
-    addEventListener() {},
+    addEventListener: (type, fn) => (winListeners[type] ??= []).push(fn),
     innerWidth: 390, innerHeight: 844,
     prompt() {},
     setInterval: () => 0, // the app's 15 s / 45 s refresh timers would keep the test process alive
-    fetch: async (url) => {
+    fetch: async (url, init) => {
       const path = String(url);
-      if (path === '/api/sheet') return respond({ fetchedAt: FETCHED_AT, stale: false, raw: RAW });
+      fetches.push({ path, method: init?.method ?? 'GET', body: init?.body ?? null });
+      if (path === '/api/sheet') return sheet ? respond({ fetchedAt: FETCHED_AT, stale: false, raw: RAW }) : respond({ error: 'Sheet unreachable' }, 502);
       if (path === '/api/usage') return respond({ error: 'Upstream data unavailable. Please try again.' }, 502);
       return path in served ? respond(served[path]) : respond({ error: 'Not found' }, 404);
     },
@@ -70,15 +113,22 @@ export async function bootApp({ source = read('public/app.js').toString('utf8'),
     for (const [k, d] of Object.entries(saved)) { if (d) Object.defineProperty(globalThis, k, d); else delete globalThis[k]; }
   };
 
-  // The browser resolves /lib/… and /glossary.js against the site root; here they point at the repo files.
+  // The browser resolves /lib/…, /glossary.js and the lazily loaded /prep.js against the site root; here they point at
+  // the repo files (prep.js's own imports are relative, so they resolve from its file URL).
   const src = source.replace(/from '\/lib\/([\w-]+\.mjs)'/g, (_, f) => `from '${new URL(`lib/${f}`, ROOT).href}'`)
-    .replace(/from '\/glossary\.js'/g, `from '${new URL('public/glossary.js', ROOT).href}'`);
-  if (/from '\//.test(src)) throw new Error('ui-harness: app.js has an import this harness does not map');
-  const settle = async (n = 50) => { for (let i = 0; i < n; i++) await new Promise((r) => setImmediate(r)); };
+    .replace(/from '\/glossary\.js'/g, `from '${new URL('public/glossary.js', ROOT).href}'`)
+    .replace(/import\('\/prep\.js'\)/g, `import('${new URL('public/prep.js', ROOT).href}')`);
+  if (/from '\/|import\('\//.test(src)) throw new Error('ui-harness: app.js has an import this harness does not map');
+  const waitFor = async (pred, what = 'condition', ms = 10000) => {
+    const end = Date.now() + ms;
+    while (!pred()) { if (Date.now() > end) throw new Error(`ui-harness: timed out waiting for ${what}`); await new Promise((r) => setTimeout(r, 5)); }
+    await settle(5);
+  };
   try {
     await import(`data:text/javascript;base64,${Buffer.from(`${src}\n// instance ${++instances}\n`).toString('base64')}`);
     for (let i = 0; i < 2000 && els['#main'].innerHTML.length === 0; i++) await settle(1);
     await settle(); // the usage request re-renders once it settles
+    if (mode === 'prep' || mode.startsWith('prep/')) await waitFor(() => /class="prep"|Prep couldn't load/.test(els['#main'].innerHTML), 'Prep to load');
   } catch (e) { restore(); throw e; }
 
   // A fake event target for the delegated handlers: closest() returns the "button" itself.
@@ -89,10 +139,16 @@ export async function bootApp({ source = read('public/app.js').toString('utf8'),
     return t;
   };
   return {
-    main: els['#main'], drawer: els['#drawer'], toast: els['#toast'], clipboard,
+    main: els['#main'], drawer: els['#drawer'], toast: els['#toast'], banners: els['#banners'], body, clipboard, storage, session, history, location, fetches, downloads,
     html: () => els['#main'].innerHTML,
     async click(attrs) { const t = target(attrs); for (const fn of listeners.click ?? []) await fn({ target: { closest: () => t } }); await settle(5); },
     async change(id, props) { const t = Object.assign(new El(id), props); for (const fn of listeners.change ?? []) fn({ target: t }); await settle(5); },
+    /** An input event on a prep field: input('paste-text', 'text…', {set: 'set_…'}) → data-pi plus extra data-*. */
+    async input(pi, value, data = {}) { const t = Object.assign(new El(), { value }); t.dataset = { pi, ...data }; for (const fn of listeners.input ?? []) fn({ target: t }); await settle(5); },
+    /** The same element firing change (a select or a committed field): pc for data-pc, or pi for data-pi. */
+    async changeData(data, props = {}) { const t = Object.assign(new El(), props); t.dataset = data; for (const fn of listeners.change ?? []) fn({ target: t }); await settle(5); },
+    async visibility(hidden) { stubs.document.hidden = hidden; for (const fn of listeners.visibilitychange ?? []) fn({}); await settle(5); },
+    waitFor, fire, settle,
     restore,
   };
 }

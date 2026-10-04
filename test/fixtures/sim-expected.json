@@ -1,0 +1,2576 @@
+{
+ "generator": "tools/port-sim-fixtures.mjs",
+ "simulator": "smogon/pokemon-showdown@9fb3a5b99f1a0bea17f495c5cc1bfe04fdd19c3e",
+ "sources": {
+  "golden-sim.json": "ea08d0af879b330ecd52a094181bc86f773e5000bbfd8cef968708deec06341e",
+  "scenarios.json": "628cdd894393b641be8e71ca96d01f2663c50fe6c4051fdea1a87caf689160f1",
+  "wrapper-fixes.json": "5affbd523d959fa1e61553a906d051ca3693f60ddcb40acafc56c2dc1ba488b3",
+  "intimidate.json": "3e1b8e9e755855864aeee6dd80832a9020c0384dbeaa1770a834959b13f90129",
+  "survival.json": "71596aa41716be380b9535ac960124879a7e9bf9d67259110126a1cb6ba64cdc",
+  "misc-semantics.json": "1d6299c4352303a06b0d94e086eb78cc56f5f33184f5ac2f152fff724d4a5fca"
+ },
+ "golden": {
+  "G1a-neutral": [
+   [
+    138,
+    140,
+    140,
+    144,
+    144,
+    146,
+    150,
+    150,
+    152,
+    152,
+    156,
+    156,
+    158,
+    158,
+    162,
+    164
+   ]
+  ],
+  "G1a-realIntimidate": [
+   [
+    92,
+    92,
+    96,
+    96,
+    96,
+    98,
+    98,
+    102,
+    102,
+    102,
+    104,
+    104,
+    104,
+    108,
+    108,
+    110
+   ]
+  ],
+  "G1b-singles": [
+   [
+    186,
+    186,
+    188,
+    192,
+    192,
+    194,
+    198,
+    200,
+    200,
+    204,
+    206,
+    210,
+    210,
+    212,
+    216,
+    218
+   ]
+  ],
+  "G1c-realIntimidate": [
+   [
+    92,
+    92,
+    96,
+    96,
+    96,
+    98,
+    98,
+    102,
+    102,
+    102,
+    104,
+    104,
+    104,
+    108,
+    108,
+    110
+   ]
+  ],
+  "G1d-crit": [
+   [
+    206,
+    210,
+    212,
+    216,
+    216,
+    218,
+    222,
+    224,
+    228,
+    230,
+    230,
+    234,
+    236,
+    240,
+    242,
+    246
+   ]
+  ],
+  "G2": [
+   [
+    62,
+    63,
+    63,
+    64,
+    65,
+    66,
+    66,
+    67,
+    68,
+    69,
+    69,
+    70,
+    71,
+    72,
+    72,
+    73
+   ]
+  ],
+  "G3": [
+   [
+    276,
+    278,
+    282,
+    284,
+    290,
+    294,
+    296,
+    300,
+    302,
+    306,
+    308,
+    312,
+    314,
+    318,
+    320,
+    326
+   ]
+  ],
+  "G4-singles": [
+   [
+    51,
+    52,
+    52,
+    53,
+    53,
+    54,
+    55,
+    55,
+    56,
+    56,
+    57,
+    58,
+    58,
+    59,
+    59,
+    60
+   ]
+  ],
+  "G4-doubles": [
+   [
+    51,
+    52,
+    52,
+    53,
+    53,
+    54,
+    55,
+    55,
+    56,
+    56,
+    57,
+    58,
+    58,
+    59,
+    59,
+    60
+   ]
+  ],
+  "G7": [
+   [
+    30,
+    30,
+    30,
+    31,
+    31,
+    31,
+    32,
+    32,
+    33,
+    33,
+    33,
+    34,
+    34,
+    34,
+    35,
+    35
+   ]
+  ],
+  "G8": [
+   [
+    103,
+    105,
+    106,
+    108,
+    108,
+    109,
+    111,
+    112,
+    114,
+    115,
+    115,
+    117,
+    118,
+    120,
+    121,
+    123
+   ]
+  ]
+ },
+ "scenarios": {
+  "spread-rockslide-two-foes": {
+   "psHits": [
+    [
+     68,
+     70,
+     70,
+     72,
+     72,
+     72,
+     74,
+     74,
+     76,
+     76,
+     76,
+     78,
+     78,
+     80,
+     80,
+     82
+    ]
+   ],
+   "spreadHit": true
+  },
+  "spread-rockslide-lone-foe": {
+   "psHits": [
+    [
+     92,
+     94,
+     94,
+     96,
+     96,
+     98,
+     100,
+     100,
+     102,
+     102,
+     104,
+     104,
+     106,
+     106,
+     108,
+     110
+    ]
+   ],
+   "spreadHit": false
+  },
+  "spread-rockslide-lone-foe-reflect": {
+   "psHits": [
+    [
+     61,
+     63,
+     63,
+     64,
+     64,
+     65,
+     67,
+     67,
+     68,
+     68,
+     69,
+     69,
+     71,
+     71,
+     72,
+     73
+    ]
+   ],
+   "spreadHit": false
+  },
+  "spread-eq-lone-foe-ally-present": {
+   "psHits": [
+    [
+     138,
+     140,
+     140,
+     144,
+     144,
+     146,
+     150,
+     150,
+     152,
+     152,
+     156,
+     156,
+     158,
+     158,
+     162,
+     164
+    ]
+   ],
+   "spreadHit": true
+  },
+  "spread-eq-lone-foe-no-ally": {
+   "psHits": [
+    [
+     186,
+     186,
+     188,
+     192,
+     192,
+     194,
+     198,
+     200,
+     200,
+     204,
+     206,
+     210,
+     210,
+     212,
+     216,
+     218
+    ]
+   ],
+   "spreadHit": false
+  },
+  "spread-rockslide-partner-protects": {
+   "psHits": [
+    [
+     68,
+     70,
+     70,
+     72,
+     72,
+     72,
+     74,
+     74,
+     76,
+     76,
+     76,
+     78,
+     78,
+     80,
+     80,
+     82
+    ]
+   ],
+   "spreadHit": true
+  },
+  "spread-eq-partner-immune-levitate": {
+   "psHits": [
+    [
+     138,
+     140,
+     140,
+     144,
+     144,
+     146,
+     150,
+     150,
+     152,
+     152,
+     156,
+     156,
+     158,
+     158,
+     162,
+     164
+    ]
+   ],
+   "spreadHit": true
+  },
+  "spread-rockslide-partner-flying-semiinv": {
+   "psHits": [
+    [
+     68,
+     70,
+     70,
+     72,
+     72,
+     72,
+     74,
+     74,
+     76,
+     76,
+     76,
+     78,
+     78,
+     80,
+     80,
+     82
+    ]
+   ],
+   "spreadHit": true
+  },
+  "screen-reflect-crit": {
+   "psHits": [
+    [
+     102,
+     104,
+     106,
+     106,
+     108,
+     108,
+     110,
+     112,
+     112,
+     114,
+     114,
+     116,
+     118,
+     118,
+     120,
+     122
+    ]
+   ],
+   "spreadHit": true
+  },
+  "screen-veil-plus-reflect": {
+   "psHits": [
+    [
+     45,
+     47,
+     47,
+     48,
+     48,
+     48,
+     49,
+     49,
+     51,
+     51,
+     51,
+     52,
+     52,
+     53,
+     53,
+     55
+    ]
+   ],
+   "spreadHit": true
+  },
+  "burn-crit-physical": {
+   "psHits": [
+    [
+     51,
+     52,
+     53,
+     53,
+     54,
+     54,
+     55,
+     56,
+     56,
+     57,
+     57,
+     58,
+     59,
+     59,
+     60,
+     61
+    ]
+   ],
+   "spreadHit": true
+  },
+  "screen-brickbreak": {
+   "psHits": [
+    [
+     92,
+     94,
+     94,
+     96,
+     96,
+     98,
+     100,
+     100,
+     102,
+     102,
+     104,
+     104,
+     106,
+     106,
+     108,
+     110
+    ]
+   ],
+   "spreadHit": false
+  },
+  "megasol-rain-weatherball": {
+   "psHits": [
+    [
+     67,
+     68,
+     69,
+     69,
+     70,
+     71,
+     72,
+     73,
+     73,
+     74,
+     75,
+     76,
+     77,
+     77,
+     78,
+     79
+    ]
+   ],
+   "spreadHit": false
+  },
+  "megasol-rain-flamethrower": {
+   "psHits": [
+    [
+     61,
+     61,
+     62,
+     63,
+     64,
+     64,
+     65,
+     66,
+     66,
+     67,
+     68,
+     69,
+     69,
+     70,
+     71,
+     72
+    ]
+   ],
+   "spreadHit": false
+  },
+  "megasol-rain-hydropump": {
+   "psHits": [
+    [
+     24,
+     24,
+     25,
+     25,
+     25,
+     26,
+     26,
+     26,
+     26,
+     27,
+     27,
+     27,
+     28,
+     28,
+     28,
+     29
+    ]
+   ],
+   "spreadHit": false
+  },
+  "megasol-rain-solarbeam": {
+   "psHits": [
+    [
+     160,
+     163,
+     165,
+     166,
+     169,
+     171,
+     172,
+     174,
+     177,
+     178,
+     180,
+     181,
+     184,
+     186,
+     187,
+     190
+    ]
+   ],
+   "spreadHit": false
+  },
+  "megasol-rain-energyball": {
+   "psHits": [
+    [
+     121,
+     123,
+     124,
+     126,
+     127,
+     129,
+     130,
+     132,
+     133,
+     135,
+     136,
+     138,
+     139,
+     141,
+     142,
+     144
+    ]
+   ],
+   "spreadHit": false
+  },
+  "megasol-partner-fire-in-rain": {
+   "psHits": [
+    [
+     24,
+     24,
+     24,
+     25,
+     25,
+     26,
+     26,
+     26,
+     27,
+     27,
+     27,
+     27,
+     27,
+     28,
+     28,
+     29
+    ]
+   ],
+   "spreadHit": false
+  },
+  "megasol-defender-in-sand": {
+   "psHits": [
+    [
+     128,
+     128,
+     132,
+     132,
+     134,
+     134,
+     138,
+     138,
+     140,
+     140,
+     144,
+     144,
+     146,
+     146,
+     150,
+     152
+    ]
+   ],
+   "spreadHit": false
+  },
+  "auraguard-contact": {
+   "psHits": [
+    [
+     102,
+     103,
+     105,
+     106,
+     108,
+     108,
+     109,
+     111,
+     112,
+     114,
+     114,
+     115,
+     117,
+     118,
+     120,
+     121
+    ]
+   ],
+   "spreadHit": false
+  },
+  "auraguard-noncontact": {
+   "psHits": [
+    [
+     126,
+     128,
+     128,
+     132,
+     132,
+     134,
+     134,
+     138,
+     138,
+     140,
+     140,
+     144,
+     144,
+     146,
+     146,
+     150
+    ]
+   ],
+   "spreadHit": true
+  },
+  "auraguard-moldbreaker": {
+   "psHits": [
+    [
+     38,
+     39,
+     39,
+     39,
+     40,
+     40,
+     41,
+     42,
+     42,
+     42,
+     42,
+     43,
+     44,
+     44,
+     45,
+     45
+    ]
+   ],
+   "spreadHit": false
+  },
+  "auraguard-crit": {
+   "psHits": [
+    [
+     153,
+     156,
+     157,
+     159,
+     160,
+     162,
+     165,
+     166,
+     168,
+     169,
+     171,
+     174,
+     175,
+     177,
+     178,
+     181
+    ]
+   ],
+   "spreadHit": false
+  },
+  "dragonize-doubleedge": {
+   "psHits": [
+    [
+     169,
+     171,
+     172,
+     175,
+     177,
+     178,
+     181,
+     183,
+     184,
+     187,
+     189,
+     190,
+     193,
+     195,
+     196,
+     199
+    ]
+   ],
+   "spreadHit": false
+  },
+  "dragonize-hypervoice": {
+   "psHits": [
+    [
+     28,
+     28,
+     30,
+     30,
+     30,
+     30,
+     30,
+     31,
+     31,
+     31,
+     31,
+     33,
+     33,
+     33,
+     33,
+     34
+    ]
+   ],
+   "spreadHit": true
+  },
+  "dragonize-return": {
+   "psHits": [
+    [
+     144,
+     145,
+     147,
+     148,
+     150,
+     151,
+     153,
+     154,
+     157,
+     159,
+     160,
+     162,
+     163,
+     165,
+     166,
+     169
+    ]
+   ],
+   "spreadHit": false
+  },
+  "dragonize-extremespeed": {
+   "psHits": [
+    [
+     112,
+     114,
+     115,
+     117,
+     118,
+     120,
+     120,
+     121,
+     123,
+     124,
+     126,
+     127,
+     129,
+     130,
+     132,
+     133
+    ]
+   ],
+   "spreadHit": false
+  },
+  "dragonize-weatherball": {
+   "psHits": [
+    [
+     12,
+     12,
+     13,
+     13,
+     13,
+     13,
+     13,
+     13,
+     13,
+     14,
+     14,
+     14,
+     14,
+     14,
+     14,
+     15
+    ]
+   ],
+   "spreadHit": false
+  },
+  "dragonize-crunch": {
+   "psHits": [
+    [
+     31,
+     32,
+     32,
+     33,
+     33,
+     33,
+     34,
+     34,
+     34,
+     35,
+     35,
+     36,
+     36,
+     36,
+     37,
+     37
+    ]
+   ],
+   "spreadHit": false
+  },
+  "dragonize-vs-fairy": {
+   "psHits": null,
+   "spreadHit": false
+  },
+  "eelevate-eq": {
+   "psHits": null,
+   "spreadHit": true
+  },
+  "eelevate-gravity": {
+   "psHits": [
+    [
+     152,
+     156,
+     158,
+     158,
+     162,
+     162,
+     164,
+     168,
+     168,
+     170,
+     170,
+     174,
+     176,
+     176,
+     180,
+     182
+    ]
+   ],
+   "spreadHit": true
+  },
+  "eelevate-moldbreaker": {
+   "psHits": [
+    [
+     174,
+     176,
+     180,
+     180,
+     182,
+     186,
+     186,
+     188,
+     192,
+     192,
+     194,
+     198,
+     198,
+     200,
+     204,
+     206
+    ]
+   ],
+   "spreadHit": true
+  },
+  "eelevate-ironball-levitate": {
+   "psHits": [
+    [
+     152,
+     156,
+     158,
+     158,
+     162,
+     162,
+     164,
+     168,
+     168,
+     170,
+     170,
+     174,
+     176,
+     176,
+     180,
+     182
+    ]
+   ],
+   "spreadHit": true
+  },
+  "bypass-UnseenFist-drainpunch-vs-Incineroar": {
+   "psHits": [
+    [
+     30,
+     30,
+     30,
+     31,
+     31,
+     31,
+     32,
+     32,
+     33,
+     33,
+     33,
+     34,
+     34,
+     34,
+     35,
+     35
+    ]
+   ],
+   "spreadHit": false
+  },
+  "bypass-UnseenFist-drainpunch-vs-Kingambit-chopleberry": {
+   "psHits": [
+    [
+     23,
+     24,
+     24,
+     24,
+     24,
+     25,
+     25,
+     25,
+     26,
+     26,
+     26,
+     26,
+     27,
+     27,
+     27,
+     28
+    ]
+   ],
+   "spreadHit": false
+  },
+  "bypass-UnseenFist-drainpunch-vs-Rillaboom-fg-reflect": {
+   "psHits": [
+    [
+     7,
+     8,
+     8,
+     8,
+     8,
+     8,
+     8,
+     8,
+     8,
+     8,
+     8,
+     8,
+     8,
+     9,
+     9,
+     9
+    ]
+   ],
+   "spreadHit": false
+  },
+  "bypass-UnseenFist-drainpunch-vs-Garchomp-reflect": {
+   "psHits": [
+    [
+     9,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     11,
+     11,
+     11,
+     11,
+     11,
+     11
+    ]
+   ],
+   "spreadHit": false
+  },
+  "bypass-UnseenFist-heavyslam-vs-Incineroar": {
+   "psHits": [
+    [
+     8,
+     8,
+     8,
+     8,
+     8,
+     8,
+     8,
+     8,
+     9,
+     9,
+     9,
+     9,
+     9,
+     9,
+     9,
+     9
+    ]
+   ],
+   "spreadHit": false
+  },
+  "bypass-UnseenFist-heavyslam-vs-Kingambit-chopleberry": {
+   "psHits": [
+    [
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5
+    ]
+   ],
+   "spreadHit": false
+  },
+  "bypass-UnseenFist-heavyslam-vs-Rillaboom-fg-reflect": {
+   "psHits": [
+    [
+     8,
+     8,
+     8,
+     8,
+     8,
+     8,
+     9,
+     9,
+     9,
+     9,
+     9,
+     9,
+     9,
+     9,
+     9,
+     9
+    ]
+   ],
+   "spreadHit": false
+  },
+  "bypass-UnseenFist-heavyslam-vs-Garchomp-reflect": {
+   "psHits": [
+    [
+     10,
+     10,
+     10,
+     11,
+     11,
+     11,
+     11,
+     11,
+     11,
+     11,
+     11,
+     12,
+     12,
+     12,
+     12,
+     12
+    ]
+   ],
+   "spreadHit": false
+  },
+  "bypass-PiercingDrill-ironhead-vs-Incineroar": {
+   "psHits": [
+    [
+     12,
+     12,
+     12,
+     13,
+     13,
+     13,
+     13,
+     13,
+     13,
+     13,
+     14,
+     14,
+     14,
+     14,
+     14,
+     14
+    ]
+   ],
+   "spreadHit": false
+  },
+  "bypass-PiercingDrill-ironhead-vs-Kingambit-chopleberry": {
+   "psHits": [
+    [
+     9,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     11,
+     11,
+     11,
+     11,
+     11
+    ]
+   ],
+   "spreadHit": false
+  },
+  "bypass-PiercingDrill-ironhead-vs-Rillaboom-fg-reflect": {
+   "psHits": [
+    [
+     12,
+     12,
+     12,
+     13,
+     13,
+     13,
+     13,
+     13,
+     13,
+     14,
+     14,
+     14,
+     14,
+     14,
+     14,
+     15
+    ]
+   ],
+   "spreadHit": false
+  },
+  "bypass-PiercingDrill-ironhead-vs-Garchomp-reflect": {
+   "psHits": [
+    [
+     15,
+     16,
+     16,
+     16,
+     16,
+     16,
+     17,
+     17,
+     17,
+     17,
+     17,
+     18,
+     18,
+     18,
+     18,
+     18
+    ]
+   ],
+   "spreadHit": false
+  },
+  "bypass-PiercingDrill-earthquake-vs-Incineroar": {
+   "psHits": null,
+   "spreadHit": true
+  },
+  "bypass-PiercingDrill-earthquake-vs-Kingambit-chopleberry": {
+   "psHits": null,
+   "spreadHit": true
+  },
+  "bypass-PiercingDrill-earthquake-vs-Rillaboom-fg-reflect": {
+   "psHits": null,
+   "spreadHit": true
+  },
+  "bypass-PiercingDrill-earthquake-vs-Garchomp-reflect": {
+   "psHits": null,
+   "spreadHit": true
+  },
+  "pb-doubleedge": {
+   "psHits": [
+    [
+     118,
+     118,
+     120,
+     121,
+     123,
+     124,
+     126,
+     127,
+     129,
+     130,
+     132,
+     133,
+     135,
+     136,
+     138,
+     139
+    ],
+    [
+     28,
+     28,
+     30,
+     30,
+     30,
+     30,
+     30,
+     31,
+     31,
+     31,
+     31,
+     33,
+     33,
+     33,
+     33,
+     34
+    ]
+   ],
+   "spreadHit": false
+  },
+  "pb-spread-two-foes": {
+   "psHits": [
+    [
+     74,
+     74,
+     76,
+     76,
+     78,
+     78,
+     80,
+     80,
+     80,
+     82,
+     82,
+     84,
+     84,
+     86,
+     86,
+     88
+    ]
+   ],
+   "spreadHit": true
+  },
+  "pb-spread-lone-foe": {
+   "psHits": [
+    [
+     100,
+     100,
+     102,
+     102,
+     104,
+     106,
+     106,
+     108,
+     108,
+     110,
+     112,
+     112,
+     114,
+     114,
+     116,
+     118
+    ],
+    [
+     24,
+     24,
+     26,
+     26,
+     26,
+     26,
+     26,
+     26,
+     26,
+     28,
+     28,
+     28,
+     28,
+     28,
+     28,
+     30
+    ]
+   ],
+   "spreadHit": false
+  },
+  "pb-sitrus-between-hits": {
+   "psHits": [
+    [
+     118,
+     118,
+     120,
+     121,
+     123,
+     124,
+     126,
+     127,
+     129,
+     130,
+     132,
+     133,
+     135,
+     136,
+     138,
+     139
+    ],
+    [
+     28,
+     28,
+     30,
+     30,
+     30,
+     30,
+     30,
+     31,
+     31,
+     31,
+     31,
+     33,
+     33,
+     33,
+     33,
+     34
+    ]
+   ],
+   "spreadHit": false
+  },
+  "fairyaura-ally-holder": {
+   "psHits": [
+    [
+     88,
+     90,
+     90,
+     91,
+     93,
+     94,
+     94,
+     96,
+     97,
+     97,
+     99,
+     100,
+     100,
+     102,
+     103,
+     105
+    ]
+   ],
+   "spreadHit": false
+  },
+  "fairyaura-foe-holder": {
+   "psHits": [
+    [
+     88,
+     90,
+     90,
+     91,
+     93,
+     94,
+     94,
+     96,
+     97,
+     97,
+     99,
+     100,
+     100,
+     102,
+     103,
+     105
+    ]
+   ],
+   "spreadHit": false
+  },
+  "moldbreaker-vs-friendguard": {
+   "psHits": [
+    [
+     42,
+     42,
+     42,
+     43,
+     43,
+     44,
+     45,
+     45,
+     45,
+     46,
+     46,
+     47,
+     48,
+     48,
+     48,
+     49
+    ]
+   ],
+   "spreadHit": false
+  },
+  "spicyspray-multihit": {
+   "psHits": [
+    [
+     34,
+     36,
+     36,
+     36,
+     36,
+     36,
+     38,
+     38,
+     38,
+     38,
+     38,
+     40,
+     40,
+     40,
+     40,
+     42
+    ],
+    [
+     17,
+     18,
+     18,
+     18,
+     18,
+     18,
+     19,
+     19,
+     19,
+     19,
+     19,
+     20,
+     20,
+     20,
+     20,
+     21
+    ],
+    [
+     17,
+     18,
+     18,
+     18,
+     18,
+     18,
+     19,
+     19,
+     19,
+     19,
+     19,
+     20,
+     20,
+     20,
+     20,
+     21
+    ],
+    [
+     17,
+     18,
+     18,
+     18,
+     18,
+     18,
+     19,
+     19,
+     19,
+     19,
+     19,
+     20,
+     20,
+     20,
+     20,
+     21
+    ],
+    [
+     17,
+     18,
+     18,
+     18,
+     18,
+     18,
+     19,
+     19,
+     19,
+     19,
+     19,
+     20,
+     20,
+     20,
+     20,
+     21
+    ]
+   ],
+   "spreadHit": false
+  },
+  "multihit-resistberry": {
+   "psHits": [
+    [
+     32,
+     36,
+     36,
+     36,
+     36,
+     36,
+     36,
+     36,
+     38,
+     38,
+     38,
+     38,
+     38,
+     38,
+     38,
+     42
+    ],
+    [
+     64,
+     72,
+     72,
+     72,
+     72,
+     72,
+     72,
+     72,
+     76,
+     76,
+     76,
+     76,
+     76,
+     76,
+     76,
+     84
+    ],
+    [
+     64,
+     72,
+     72,
+     72,
+     72,
+     72,
+     72,
+     72,
+     76,
+     76,
+     76,
+     76,
+     76,
+     76,
+     76,
+     84
+    ],
+    [
+     64,
+     72,
+     72,
+     72,
+     72,
+     72,
+     72,
+     72,
+     76,
+     76,
+     76,
+     76,
+     76,
+     76,
+     76,
+     84
+    ]
+   ],
+   "spreadHit": false
+  },
+  "ragefist-0": {
+   "psHits": [
+    [
+     23,
+     23,
+     24,
+     24,
+     24,
+     24,
+     24,
+     25,
+     25,
+     25,
+     26,
+     26,
+     26,
+     27,
+     27,
+     27
+    ]
+   ],
+   "spreadHit": false
+  },
+  "ragefist-hit2": {
+   "psHits": [
+    [
+     69,
+     69,
+     70,
+     71,
+     72,
+     73,
+     74,
+     75,
+     75,
+     76,
+     77,
+     78,
+     78,
+     79,
+     80,
+     81
+    ]
+   ],
+   "spreadHit": false
+  },
+  "lastrespects-2fainted": {
+   "psHits": [
+    [
+     63,
+     64,
+     65,
+     66,
+     66,
+     67,
+     68,
+     69,
+     69,
+     70,
+     71,
+     72,
+     72,
+     73,
+     74,
+     75
+    ]
+   ],
+   "spreadHit": false
+  },
+  "knockoff-item": {
+   "psHits": [
+    [
+     87,
+     88,
+     90,
+     90,
+     91,
+     93,
+     93,
+     94,
+     96,
+     96,
+     97,
+     99,
+     99,
+     100,
+     102,
+     103
+    ]
+   ],
+   "spreadHit": false
+  },
+  "knockoff-megastone": {
+   "psHits": [
+    [
+     69,
+     70,
+     70,
+     72,
+     72,
+     73,
+     75,
+     75,
+     76,
+     76,
+     78,
+     78,
+     79,
+     79,
+     81,
+     82
+    ]
+   ],
+   "spreadHit": false
+  },
+  "hex-status": {
+   "psHits": [
+    [
+     47,
+     48,
+     48,
+     49,
+     49,
+     50,
+     51,
+     51,
+     51,
+     52,
+     53,
+     54,
+     54,
+     54,
+     55,
+     56
+    ]
+   ],
+   "spreadHit": false
+  },
+  "lowkick-weight": {
+   "psHits": [
+    [
+     87,
+     87,
+     90,
+     90,
+     90,
+     91,
+     91,
+     94,
+     94,
+     96,
+     96,
+     99,
+     99,
+     100,
+     100,
+     103
+    ]
+   ],
+   "spreadHit": false
+  }
+ },
+ "wrapperFixes": [
+  {
+   "fix": "F3",
+   "move": "earthquake",
+   "defender": "Eelektross",
+   "ability": "Levitate",
+   "item": "ironball",
+   "gravity": false,
+   "ps": [
+    152,
+    182
+   ]
+  },
+  {
+   "fix": "F3",
+   "move": "highhorsepower",
+   "defender": "Eelektross",
+   "ability": "Levitate",
+   "item": "ironball",
+   "gravity": false,
+   "ps": [
+    198,
+    234
+   ]
+  },
+  {
+   "fix": "F3",
+   "move": "bulldoze",
+   "defender": "Eelektross",
+   "ability": "Levitate",
+   "item": "ironball",
+   "gravity": false,
+   "ps": [
+    92,
+    110
+   ]
+  },
+  {
+   "fix": "F3",
+   "move": "earthquake",
+   "defender": "Rotom-Wash",
+   "ability": "Levitate",
+   "item": "ironball",
+   "gravity": false,
+   "ps": [
+    122,
+    146
+   ]
+  },
+  {
+   "fix": "F3",
+   "move": "highhorsepower",
+   "defender": "Rotom-Wash",
+   "ability": "Levitate",
+   "item": "ironball",
+   "gravity": false,
+   "ps": [
+    152,
+    182
+   ]
+  },
+  {
+   "fix": "F3",
+   "move": "bulldoze",
+   "defender": "Rotom-Wash",
+   "ability": "Levitate",
+   "item": "ironball",
+   "gravity": false,
+   "ps": [
+    72,
+    86
+   ]
+  },
+  {
+   "fix": "F3",
+   "move": "earthquake",
+   "defender": "Hydreigon",
+   "ability": "Levitate",
+   "item": "ironball",
+   "gravity": false,
+   "ps": [
+    69,
+    82
+   ]
+  },
+  {
+   "fix": "F3",
+   "move": "highhorsepower",
+   "defender": "Hydreigon",
+   "ability": "Levitate",
+   "item": "ironball",
+   "gravity": false,
+   "ps": [
+    90,
+    106
+   ]
+  },
+  {
+   "fix": "F3",
+   "move": "bulldoze",
+   "defender": "Hydreigon",
+   "ability": "Levitate",
+   "item": "ironball",
+   "gravity": false,
+   "ps": [
+    42,
+    51
+   ]
+  },
+  {
+   "fix": "F3",
+   "move": "earthquake",
+   "defender": "Eelektross-Mega",
+   "ability": "Eelevate",
+   "item": "eelektrossite",
+   "gravity": true,
+   "ps": [
+    152,
+    182
+   ]
+  },
+  {
+   "fix": "F3",
+   "move": "highhorsepower",
+   "defender": "Eelektross-Mega",
+   "ability": "Eelevate",
+   "item": "eelektrossite",
+   "gravity": true,
+   "ps": [
+    198,
+    234
+   ]
+  },
+  {
+   "fix": "F3",
+   "move": "bulldoze",
+   "defender": "Eelektross-Mega",
+   "ability": "Eelevate",
+   "item": "eelektrossite",
+   "gravity": true,
+   "ps": [
+    92,
+    110
+   ]
+  },
+  {
+   "fix": "F4",
+   "move": "ragefist",
+   "hitsTaken": 0,
+   "ps": [
+    30,
+    36
+   ]
+  },
+  {
+   "fix": "F4",
+   "move": "ragefist",
+   "hitsTaken": 1,
+   "ps": [
+    58,
+    69
+   ]
+  },
+  {
+   "fix": "F4",
+   "move": "ragefist",
+   "hitsTaken": 2,
+   "ps": [
+    85,
+    102
+   ]
+  },
+  {
+   "fix": "F4",
+   "move": "ragefist",
+   "hitsTaken": 3,
+   "ps": [
+    114,
+    135
+   ]
+  },
+  {
+   "fix": "F4",
+   "move": "ragefist",
+   "hitsTaken": 6,
+   "ps": [
+    198,
+    234
+   ]
+  },
+  {
+   "fix": "F4",
+   "move": "ragefist",
+   "hitsTaken": 7,
+   "ps": [
+    198,
+    234
+   ]
+  },
+  {
+   "fix": "F4",
+   "move": "lastrespects",
+   "fainted": 0,
+   "ps": [
+    21,
+    26
+   ]
+  },
+  {
+   "fix": "F4",
+   "move": "lastrespects",
+   "fainted": 1,
+   "ps": [
+    43,
+    51
+   ]
+  },
+  {
+   "fix": "F4",
+   "move": "lastrespects",
+   "fainted": 2,
+   "ps": [
+    64,
+    76
+   ]
+  },
+  {
+   "fix": "F4",
+   "move": "lastrespects",
+   "fainted": 3,
+   "ps": [
+    86,
+    102
+   ]
+  }
+ ],
+ "intimidate": [
+  {
+   "receiverAbility": "Run Away",
+   "item": null,
+   "receiver": {
+    "atk": -1,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Run Away",
+   "item": "whiteherb",
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Inner Focus",
+   "item": null,
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Inner Focus",
+   "item": "whiteherb",
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "whiteherb",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Own Tempo",
+   "item": null,
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Own Tempo",
+   "item": "whiteherb",
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "whiteherb",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Oblivious",
+   "item": null,
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Oblivious",
+   "item": "whiteherb",
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "whiteherb",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Scrappy",
+   "item": null,
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Scrappy",
+   "item": "whiteherb",
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "whiteherb",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Clear Body",
+   "item": null,
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Clear Body",
+   "item": "whiteherb",
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "whiteherb",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Hyper Cutter",
+   "item": null,
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Hyper Cutter",
+   "item": "whiteherb",
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "whiteherb",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "White Smoke",
+   "item": null,
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "White Smoke",
+   "item": "whiteherb",
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "whiteherb",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Full Metal Body",
+   "item": null,
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Full Metal Body",
+   "item": "whiteherb",
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "whiteherb",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Defiant",
+   "item": null,
+   "receiver": {
+    "atk": 1,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Defiant",
+   "item": "whiteherb",
+   "receiver": {
+    "atk": 1,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "whiteherb",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Competitive",
+   "item": null,
+   "receiver": {
+    "atk": -1,
+    "spa": 2,
+    "spe": 0
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Competitive",
+   "item": "whiteherb",
+   "receiver": {
+    "atk": 0,
+    "spa": 2,
+    "spe": 0
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Contrary",
+   "item": null,
+   "receiver": {
+    "atk": 1,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Contrary",
+   "item": "whiteherb",
+   "receiver": {
+    "atk": 1,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "whiteherb",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Simple",
+   "item": null,
+   "receiver": {
+    "atk": -2,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Simple",
+   "item": "whiteherb",
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Guard Dog",
+   "item": null,
+   "receiver": {
+    "atk": 1,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Guard Dog",
+   "item": "whiteherb",
+   "receiver": {
+    "atk": 1,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "whiteherb",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Mirror Armor",
+   "item": null,
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": -1
+  },
+  {
+   "receiverAbility": "Mirror Armor",
+   "item": "whiteherb",
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "whiteherb",
+   "intimidatorAtk": -1
+  },
+  {
+   "receiverAbility": "Rattled",
+   "item": null,
+   "receiver": {
+    "atk": -1,
+    "spa": 0,
+    "spe": 1
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Rattled",
+   "item": "whiteherb",
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 1
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": 0
+  },
+  {
+   "receiverAbility": "Intimidate",
+   "item": null,
+   "receiver": {
+    "atk": -1,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": -1
+  },
+  {
+   "receiverAbility": "Intimidate",
+   "item": "whiteherb",
+   "receiver": {
+    "atk": 0,
+    "spa": 0,
+    "spe": 0
+   },
+   "receiverItemAfter": "",
+   "intimidatorAtk": -1
+  }
+ ],
+ "survival": {
+  "two-turns-sitrus": "123/256",
+  "two-turns-sitrus-crit-mixture": "77099/147456",
+  "two-turns-leftovers": "256/256",
+  "same-turn-two-attackers-sitrus": "0/256",
+  "same-turn-two-attackers-focussash-crit-first": "256/256",
+  "multihit-3-sitrus": "0/4096",
+  "multihit-2-focussash": "256/256",
+  "parentalbond-vs-sturdy": "256/256"
+ },
+ "disguise": [
+  {
+   "attacker": "Garchomp",
+   "move": "dragonclaw",
+   "maxhp": 162,
+   "firstHitHPLost": 0,
+   "formeAfter": "Mimikyu",
+   "trunc8": 20,
+   "secondHitHPLost100roll": 0,
+   "calcDisguiseRolls": [
+    0,
+    0
+   ],
+   "calcBustedFormeRolls100": 0
+  },
+  {
+   "attacker": "Kingambit",
+   "move": "ironhead",
+   "maxhp": 162,
+   "firstHitHPLost": 20,
+   "formeAfter": "Mimikyu-Busted",
+   "trunc8": 20,
+   "secondHitHPLost100roll": 142,
+   "calcDisguiseRolls": [
+    186,
+    222
+   ],
+   "calcBustedFormeRolls100": 222
+  }
+ ],
+ "aegislash": {
+  "attackingShadowBall": {
+   "ps": [
+    43,
+    44,
+    45,
+    45,
+    45,
+    46,
+    46,
+    47,
+    48,
+    48,
+    48,
+    49,
+    49,
+    50,
+    51,
+    51
+   ],
+   "liveSpecies": "Aegislash-Blade",
+   "calcBlade": [
+    43,
+    44,
+    45,
+    45,
+    45,
+    46,
+    46,
+    47,
+    48,
+    48,
+    48,
+    49,
+    49,
+    50,
+    51,
+    51
+   ],
+   "calcShield": [
+    23,
+    23,
+    24,
+    24,
+    24,
+    24,
+    24,
+    25,
+    25,
+    25,
+    26,
+    26,
+    26,
+    27,
+    27,
+    27
+   ],
+   "equalsBlade": true
+  },
+  "hitBeforeItAttacks": {
+   "ps": [
+    29,
+    29,
+    30,
+    30,
+    30,
+    30,
+    30,
+    31,
+    31,
+    32,
+    32,
+    33,
+    33,
+    33,
+    33,
+    34
+   ],
+   "liveSpecies": "Aegislash",
+   "equalsShield": true
+  },
+  "hitAfterItAttacked": {
+   "ps": [
+    64,
+    65,
+    66,
+    66,
+    67,
+    68,
+    69,
+    69,
+    70,
+    71,
+    72,
+    72,
+    73,
+    74,
+    75,
+    76
+   ],
+   "liveSpecies": "Aegislash-Blade",
+   "equalsBlade": true
+  }
+ }
+}

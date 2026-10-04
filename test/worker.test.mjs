@@ -5,6 +5,8 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import { join, relative, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { GID, PUB } from '../lib/sheet.mjs';
 import { buildLeague } from '../lib/league.mjs';
 import { slimChaos } from '../lib/usage.mjs';
@@ -98,12 +100,15 @@ function assertSanitized(r, expected) {
   for (const s of SECRETS) assert.ok(!r.text.includes(s), `response leaks ${JSON.stringify(s)}: ${r.text}`);
 }
 
-const STATIC_FILES = [...readdirSync(new URL('public/', ROOT)).map((f) => [`/${f}`, `public/${f}`]),
-  ...readdirSync(new URL('lib/', ROOT)).map((f) => [`/lib/${f}`, `lib/${f}`]), ['/data/dex.json', 'data/dex.json'], ['/data/cores.json', 'data/cores.json'],
-  ['/', 'public/index.html']];
-// Everything the Worker may serve: public/, lib/ and exactly two data files. Anything else embedded would be an exposure.
+// public/ and lib/ are served recursively (public/vendor/, lib/calc/), like the build embeds them.
+const filesUnder = (dir) => readdirSync(new URL(`${dir}/`, ROOT), { recursive: true, withFileTypes: true }).filter((d) => d.isFile())
+  .map((d) => relative(fileURLToPath(new URL(`${dir}/`, ROOT)), join(d.parentPath ?? d.path, d.name)).split(sep).join('/')).sort();
+const STATIC_FILES = [...filesUnder('public').map((f) => [`/${f}`, `public/${f}`]),
+  ...filesUnder('lib').map((f) => [`/lib/${f}`, `lib/${f}`]), ['/data/dex.json', 'data/dex.json'], ['/data/cores.json', 'data/cores.json'],
+  ['/data/mechanics.json', 'data/mechanics.json'], ['/', 'public/index.html']];
+// Everything the Worker may serve: public/, lib/ and exactly three data files. Anything else embedded would be an exposure.
 const ALLOWED_ASSETS = STATIC_FILES.filter(([p]) => p !== '/').map(([, f]) => f).sort();
-const TYPES = { html: 'text/html; charset=utf-8', js: 'text/javascript; charset=utf-8', mjs: 'text/javascript; charset=utf-8', css: 'text/css; charset=utf-8', json: 'application/json; charset=utf-8' };
+const TYPES = { html: 'text/html; charset=utf-8', js: 'text/javascript; charset=utf-8', mjs: 'text/javascript; charset=utf-8', css: 'text/css; charset=utf-8', json: 'application/json; charset=utf-8', txt: 'text/plain; charset=utf-8' };
 
 test('static routes serve the embedded files byte-for-byte with the original headers', async (t) => {
   const { calls } = setup(t);
@@ -116,8 +121,36 @@ test('static routes serve the embedded files byte-for-byte with the original hea
     assert.equal(res.headers.get('cache-control'), 'no-store', path);
   }
   assert.ok(STATIC_FILES.length >= 17);
-  for (const p of ['/lib/cores.mjs', '/lib/cores-view.mjs', '/lib/rerender.mjs', '/data/cores.json']) assert.ok(STATIC_FILES.some(([x]) => x === p), p);
+  for (const p of ['/lib/cores.mjs', '/lib/cores-view.mjs', '/lib/rerender.mjs', '/data/cores.json', '/prep.js', '/lib/calc/wrapper.mjs', '/data/mechanics.json',
+    '/vendor/smogon-calc-0.12.0.mjs', '/vendor/THIRD_PARTY_NOTICES.txt', '/vendor/smogon-calc.SOURCE.json']) assert.ok(STATIC_FILES.some(([x]) => x === p), p);
   assert.equal(calls.length, 0);
+});
+
+test('Prep adds no server route: no POST, no prep API, no simulator or research inputs served', async (t) => {
+  const { calls } = setup(t);
+  const worker = await freshWorker();
+  for (const path of ['/api/prep', '/api/prep/', '/api/calc', '/api/backup', '/api/telemetry', '/data/mechanics-projection.json', '/data/cache/mechanics.json',
+    '/node_modules/@smogon/calc/package.json', '/node_modules/@smogon/calc/dist/production.min.js', '/pokemon-showdown/sim/battle.ts', '/tools/vendor-calc.mjs',
+    '/tools/build-mechanics.mjs', '/tools/port-sim-fixtures.mjs', '/test/fixtures/sim-expected.json', '/test/fixtures/pastes.txt', '/test/fixtures/calc-source-pin.json',
+    '/research/SIMULATOR-VALIDATION.md', '/research/IMPLEMENTATION-STATUS.md', '/IMPLEMENTATION-STATUS.md', '/scratch/oracle/report.json',
+    '/lib/calc/', '/vendor/', '/data/mechanics.json/']) {
+    const r = await get(worker, path, {});
+    assert.equal(r.status, 404, path);
+  }
+  for (const path of ['/api/prep', '/data/mechanics.json', '/prep.js']) assert.equal((await get(worker, path, {}, 'POST')).status, 405, path);
+  assert.equal(calls.length, 0);
+});
+
+test('artifact budget: the Worker bundle stays under 3 MB and the mechanics projection is the pinned, minimal one', () => {
+  const size = read('dist/server/index.js').length;
+  assert.ok(size < 3 * 1024 * 1024, `dist/server/index.js is ${size} bytes`);
+  const mech = JSON.parse(read('data/mechanics.json'));
+  assert.equal(mech.meta.schema, 'drafarig.mechanics-app/1');
+  assert.deepEqual(Object.keys(mech).sort(), ['abilities', 'items', 'learnsetMoves', 'learnsets', 'meta', 'moves', 'natures', 'regulation', 'species']);
+  assert.equal(mech.meta.source.projectionSha256, '167e768f3a24ffe70b03e4ddc02b887fbf9a3cee826c704d1578dfdfbad57d02');
+  assert.equal(mech.meta.source.projectionHash, '48dafc7a14a2ac971a533989ccaf07c0117452b5f60bc813e8c6de7963838e08');
+  const text = read('data/mechanics.json').toString('utf8');
+  for (const s of ['/workspace', 'drafarig-match-prep-research', 'scratch', 'oracle', 'node_modules', 'pokemon-showdown/', 'C:\\']) assert.ok(!text.includes(s), `mechanics.json mentions ${s}`);
 });
 
 test('unknown paths, directories, source/config files and the R2 cache blobs are all 404', async (t) => {
@@ -400,7 +433,10 @@ test('build artifact: self-contained ESM, deterministic, Worker manifest with th
   assert.deepEqual(source.match(/^import .+$/gm).map((l) => l.match(/'(.+)'/)[1]), ['../lib/sheet.mjs', '../lib/league.mjs', '../lib/usage.mjs']);
   // Safe-asset exposure: the embedded files are exactly public/, lib/, data/dex.json and data/cores.json.
   const files = bundle.slice(bundle.indexOf('\nconst FILES = {\n'), bundle.indexOf('\n};\n', bundle.indexOf('\nconst FILES = {\n')));
-  assert.deepEqual([...files.matchAll(/^ {2}("(?:[^"\\]|\\.)*"): /gm)].map((m) => JSON.parse(m[1])).sort(), ALLOWED_ASSETS);
+  const embedded = [...files.matchAll(/^ {2}("(?:[^"\\]|\\.)*"): /gm)].map((m) => JSON.parse(m[1])).sort();
+  assert.deepEqual(embedded, ALLOWED_ASSETS);
+  // only app file types ship (a stray report, patch or dotfile would fail here as well as in the build)
+  for (const f of embedded) assert.match(f, /^lib\/[\w./-]+\.mjs$|^public\/[\w-]+\.(html|js|css|svg)$|^public\/vendor\/[\w.-]+\.(mjs|txt|json)$|^data\/(dex|cores|mechanics)\.json$/, f);
   const sha = () => createHash('sha256').update(read('dist/server/index.js')).digest('hex');
   const before = sha();
   execFileSync(process.execPath, [new URL('scripts/build.mjs', ROOT).pathname], { stdio: 'pipe' });

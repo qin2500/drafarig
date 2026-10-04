@@ -1,0 +1,12 @@
+{
+ "note": "Result-affecting calc sources. Changing any of them must bump WRAPPER_VERSION (saved calcs then show as out of date) and update this pin.",
+ "version": "drafarig-calc/3",
+ "files": {
+  "lib/calc/wrapper.mjs": "45e76ea09943ba718e22109140d0413fe15f181150fb66f3b4fb35d5cae7be4c",
+  "lib/calc/rules.mjs": "ccfd630595976ced4b7f5bb85522bcde54ee10a95a9f1c0cc76fa14704b04d7b",
+  "lib/calc/ko.mjs": "0ae38a59db0e0451d06891dc97c10e9beefc60b3248a49df2880bde6e3e826ac",
+  "lib/calc/stats.mjs": "417a002e533cf97cacd37ae5aedb2b15034692f096771788e4fa87b1f7961f37",
+  "lib/calc/scenario.mjs": "0237debbe8c090e2bcad0c5b18f08e14b1b7c7277b3c7c0a774ab543fd2a5c83",
+  "lib/calc/mech.mjs": "218d35edb6e675010ecc6fc9468a8092d291848893acc89eb33991380f8e6ab3"
+ }
+}

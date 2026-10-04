@@ -1,0 +1,167 @@
+### Showdown paste fixtures (synthetic sets). Each block starts with a line "#### <id>"; lines starting with "###" are comments.
+### Expected outcomes come from the pinned Pokémon Showdown Teams.import / TeamValidator (test/paste.test.mjs).
+
+#### 01-valid-champions
+Garchomp @ Choice Scarf
+Ability: Rough Skin
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Earthquake
+- Dragon Claw
+- Rock Slide
+- Stomping Tantrum
+
+#### 02-legacy-252ev
+Garchomp @ Life Orb
+Ability: Rough Skin
+Level: 50
+EVs: 4 HP / 252 Atk / 252 Spe
+Jolly Nature
+- Earthquake
+- Dragon Claw
+- Rock Slide
+- Protect
+
+#### 03-tera-and-ivs
+Rotom-Wash @ Sitrus Berry
+Ability: Levitate
+Level: 50
+Tera Type: Fairy
+EVs: 32 HP / 2 Def / 32 SpA
+Modest Nature
+IVs: 0 Atk
+- Hydro Pump
+- Thunderbolt
+- Will-O-Wisp
+- Protect
+
+#### 04a-mega-forme-correct-stone
+Garchomp-Mega @ Garchompite
+Ability: Rough Skin
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Earthquake
+- Dragon Claw
+- Rock Slide
+- Protect
+
+#### 04b-mega-z-wrong-stone
+Garchomp-Mega-Z @ Garchompite
+Ability: Rough Skin
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Earthquake
+- Dragon Claw
+- Rock Slide
+- Protect
+
+#### 04c-meowstic-f-mega
+Meowstic-F-Mega @ Meowsticite
+Ability: Competitive
+EVs: 32 HP / 2 Def / 32 SpA
+Modest Nature
+- Psychic
+- Shadow Ball
+- Protect
+- Fake Out
+
+#### 05-nickname-gender-shiny
+Chompy (Garchomp) (F) @ Choice Scarf
+Ability: Rough Skin
+Level: 50
+Shiny: Yes
+Happiness: 160
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Earthquake
+- Dragon Claw
+- Rock Slide
+- Stomping Tantrum
+
+Mr. (Bob) (Garchomp) @ Life Orb
+Ability: Rough Skin
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Earthquake
+
+#### 06-unknown-and-past-items
+Garchomp @ Fake Orb
+Ability: Rough Skin
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Earthquake
+
+Lucario @ Choice Band
+Ability: Inner Focus
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Close Combat
+
+#### 07-nonstandard-sp-labels
+Garchomp @ Life Orb
+Ability: Rough Skin
+SPs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Earthquake
+
+Lucario @ Life Orb
+Ability: Inner Focus
+Stat Points: 2 HP / 32 Atk / 32 Spe
+- Close Combat
+
+#### 08-ev-line-oddities
+Garchomp @ Life Orb
+Ability: Rough Skin
+EVs: 32 Sp. Atk / 32 Spd / 2 SpD
+Modest Nature
+- Draco Meteor
+
+Lucario @ Life Orb
+Ability: Inner Focus
+EVs: 32atk / 32  Spe / x HP / 31 Atk
+Jolly Nature
+- Close Combat
+
+#### 09-species-name-variants
+Garchomp-Mega Z @ Garchompite Z
+Ability: Rough Skin
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Earthquake
+
+Mega Garchomp @ Garchompite
+Ability: Rough Skin
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Earthquake
+
+Mega Garchomp Z @ Garchompite Z
+Ability: Rough Skin
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Earthquake
+
+Rotom-W @ Sitrus Berry
+Ability: Levitate
+EVs: 32 HP / 2 Def / 32 SpA
+Modest Nature
+- Hydro Pump
+
+Meowstic (F) @ Sitrus Berry
+Ability: Prankster
+EVs: 32 HP / 2 Def / 32 SpD
+Calm Nature
+- Fake Out
+
+Tauros-Paldea-Water @ Sitrus Berry
+Ability: Intimidate
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Wave Crash
+
+Urshifu-Rapid-Strike @ Focus Sash
+Ability: Unseen Fist
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Surging Strikes

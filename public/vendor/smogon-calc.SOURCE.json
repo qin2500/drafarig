@@ -1,0 +1,31 @@
+{
+  "name": "@smogon/calc",
+  "version": "0.12.0",
+  "license": "MIT",
+  "copyright": "Copyright (c) 2013-2025 Honko and other contributors",
+  "repository": "https://github.com/smogon/damage-calc",
+  "npmIntegrity": "sha512-rNkdYV/ZGIugxD+hZlHdDaZLdGPYRIm+AaMFM18X2T2Pf8jpuuro9aoeiaZh51zcRR4tN3NRjSPoEXZ5ZDTuuA==",
+  "inputs": {
+    "package.json": "bcae3ec722d55294af0d8932057c4dde7ca4e71b5558ba07984c788498d4fcf8",
+    "dist/data/production.min.js": "b6037ccba7bfdabc332041e237cf19cfddee8d6037f9ee3ccba6fda55208e873",
+    "dist/production.min.js": "ee755aaac6819fe1fd81277ca327fdda161d17f9ff8897f03296a50bbc060471"
+  },
+  "output": {
+    "path": "public/vendor/smogon-calc-0.12.0.mjs",
+    "sha256": "8e94c611e12b0b37169d8b9f5a33b346d755561973551573e182c2a777fe4857",
+    "bytes": 499639
+  },
+  "exports": [
+    "Generations",
+    "Pokemon",
+    "Move",
+    "Field",
+    "Side",
+    "calculate",
+    "Result",
+    "toID",
+    "STATS",
+    "Stats"
+  ],
+  "generator": "tools/vendor-calc.mjs"
+}

@@ -1,5 +1,6 @@
 // Drafarig local server. Zero dependencies. Run:  node server.mjs   (or npm start)
-// Serves public/ and lib/ (shared ES modules), data/dex.json, data/cores.json (the public Cores spec), and:
+// Serves public/ and lib/ (shared ES modules), data/dex.json, data/cores.json (the public Cores spec),
+// data/mechanics.json (the static Reg M-C projection the Prep calculator reads in the browser), and:
 //   GET /api/sheet  live league sheet on every call (no-store + cache-busting); falls back to the last good snapshot
 //   GET /api/usage  Smogon chaos stats for gen9championsvgc2026regmc, slimmed + cached 24 h in data/cache/
 import { createServer } from 'node:http';
@@ -84,9 +85,9 @@ async function getUsage() {
 }
 
 const API = { '/api/sheet': getSheet, '/api/usage': getUsage };
-const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml' };
+const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml', '.txt': 'text/plain; charset=utf-8' };
 // URL prefix -> directory. lib/ is shared with the browser.
-const STATIC = [['/lib/', join(ROOT, 'lib')], ['/data/dex.json', join(ROOT, 'data', 'dex.json')], ['/data/cores.json', join(ROOT, 'data', 'cores.json')], ['/', join(ROOT, 'public')]];
+const STATIC = [['/lib/', join(ROOT, 'lib')], ['/data/dex.json', join(ROOT, 'data', 'dex.json')], ['/data/cores.json', join(ROOT, 'data', 'cores.json')], ['/data/mechanics.json', join(ROOT, 'data', 'mechanics.json')], ['/', join(ROOT, 'public')]];
 
 createServer(async (req, res) => {
   if (req.method !== 'GET' && req.method !== 'HEAD') {
