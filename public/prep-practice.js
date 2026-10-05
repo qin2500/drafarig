@@ -56,7 +56,8 @@ function brief(P, ws) {
   const howIdeas = ws.plans.filter((p) => p.kind === 'likely' || p.kind === 'alt').map((p) => (p.needs ?? '').trim()).filter(Boolean).map((s) => `Needs: ${s}`);
   // The purpose starts empty: your premortem, revisions and findings are your notes and can name your team, so they are
   // only offered as suggestions you tap (and check) before anything of yours goes into text you send.
-  const purposeIdeas = [lastRev?.expectedEffect, ws.premortem, ws.findings.find((f) => f.status === 'open')?.statement].map((s) => (s ?? '').trim()).filter(Boolean);
+  // (a purpose from the Battle Prep briefing joins them, on the same terms: a suggestion to tap, never filled in for you)
+  const purposeIdeas = [ui.brPurposeHint, lastRev?.expectedEffect, ws.premortem, ws.findings.find((f) => f.status === 'open')?.statement].map((s) => (s ?? '').trim()).filter(Boolean);
   ui.br ??= {
     purpose: '',
     partner: '', inLeague: 'unsure', variantId: (defaultVariant(ws) ?? variantOf(P, ws))?.id ?? null, rotate: false, blind: false, fidelity: 1,
@@ -114,7 +115,7 @@ export function logForm(P, ws, target) {
   const chosen = (target.kind === 'match' ? holder.my6 : (holder.mySets?.length ? holder.mySets : ws.my6)).map((x) => P.lineage(x.setId)).filter(Boolean);
   // no 6 chosen yet: offer your sets for the Pokémon on your roster (one per Pokémon), so the log can still be finished
   const roster = new Set(P.coachRoster(P.myCoach()));
-  const mine = chosen.length ? chosen : [...new Map(P.docs.mysets.sets.filter((s) => !roster.size || roster.has(s.speciesId)).map((s) => [s.speciesId, s])).values()];
+  const mine = chosen.length ? chosen : [...new Map(P.mineSets().filter((s) => !roster.size || roster.has(s.speciesId)).map((s) => [s.speciesId, s])).values()];
   const prev = holder.games.find((x) => x.index === idx - 1);
   const d = { kind: target.kind, holder: holder.id, index: idx };
   // Played from a brief: ask once per mock set, in view, whether the partner's teambuilder showed the brief's numbers.

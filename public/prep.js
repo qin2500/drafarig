@@ -1,7 +1,8 @@
 // Prep mode controller (browser). Owns device-local prep documents, autosave with revision checks, routes, and the
 // screens. Screens live in prep-*.js modules; pure logic lives in /lib. Nothing here sends prep anywhere: no fetch, no
 // beacons, no URLs with data. The only dynamic import is the vendored damage engine (prep-engine.js).
-import { parseRoute, formatRoute, parentRoute, navKind } from '../lib/prep-route.mjs';
+import { parseRoute, formatRoute, parentRoute, navKind, isMatch, MATCH_TABS } from '../lib/prep-route.mjs';
+import { resolvePov, identityOf, ownerOf, workspacesFor, unassignedVs, legacyEvidence } from '../lib/prep-matchup.mjs';
 import { KEYS, wsKey, newId, emptyMeta, emptyRules, emptyMySets, emptyPilot, newWorkspace, typeOfKey, forbiddenKey, SCHEMA_VERSION } from '../lib/prep-schema.mjs';
 import { createStore, USAGE_BUDGET_CHARS, isPrepKey } from '../lib/prep-store.mjs';
 import { makeBackup, readBackup, planRestore, opponentDocs } from '../lib/prep-backup.mjs';
@@ -16,17 +17,29 @@ import * as Sets from './prep-sets.js';
 import * as Calcs from './prep-calcs.js';
 import * as Plan from './prep-plan.js';
 import * as Practice from './prep-practice.js';
+import * as Matchup from './prep-matchup.js';
 
 const SAVE_DELAY = 400;
-const TAB_LABEL = { plan: 'Plan', sets: 'Sets', calcs: 'Calcs', practice: 'Practice' };
-const MODULES = [Sets, Calcs, Plan, Practice];
+const TAB_LABEL = { brief: 'Brief', plan: 'Plan', sets: 'Sets', calcs: 'Calcs', practice: 'Practice' };
+const MODULES = [Sets, Calcs, Plan, Practice, Matchup];
 
 /**
  * app: { dex, league(), sheet(), usage(), coresCx(), viewingCoach(), setViewingCoach(name), goMode(mode), toast(msg),
  * rerender(), storage, crypto, history, location, now(), loadMechanics() -> Promise<json>, download(name, text, type),
  * copyText(text) -> Promise, readClipboard() -> Promise<string>, persist: {persisted(), persist()} | null, appBuild }
  */
+/** The app shell this Prep needs (public/app.js prepApp.shellVersion). An older shell gets a "Reload" screen and no writes. */
+export const SHELL_VERSION = 2;
+function outdatedShell(app) {
+  const msg = 'Drafarig was updated while this page was open. Reload the page to open Battle Prep. Nothing was changed.';
+  return {
+    P: null, render: () => `<div class="prep" data-prep-view="outdated"><section class="panel">${h2('Reload to continue')}<p>${esc(msg)}</p>${btn('Reload', 'reload-page', {}, { primary: true })}</section></div>`,
+    click(t) { if (t?.dataset?.pa === 'reload-page') { try { app.location.reload(); } catch { /* no reload here */ } return true; } return false; },
+    change: () => false, input: () => false, applyHash: () => true, hash: () => '#prep', consumeFocus: () => null, onStorage() {}, onHidden() {}, init() {}, flush() {}, setPersisted() {}, saveUi() {}, escape() {},
+  };
+}
 export function createPrep(app) {
+  if (app.shellVersion !== SHELL_VERSION) return outdatedShell(app);
   const P = {
     app, store: createStore(app.storage), docs: {}, ws: new Map(), revs: new Map(), saveIds: new Map(), dirty: new Set(), route: { view: 'home' },
     mech: null, mechState: 'idle', calc: null, engineState: 'idle', ui: { ws: {} }, saveState: 'saved', saveError: null,
@@ -63,7 +76,7 @@ export function createPrep(app) {
     }
     // the workspace index follows what is actually stored
     const listed = new Map((P.docs.meta.workspaces ?? []).map((w) => [w.id, w]));
-    const idx = [...P.ws.values()].map((w) => ({ id: w.id, coach: w.coach, updatedAt: w.updatedAt, archived: false, ...(listed.get(w.id) ?? {}) }));
+    const idx = [...P.ws.values()].map((w) => ({ id: w.id, coach: w.coach, ...(ownerOf(w) ? { pov: w.pov } : {}), updatedAt: w.updatedAt, archived: false, ...(listed.get(w.id) ?? {}) }));
     if (JSON.stringify(idx.map((w) => w.id).sort()) !== JSON.stringify([...listed.keys()].sort())) { P.docs.meta = { ...P.docs.meta, workspaces: idx }; P.dirty.add(KEYS.meta); }
     if (P.dirty.size) flush();
   };
@@ -73,8 +86,12 @@ export function createPrep(app) {
   const docFor = (key) => (key === KEYS.meta ? P.docs.meta : key === KEYS.rules ? P.docs.rules : key === KEYS.mysets ? P.docs.mysets : key === KEYS.pilot ? P.docs.pilot : P.ws.get(key.slice(wsKey('').length)));
   const setDoc = (key, d) => { if (key === KEYS.meta) P.docs.meta = d; else if (key === KEYS.rules) P.docs.rules = d; else if (key === KEYS.mysets) P.docs.mysets = d; else if (key === KEYS.pilot) P.docs.pilot = d; else P.ws.set(d.id, d); };
   /** Apply a change to a document (on a deep copy) and schedule an autosave. which: meta | rules | mysets | pilot | 'ws:<id>'. */
-  P.mutate = (which, fn, { substantive = true, render = true } = {}) => {
+  P.mutate = (which, fn, { substantive = true, render = true, allowUnassigned = false } = {}) => {
     if (P.readOnly()) { P.toast(C.SAVE.newer); return false; }
+    // My sets is your own library: viewing as another coach never writes into it (their ideas stay in their prep)
+    if (which === 'mysets' && !P.canWriteMine()) { P.toast(P.myCoach() ? C.POV.mineBlocked(P.myCoach()) : C.POV.assignFirst); return false; }
+    // A workspace saved before perspectives is read-only until you say whose it is (its own review screen does that)
+    if (which.startsWith('ws:') && !allowUnassigned && P.ws.has(which.slice(3)) && !ownerOf(P.ws.get(which.slice(3)))) { P.toast(C.POV.assignFirst); return false; }
     const key = keyOf(which);
     if (P.conflicts.has(key)) { P.toast(C.SAVE.conflict({ what: 'This prep' })); return false; }
     const cur = docFor(key);
@@ -186,14 +203,15 @@ export function createPrep(app) {
 
   // ---------- mechanics and engine ----------
   P.ensureMech = () => {
-    if (P.mech || P.mechState === 'loading') return;
+    // a failed load waits for "Retry" (retry-mech): retrying on every render would fetch and re-render without end
+    if (P.mech || P.mechState === 'loading' || P.mechState === 'failed') return;
     P.mechState = 'loading';
     app.loadMechanics().then((raw) => { P.mech = loadMechanics(raw); P.mechState = 'ready'; app.rerender(); })
       .catch(() => { P.mechState = 'failed'; app.rerender(); });
   };
   P.ensureEngine = () => {
     P.ensureMech();
-    if (P.calc || P.engineState === 'loading') return;
+    if (P.calc || P.engineState === 'loading' || P.engineState === 'failed') return; // failed: waits for "Retry" (calc-retry-engine)
     P.engineState = 'loading';
     (app.importEngine ?? importEngine)().then((engine) => {
       P.engine = engine; P.engineState = 'ready';
@@ -205,7 +223,49 @@ export function createPrep(app) {
 
   // ---------- league data ----------
   P.league = () => app.league();
-  P.myCoach = () => P.docs.meta.myCoach ?? app.viewingCoach();
+  // ---------- perspective (whose side) ----------
+  P.coaches = () => P.league()?.coaches ?? null;
+  P.coachBySeat = (seat) => P.coaches()?.find((c) => c.order === seat) ?? null;
+  P.seatOf = (name) => P.coaches()?.find((c) => c.name === name)?.order ?? null;
+  P.identity = () => identityOf(P.docs.meta);
+  /** The Draft coach setting, as stored (or the shipped default when nothing is stored); never Draft's seat fallback. */
+  P.hint = () => app.identityHint?.() ?? null;
+  P.resolvePov = (urlSeat = null) => resolvePov({ urlSeat, coaches: P.coaches(), meta: P.docs.meta, hint: P.hint() });
+  /** The perspective of the screen being shown (matchup or overview), else the default one; null when none. */
+  P.currentPov = () => {
+    const r = P.route;
+    if (isMatch(r) && r.names?.pov) return r.names.pov;
+    if ((r.view === 'overview' || isMatch(r)) && P.coachBySeat(r.pov)) return P.coachBySeat(r.pov).name;
+    if (r.view === 'ws' && r.wsId && ownerOf(P.ws.get(r.wsId))) return ownerOf(P.ws.get(r.wsId));
+    return P.lastPov ?? P.resolvePov(null).name ?? null;
+  };
+  /**
+   * Your own side, the owner of your library (My sets): the confirmed identity; without one, the Draft coach setting while it is
+   * the default perspective offered with "Is this you?" (on the sheet when the sheet is loaded). Never a perspective chosen in
+   * the address, a flip, the last one viewed, or Draft's seat fallback.
+   */
+  P.ownSide = () => {
+    const ident = P.identity();
+    if (ident) return ident;
+    if (!P.coaches()) return P.hint()?.name ?? null;
+    const d = P.resolvePov(null);
+    return d.name && ['setting', 'default'].includes(d.source) ? d.name : null;
+  };
+  /**
+   * "Your" side on the screen: the open workspace's owner (none for a workspace saved before perspectives: nothing is inferred
+   * for it), else the perspective being shown; tools (My sets, rules, backup, pilot) are your own side.
+   */
+  P.myCoach = () => {
+    const r = P.route;
+    const ws = r.view === 'ws' && r.wsId ? P.ws.get(r.wsId) : null;
+    if (ws) return ownerOf(ws);
+    if (r.view === 'overview' || isMatch(r)) return P.currentPov();
+    return P.ownSide();
+  };
+  /** Writes to My sets (your library) only from your own side. */
+  P.canWriteMine = () => { const own = P.ownSide(); return !!own && P.myCoach() === own; };
+  /** Your library as "your" sets on this screen: empty while viewing as another coach (never shown as their exact sets). */
+  P.mineSets = () => (P.canWriteMine() ? P.docs.mysets.sets : []);
   P.coachRoster = (coach) => (P.league()?.coaches.find((c) => c.name === coach)?.picks ?? []).map((p) => p.id).filter(Boolean);
   P.dexSp = (id) => app.dex.species[id] ?? Object.values(app.dex.species).find((s) => s.forms.some((f) => f.id === id)) ?? null;
   // Names come from the static Reg M-C data or the dex. An id that isn't there (e.g. from an imported file) is shown
@@ -221,14 +281,73 @@ export function createPrep(app) {
 
   // ---------- navigation ----------
   P.go = (route, { push = null } = {}) => {
-    const kind = push === null ? navKind(P.route, route) : push ? 'push' : 'replace';
-    const hash = formatRoute(route);
-    try { if (kind === 'push') app.history.pushState({ prep: true }, '', hash); else app.history.replaceState(null, '', hash); } catch { /* history unavailable */ }
-    P.route = parseRoute(hash) ?? { view: 'home' };
+    const to = P.resolve(P.canonical(route));
+    const kind = push === null ? navKind(P.route, to) : push ? 'push' : 'replace';
+    // Unsaved work lands before the screen changes: pending autosaves are written and screen drafts kept for this tab.
+    if (P.dirty.size) flush();
+    P.saveUi();
+    const hash = formatRoute(to);
+    const names = isMatch(to) ? to.names ?? null : null, wsId = isMatch(to) ? to.wsId ?? null : null;
+    try { if (kind === 'push') app.history.pushState({ prep: true, names, wsId }, '', hash); else app.history.replaceState({ prep: !!app.history.state?.prep, names, wsId }, '', hash); } catch { /* history unavailable */ }
+    P.route = P.resolve({ ...(parseRoute(hash) ?? { view: 'home' }), ...(names ? { names, wsId } : {}) });
     if (P.route.view === 'ws' && P.ws.has(P.route.wsId)) P.store.hint('lastRoute', hash); // for "Continue"; not a document
     P.pendingFocus = true;
     app.rerender();
   };
+  /**
+   * The address a route should have: Battle Prep home goes to the overview of the default perspective. A saved workspace
+   * opened by id keeps its id form (it is pinned to that document); a section change inside a matchup that is showing that
+   * same workspace keeps the matchup form (same pinned workspace).
+   */
+  P.canonical = (r) => {
+    if (!r) return { view: 'home' };
+    if (r.view === 'home') { const pv = P.resolvePov(null); return pv.name ? { view: 'overview', pov: pv.seat } : r; }
+    const cur = P.route;
+    if (r.view === 'ws' && !r.kind && !isMatch(r) && r.wsId && isMatch(cur) && cur.wsId === r.wsId) {
+      return { view: 'ws', pov: cur.pov, opp: cur.opp, names: cur.names, wsId: cur.wsId, tab: MATCH_TABS.includes(r.tab) ? r.tab : 'plan' };
+    }
+    // a link drawn on this matchup (section tab, detail, Back to the briefing) means these same two coaches and workspace,
+    // even if the sheet's seats moved since it was drawn; "their side" swaps the two coaches
+    if (isMatch(r) && !r.names && isMatch(cur) && cur.names) {
+      if (r.pov === cur.pov && r.opp === cur.opp) return { ...r, names: cur.names, wsId: cur.wsId };
+      if (r.pov === cur.opp && r.opp === cur.pov) return { ...r, names: { pov: cur.names.opp, opp: cur.names.pov }, wsId: null };
+    }
+    return r;
+  };
+  /**
+   * A matchup route is pinned to coach names when it is opened (seats are only how the address spells it): the sheet is
+   * re-read every 45 s and seats could move, but the screen and every edit keep pointing at the same two coaches. It gets
+   * the id of the workspace saved for (perspective, opponent), or null when there is none yet. While the sheet is loading
+   * nothing is resolved (nothing is created, no perspective is defaulted).
+   */
+  P.resolve = (r) => {
+    if (!isMatch(r)) return r;
+    if (!P.coaches()) return { ...r, wsId: null };
+    const names = r.names ?? { pov: P.coachBySeat(r.pov)?.name ?? null, opp: P.coachBySeat(r.opp)?.name ?? null };
+    if (!names.pov || !names.opp) return { ...r, names: null, wsId: null };
+    const ps = P.seatOf(names.pov), os = P.seatOf(names.opp);
+    const moved = ps !== r.pov || os !== r.opp;
+    // the workspace is pinned when the matchup is opened: a pinned one that still belongs to these two coaches is kept, whatever
+    // newer copy appears; only a missing one is looked up (newest, or the copy chosen in this tab)
+    const pinned = r.wsId ? P.ws.get(r.wsId) : null;
+    const keep = pinned && ownerOf(pinned) === names.pov && pinned.coach === names.opp;
+    const list = keep ? [] : workspacesFor([...P.ws.values()], names.pov, names.opp);
+    const pick = keep ? pinned : list.find((w) => w.id === P.ui.activeWs?.[`${names.pov}|${names.opp}`]) ?? list[0];
+    // a pinned coach who is no longer on the sheet: keep the names, offer nothing new (P.match returns null)
+    return { ...r, names, wsId: pick?.id ?? null, ...(ps && os && moved ? { pov: ps, opp: os, seatsMoved: true } : {}) };
+  };
+  /** Bring the route in line with what is stored and loaded now (the sheet may have arrived); the address follows quietly. */
+  function settleRoute() {
+    const r = P.resolve(P.canonical(P.route));
+    // compare with the address itself: a malformed one (#prep/5v5) is re-spelled as the route it was read as
+    const before = app.location?.hash ?? formatRoute(P.route), after = formatRoute(r);
+    P.route = r;
+    if (r.seatsMoved && !P.seatsNoted) { P.seatsNoted = true; P.toast(C.POV.seatsMoved(r.names.pov, r.names.opp)); }
+    const st = app.history.state;
+    if (after !== before || (isMatch(r) && r.names && (!st?.names || (st.wsId ?? null) !== (r.wsId ?? null)))) {
+      try { app.history.replaceState({ prep: !!st?.prep, names: isMatch(r) ? r.names ?? null : null, wsId: isMatch(r) ? r.wsId ?? null : null }, '', after); } catch { /* history unavailable */ }
+    }
+  }
   /** Back to the parent: history.back() when the previous entry is ours, else replace with the parent. */
   P.back = () => {
     const st = app.history.state;
@@ -237,7 +356,13 @@ export function createPrep(app) {
   P.applyHash = (hash) => {
     const r = parseRoute(hash);
     if (!r) return false;
-    P.route = r; P.pendingFocus = true;
+    if (P.docs.meta && P.dirty.size) flush();
+    if (P.docs.meta) P.saveUi();
+    // Back / Forward: the entry remembers which two coaches it showed
+    const st = app.history?.state;
+    P.route = isMatch(r) && st?.names?.pov && st.names.opp ? { ...r, names: st.names, wsId: st.wsId ?? null } : r;
+    P.seatsNoted = false;
+    P.pendingFocus = true;
     return true;
   };
   /** After the next render, move focus (and the view) to a section of the screen instead of its heading. */
@@ -245,19 +370,58 @@ export function createPrep(app) {
   /** The element id to focus after this render ('prep-h' = the screen heading after a navigation), or null. */
   P.consumeFocus = () => { const f = P.pendingFocus ? P.pendingFocusId ?? 'prep-h' : null; P.pendingFocus = false; P.pendingFocusId = null; return f; };
 
+  // ---------- screen drafts a prefill would replace (ask first) ----------
+  const DRAFT_SLOTS = {
+    cd: { live: (d) => !!(d && d.move && !d.calcId), what: (d) => C.POV.draftCalc(P.spName(d.a?.species ?? ''), P.spName(d.d?.species ?? '')), same: (a, b) => a?.a?.species === b?.a?.species && a?.d?.species === b?.d?.species && a?.move === b?.move },
+    th: { live: (d) => !!(d && (d.result || d.mine || d.their || d.theirSpecies)), what: () => C.POV.draftThreshold, same: (a, b) => a?.kind === b?.kind && a?.mine === b?.mine && a?.theirSpecies === b?.theirSpecies },
+  };
+  /**
+   * Put a prefilled draft into a workspace's screen slot ('cd' quick check, 'th' "What would it take?") and open `route`,
+   * unless an unsaved draft is there: then nothing is replaced and a banner asks (Open it / Replace it / Cancel).
+   */
+  P.prefill = (ws, slot, next, route) => {
+    const ui = P.wsUi(ws.id), cur = ui[slot], spec = DRAFT_SLOTS[slot];
+    if (spec.live(cur) && !spec.same(cur, next)) { P.pendingReplace = { wsId: ws.id, slot, next, route, existing: spec.what(cur) }; app.rerender(); return false; }
+    ui[slot] = next; P.pendingReplace = null;
+    P.go(route, { push: true });
+    return true;
+  };
+  const KIND_OF_SLOT = { cd: { kind: 'calcs', id: 'new' }, th: { kind: 'threshold' } };
+
   // ---------- workspace helpers ----------
-  P.openWorkspace = (coach) => {
-    const existing = [...P.ws.values()].find((w) => w.coach === coach);
-    if (existing) return P.go({ view: 'ws', wsId: existing.id, tab: 'plan' }, { push: true });
+  /**
+   * The workspace for (pov, opp): the newest saved one, or a new one with that pov. Only called from an explicit tap (start
+   * prep, a section tab, + My 6, Next match, a prefilled check), never from showing a screen or following an address.
+   */
+  P.ensureWorkspace = (pov, opp) => {
+    const key = `${pov}|${opp}`;
+    const list = workspacesFor([...P.ws.values()], pov, opp);
+    const existing = list.find((w) => w.id === P.ui.activeWs?.[key]) ?? list[0];
+    if (existing) return existing;
+    if (P.readOnly()) { P.toast(C.SAVE.newer); return null; }
+    if (!pov || !opp || pov === opp) return null;
     const id = P.id('ws');
-    const roster = { fetchedAt: app.sheet()?.fetchedAt ?? null, speciesIds: P.coachRoster(coach), points: Object.fromEntries((P.league()?.coaches.find((c) => c.name === coach)?.picks ?? []).filter((p) => p.id).map((p) => [p.id, p.points])) };
-    const ws = newWorkspace({ id, coach, roster, now: P.now() });
+    const roster = { fetchedAt: app.sheet()?.fetchedAt ?? null, speciesIds: P.coachRoster(opp), points: Object.fromEntries((P.league()?.coaches.find((c) => c.name === opp)?.picks ?? []).filter((p) => p.id).map((p) => [p.id, p.points])) };
+    const ws = newWorkspace({ id, coach: opp, roster, now: P.now(), pov });
     P.ws.set(id, ws); P.revs.set(wsKey(id), null);
     P.dirty.add(wsKey(id));
-    P.docs.meta = { ...P.docs.meta, workspaces: [...P.docs.meta.workspaces, { id, coach, updatedAt: ws.updatedAt, archived: false }] };
+    P.docs.meta = { ...P.docs.meta, workspaces: [...P.docs.meta.workspaces, { id, coach: opp, pov, updatedAt: ws.updatedAt, archived: false }] };
     P.dirty.add(KEYS.meta);
     flush();
-    P.go({ view: 'ws', wsId: id, tab: 'plan' }, { push: true });
+    return P.ws.get(id);
+  };
+  /** Open prep vs a coach from the current perspective (creates the workspace: an explicit tap). */
+  P.openWorkspace = (coach) => {
+    const pov = P.currentPov();
+    const ws = pov && P.ensureWorkspace(pov, coach);
+    if (ws) P.go({ view: 'ws', wsId: ws.id, tab: 'plan' }, { push: true });
+  };
+  /** The matchup a seat route names: {pov, opp} coaches (or null while the sheet loads / for an unknown seat). */
+  P.match = (r = P.route) => {
+    if (!isMatch(r) || !P.coaches()) return null;
+    const by = (name, seat) => (name ? P.coaches().find((c) => c.name === name) : P.coachBySeat(seat)) ?? null;
+    const pov = by(r.names?.pov, r.pov), opp = by(r.names?.opp, r.opp);
+    return pov && opp && pov.name !== opp.name ? { pov, opp, ws: r.wsId ? P.ws.get(r.wsId) ?? null : null } : null;
   };
   P.wsUi = (id) => (P.ui.ws[id] ??= {});
 
@@ -280,18 +444,20 @@ export function createPrep(app) {
   P.render = () => {
     if (!P.docs.meta) P.init();
     P.ensureMech();
+    settleRoute();
     const r = P.route;
     let body;
     try {
-      if (r.view === 'home') body = home();
+      if (r.view === 'home' || r.view === 'overview') body = home(r);
       else if (r.view === 'rules') body = rulesScreen();
       else if (r.view === 'backup') body = backupScreen();
       else if (r.view === 'pilot') body = Practice.pilot(P);
       else if (r.view === 'my-sets') body = Sets.mySets(P, r);
+      else if (isMatch(r)) body = matchScreen(r);
       else if (r.view === 'ws') {
         const ws = P.ws.get(r.wsId);
         body = ws ? workspace(ws, r) : notOnDevice();
-      } else body = home();
+      } else body = home(r);
     } catch (e) {
       console.error('Prep screen failed:', e && e.message);
       body = `<section class="panel">${h2('Prep')}<p class="banner bad" role="alert">This screen couldn't be shown. Your prep is unchanged.</p>${btn('Go to Prep home', 'go-home')}</section>`;
@@ -299,8 +465,21 @@ export function createPrep(app) {
     return `<div class="prep" data-prep-view="${esc(r.view)}">${banners()}${body}</div>`;
   };
 
+  /**
+   * Recovery copies whose workspace an older Drafarig tab removed, or replaced with an unassigned copy (its Archive or
+   * "Replace everything" never saw the assignment). Nothing is put back without a tap.
+   */
+  P.recoverable = () => P.store.vault.list().filter(({ id, doc }) => {
+    const r = P.store.load(wsKey(id));
+    return r.status === 'missing' || (r.status === 'ok' && ownerOf(r.doc) !== doc.pov);
+  });
   function banners() {
     const out = [];
+    for (const { id, doc } of P.recoverable()) {
+      out.push(`<div class="banner warn" role="group" aria-label="${esc(C.POV.vaultGroup)}">${esc(C.POV.vaultText(doc.pov, doc.coach, (doc.povAssignedAt ?? doc.updatedAt ?? '').slice(0, 10), P.store.load(wsKey(id)).status === 'missing'))} ${btn(C.POV.vaultRecover, 'vault-recover', { ws: id }, { primary: true })} ${btn(C.POV.vaultDiscard, 'vault-discard', { ws: id })}</div>`);
+    }
+    const pr = P.pendingReplace;
+    if (pr && P.ws.has(pr.wsId)) out.push(`<div class="banner warn" role="group" aria-label="${esc(C.POV.draftGroup)}">${esc(pr.existing)} ${esc(C.POV.draftAsk)} ${btn(C.BRIEF.openIt, 'draft-open', {}, { primary: true })} ${btn(C.BRIEF.replaceIt, 'draft-replace')} ${btn(C.BRIEF.cancel, 'draft-cancel', {}, { cls: 'linkish' })}</div>`);
     if (P.ui.undo) out.push(`<div class="banner info" role="status">${esc(P.ui.undo.label)}. ${btn('Undo', 'undo-delete', {}, { primary: true })}</div>`);
     // Banners are announced once when they appear (announceBanners), not as role="alert" re-created on every render.
     if (P.newer.size) out.push(`<div class="banner bad">${esc(C.SAVE.newer)} ${btn('Download a backup', 'backup-download')} ${btn('Reload', 'reload-prep')}</div>`);
@@ -328,53 +507,154 @@ export function createPrep(app) {
     return `<section class="panel">${h2('Not on this device')}<p>${esc(C.NOT_ON_DEVICE)}</p>${btn('Go to Prep', 'go-home', {}, { primary: true })}</section>`;
   }
 
-  // ---------- home ----------
-  function home() {
-    const L = P.league();
+  // ---------- perspective row and opponent strip ----------
+  /** "Preparing as …" with where that comes from; never says who the user is. */
+  function povRow(povName, src) {
+    const coaches = P.coaches() ?? [];
+    const ident = P.identity();
+    const picker = select('prep-pov', [['', 'Prepare as…'], ...coaches.map((c) => [String(c.order), c.name])], '', { data: { pc: 'pov-pick' }, aria: C.POV.choose, cls: 'povpick' });
+    if (!povName) return `<div class="povrow" role="group" aria-label="${esc(C.POV.group)}"><p><b>${esc(C.POV.who)}</b></p>${picker}</div>`;
+    const viewing = ident && ident !== povName && P.seatOf(ident);
+    const source = src === 'identity' || ident === povName ? `<span class="chip ok">${esc(C.POV.you)}</span>` : `<span class="small muted">${esc(C.POV.source[src] ?? C.POV.source.url)}</span>`;
+    return `<div class="povrow${viewing ? ' viewing' : ''}" role="group" aria-label="${esc(C.POV.group)}">
+      <p class="povline">${esc(C.POV.preparing)} <b>${esc(povName)}</b> ${source}</p>
+      ${viewing ? `<p class="ribbon">${esc(C.POV.viewingAs(povName))} ${btn(C.POV.backTo(ident), 'pov-back', {}, { primary: true })}</p>` : ''}
+      ${!ident && (src === 'setting' || src === 'default') && P.resolvePov(null).name === povName ? `<p class="confirm">${esc(C.HOME.isThisYou)} ${btn('Yes', 'confirm-me', { coach: povName }, { primary: true })}</p>` : ''}
+      <details class="povchange"><summary>${esc(C.POV.change)}</summary>${picker}</details></div>`;
+  }
+  /** The opponent row: every other coach in sheet seat order, as links; the current one marked. */
+  function oppStrip(pov, activeSeat) {
+    const coaches = (P.coaches() ?? []).filter((c) => c.name !== pov.name);
+    const tab = (c) => {
+      const ws = workspacesFor([...P.ws.values()], pov.name, c.name)[0];
+      const face = c.picks.find((p) => p.id)?.id;
+      const played = ws?.matches.find((m) => (m.games ?? []).some((g) => g.result));
+      const marks = [ws?.isNext ? C.BRIEF.stripNext : '', played ? C.BRIEF.stripPlayed : ''].filter(Boolean);
+      const name = `${c.name}${marks.length ? `, ${marks.join(', ')}` : ''}`;
+      return `<li><a href="${esc(formatRoute({ view: 'ws', pov: pov.order, opp: c.order, tab: 'brief' }))}" data-pa="go-opp" data-opp="${c.order}" class="opptab${c.order === activeSeat ? ' active' : ''}"${c.order === activeSeat ? ' aria-current="page"' : ''} aria-label="${esc(name)}" title="${esc(c.name)}">${face ? P.pt(face, { size: 'sm' }) : '<span class="pt pt-sm noimg" data-ini="?"></span>'}<span class="oppname">${esc(c.name)}</span>${ws?.isNext ? `<span class="tabmark next" aria-hidden="true">${esc(C.BRIEF.stripNext)}</span>` : ''}${played ? `<span class="tabmark played" aria-hidden="true">✓ ${esc(C.BRIEF.stripPlayed)}</span>` : ''}</a></li>`;
+    };
+    const jump = select('prep-oppjump', [['', C.BRIEF.allOpponents(coaches.length)], ...coaches.map((c) => [String(c.order), `${c.order}. ${c.name}`])], '', { data: { pc: 'opp-jump' }, aria: C.BRIEF.jumpLabel, cls: 'oppjump' });
+    return `<nav class="oppstrip" aria-label="Opponents"><ol><li><a href="${esc(formatRoute({ view: 'overview', pov: pov.order }))}" data-pa="go-overview" class="opptab overview${activeSeat === null ? ' active' : ''}"${activeSeat === null ? ' aria-current="page"' : ''}><span class="oppname">${esc(C.BRIEF.overview)}</span></a></li>${coaches.map(tab).join('')}</ol>${jump}</nav>`;
+  }
+  P.pt = (id, opts = {}) => app.portrait?.(id, opts) ?? `<span class="pt pt-${esc(opts.size ?? 'sm')} noimg" data-ini="${esc(P.spName(id).slice(0, 2))}"></span>`;
+
+  // ---------- Battle Prep overview (home) ----------
+  function savedLists(povName, coaches) {
+    const all = [...P.ws.values()].sort((a, b) => (b.updatedAt ?? '').localeCompare(a.updatedAt ?? ''));
+    const onSheet = (n) => coaches.some((c) => c.name === n);
+    const unassigned = all.filter((w) => !ownerOf(w));
+    const other = all.filter((w) => ownerOf(w) && ownerOf(w) !== povName && onSheet(w.coach));
+    const orphan = all.filter((w) => coaches.length && (!onSheet(w.coach) || (ownerOf(w) && !onSheet(ownerOf(w)))) && ownerOf(w) !== povName);
+    const counts = (w) => `${w.theirSets.length} sets · ${w.calcs.length} calcs · ${w.mockSets.reduce((t, m) => t + m.games.filter((g) => !g.draft).length, 0)} mock games · changed ${esc((w.updatedAt ?? '').slice(0, 10))}`;
+    return `${unassigned.length ? `<h3>${esc(C.POV.unassignedHead(unassigned.length))}</h3><p class="small">${esc(C.POV.unassignedHelp)}</p><ul class="opps">${unassigned.map((w) => `<li class="opp started">${btn(`vs ${w.coach}`, 'open-ws', { ws: w.id }, { cls: 'opp-btn' })} ${btn(C.POV.review, 'go-owner', { ws: w.id }, { cls: 'linkish' })}<div class="small muted">${counts(w)}</div></li>`).join('')}</ul>` : ''}
+      ${other.length ? `<h3>${esc(C.POV.otherHead(other.length))}</h3><ul class="opps">${other.map((w) => `<li class="opp started">${btn(`${ownerOf(w)} vs ${w.coach}`, 'open-ws', { ws: w.id }, { cls: 'opp-btn' })}<div class="small muted">${counts(w)}</div></li>`).join('')}</ul>` : ''}
+      ${orphan.length ? `<h3>Other saved prep</h3><ul class="opps">${orphan.map((w) => `<li class="opp started">${btn(`${ownerOf(w) ? `${ownerOf(w)} ` : ''}vs ${w.coach}`, 'open-ws', { ws: w.id }, { cls: 'opp-btn' })} <span class="small muted">not on the sheet now</span></li>`).join('')}</ul>` : ''}`;
+  }
+  function tools() {
     const meta = P.docs.meta;
-    const me = P.myCoach();
-    const confirm = !meta.myCoachConfirmed;
-    const coaches = (L?.coaches ?? []).filter((c) => c.name !== me);
-    // every saved workspace is listed (a restore with "Keep both" leaves two for one coach)
-    const byCoach = new Map();
-    for (const w of [...P.ws.values()].sort((a, b) => (b.updatedAt ?? '').localeCompare(a.updatedAt ?? ''))) byCoach.set(w.coach, [...(byCoach.get(w.coach) ?? []), w]);
-    const rows = coaches.flatMap((c) => {
-      const list = byCoach.get(c.name) ?? [];
-      if (!list.length) return [{ c, w: null, sort: 2, html: `<li class="opp">${btn(`${c.name}`, 'open-coach', { coach: c.name }, { cls: 'opp-btn' })} <span class="muted small">${esc(C.HOME.notStarted)}</span></li>` }];
-      return list.map((w, i) => row(c, w, i));
-    }).sort((a, b) => a.sort - b.sort || (b.at ?? '').localeCompare(a.at ?? ''));
-    function row(c, w, copy) {
-      const stale = w.calcs.filter((x) => P.staleOf(w, x).length).length;
-      const games = w.mockSets.reduce((t, m) => t + m.games.filter((g) => !g.draft).length, 0);
-      const played = w.matches.find((m) => m.games?.length);
-      const res = played ? `Played: ${played.games.filter((g) => g.result === 'W').length}–${played.games.filter((g) => g.result === 'L').length}` : '';
-      return { c, w, sort: w.isNext ? 0 : 1, at: w.updatedAt, html: `<li class="opp started">${btn(`vs ${c.name}${copy ? ` (copy ${copy + 1})` : ''}`, 'open-ws', { ws: w.id }, { cls: 'opp-btn' })}${w.isNext ? ' <span class="chip ok">next</span>' : ''}${w.matchDate ? ` <span class="small">${esc(w.matchDate)}</span>` : ''}
-        <div class="small muted">${w.theirSets.length} sets · ${w.calcs.length} calcs${stale ? ` (${stale} out of date)` : ''} · ${games} mock games${res ? ` · ${esc(res)}` : ''}${copy ? ` · changed ${esc((w.updatedAt ?? '').slice(0, 10))}` : ''}</div></li>` };
-    }
-    const orphan = [...P.ws.values()].filter((w) => !coaches.some((c) => c.name === w.coach) && w.coach !== me);
     const lastHash = P.store.hint('lastRoute') ?? meta.lastRoute;
     const last = lastHash && parseRoute(lastHash);
-    const lastWs = last?.wsId && P.ws.get(last.wsId);
+    const lastWs = last && (last.wsId ? P.ws.get(last.wsId) : P.resolve(last).wsId ? P.ws.get(P.resolve(last).wsId) : null);
     const rules = P.docs.rules.rules;
-    const ruleLine = C.RULES_MAIN.map((k) => `${C.RULES[k].q}: ${rules[k]?.value === 'unknown' ? "don't know" : C.RULES[k].options[rules[k]?.value]}`).join(' · ');
+    const known = Object.values(rules).filter((x) => x.value !== 'unknown').length;
     const usage = P.store.usage();
     const backupAge = meta.lastBackupAt ? Math.floor((Date.parse(P.now()) - Date.parse(meta.lastBackupAt)) / 864e5) : null;
     const nag = (backupAge === null || backupAge > 7) && (meta.changesSinceBackup ?? 0) > 0;
     const mineCount = P.docs.mysets.sets.length;
-    return `<section class="panel prep-home">${h2(C.HOME.whose(me))}
-      ${confirm ? `<p class="confirm">${esc(C.HOME.isThisYou)} <b>${esc(me)}</b> ${btn('Yes', 'confirm-me', {}, { primary: true })} ${select('prep-me', (L?.coaches ?? []).map((c) => [c.name, c.name]), me, { data: { pc: 'pick-me' }, label: 'Pick someone else' })}</p>` : ''}
-      ${nag ? `<p class="banner warn">${esc(meta.lastBackupAt ? `Last backup ${backupAge} days ago` : 'No backup yet')}: ${meta.changesSinceBackup} changes since. ${btn('Back up now', 'backup-download', {}, { primary: true })}</p>` : ''}
-      ${lastWs ? `<p>${btn(`Continue: vs ${lastWs.coach}${last.tab ? ` · ${TAB_LABEL[last.tab] ?? ''}` : ''}`, 'continue')}</p>` : ''}
-      <h3>Rules you know ${btn('Edit', 'go-rules')}</h3><p class="small">${esc(ruleLine)}</p>
+    return `${nag ? `<p class="banner warn">${esc(meta.lastBackupAt ? `Last backup ${backupAge} days ago` : 'No backup yet')}: ${meta.changesSinceBackup} changes since. ${btn('Back up now', 'backup-download', {}, { primary: true })}</p>` : ''}
+      ${lastWs ? `<p>${btn(`Continue: ${ownerOf(lastWs) ? `${ownerOf(lastWs)} ` : ''}vs ${lastWs.coach}${last.tab ? ` · ${TAB_LABEL[last.tab] ?? ''}` : ''}`, 'continue')}</p>` : ''}
+      <h3>${esc(C.BRIEF.toolsHead)}</h3>
+      <ul class="toolrows">
+        <li>${btn('Rules you know', 'go-rules', {}, { cls: 'linkish' })} <span class="small muted">${known} known · ${Object.keys(rules).length - known} don't know</span></li>
+        <li>${btn('My sets', 'go-mysets', {}, { cls: 'linkish' })} <span class="small muted">${mineCount} set${mineCount === 1 ? '' : 's'} in your library</span> ${btn('Paste your team', 'go-mysets-import', {}, { cls: 'linkish' })}</li>
+        <li>${btn('Help a friend practise (pilot card)', 'go-pilot', {}, { cls: 'linkish' })}</li>
+        <li>${btn('Backup & restore', 'go-backup', {}, { cls: 'linkish' })} <span class="small muted backup-line">${esc(C.HOME.savedLocal)} Last backup: ${meta.lastBackupAt ? `${backupAge} days ago` : 'never'} (${meta.changesSinceBackup ?? 0} changes since).</span></li>
+      </ul>
+      <details class="howto"><summary>How prep works here (1 minute)</summary><ol>${C.HOME.how.map((x) => `<li>${esc(x)}</li>`).join('')}</ol></details>
+      ${usage > USAGE_BUDGET_CHARS * 0.85 ? `<p class="banner warn">Prep is using most of the space this browser allows. Archive finished opponents to a file. ${btn('Backup & restore', 'go-backup')}</p>` : ''}`;
+  }
+  function home(r) {
+    const L = P.league();
+    const coaches = L?.coaches ?? [];
+    const def = P.resolvePov(null);
+    // the overview of the default perspective says where that default comes from; another seat is "chosen here"
+    const pv = r.view === 'overview' ? (def.name && def.seat === r.pov ? def : P.resolvePov(r.pov)) : def;
+    if (pv.name) P.lastPov = pv.name;
+    const pov = pv.name ? P.coachBySeat(pv.seat) : null;
+    if (!pov) {
+      const why = !L ? `<p class="small">${esc(app.sheet?.() === null && P.sheetFailed?.() ? C.BRIEF.sheetFailed : C.BRIEF.sheetLoading)}</p>`
+        : pv.reason === 'unknown-seat' ? `<p class="banner warn">${esc(C.POV.unknownSeat)}</p>`
+        : pv.reason === 'identity-not-on-sheet' ? `<p class="banner warn">${esc(C.POV.identityGone(pv.identity))}</p>` : '';
+      return `<section class="panel prep-home">${h2(C.BRIEF.appName)}${why}${L ? povRow(null) : ''}
+        ${savedLists(null, coaches)}${tools()}</section>`;
+    }
+    const opps = coaches.filter((c) => c.name !== pov.name);
+    const next = [...P.ws.values()].find((w) => ownerOf(w) === pov.name && w.isNext && opps.some((c) => c.name === w.coach));
+    const card = (c) => {
+      const ws = workspacesFor([...P.ws.values()], pov.name, c.name)[0];
+      const ids = c.picks.map((p) => p.id).filter(Boolean);
+      const started = ws && (ws.theirSets.length || ws.calcs.length || ws.cards.length || ws.mockSets.length || ws.plans.length || ws.matchDate || ws.isNext);
+      const status = !ws || !started ? C.HOME.notStarted : `${ws.theirSets.length} sets · ${ws.calcs.length} calcs`;
+      const legacy = unassignedVs([...P.ws.values()], c.name).length;
+      return `<li><a class="oppcard" href="${esc(formatRoute({ view: 'ws', pov: pov.order, opp: c.order, tab: 'brief' }))}" data-pa="go-opp" data-opp="${c.order}">
+        <span class="oc-head"><b>${esc(c.name)}</b> <span class="small muted">seat ${c.order} · ${ids.length}/10 drafted</span>${ws?.isNext ? ` <span class="chip ok">${esc(C.BRIEF.stripNext)}</span>` : ''}</span>
+        <span class="minis" aria-hidden="true">${ids.map((id) => P.pt(id, { size: 'xs' })).join('')}</span>
+        <span class="small">${esc(status)}${legacy ? ` · ${esc(C.POV.earlierChip)}` : ''}</span></a></li>`;
+    };
+    return `<section class="panel prep-home">${povRow(pov.name, pv.source)}${oppStrip(pov, null)}
+      ${h2(C.BRIEF.overviewHead(pov.name))}
+      ${next ? `<div class="nexthero"><p><b>${esc(C.BRIEF.nextMatch)}</b>: vs ${esc(next.coach)}${next.matchDate ? ` · ${esc(next.matchDate)}` : ''}</p><p>${btn(C.BRIEF.openBriefing, 'go-opp', { opp: P.seatOf(next.coach) }, { primary: true })}</p></div>` : ''}
       <h3>${esc(C.HOME.choose)}</h3><p class="small">${esc(C.HOME.chooseHelp)}</p>
-      ${L ? `<ul class="opps">${rows.map((x) => x.html).join('')}</ul>` : `<p class="small">The league sheet hasn't loaded, so opponents aren't listed yet. Saved prep is below.</p>`}
-      ${orphan.length ? `<h3>Other saved prep</h3><ul class="opps">${orphan.map((w) => `<li class="opp started">${btn(`vs ${w.coach}`, 'open-ws', { ws: w.id }, { cls: 'opp-btn' })} <span class="small muted">not on the sheet now</span></li>`).join('')}</ul>` : ''}
-      <details class="howto"><summary>How prep works here (1 minute)</summary><ol>${C.HOME.how.map((s) => `<li>${esc(s)}</li>`).join('')}</ol></details>
-      <h3>My sets ${btn('Open', 'go-mysets')}</h3><p class="small">${mineCount} set${mineCount === 1 ? '' : 's'} in your library. ${btn('Paste your team', 'go-mysets-import')}</p>
-      <h3>Help a friend practise ${btn('Pilot card', 'go-pilot')}</h3>
-      <p class="small backup-line">${esc(C.HOME.savedLocal)} Last backup: ${meta.lastBackupAt ? `${backupAge} days ago` : 'never'} (${meta.changesSinceBackup ?? 0} changes since). ${btn('Backup & restore', 'go-backup')}</p>
-      ${usage > USAGE_BUDGET_CHARS * 0.85 ? `<p class="banner warn">Prep is using most of the space this browser allows. Archive finished opponents to a file. ${btn('Backup & restore', 'go-backup')}</p>` : ''}
+      ${L ? `<ul class="oppcards">${opps.map(card).join('')}</ul>` : `<p class="small">${esc(C.BRIEF.sheetLoading)}</p>`}
+      ${savedLists(pov.name, coaches)}${tools()}
     </section>`;
+  }
+
+  // ---------- matchup (seat routes) ----------
+  function matchScreen(r) {
+    const L = P.league();
+    if (!L) return `<section class="panel prep-home">${h2(C.BRIEF.appName)}<p>${esc(P.sheetFailed?.() ? C.BRIEF.sheetFailedSeat : C.BRIEF.sheetLoading)}</p>${savedLists(null, [])}${tools()}</section>`;
+    const m = P.match(r);
+    if (!m) return `<section class="panel prep-home">${h2(C.BRIEF.appName)}<p class="banner warn">${esc(C.POV.unknownSeat)}</p>${btn(C.BRIEF.overview, 'go-home', {}, { primary: true })}</section>`;
+    return matchView(r, m, false);
+  }
+  /**
+   * The matchup shell (perspective, opponent row, hero, sections) around one section. idRoute: a saved workspace opened by
+   * its id (#prep/w/<id>/<tab>): its sections stay pinned to that document; the Brief opens the matchup form pinned to it.
+   */
+  function matchView(r, m, idRoute) {
+    P.lastPov = m.pov.name;
+    const ident = P.identity();
+    const src = ident === m.pov.name ? 'identity' : P.resolvePov(null).name === m.pov.name ? P.resolvePov(null).source : 'url';
+    const ws = m.ws;
+    const legacy = unassignedVs([...P.ws.values()], m.opp.name);
+    const tab = MATCH_TABS.includes(r.tab) ? r.tab : idRoute ? 'plan' : 'brief';
+    const dots = ws ? draftDots(ws) : {};
+    const seatRoute = { view: 'ws', pov: m.pov.order, opp: m.opp.order };
+    const hrefOf = (k) => formatRoute(idRoute && k !== 'brief' ? { view: 'ws', wsId: ws.id, tab: k } : { ...seatRoute, tab: k });
+    const tabs = `<nav class="dtabs" aria-label="${esc(`Sections for vs ${m.opp.name}`)}">${MATCH_TABS.map((k) => `<a href="${esc(hrefOf(k))}" id="ptab-${k}" data-pa="tab" data-tab="${k}"${tab === k && !r.detail ? ' aria-current="page" class="active"' : ''}${dots[k] ? ` aria-label="${esc(`${TAB_LABEL[k]}, ${C.BRIEF.unsavedDot[k]}`)}"` : ''}>${esc(TAB_LABEL[k])}${dots[k] ? '<span class="dot" aria-hidden="true"></span>' : ''}</a>`).join('')}</nav>`;
+    let body;
+    if (tab === 'brief') body = Matchup.brief(P, { r, pov: m.pov, opp: m.opp, ws, legacy });
+    else if (ws) body = tab === 'sets' ? Sets.tab(P, ws) : tab === 'calcs' ? Calcs.tab(P, ws) : tab === 'practice' ? Practice.tab(P, ws) : Plan.tab(P, ws);
+    else body = startPanel(m, legacy, tab);
+    return `<section class="panel prep-match" data-key="match">${povRow(m.pov.name, src)}${oppStrip(m.pov, m.opp.order)}
+      ${Matchup.hero(P, { r, pov: m.pov, opp: m.opp, ws, legacy })}${tabs}<div id="ptab-panel">${body}</div>
+      <p class="small muted ws-foot">${esc(C.HOME.savedLocal)} ${ws ? (P.saveState === 'saving' ? esc(C.SAVE.saving) : P.saveState === 'error' ? '' : esc(C.SAVE.saved)) : esc(C.BRIEF.nothingSaved)}</p></section>`;
+  }
+  /** A section tab without saved prep for this matchup: nothing is created until the user says so. */
+  function startPanel(m, legacy, tab) {
+    return `${h2(`vs ${m.opp.name} · ${TAB_LABEL[tab]}`)}<p>${esc(C.BRIEF.startHelp(m.pov.name, m.opp.name))}</p>
+      <p>${btn(C.BRIEF.start(m.pov.name, m.opp.name), 'match-start-ws', { tab }, { primary: true })}</p>
+      ${legacy.length ? `<p class="small">${esc(C.POV.earlierHere(m.opp.name))} ${legacy.map((w) => btn(`${C.POV.review} (${(w.updatedAt ?? '').slice(0, 10)})`, 'go-owner', { ws: w.id }, { cls: 'linkish' })).join(' ')}</p>` : ''}`;
+  }
+  /** Section tabs that hold an unsaved screen draft (session) or set-editor draft. */
+  function draftDots(ws) {
+    const ui = P.ui.ws[ws.id] ?? {};
+    return {
+      calcs: !!(ui.cd && ui.cd.move && !ui.cd.calcId),
+      sets: !!(ui.imp?.text || Object.keys(ws.drafts ?? {}).length),
+      practice: !!(ui.br?.purpose || ui.br?.partner || (ws.mockSets ?? []).some((x) => (x.games ?? []).some((g) => g.draft))),
+    };
   }
 
   // ---------- rules ----------
@@ -421,12 +701,14 @@ export function createPrep(app) {
       ${P.lastRestore ? `<p class="banner info">Restored. ${btn('Undo restore', 'restore-undo')}</p>` : ''}
       <h3>Move to another device</h3><ol class="small"><li>Back up here.</li><li>Send the file to yourself.</li><li>Restore there.</li></ol><p class="small">${esc(C.BACKUP.share)} ${esc(C.BACKUP.ios)}</p>
       <h3>Space</h3><p class="small">Prep is using about ${Math.round(usage / 1000)} thousand characters of roughly ${Math.round(USAGE_BUDGET_CHARS / 1e6 * 10) / 10} million this browser allows${usage > USAGE_BUDGET_CHARS * 0.6 ? '. Archive old opponents to a file to free space' : ''}.</p>
-      ${wsList.length ? `<p class="small">An opponent file includes your sets for that match, your cards and notes: it is for your own devices, not for sharing as scouting.</p><ul class="small">${wsList.map((w) => `<li>vs ${esc(w.coach)} · ${btn('Export this opponent', 'ws-export-file', { ws: w.id })} ${btn('Archive (file + remove here)…', 'ws-archive', { ws: w.id })}
-        ${ui.archivePending === w.id ? `<p class="banner warn">A file for vs ${esc(w.coach)} was downloaded. Check it is in your downloads, then: ${btn(`Remove vs ${w.coach} from this device`, 'ws-archive-confirm', { ws: w.id })} ${btn('Keep it here', 'ws-archive-cancel')}</p>` : ''}</li>`).join('')}</ul>` : ''}
+      ${wsList.length ? `<p class="small">An opponent file includes your sets for that match, your cards and notes: it is for your own devices, not for sharing as scouting.</p><ul class="small">${wsList.map((w) => `<li>${esc(wsLabel(w))} · ${btn('Export this opponent', 'ws-export-file', { ws: w.id })} ${btn('Archive (file + remove here)…', 'ws-archive', { ws: w.id }, { aria: `Archive ${wsLabel(w)}` })}
+        ${ui.archivePending === w.id ? `<p class="banner warn">A file for ${esc(wsLabel(w))} was downloaded. Check it is in your downloads, then: ${btn(`Remove ${ownerOf(w) ? `${ownerOf(w)} ` : ''}vs ${w.coach} from this device`, 'ws-archive-confirm', { ws: w.id })} ${btn('Keep it here', 'ws-archive-cancel')}</p>` : ''}</li>`).join('')}</ul>` : ''}
       <h3>Delete</h3><p class="small">Removes only prep (drafarig.prep.*); your draft settings stay.</p>
       ${ui.confirmDelete ? `<p><label class="field" for="prep-delete-confirm"><span>Type delete to confirm</span><input id="prep-delete-confirm" data-pi="delete-confirm" value=""></label> ${btn('Download a backup first', 'backup-download')} ${btn('Delete all prep on this device', 'delete-all-confirm')}</p>` : btn('Delete all prep on this device…', 'delete-all')}
     </section>`;
   }
+  /** One saved workspace in words: whose (or "earlier, not tied to a coach"), against whom, last changed. */
+  const wsLabel = (w) => `${ownerOf(w) ? `${ownerOf(w)}'s prep` : 'Earlier prep (not tied to a coach)'} vs ${w?.coach ?? '?'}, changed ${String(w?.updatedAt ?? '').slice(0, 10) || 'unknown'}`;
   /** What "Replace everything" removes and brings in, in counts. */
   function replaceSummary(backup) {
     const docs = Object.values(backup.docs);
@@ -444,16 +726,24 @@ export function createPrep(app) {
     return `<div class="restore-preview"><p>Backup from ${esc(ui.preview.backup.deviceLabel || 'a device')}, ${esc(String(ui.preview.backup.exportedAt).slice(0, 16).replace('T', ' '))}: ${s.opponents} opponents, ${s.sets} sets, ${s.calcs} calcs, ${s.mockGames} mock games. On this device: ${here.opponents} opponents.</p>
       <p>${btn('Import opponents (keeps what is here)', 'restore-import', {}, { primary: true })} ${opponentFile ? '<span class="small">(a file with one opponent can only be imported)</span>' : btn('Replace everything…', 'restore-replace')}</p>
       ${ui.confirmReplace && !opponentFile ? `<p class="banner warn">Replace everything: ${esc(replaceSummary(ui.preview.backup))} A backup of what is here now downloads first; if it doesn't arrive, don't continue. You can undo until your next change. ${btn('Replace now', 'restore-replace-confirm')} ${btn('Cancel', 'restore-replace-cancel')}</p>` : ''}
-      ${collide.length ? `<p class="small">Already on this device: ${collide.map((d) => `${esc(d.coach)} ${['add', 'replace', 'keep-both', 'skip'].filter((x) => x !== 'add').map((c) => btn(c === 'keep-both' ? 'Keep both' : c === 'replace' ? 'Replace' : 'Skip', 'restore-choice', { ws: d.id, choice: c }, { cls: `pchip${ui.choices?.[d.id] === c ? ' on' : ''}`, pressed: ui.choices?.[d.id] === c })).join('')}`).join(' · ')}</p>` : ''}</div>`;
+      ${collide.length ? `<p class="small">Already on this device: ${collide.map((d) => `${esc(`${wsLabel(P.ws.get(d.id))} here; the file's copy: ${wsLabel(d)}`)} ${['add', 'replace', 'keep-both', 'skip'].filter((x) => x !== 'add').map((c) => btn(c === 'keep-both' ? 'Keep both' : c === 'replace' ? 'Replace' : 'Skip', 'restore-choice', { ws: d.id, choice: c }, { cls: `pchip${ui.choices?.[d.id] === c ? ' on' : ''}`, pressed: ui.choices?.[d.id] === c })).join('')}`).join(' · ')}</p>` : ''}</div>`;
   }
 
   // ---------- workspace shell ----------
   function workspace(ws, r) {
     const tab = r.tab ?? null;
-    const head = `<div class="ws-head">${btn('‹ Prep', r.kind ? 'back' : 'go-home', {}, { cls: 'back', aria: r.kind ? 'Back' : 'Back to Prep home' })}
-      <span class="ws-title">vs ${esc(ws.coach)}</span>${ws.isNext ? ' <span class="chip ok">next</span>' : ''}</div>`;
+    const owner = ownerOf(ws);
+    // a perspective's workspace opened by id: the full matchup shell, pinned to this document
+    if (!r.kind && owner) {
+      const pov = (P.coaches() ?? []).find((c) => c.name === owner), opp = (P.coaches() ?? []).find((c) => c.name === ws.coach);
+      if (pov && opp && pov.name !== opp.name) return matchView({ ...r, tab: tab ?? 'plan' }, { pov, opp, ws }, true);
+    }
+    const head = `<div class="ws-head">${btn('‹ Back', r.kind ? 'back' : 'go-home', {}, { cls: 'back', aria: r.kind ? 'Back' : 'Back to Battle Prep' })}
+      <span class="ws-title">${owner ? `${esc(owner)} ` : ''}vs ${esc(ws.coach)}</span>${ws.isNext ? ' <span class="chip ok">next</span>' : ''}</div>
+      ${owner ? '' : `<p class="banner warn unassigned">${esc(C.POV.unassignedBanner)} ${btn(C.POV.review, 'go-owner', { ws: ws.id }, { primary: true })}</p>`}`;
     // section buttons (not an ARIA tablist: no arrow-key model to promise); the current one is marked aria-current
-    const tabs = `<nav class="ptabs" aria-label="Prep sections">${Object.entries(TAB_LABEL).map(([k, l]) => `<button type="button" id="ptab-${k}" data-pa="tab" data-tab="${k}"${!r.kind && tab === k ? ' aria-current="page" class="active"' : ''}>${l}</button>`).join('')}</nav>`;
+    const tabs = `<nav class="ptabs" aria-label="Prep sections">${Object.entries(TAB_LABEL).filter(([k]) => k !== 'brief' || owner).map(([k, l]) => `<button type="button" id="ptab-${k}" data-pa="tab" data-tab="${k}"${!r.kind && tab === k ? ' aria-current="page" class="active"' : ''}>${l}</button>`).join('')}</nav>`;
+    if (r.kind === 'owner') return `<section class="panel prep-ws" data-key="ws">${head}${ownerScreen(ws)}</section>`;
     let body;
     if (!r.kind) {
       body = tab === 'sets' ? Sets.tab(P, ws) : tab === 'calcs' ? Calcs.tab(P, ws) : tab === 'practice' ? Practice.tab(P, ws) : Plan.tab(P, ws);
@@ -464,11 +754,112 @@ export function createPrep(app) {
     return `<section class="panel prep-ws" data-key="ws">${head}${tabs}<div id="ptab-panel">${body}</div>
       <p class="small muted ws-foot">${esc(C.HOME.savedLocal)} ${P.saveState === 'saving' ? esc(C.SAVE.saving) : P.saveState === 'error' ? '' : esc(C.SAVE.saved)}</p></section>`;
   }
+  /** Whose prep is this? One workspace saved before perspectives, with the facts to decide, and an explicit answer. */
+  function ownerScreen(ws) {
+    const owner = ownerOf(ws);
+    const coaches = (P.coaches() ?? []).filter((c) => c.name !== ws.coach);
+    if (owner) {
+      return `${h2(C.POV.ownerHead(ws.coach))}<p>${esc(C.POV.ownedBy(owner, ws.coach))}${ws.povAssignedAt ? ` ${esc(C.POV.assignedOn(ws.povAssignedAt.slice(0, 10)))}` : ''}</p>
+        ${ws.povFrom === 'legacy-confirm' ? `<p>${btn(C.POV.unassign, 'owner-unassign', { ws: ws.id })} <span class="small muted">${esc(C.POV.unassignHelp)}</span></p>` : ''}`;
+    }
+    const pick = P.ui.ownerPick?.[ws.id] ?? (coaches.some((c) => c.name === P.currentPov()) ? P.currentPov() : '');
+    const whoHas = (sp) => (P.coaches() ?? []).find((c) => c.picks.some((x) => x.id === sp))?.name ?? null;
+    const ev = legacyEvidence(ws, { pov: pick || null, rosterOf: (n) => P.coachRoster(n), mysets: P.docs.mysets, whoHas });
+    const nm = (ids) => ids.map((x) => P.spName(x)).join(', ');
+    const facts = [
+      C.POV.evOpp(ws.coach, ev.snapshotMatches, ev.snapshotSize, ev.oppNowSize),
+      C.POV.evDates((ev.createdAt ?? '').slice(0, 10), (ev.updatedAt ?? '').slice(0, 10), ev.matchDate),
+      C.POV.evCounts(ev.counts),
+      ev.six.length ? C.POV.evSix(nm(ev.six)) : C.POV.evNoSix,
+      ev.yours.length ? C.POV.evYours(nm(ev.yours)) : C.POV.evNoYours,
+    ];
+    const fit = !pick ? '' : !ev.yours.length ? `<p class="small">${esc(C.POV.fitUnknown(pick))}</p>`
+      : ev.yoursElsewhere.length ? `<p class="banner warn">${esc(C.POV.fitWarn(pick, ev.yoursElsewhere.map((x) => `${P.spName(x.id)}${x.coach ? ` (${x.coach}'s now)` : ''}`).join(', ')))}</p>`
+      : `<p class="small">✓ ${esc(C.POV.fitOk(pick, nm(ev.yoursOnPov)))}</p>`;
+    return `${h2(C.POV.ownerHead(ws.coach))}
+      <p>${esc(C.POV.ownerIntro)}</p>
+      <ul class="small evid">${facts.map((f) => `<li>${esc(f)}</li>`).join('')}</ul>
+      ${select('owner-pick', [['', C.POV.ownerChoose], ...coaches.map((c) => [c.name, c.name])], pick, { label: C.POV.ownerQuestion, data: { pc: 'owner-pick', ws: ws.id } })}
+      ${fit}
+      <p>${pick ? btn(C.POV.assign(pick, ws.coach), 'owner-assign', { ws: ws.id, owner: pick }, { primary: true }) : ''} ${btn(C.POV.notNow, 'back')}</p>
+      <p class="small muted">${esc(C.POV.assignHelp)}</p>`;
+  }
   P.rosterDiffOf = (ws) => (P.league() ? rosterDiff(ws.roster.speciesIds, P.coachRoster(ws.coach)) : { added: [], removed: [] });
 
   // ---------- actions ----------
+  const povSeat = () => P.seatOf(P.currentPov());
+  /** The same screen from another perspective (a setting change: replace). Opponent kept unless it is the new perspective. */
+  const toPov = (seat) => {
+    const r = P.route;
+    if (!P.coachBySeat(seat)) return;
+    if (isMatch(r) && r.opp !== seat) P.go({ view: 'ws', pov: seat, opp: r.opp, tab: r.tab ?? 'brief' }, { push: false });
+    else P.go({ view: 'overview', pov: seat }, { push: false });
+  };
+  const toOpp = (seat) => {
+    const pov = povSeat();
+    if (!pov || !P.coachBySeat(seat) || seat === pov) return;
+    const r = P.route;
+    P.go({ view: 'ws', pov, opp: seat, tab: isMatch(r) && !r.detail ? r.tab ?? 'brief' : 'brief' });
+  };
+  P.sheetFailed = () => app.sheetFailed?.() ?? false;
   const ACTIONS = {
-    'go-home': () => P.go({ view: 'home' }, { push: false }),
+    'go-home': () => { const seat = povSeat(); P.go(seat ? { view: 'overview', pov: seat } : { view: 'home' }, { push: false }); },
+    'go-overview': () => { const seat = povSeat(); P.go(seat ? { view: 'overview', pov: seat } : { view: 'home' }); },
+    'go-opp': (t) => toOpp(Number(t.dataset.opp)),
+    'pov-back': () => { const seat = P.seatOf(P.identity()); if (seat) toPov(seat); },
+    // Start saved prep for this matchup (an explicit tap): the workspace gets this perspective as its owner.
+    'match-start-ws': (t) => {
+      const m = P.match();
+      if (!m) return;
+      const ws = P.ensureWorkspace(m.pov.name, m.opp.name);
+      if (ws) P.go({ view: 'ws', pov: m.pov.order, opp: m.opp.order, tab: MATCH_TABS.includes(t.dataset.tab) ? t.dataset.tab : 'plan' }, { push: false });
+    },
+    // Put an assigned earlier workspace back from its recovery copy: under its own id when it is gone, else as a second copy
+    // beside the one that replaced it (nothing is overwritten).
+    'vault-recover': (t) => {
+      const id = t.dataset.ws, doc = P.store.vault.get(id);
+      if (!doc || !P.recoverable().some((x) => x.id === id)) { app.rerender(); return; }
+      if (P.readOnly()) { P.toast(C.SAVE.newer); return; }
+      if (P.dirty.size) flush();
+      const gone = P.store.load(wsKey(id)).status === 'missing';
+      const copyId = gone ? id : P.id('ws');
+      const res = P.store.save(wsKey(copyId), { ...doc, id: copyId }, null);
+      if (!res.ok) { P.toast(C.SAVE.error); return; }
+      if (!gone) P.store.vault.remove(id);
+      P.init();
+      P.toast(C.POV.vaultDone(doc.pov, doc.coach));
+      app.rerender();
+    },
+    'vault-discard': (t) => { P.store.vault.remove(t.dataset.ws); P.toast(C.POV.vaultDropped); app.rerender(); },
+    'draft-open': () => { const pr = P.pendingReplace; P.pendingReplace = null; if (pr && P.ws.has(pr.wsId)) P.go({ view: 'ws', wsId: pr.wsId, ...KIND_OF_SLOT[pr.slot] }, { push: true }); else app.rerender(); },
+    'draft-replace': () => { const pr = P.pendingReplace; P.pendingReplace = null; if (pr && P.ws.has(pr.wsId)) { P.wsUi(pr.wsId)[pr.slot] = pr.next; P.go(pr.route, { push: true }); } else app.rerender(); },
+    'draft-cancel': () => { P.pendingReplace = null; app.rerender(); },
+    'go-owner': (t) => { if (P.ws.has(t.dataset.ws)) P.go({ view: 'ws', wsId: t.dataset.ws, kind: 'owner' }, { push: true }); },
+    // Saying whose an earlier workspace is: only from its own review screen, only for an unassigned one, only to a coach on
+    // the sheet other than its opponent. Undoable at once (Undo) and later (Unassign).
+    'owner-assign': (t) => {
+      const ws = P.ws.get(t.dataset.ws), owner = t.dataset.owner;
+      if (!ws || ownerOf(ws) || !owner || owner === ws.coach || !P.seatOf(owner)) return;
+      const ok = P.mutate(`ws:${ws.id}`, (d) => { d.pov = owner; d.povFrom = 'legacy-confirm'; d.povAssignedAt = P.now(); }, { allowUnassigned: true });
+      if (!ok) return;
+      P.docs.meta = { ...P.docs.meta, workspaces: P.docs.meta.workspaces.map((w) => (w.id === ws.id ? { ...w, pov: owner } : w)) };
+      P.dirty.add(KEYS.meta);
+      if (P.ui.ownerPick) delete P.ui.ownerPick[ws.id];
+      P.toast(C.POV.assigned(owner, ws.coach));
+      const ps = P.seatOf(owner), os = P.seatOf(ws.coach);
+      (P.ui.activeWs ??= {})[`${owner}|${ws.coach}`] = ws.id;
+      P.go(ps && os ? { view: 'ws', pov: ps, opp: os, names: { pov: owner, opp: ws.coach }, wsId: ws.id, tab: 'plan' } : { view: 'ws', wsId: ws.id, tab: 'plan' }, { push: false });
+    },
+    'owner-unassign': (t) => {
+      const ws = P.ws.get(t.dataset.ws);
+      if (!ws || ws.povFrom !== 'legacy-confirm') return;
+      const ok = P.mutate(`ws:${ws.id}`, (d) => { delete d.pov; delete d.povFrom; delete d.povAssignedAt; });
+      if (!ok) return;
+      P.docs.meta = { ...P.docs.meta, workspaces: P.docs.meta.workspaces.map((w) => { if (w.id !== ws.id) return w; const { pov, ...rest } = w; void pov; return rest; }) };
+      P.dirty.add(KEYS.meta);
+      P.toast(C.POV.unassigned(ws.coach));
+      P.go({ view: 'ws', wsId: ws.id, tab: 'plan' }, { push: false });
+    },
     back: () => P.back(),
     'go-rules': () => P.go({ view: 'rules' }, { push: true }),
     'go-backup': () => P.go({ view: 'backup' }, { push: true }),
@@ -476,10 +867,30 @@ export function createPrep(app) {
     'go-mysets': () => P.go({ view: 'my-sets' }, { push: true }),
     'go-mysets-import': () => P.go({ view: 'my-sets', kind: 'import' }, { push: true }),
     continue: () => { const r = parseRoute(P.store.hint('lastRoute') ?? P.docs.meta.lastRoute); if (r) P.go(r, { push: true }); },
-    'confirm-me': () => P.mutate('meta', (m) => { m.myCoach = P.myCoach(); m.myCoachConfirmed = true; }, { substantive: false }),
+    // "Is this you? Yes" records who you are on this device. It assigns no saved prep (each earlier workspace is reviewed on its own).
+    'confirm-me': (t) => {
+      // only the name the button showed, and only while it is still the default from your Draft setting
+      const name = t.dataset?.coach, d = P.resolvePov(null);
+      if (!name || name !== d.name || !['setting', 'default'].includes(d.source) || P.identity()) return;
+      P.mutate('meta', (m) => { m.myCoach = name; m.myCoachConfirmed = true; }, { substantive: false });
+    },
     'open-coach': (t) => P.openWorkspace(t.dataset.coach),
     'open-ws': (t) => P.go({ view: 'ws', wsId: t.dataset.ws, tab: 'plan' }, { push: true }),
-    tab: (t) => P.go({ view: 'ws', wsId: P.route.wsId, tab: t.dataset.tab }, { push: false }),
+    tab: (t) => {
+      const r = P.route, tab = t.dataset.tab;
+      const m = P.match(r);
+      if (m) {
+        // a section tap starts saved prep for this matchup, unless an earlier unassigned one could be it: then the tab asks
+        if (tab !== 'brief' && !m.ws && !unassignedVs([...P.ws.values()], m.opp.name).length && !P.ensureWorkspace(m.pov.name, m.opp.name)) return;
+        return P.go({ view: 'ws', pov: r.pov, opp: r.opp, tab: MATCH_TABS.includes(tab) ? tab : 'brief' }, { push: false });
+      }
+      const ws = P.ws.get(r.wsId), owner = ownerOf(ws);
+      if (tab === 'brief' && owner && P.seatOf(owner) && P.seatOf(ws.coach)) {
+        (P.ui.activeWs ??= {})[`${owner}|${ws.coach}`] = ws.id;
+        return P.go({ view: 'ws', pov: P.seatOf(owner), opp: P.seatOf(ws.coach), names: { pov: owner, opp: ws.coach }, wsId: ws.id, tab: 'brief' }, { push: false });
+      }
+      return P.go({ view: 'ws', wsId: r.wsId, tab: tab === 'brief' ? 'plan' : tab }, { push: false });
+    },
     'set-rule': (t) => P.mutate('rules', (d) => { d.rules[t.dataset.rule] = { value: t.dataset.value, source: t.dataset.value === 'unknown' ? 'default' : 'user', setAt: P.now(), note: '' }; d.updatedAt = P.now(); }),
     'reload-prep': () => P.reloadFromStorage(),
     'retry-mech': () => { P.mechState = 'idle'; P.ensureMech(); },
@@ -547,6 +958,7 @@ export function createPrep(app) {
     'delete-all-confirm': () => {
       if ((P.ui.backup?.deleteText ?? '').trim().toLowerCase() !== 'delete') { P.toast('Type delete to confirm'); return; }
       for (const k of P.store.keys()) P.store.remove(k);
+      P.store.vault.clear(); // "delete all" includes the recovery copies
       P.ui = { ws: {} }; P.saveUi(); P.store.hint('lastRoute', null); P.init(); P.go({ view: 'home' }, { push: false }); P.toast('All prep on this device was deleted');
     },
   };
@@ -586,6 +998,9 @@ export function createPrep(app) {
 
   const CHANGES = {
     'pick-me': (t) => P.mutate('meta', (m) => { m.myCoach = t.value; m.myCoachConfirmed = true; }, { substantive: false }),
+    'pov-pick': (t) => { if (t.value) toPov(Number(t.value)); },
+    'opp-jump': (t) => { if (t.value) toOpp(Number(t.value)); },
+    'owner-pick': (t) => { (P.ui.ownerPick ??= {})[t.dataset.ws] = t.value; app.rerender(); },
     'restore-file': async (t) => {
       const f = t.files?.[0];
       if (!f) return;
@@ -612,12 +1027,12 @@ export function createPrep(app) {
     return true;
   };
   // Actions that create or remove something run once per tap: a double tap within a moment is the same tap.
-  const ONCE = new Set(['open-coach', 'match-start', 'finding-new', 'calc-save', 'calc-dup', 'card-new', 'plan-new', 'variant-new', 'variant-dup', 'br-start', 'mock-quick',
+  const ONCE = new Set(['open-coach', 'match-start-ws', 'vault-recover', 'owner-assign', 'owner-unassign', 'brief-six', 'brief-next', 'brief-calc', 'brief-calc-replace', 'match-start', 'finding-new', 'calc-save', 'calc-dup', 'card-new', 'plan-new', 'variant-new', 'variant-dup', 'br-start', 'mock-quick',
     'guess-all', 'paste-import', 'set-save', 'set-save-copy', 'pilot-save', 'rv-save', 'restore-import', 'restore-replace-confirm', 'backup-download', 'ws-archive', 'ws-archive-confirm', 'delete-all-confirm', 'undo-delete']);
   const recent = new Map();
   const tappedTwice = (t) => {
     if (!ONCE.has(t.dataset.pa)) return false;
-    const key = JSON.stringify(t.dataset), now = Date.now();
+    const key = JSON.stringify([t.dataset, formatRoute(P.route)]), now = Date.now(); // the same tap on the same screen
     if (now - (recent.get(key) ?? 0) < 400) return true;
     recent.set(key, now);
     return false;
@@ -626,7 +1041,8 @@ export function createPrep(app) {
   const NOT_WHEN_NEWER = new Set(['ws-archive', 'ws-archive-confirm', 'restore-replace', 'restore-replace-confirm', 'restore-import', 'restore-undo', 'delete-all', 'delete-all-confirm']);
   // Deletes take one tap and can be undone until the next action: the documents they change are kept and put back.
   const UNDOABLE = { 'set-delete': 'Set deleted', 'variant-delete': 'Version deleted', 'calc-delete': 'Calc deleted', 'plan-delete': 'Plan deleted', 'card-delete': 'Card deleted',
-    'fd-delete': 'Finding deleted', 'pilot-delete': 'Pilot team deleted', 'rv-del': 'Reveal removed', 'ifthen-remove': 'If-then line removed' };
+    'fd-delete': 'Finding deleted', 'pilot-delete': 'Pilot team deleted', 'rv-del': 'Reveal removed', 'ifthen-remove': 'If-then line removed',
+    'owner-assign': 'Earlier prep assigned', 'owner-unassign': 'Earlier prep unassigned' };
   const docKeys = () => [KEYS.meta, KEYS.rules, KEYS.mysets, KEYS.pilot, ...[...P.ws.keys()].map(wsKey)];
   /** A document's content, without the save bookkeeping autosave changes (rev, saveId, meta's counters). */
   const contentOf = (d) => JSON.stringify(d ? { ...d, rev: 0, saveId: null, changesSinceBackup: 0, updatedAt: null } : null);
@@ -668,6 +1084,24 @@ export function createPrep(app) {
     input(t) { const h = allInputs[t.dataset.pi]; return h ? guarded(h, t, 'input') : false; },
     applyHash: (h) => P.applyHash(h),
     hash: () => formatRoute(P.route),
+    saveUi: () => P.saveUi(),
+    /** Escape: close an open detail sheet (Back) or a pending question. Returns whether it did something. */
+    escape: () => {
+      if (P.pendingReplace) { P.pendingReplace = null; app.rerender(); return true; }
+      if (isMatch(P.route) && P.route.detail) { P.back(); return true; }
+      return false;
+    },
+    /** Which opponent row is showing (perspective seat | current opponent or overview), so the app keeps its scroll. */
+    stripKey: () => { const r = P.route; return isMatch(r) ? `${r.pov}|${r.opp}` : r.view === 'overview' ? `${r.pov}|-` : null; },
+    /** A screen that can be redrawn under the user after a sheet refresh (no typing on it). */
+    canRedraw: () => P.route.view === 'home' || P.route.view === 'overview' || (isMatch(P.route) && (P.route.tab ?? 'brief') === 'brief'),
+    /** "Battle Prep vs <seat>" from Draft: that matchup from the current perspective (or the overview without one). */
+    openVs: (seat) => {
+      if (!P.docs.meta) P.init();
+      const pov = P.seatOf(P.currentPov());
+      if (pov && P.coachBySeat(seat) && seat !== pov) P.go({ view: 'ws', pov, opp: seat, tab: 'brief' }, { push: true });
+      else P.go({ view: 'home' }, { push: false });
+    },
     consumeFocus: () => P.consumeFocus(),
     onStorage: (e) => P.onStorage(e),
     onHidden: () => P.onHidden(),

@@ -14,14 +14,17 @@ const store = {
   // a setting that can't be saved (storage full or blocked) says so once instead of failing silently
   set(k, v) { try { localStorage.setItem('drafarig.' + k, JSON.stringify(v)); } catch { if (!store.warned) { store.warned = true; toast("Settings couldn't be saved on this device (storage full or blocked)."); } } },
 };
+const DEFAULT_COACH = 'Anthony'; // the shipped default Draft coach setting (used only when nothing is stored)
 const S = {
-  coach: store.get('coach', 'Anthony'), order: store.get('order', 'snake'), explain: store.get('explain', true),
+  coach: store.get('coach', DEFAULT_COACH), order: store.get('order', 'snake'), explain: store.get('explain', true),
   mode: store.get('mode', 'draft'), aliases: store.get('aliases', {}), draftTab: 'plans', check: '', showForms: false,
   tailwind: false, trickRoom: false, speedOpp: '', threatScope: 'all', boardFilter: { q: '', role: '', type: '', hideTaken: false, affordable: false },
   cores: { open: {}, more: false, showAll: {} }, // Cores panels: expand state per card / mon key (not persisted)
 };
 
 let dex, sheet, L, usage = null, usageError = null, planCache = null;
+let coachIsFallback = false; // S.coach was filled in because the stored coach isn't on the sheet: shown, never saved as a setting
+let sheetFailed = false;
 // Cores to fear: the spec context is built once at boot; the per-coach view is cached and recomputed only by rebuild()
 // (new sheet data or name fixes) or a coach change, never on a re-render (UX §11.1). The sheet read time isn't part of
 // the cached view: it's passed at render time (QA S6).
@@ -39,9 +42,12 @@ function coresView() {
   if (!coreCx) return null;
   try { return coreCache.get(S.coach); } catch (e) { console.error('Cores to fear failed:', e); return null; }
 }
-// Prep: device-local opponent prep (public/prep.js). Its code loads on first use, so the other screens don't pay for it.
-// Nothing in Prep is sent anywhere; the app only hands it the league data it already has and a few browser helpers.
+// Battle Prep: device-local opponent prep (public/prep.js), the second app beside Draft. Its code loads on first use, so the
+// Draft screens don't pay for it. Nothing in Prep is sent anywhere; the app only hands it the league data it already has and a
+// few browser helpers. Draft is every other mode (Draft, My team, League, Rules & glossary, Setup).
 const MODES = ['draft', 'team', 'league', 'learn', 'setup', 'prep'];
+let lastDraftMode = 'draft';
+let pendingVs = null; // "Battle Prep vs …" from Draft, applied once Prep has loaded
 const isPrepHash = (h) => h === 'prep' || h.startsWith('prep/');
 let prep = null, prepLoading = null, prepFailed = false, prepGlossary = {};
 let viewingAs = null; // {coach: your coach before "See it as they do", back()} while League shows an opponent's side
@@ -50,6 +56,40 @@ const esc =(s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<
 const sp = (id) => dex.species[id];
 const SPRITE = 'https://play.pokemonshowdown.com/sprites';
 const sprite = (f) => `<img alt="" loading="lazy" src="${SPRITE}/gen5/${f.sprite}.png" onerror="this.onerror=null;this.src='${SPRITE}/ani/${f.sprite}.gif'">`;
+// Battle Prep portraits: the same Showdown sprite host, static images only (no animated ani/ in Battle Prep). Coverage was
+// HEAD-checked for every dex form on 2026-10-02 (prior research, sprite-coverage.json): home-centered has every base form,
+// gen5 has every form except these 11 Megas, which show their base form's gen5 image (the card marks the Mega in words).
+// No inline handlers: a document-level error listener walks data-fb, then leaves a text initials disc. alt="" because the
+// name is always written next to the image; no-referrer so the image host isn't told which page asked.
+const GEN5_MISSING = new Set(['barbaracle-mega', 'dragalge-mega', 'eelektross-mega', 'falinks-mega', 'malamar-mega', 'pyroar-mega', 'raichu-megax', 'raichu-megay', 'scolipede-mega', 'scrafty-mega', 'staraptor-mega']);
+const PORTRAIT_PX = { xs: 24, sm: 40, md: 64, lg: 80 };
+let formIndex = null;
+function formOf(id) {
+  if (!dex) return null;
+  if (dex.species[id]) return { s: dex.species[id], f: dex.species[id].forms[0] };
+  formIndex ??= new Map(Object.values(dex.species).flatMap((s) => s.forms.map((f) => [f.id, { s, f }])));
+  return formIndex.get(id) ?? null;
+}
+function portrait(id, { size = 'sm' } = {}) {
+  const x = formOf(id), px = PORTRAIT_PX[size] ?? 40, sz = PORTRAIT_PX[size] ? size : 'sm';
+  const ini = esc(String(x?.s.name ?? id ?? '?').replace(/[^A-Za-z0-9]/g, '').slice(0, 2) || '?');
+  const type = /^[A-Za-z]+$/.test(x?.f.types?.[0] ?? '') ? x.f.types[0].toLowerCase() : 'none';
+  const sid = x?.f.sprite, base = x?.s.forms[0].sprite;
+  if (!x || !/^[a-z0-9-]+$/.test(sid ?? '') || !/^[a-z0-9-]+$/.test(base ?? '')) return `<span class="pt pt-${sz} noimg ty-${type}" data-ini="${ini}"></span>`;
+  const large = px >= 56;
+  const chain = x.f.mega ? (GEN5_MISSING.has(sid) ? [`gen5/${base}`] : [`gen5/${sid}`, `gen5/${base}`]) : large ? [`home-centered/${sid}`, `gen5/${sid}`] : [`gen5/${sid}`];
+  const [src, fb] = chain.map((c) => `${SPRITE}/${c}.png`);
+  return `<span class="pt pt-${sz} ty-${type}${large && !x.f.mega ? ' home' : ''}" data-ini="${ini}"><img class="spr" src="${src}"${fb ? ` data-fb="${fb}"` : ''} alt="" width="${px}" height="${px}" loading="lazy" decoding="async" referrerpolicy="no-referrer"></span>`;
+}
+// A portrait that fails to load tries its fallback once, then becomes the initials disc (no broken-image icon).
+document.addEventListener('error', (e) => {
+  const img = e.target;
+  if (!img || img.tagName !== 'IMG' || !img.classList?.contains('spr')) return;
+  const fb = img.dataset?.fb;
+  if (fb) { delete img.dataset.fb; img.src = fb; return; }
+  img.parentElement?.classList.add('noimg');
+  img.remove();
+}, true);
 const term = (label, key = label) => `<span class="term" tabindex="0" data-term="${esc(key)}">${esc(label)}</span>`;
 const typeTag = (t) => `<span class="type">${esc(t)}</span>`;
 const mult = (m) => (m === 0 ? '0' : m === 0.25 ? '¼' : m === 0.5 ? '½' : m === 1 ? '' : '×' + m);
@@ -89,8 +129,10 @@ async function refreshSheet() {
     const before = L.coaches.reduce((s, c) => s + c.picks.length, 0);
     sheet = body;
     if (!changed) { renderTop(); showReadTime(); return; }
-    // Prep isn't redrawn under the user (they may be typing); it reads the new picks on its next screen.
-    rebuild(); if (S.mode === 'prep') renderTop(); else render();
+    // Battle Prep is redrawn only on a briefing or overview with no field in use (its screens with typing read the new picks
+    // on their next screen); a matchup stays on the two coaches it was opened for (prep.js pins them).
+    const typing = !!document.activeElement?.matches?.('input, textarea, select');
+    rebuild(); if (S.mode === 'prep') { if (prep?.canRedraw?.() && !typing) render(); else renderTop(); } else render();
     const n = L.coaches.reduce((s, c) => s + c.picks.length, 0) - before;
     toast(n > 0 ? `Sheet updated: ${n} new pick${n > 1 ? 's' : ''}` : 'Sheet updated');
   } catch {} finally { refreshing = false; }
@@ -104,7 +146,7 @@ function rebuild() {
   L = buildLeague(sheet.raw, dex, S.aliases);
   planCache = null;
   coreCache.reset();
-  if (!L.coaches.some((c) => c.name === S.coach)) S.coach = L.coaches.find((c) => c.order === 5)?.name || L.coaches[0].name;
+  if (!L.coaches.some((c) => c.name === S.coach)) { S.coach = L.coaches.find((c) => c.order === 5)?.name || L.coaches[0].name; coachIsFallback = true; }
 }
 async function loadUsage() {
   try {
@@ -138,7 +180,9 @@ function renderTop() {
   const sync = $('#sync');
   const t = new Date(sheet.fetchedAt).toLocaleTimeString();
   sync.className = 'sync' + (sheet.stale ? ' stale' : '');
-  sync.textContent = sheet.stale ? `⚠ Using data from ${t} (sheet unreachable) ⟳` : `● Synced ${ago(sheet.fetchedAt)} (${t}) ⟳`;
+  // phones show the dot and the age only; the full words stay for screen readers (and wider screens)
+  const full = sheet.stale ? `⚠ Using data from ${t} (sheet unreachable) ⟳` : `● Synced ${ago(sheet.fetchedAt)} (${t}) ⟳`;
+  sync.innerHTML = `<span class="sync-long">${esc(full)}</span><span class="sync-short" aria-hidden="true">${sheet.stale ? '⚠' : '●'} ${esc(ago(sheet.fetchedAt))} ⟳</span>`;
   sync.title = sheet.stale ? `Last error: ${sheet.error}. Click to retry.` : 'Fresh copy of the league sheet. It re-checks every 45 seconds while this tab is open; click to reload now. Google can lag a few minutes behind edits.';
   const turn = computeTurn(L.coaches, S.order);
   const until = picksUntil(L.coaches, S.coach, S.order);
@@ -155,7 +199,8 @@ function renderTop() {
   if (viewingAs) banners.push(`<div class="banner info" role="status">Viewing as ${esc(S.coach)} (from your prep). Your prep hasn't changed. <button class="primary" data-viewas-back="">Back to my prep</button></div>`);
   if (sheet.stale) banners.push(`<div class="banner warn">Couldn't reach the league sheet (${esc(sheet.error)}). Showing data from ${t} (${ago(sheet.fetchedAt)}). Picks made since then are missing. <button id="retry">Retry</button></div>`);
   if (L.unmatched.length) banners.push(`<div class="banner warn">${L.unmatched.length} name(s) couldn't be matched to a Pokémon. They still count toward points but are left out of the analysis. <button data-goto="setup">Fix names</button></div>`);
-  if (L.warnings.length) banners.push(`<div class="banner info"><details><summary>${L.warnings.length} sheet note(s): Drafts tab is the source of truth; board red text is a cross-check.</summary><ul>${L.warnings.map((w) => `<li>${esc(w)}</li>`).join('')}</ul></details></div>`);
+  // sheet notes are about the draft board: Battle Prep leaves them out (stale and unmatched-name banners still show: they change the briefing)
+  if (L.warnings.length && S.mode !== 'prep') banners.push(`<div class="banner info"><details><summary>${L.warnings.length} sheet note(s): Drafts tab is the source of truth; board red text is a cross-check.</summary><ul>${L.warnings.map((w) => `<li>${esc(w)}</li>`).join('')}</ul></details></div>`);
   $('#banners').innerHTML = banners.join('');
 }
 
@@ -205,7 +250,7 @@ function checkPanel(c) {
 
 function renderDraft() {
   const c = me();
-  if (!c.slotsLeft) return `${budgetPanel(c)}<div class="panel"><h2>Roster complete</h2><p>${esc(c.name)} has all ${ROSTER_SIZE} picks. See My team and League for matchup prep.</p></div>`;
+  if (!c.slotsLeft) return `${budgetPanel(c)}<div class="panel"><h2>Roster complete</h2><p>${esc(c.name)} has all ${ROSTER_SIZE} picks. Matchup prep is in Battle Prep.</p><button class="primary" data-mode="prep">Open Battle Prep</button></div>`;
   const P = plans(), aff = affMap();
   const tab = S.draftTab;
   const planHtml = P.plans.length ? P.plans.map((p, i) => `<div class="plan ${i === 0 ? 'selected' : ''}">
@@ -358,7 +403,7 @@ function renderLeague() {
   const coaches = L.coaches.map((x) => {
     const b = budgetSummary(x.pointsLeft, x.slotsLeft, available().map((a) => a.cost));
     const missing = roleChecklist(dex, myIds(x)).filter((r) => !r.met && r.weight >= 4).map((r) => r.label);
-    return `<div class="coach-card ${x.name === S.coach ? 'me' : ''}"><b>${x.order}. ${esc(x.name)}</b> ${b.feasible ? '' : '<span class="chip breaks">Infeasible</span>'}
+    return `<div class="coach-card ${x.name === S.coach ? 'me' : ''}"><b>${x.order}. ${esc(x.name)}</b> ${b.feasible ? '' : '<span class="chip breaks">Infeasible</span>'}${x.name !== S.coach ? ` <button class="linkish" data-prep-vs="${x.order}">Battle Prep vs ${esc(x.name)}</button>` : ''}
       <div class="small">${x.pointsLeft} pts · ${x.slotsLeft} slots · avg ${b.avgPerSlot} · max next pick ${b.maxThisPick}</div>
       <div class="small muted">${x.slotsLeft ? `Can still afford: up to ${b.maxThisPick}-pt mons` : 'Roster complete'}</div>
       <div class="small">${x.picks.map((p) => `${esc(p.id ? sp(p.id).name : p.en)} ${p.points}`).join(' · ')}</div>
@@ -442,7 +487,17 @@ function openDrawer(id, formIdx = 0) {
 // ---------- Prep ----------
 function markMode() {
   document.body.dataset.mode = S.mode;
+  // two apps: Battle Prep (mode prep) and Draft (every other mode); the switch marks the current one
+  const app = S.mode === 'prep' ? 'prep' : 'draft';
+  document.body.dataset.app = app;
   document.querySelectorAll('#modes button').forEach((b) => b.classList.toggle('active', b.dataset.mode === S.mode));
+  const unsaved = !!prep?.P?.saveError;
+  document.querySelectorAll('.appswitch a').forEach((a) => {
+    const on = a.dataset.appLink === app;
+    a.classList.toggle('active', on);
+    if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    if (a.dataset.appLink === 'prep') { a.classList.toggle('warn', unsaved); a.setAttribute('aria-label', unsaved ? 'Battle Prep: changes not saved' : 'Battle Prep'); }
+  });
 }
 function download(name, text, type = 'text/plain') {
   const url = URL.createObjectURL(new Blob([text], { type: `${type};charset=utf-8` }));
@@ -465,6 +520,17 @@ const prepApp = {
   get dex() { return dex ?? { species: {}, types: [] }; },
   league: () => L ?? null, sheet: () => sheet ?? null, usage: () => usage, coresCx: () => coreCx,
   viewingCoach: () => (viewingAs ? viewingAs.coach : S.coach),
+  shellVersion: 2, // public/prep.js SHELL_VERSION: a Prep from another release refuses to run in this shell (and the reverse)
+  /** The Draft coach setting as stored, or the shipped default when nothing is stored. Never the seat-5 stand-in. */
+  identityHint() {
+    try {
+      const raw = localStorage.getItem('drafarig.coach');
+      const v = raw === null ? null : JSON.parse(raw);
+      return typeof v === 'string' && v ? { name: v, source: 'setting' } : { name: DEFAULT_COACH, source: 'default' };
+    } catch { return { name: DEFAULT_COACH, source: 'default' }; }
+  },
+  portrait: (id, opts) => portrait(id, opts),
+  sheetFailed: () => sheetFailed,
   goMode: (m) => goTo(m), toast: (m) => toast(m), announce: (m) => announce(m), rerender: () => render(),
   viewAs(coach, back) {
     viewingAs = { coach: viewingAs?.coach ?? S.coach, back };
@@ -485,6 +551,7 @@ function loadPrep() {
     prepGlossary = m.GLOSSARY_PREP ?? {};
     prepFailed = false;
     if (isPrepHash(location.hash.slice(1))) prep.applyHash(location.hash);
+    if (pendingVs !== null) { const seat = pendingVs; pendingVs = null; prep.openVs?.(seat); }
     // navigator.storage.persisted() only reads the state; it never asks the user anything.
     prepApp.persist?.persisted().then((v) => prep.setPersisted(v), () => {});
     render();
@@ -508,8 +575,11 @@ function renderPrep(main) {
   const scroll = same ? window.scrollY : 0;
   const focused = same && !target ? prepFocusKey(document.activeElement, main) : null;
   const caret = focused ? document.activeElement?.selectionStart ?? null : null; // typing in a field that re-renders keeps its place
+  const strip0 = document.querySelector('.oppstrip ol');
+  const stripLeft = strip0 ? strip0.scrollLeft : null;
   main.innerHTML = prep.render();
   shownMode = 'prep';
+  keepOppStrip(stripLeft);
   window.scrollY !== scroll && window.scrollTo(0, scroll);
   const el = target && document.getElementById(target);
   if (el) { if (!nav) el.scrollIntoView?.({ block: 'start' }); el.focus?.({ preventScroll: true }); }
@@ -517,6 +587,21 @@ function renderPrep(main) {
     c.focus?.({ preventScroll: true });
     if (document.activeElement === c) { if (caret !== null) try { c.setSelectionRange?.(caret, caret); } catch { /* not a text field */ } break; }
   }
+}
+// The opponent row is rebuilt on every Prep render: the same row keeps where the user scrolled it; a new opponent (or
+// perspective) centres its tab. scrollLeft only, so the page itself never jumps (scrollIntoView could scroll vertically).
+let shownStrip = null;
+function keepOppStrip(left) {
+  const ol = document.querySelector('.oppstrip ol');
+  const key = prep?.stripKey?.() ?? null;
+  if (ol) {
+    if (key && key === shownStrip && left !== null) ol.scrollLeft = left;
+    else {
+      const a = ol.querySelector?.('[aria-current="page"]');
+      if (a) ol.scrollLeft = Math.max(0, a.offsetLeft - (ol.clientWidth - a.offsetWidth) / 2);
+    }
+  }
+  shownStrip = ol ? key : null;
 }
 // Prep controls without an id are found again by their action and arguments (all their data-* attributes).
 const PREP_ATTRS = ['data-pa', 'data-pc', 'data-pi'];
@@ -531,7 +616,7 @@ function prepFocusCandidates(root, k) {
   const sel = k.prep.map(([n, v]) => `[${n}="${CSS.escape(v)}"]`).join('');
   return [...root.querySelectorAll(`${k.tag.toLowerCase()}${sel}`)].slice(0, 1);
 }
-function setCoach(name) { S.coach = name; S.speedOpp = ''; S.threatScope = 'all'; S.check = ''; planCache = null; S.cores = { open: {}, more: false, showAll: {} }; }
+function setCoach(name) { S.coach = name; coachIsFallback = false; S.speedOpp = ''; S.threatScope = 'all'; S.check = ''; planCache = null; S.cores = { open: {}, more: false, showAll: {} }; }
 function endViewAs() {
   const v = viewingAs;
   viewingAs = null;
@@ -544,7 +629,10 @@ function onHashChange() {
     if (prep) prep.applyHash(location.hash);
     if (S.mode !== 'prep') { S.mode = 'prep'; save(); }
     render();
-  } else if (MODES.includes(h) && h !== S.mode) { S.mode = h; save(); render(); }
+  } else if (MODES.includes(h) && h !== S.mode) {
+    if (S.mode === 'prep' && prep) { prep.flush?.(); prep.saveUi?.(); }
+    lastDraftMode = h; S.mode = h; save(); render();
+  }
 }
 
 // ---------- render + events ----------
@@ -573,20 +661,39 @@ function render() {
 }
 // Switch screens. The URL hash follows, so a reload or a copied link opens the same screen (QA S3). Prep comes back
 // to the Prep screen you were on; its hashes carry random ids only.
-function goTo(mode) { S.mode = mode; history.replaceState(null, '', mode === 'prep' && prep ? prep.hash() : '#' + mode); save(); render(); }
-// While viewing League as an opponent, your own coach is what stays saved.
-const save = () => { store.set('coach', viewingAs ? viewingAs.coach : S.coach); store.set('order', S.order); store.set('explain', S.explain); store.set('mode', S.mode); store.set('aliases', S.aliases); };
+function goTo(mode) {
+  // leaving Battle Prep: pending autosaves are written and screen drafts kept for this tab before Draft renders
+  if (S.mode === 'prep' && mode !== 'prep' && prep) { prep.flush?.(); prep.saveUi?.(); }
+  if (mode !== 'prep') lastDraftMode = mode;
+  S.mode = mode; history.replaceState(null, '', mode === 'prep' && prep ? prep.hash() : '#' + mode); save(); render();
+}
+/** The app switch: Battle Prep returns to its last screen; Draft returns to the last Draft screen this session. */
+const switchApp = (app) => goTo(app === 'prep' ? 'prep' : lastDraftMode);
+/** "Battle Prep vs <coach>" from Draft: the matchup from your Battle Prep perspective. */
+function prepVs(seat) { goTo('prep'); if (prep) prep.openVs?.(seat); else pendingVs = seat; }
+// While viewing League as an opponent, your own coach is what stays saved; a stand-in coach (the stored one isn't on the
+// sheet) is never saved over your setting.
+const save = () => { if (!coachIsFallback || viewingAs) store.set('coach', viewingAs ? viewingAs.coach : S.coach); store.set('order', S.order); store.set('explain', S.explain); store.set('mode', S.mode); store.set('aliases', S.aliases); };
 // The toast is visual; screen readers get the same words from #live, a status region that stays in the page.
 // Longer messages stay up longer.
 function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; announce(msg); clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), Math.min(6000, 2500 + 30 * String(msg).length)); }
 function announce(msg) { const live = $('#live'); if (!live) return; live.textContent = ''; setTimeout(() => { live.textContent = msg; }, 30); }
 
+const modifierClick = (e) => !!(e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || (e.button ?? 0) > 0);
 document.addEventListener('click', async (e) => {
+  // Battle Prep links (tabs, opponents) are real links: a modified click opens them natively, a plain click routes here
+  const sw = e.target.closest('[data-app-link]');
+  if (sw?.dataset.appLink) { if (modifierClick(e)) return; e.preventDefault?.(); switchApp(sw.dataset.appLink); return; }
   const pa = e.target.closest('[data-pa]');
-  if (pa?.dataset.pa) { if (S.mode === 'prep' && prep && !pa.disabled) prep.click(pa); return; }
+  if (pa?.dataset.pa) {
+    if (pa.tagName === 'A') { if (modifierClick(e)) return; e.preventDefault?.(); }
+    if (S.mode === 'prep' && prep && !pa.disabled) prep.click(pa);
+    return;
+  }
   const t = e.target.closest('button, .nm, .cell, .chip.form, .term');
   if (!t) return;
   if (t.dataset.mode) goTo(t.dataset.mode);
+  else if (t.dataset.prepVs) prepVs(Number(t.dataset.prepVs));
   else if (t.dataset.viewasBack !== undefined) { if (viewingAs) endViewAs(); }
   else if (t.dataset.prepRetry !== undefined) { prepFailed = false; render(); }
   else if (t.dataset.goto) {
@@ -653,7 +760,22 @@ function showPop(el) {
 const hidePop = () => { $('#pop').hidden = true; };
 document.addEventListener('mouseover', (e) => { const t = e.target.closest('.term'); t ? showPop(t) : hidePop(); });
 document.addEventListener('focusin', (e) => { const t = e.target.closest('.term'); t ? showPop(t) : hidePop(); });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { hidePop(); $('#drawer').hidden = true; document.querySelector('.layout').classList.add('nodrawer'); } });
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    // Battle Prep first: Escape closes an open detail sheet or a pending question (focus goes back with it)
+    if (S.mode === 'prep' && prep?.escape?.()) return;
+    hidePop(); $('#drawer').hidden = true; document.querySelector('.layout').classList.add('nodrawer');
+    return;
+  }
+  // opponent row: ← → move between opponents, Home / End jump to the ends (links stay reachable by Tab too)
+  const a = e.target?.closest?.('.oppstrip a');
+  if (a && ['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) {
+    const all = [...(a.closest('ol')?.querySelectorAll('a') ?? [])];
+    const i = all.indexOf(a);
+    const next = e.key === 'Home' ? all[0] : e.key === 'End' ? all.at(-1) : all[Math.max(0, Math.min(all.length - 1, i + (e.key === 'ArrowRight' ? 1 : -1)))];
+    if (next && next !== a) { e.preventDefault?.(); next.focus(); next.scrollIntoView?.({ inline: 'nearest', block: 'nearest' }); }
+  }
+});
 
 // ---------- boot ----------
 // The sticky top bar wraps on phones. Keep --topbar-h equal to its real height so the scroll-margin-top on the headings
@@ -671,6 +793,7 @@ function trackTopbarHeight() {
   const h = location.hash.slice(1); // deep link: #draft, #team, #league, #learn, #setup, #prep…
   if (MODES.includes(h) || isPrepHash(h)) S.mode = isPrepHash(h) ? 'prep' : h;
   if (!MODES.includes(S.mode)) S.mode = 'draft';
+  if (S.mode !== 'prep') lastDraftMode = S.mode;
   // Prep saves when the page is hidden or closed, follows Back/Forward, and notices edits made in another tab.
   // (popstate also fires for typed-in hash changes, so hashchange isn't needed and would render twice.)
   addEventListener('popstate', onHashChange);
@@ -697,7 +820,8 @@ function trackTopbarHeight() {
   } catch (e) {
     $('#sync').textContent = '⚠ Sheet unreachable';
     // Prep is saved on this device, so it still opens without the sheet (opponents aren't listed until it loads).
+    sheetFailed = true;
     if (S.mode === 'prep') { render(); return; }
-    $('#main').innerHTML = `<div class="panel"><h2>Couldn't load the league sheet</h2><p>${esc(e.message)}</p><p>Check your internet connection and that the sheet is still published to the web.</p><button class="primary" id="retry">Retry</button> <button data-mode="prep">Open my prep anyway</button></div>`;
+    $('#main').innerHTML = `<div class="panel"><h2>Couldn't load the league sheet</h2><p>${esc(e.message)}</p><p>Check your internet connection and that the sheet is still published to the web.</p><button class="primary" id="retry">Retry</button> <button data-mode="prep">Open Battle Prep anyway</button></div>`;
   }
 })();

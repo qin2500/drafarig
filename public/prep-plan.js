@@ -2,6 +2,7 @@
 // many ideas as you like), through their eyes ("could, not will", from Reg M-C learnsets), plan cards with if-then lines
 // and two Bo3 cards, key-calc slots, coverage in words with at most three flags, and Game day for the real best of three.
 import { suggestPlans, couldBringAgainst, closestPlans } from '../lib/prep-plans.mjs';
+import { ownerOf } from '../lib/prep-matchup.mjs';
 import { flags as computeFlags, planRung, startHere, MAX_FLAGS, recordText } from '../lib/prep-coverage.mjs';
 import { itemClauseExclusions, speedBound, boundVsRange, ledgerThem } from '../lib/prep-infer.mjs';
 import { currentVersion, asSet, addVersion, newLineage, defaultVariant, applyReveal, setForSpecies, addRevealed } from '../lib/prep-model.mjs';
@@ -168,7 +169,7 @@ function cardEditor(P, ws, r) {
   const c = ws.cards.find((x) => x.id === r.id);
   if (!c) return `${h2('Not found')}<p>${esc(C.NOT_ON_DEVICE)}</p>`;
   const six = ws.my6.map((m) => P.lineage(m.setId)).filter(Boolean);
-  const pool = six.length ? six : P.docs.mysets.sets;
+  const pool = six.length ? six : P.mineSets();
   const theirRoster = P.rosterSpecies(ws);
   if (c.kind !== 'plan') {
     return `${btn('‹ Plan', 'back', {}, { cls: 'back', aria: 'Back to Plan' })}${h2(C.CARD_KIND[c.kind])}
@@ -300,7 +301,13 @@ export const actions = {
   'plan-step4': (t, P) => P.focusOn('plan-cards'),
   'plan-step6': (t, P) => P.go({ view: 'ws', wsId: P.route.wsId, tab: 'calcs' }, { push: false }),
   'plan-step7': (t, P) => P.go({ view: 'ws', wsId: P.route.wsId, tab: 'practice' }, { push: false }),
-  'ws-next': (t, P) => { for (const w of P.ws.values()) if (w.id !== P.route.wsId && w.isNext) P.mutate(`ws:${w.id}`, (d) => { d.isNext = false; }, { render: false }); mut(P, (d) => { d.isNext = !d.isNext; }); },
+  // "Next opponent" is one per owner: only this workspace's owner's other workspaces are cleared (never another coach's
+  // perspective, and an unassigned workspace only clears other unassigned ones)
+  'ws-next': (t, P) => {
+    const me = ownerOf(W(P));
+    for (const w of P.ws.values()) if (w.id !== P.route.wsId && w.isNext && ownerOf(w) === me) P.mutate(`ws:${w.id}`, (d) => { d.isNext = false; }, { render: false });
+    mut(P, (d) => { d.isNext = !d.isNext; });
+  },
   'roster-update': (t, P) => mut(P, (d) => { d.roster = { ...d.roster, speciesIds: P.coachRoster(d.coach), fetchedAt: P.app.sheet()?.fetchedAt ?? null }; }),
   'roster-keep': (t, P) => mut(P, (d) => { d.roster = { ...d.roster, keptOld: P.now() }; d.dismissedFlags = [...(d.dismissedFlags ?? []), 'F12']; }),
   'flag-dismiss': (t, P) => mut(P, (d) => { d.dismissedFlags = [...(d.dismissedFlags ?? []), t.dataset.code + (t.dataset.ref ? `:${t.dataset.ref}` : '')]; }, { substantive: false }),
@@ -388,8 +395,9 @@ export const actions = {
     if (s.calcId) return P.go({ view: 'ws', wsId: ws.id, kind: 'calcs', id: s.calcId }, { push: true });
     const theirL = s.theirSet ? P.lineage(s.theirSet, ws) : null;
     const mv = theirL ? currentVersion(theirL).data.moves.filter((m) => P.mech.moves[m]?.category !== 'Status').sort((a, b) => P.mech.moves[b].basePower - P.mech.moves[a].basePower)[0] ?? '' : '';
-    P.wsUi(ws.id).cd = { a: { side: 'theirs', species: s.theirSpecies, setId: s.theirSet }, d: { side: 'mine', species: P.lineage(s.mineSet).speciesId, setId: s.mineSet }, move: mv, crit: false, hits: 0, firstHitOnly: false, moveState: {}, field: {}, aState: {}, dState: {}, calcId: null, slotFromCardId: s.card, slotKey: s.key };
-    P.go({ view: 'ws', wsId: ws.id, kind: 'calcs', id: 'new' }, { push: true });
+    // an unsaved quick check is never replaced silently (P.prefill asks first)
+    P.prefill(ws, 'cd', { a: { side: 'theirs', species: s.theirSpecies, setId: s.theirSet }, d: { side: 'mine', species: P.lineage(s.mineSet).speciesId, setId: s.mineSet }, move: mv, crit: false, hits: 0, firstHitOnly: false, moveState: {}, field: {}, aState: {}, dState: {}, calcId: null, slotFromCardId: s.card, slotKey: s.key },
+      { view: 'ws', wsId: ws.id, kind: 'calcs', id: 'new' });
   },
   'match-start': (t, P) => {
     const ws = W(P), ui = P.wsUi(ws.id), cur = currentMatch(ws, ui);

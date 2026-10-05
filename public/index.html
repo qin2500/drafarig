@@ -9,6 +9,7 @@
 <body>
 <header class="topbar">
   <div class="brand">DRAFARIG</div>
+  <nav class="appswitch" aria-label="Apps"><a href="#draft" data-app-link="draft">Draft</a><a href="#prep" data-app-link="prep">Battle Prep</a></nav>
   <button id="sync" class="sync" title="Reload the league sheet">Reading league sheet…</button>
   <div id="turn" class="turn" aria-live="polite"></div>
   <div id="budget" class="budget-pill"></div>
@@ -17,9 +18,8 @@
 </header>
 <div id="banners"></div>
 <div class="layout">
-  <nav class="modes" id="modes">
+  <nav class="modes" id="modes" aria-label="Draft">
     <button data-mode="draft">Draft</button>
-    <button data-mode="prep">Prep</button>
     <button data-mode="team">My team</button>
     <button data-mode="league">League</button>
     <button data-mode="learn">Rules &amp; glossary</button>
@@ -31,6 +31,15 @@
 <div id="pop" class="pop" role="tooltip" hidden></div>
 <div id="toast" class="toast" hidden></div>
 <div id="live" class="vh" role="status" aria-live="polite"></div>
+<!-- Battle Prep icons (game-plan modes), used as <svg class="ic"><use href="#i-…"></use></svg>, always beside words -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></g></symbol>
+  <symbol id="i-rain" viewBox="0 0 24 24"><path d="M6.5 14.5a4.5 4.5 0 0 1 .6-9 6 6 0 0 1 11.3 2.2A3.5 3.5 0 0 1 18 14.5z" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 17.5l-1 3M12.5 17.5l-1 3M17 17.5l-1 3"/></g></symbol>
+  <symbol id="i-sand" viewBox="0 0 24 24"><g stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"><path d="M3 8c3-2 6 2 9 0s6-2 9 0M3 13c3-2 6 2 9 0s6-2 9 0M3 18c3-2 6 2 9 0s6-2 9 0"/></g></symbol>
+  <symbol id="i-snow" viewBox="0 0 24 24"><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v19M3.8 7.2l16.4 9.6M3.8 16.8l16.4-9.6M9.5 3.8L12 6l2.5-2.2M9.5 20.2L12 18l2.5 2.2"/></g></symbol>
+  <symbol id="i-tw" viewBox="0 0 24 24"><g stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"><path d="M3 9h11a3 3 0 1 0-3-3M3 14h15a3 3 0 1 1-3 3M3 19h7"/></g></symbol>
+  <symbol id="i-tr" viewBox="0 0 24 24"><g stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"><rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M8 9h8l-3-3M16 15H8l3 3"/></g></symbol>
+</svg>
 <script type="module" src="/app.js"></script>
 </body>
 </html>

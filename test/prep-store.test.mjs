@@ -5,7 +5,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { webcrypto } from 'node:crypto';
 import { parseRoute, formatRoute, parentRoute, navKind, TABS, WS_KINDS } from '../lib/prep-route.mjs';
-import { SCHEMA_VERSION, KEYS, wsKey, newId, validate, migrate, emptyMeta, emptyRules, emptyMySets, newWorkspace, forbiddenKey, typeOfKey } from '../lib/prep-schema.mjs';
+import { SCHEMA_VERSION, BASE_VERSION, docVersion, KEYS, wsKey, newId, validate, migrate, emptyMeta, emptyRules, emptyMySets, newWorkspace, forbiddenKey, typeOfKey } from '../lib/prep-schema.mjs';
 import { createStore } from '../lib/prep-store.mjs';
 import { makeBackup, readBackup, planRestore, mergeMySets, opponentDocs, summarize } from '../lib/prep-backup.mjs';
 import { newLineage, addVersion, setCurrent, currentVersion, pruneVersions, referencedVersions, provenanceAll, weakestSource } from '../lib/prep-model.mjs';
@@ -70,7 +70,7 @@ test('schema: valid empty documents; broken fields rejected; forbidden keys foun
   assert.ok(validate('ws', { ...ws, notes: '', extra: JSON.parse('{"constructor":1}') }).some((e) => e.startsWith('forbidden key')));
   const v0 = { rules: { itemClause: { value: 'on', source: 'user', setAt: NOW } }, futureField: 7 };
   const once = migrate('rules', v0);
-  assert.equal(once.doc.schemaVersion, SCHEMA_VERSION);
+  assert.equal(once.doc.schemaVersion, BASE_VERSION, 'an early draft migrates to version 1 (version 2 only marks a perspective\'s workspace)');
   assert.equal(once.doc.futureField, 7, 'unknown fields are kept');
   assert.equal(once.doc.rules.itemClause.value, 'on');
   assert.equal(once.doc.rules.disclosure.value, 'unknown');
@@ -78,6 +78,13 @@ test('schema: valid empty documents; broken fields rejected; forbidden keys foun
   assert.deepEqual(twice.doc, once.doc);
   assert.equal(twice.changed, false);
   assert.equal(migrate('ws', { ...ws, schemaVersion: SCHEMA_VERSION + 1 }).newer, true);
+  // per-document versions: only a workspace with a perspective is version 2; it needs no migration step
+  assert.deepEqual([docVersion('ws', ws), docVersion('ws', { ...ws, pov: 'Coach Beta' }), docVersion('meta', emptyMeta(NOW)), docVersion('mysets', emptyMySets())], [1, 2, 1, 1]);
+  const pw = newWorkspace({ id: id('ws'), coach: 'Coach Alpha', roster: { speciesIds: [] }, now: NOW, pov: 'Coach Beta' });
+  assert.deepEqual([pw.schemaVersion, pw.pov, pw.povFrom], [2, 'Coach Beta', 'created']);
+  assert.deepEqual(migrate('ws', pw), { doc: pw, changed: false, newer: false });
+  assert.deepEqual(validate('ws', pw), []);
+  for (const bad of [{ pov: '' }, { pov: 7 }, { povFrom: 'guessed' }, { shortlist: ['<x>'] }, { shortlist: Array(11).fill('garchomp') }]) assert.ok(validate('ws', { ...pw, ...bad }).length, JSON.stringify(bad));
   assert.equal(typeOfKey(wsKey(ws.id)), 'ws');
   assert.equal(typeOfKey('drafarig.coach'), null);
 });

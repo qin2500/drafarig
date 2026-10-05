@@ -54,12 +54,16 @@ let instances = 0;
  * first screen is rendered and the usage request has settled. Returns { main, drawer, toast, click, change, input, clipboard,
  * html, storage, history, location, fetches, downloads, waitFor, fire }.
  * mode: the deep-link hash (without '#'); narrow: what matchMedia('(max-width: 767px)') reports; files: extra (or
- * replacement) fetchable paths; storage: a memoryStorage to start from (prep documents); sheet: false makes /api/sheet fail.
+ * replacement) fetchable paths; storage: a memoryStorage to start from (prep documents); sheet: false makes /api/sheet fail;
+ * raw: the sheet's {boardCsv, draftsCsv, boardHtml} (default: the fixtures).
  * data/dex.json, data/mechanics.json and, when it exists, data/cores.json are served from the repo.
  */
-export async function bootApp({ source = read('public/app.js').toString('utf8'), mode = 'draft', narrow = true, files = {}, storage = memoryStorage(), session = memoryStorage(), sheet = true, clipboardText = null } = {}) {
-  const els = Object.fromEntries(['#sync', '#turn', '#budget', '#coach', '#banners', '#main', '#explain', '#drawer', '#pop', '#toast', '.layout', '.topbar', '#bq']
+export async function bootApp({ root = ROOT, source = readFileSync(new URL('public/app.js', root)).toString('utf8'), mode = 'draft', narrow = true, files = {}, storage = memoryStorage(), session = memoryStorage(), sheet = true, raw = RAW, clipboardText = null } = {}) {
+  const els = Object.fromEntries(['#sync', '#turn', '#budget', '#coach', '#banners', '#main', '#explain', '#drawer', '#pop', '#toast', '.layout', '.topbar', '#bq', '.oppstrip ol']
     .map((s) => [s, new El(s.slice(1))]));
+  // the opponent row's scroller: geometry a test can set (no layout here), and the current tab it finds
+  Object.assign(els['.oppstrip ol'], { scrollLeft: 0, clientWidth: 300, current: null, querySelector: (sel) => (sel === '[aria-current="page"]' ? els['.oppstrip ol'].current : null) });
+  let sheetRaw = raw;
   const listeners = {}, winListeners = {};
   const clipboard = [], fetches = [], downloads = [];
   const served = { '/data/dex.json': read('data/dex.json').toString('utf8'), '/data/mechanics.json': read('data/mechanics.json').toString('utf8'), ...files };
@@ -67,6 +71,7 @@ export async function bootApp({ source = read('public/app.js').toString('utf8'),
   const respond = (body, status = 200) => new Response(typeof body === 'string' ? body : JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
   const settle = async (n = 50) => { for (let i = 0; i < n; i++) await new Promise((r) => setImmediate(r)); };
   const fire = async (type, ev = {}) => { for (const fn of winListeners[type] ?? []) fn({ type, ...ev }); await settle(5); };
+  const fireDoc = async (type, ev = {}) => { for (const fn of listeners[type] ?? []) await fn({ type, ...ev }); await settle(5); };
   // history as a stack of {state, hash}; back() moves the hash and fires popstate like a browser.
   const location = { hash: `#${mode}`, reload() {} };
   const stack = [{ state: null, hash: location.hash }];
@@ -78,6 +83,7 @@ export async function bootApp({ source = read('public/app.js').toString('utf8'),
     replaceState(state, _t, url) { stack[at] = { state, hash: url ?? stack[at].hash }; location.hash = stack[at].hash; },
     pushState(state, _t, url) { stack.splice(at + 1); stack.push({ state, hash: url }); at++; location.hash = url; },
     back() { if (at > 0) { at--; location.hash = stack[at].hash; setImmediate(() => fire('popstate', { state: stack[at].state })); } },
+    forward() { if (at < stack.length - 1) { at++; location.hash = stack[at].hash; setImmediate(() => fire('popstate', { state: stack[at].state })); } },
   };
   El.clicked = (el) => { if (el.download) downloads.push({ name: el.download, url: el.href }); };
   const body = new El('body');
@@ -102,7 +108,7 @@ export async function bootApp({ source = read('public/app.js').toString('utf8'),
     fetch: async (url, init) => {
       const path = String(url);
       fetches.push({ path, method: init?.method ?? 'GET', body: init?.body ?? null });
-      if (path === '/api/sheet') return sheet ? respond({ fetchedAt: FETCHED_AT, stale: false, raw: RAW }) : respond({ error: 'Sheet unreachable' }, 502);
+      if (path === '/api/sheet') return sheet ? respond({ fetchedAt: FETCHED_AT, stale: false, raw: sheetRaw }) : respond({ error: 'Sheet unreachable' }, 502);
       if (path === '/api/usage') return respond({ error: 'Upstream data unavailable. Please try again.' }, 502);
       return path in served ? respond(served[path]) : respond({ error: 'Not found' }, 404);
     },
@@ -115,9 +121,10 @@ export async function bootApp({ source = read('public/app.js').toString('utf8'),
 
   // The browser resolves /lib/…, /glossary.js and the lazily loaded /prep.js against the site root; here they point at
   // the repo files (prep.js's own imports are relative, so they resolve from its file URL).
-  const src = source.replace(/from '\/lib\/([\w-]+\.mjs)'/g, (_, f) => `from '${new URL(`lib/${f}`, ROOT).href}'`)
-    .replace(/from '\/glossary\.js'/g, `from '${new URL('public/glossary.js', ROOT).href}'`)
-    .replace(/import\('\/prep\.js'\)/g, `import('${new URL('public/prep.js', ROOT).href}')`);
+  // root: another copy of the app's tree (e.g. the published v3, for old-client tests); data files still come from the repo
+  const src = source.replace(/from '\/lib\/([\w-]+\.mjs)'/g, (_, f) => `from '${new URL(`lib/${f}`, root).href}'`)
+    .replace(/from '\/glossary\.js'/g, `from '${new URL('public/glossary.js', root).href}'`)
+    .replace(/import\('\/prep\.js'\)/g, `import('${new URL('public/prep.js', root).href}')`);
   if (/from '\/|import\('\//.test(src)) throw new Error('ui-harness: app.js has an import this harness does not map');
   const waitFor = async (pred, what = 'condition', ms = 10000) => {
     const end = Date.now() + ms;
@@ -148,7 +155,13 @@ export async function bootApp({ source = read('public/app.js').toString('utf8'),
     /** The same element firing change (a select or a committed field): pc for data-pc, or pi for data-pi. */
     async changeData(data, props = {}) { const t = Object.assign(new El(), props); t.dataset = data; for (const fn of listeners.change ?? []) fn({ target: t }); await settle(5); },
     async visibility(hidden) { stubs.document.hidden = hidden; for (const fn of listeners.visibilitychange ?? []) fn({}); await settle(5); },
-    waitFor, fire, settle,
+    waitFor, fire, fireDoc, settle,
+    /** What /api/sheet returns from now on (the league sheet changing while the page is open). */
+    setSheet(r) { sheetRaw = r; },
+    /** A stub element the app looks up by selector (e.g. '.oppstrip ol'). */
+    el: (sel) => els[sel] ?? null,
+    /** A keydown on the document (Escape, arrows), with an optional target. */
+    async key(key, target = null) { for (const fn of listeners.keydown ?? []) fn({ key, target, preventDefault() {} }); await settle(5); },
     restore,
   };
 }

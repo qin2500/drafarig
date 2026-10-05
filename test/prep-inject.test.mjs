@@ -4,6 +4,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { bootApp, memoryStorage, parseHtml, findAll } from './ui-harness.mjs';
+import { isPortrait, isIcon } from './prep-helpers.mjs';
 import { validate, typeOfKey, KEYS } from '../lib/prep-schema.mjs';
 import { parseRoute } from '../lib/prep-route.mjs';
 
@@ -138,7 +139,8 @@ test('every stored text a file could carry is escaped on every Prep screen', asy
     await app.settle(5);
     const html = app.html();
     assert.ok(!/couldn't be shown/.test(html), `${h}: screen failed`);
-    const bad = findAll(parseHtml(html), (n) => ['img', 'script', 'svg', 'iframe'].includes(n.tag) || Object.keys(n.attrs).some((a) => /^on/i.test(a)));
+    // the only images allowed are the app's verified sprite portraits (exact shape, id-only paths): nothing a file carries
+    const bad = findAll(parseHtml(html), (n) => (n.tag === 'img' && !isPortrait(n)) || (['svg', 'use'].includes(n.tag) && !isIcon(n)) || ['script', 'iframe'].includes(n.tag) || Object.keys(n.attrs).some((a) => /^on/i.test(a)));
     assert.equal(bad.length, 0, `${h}: injected ${bad.map((n) => n.tag).join(',')}`);
     assert.ok(!findAll(parseHtml(app.banners.innerHTML), (n) => n.tag === 'img').length, `${h}: banners`);
     if (html.includes('&lt;img src=x')) shown++;

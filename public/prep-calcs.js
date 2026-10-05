@@ -22,7 +22,7 @@ function sides(P, ws) {
   const mineIds = ws.my6.length ? ws.my6.map((m) => m.setId) : null;
   const myRoster = P.coachRoster(P.myCoach());
   const mine = mineIds ? mineIds.map((id) => P.lineage(id)).filter(Boolean).map((l) => ({ side: 'mine', species: l.speciesId, l }))
-    : myRoster.filter((sp) => !P.mech || (P.mech.species[sp] && !P.mech.species[sp].mega)).map((sp) => ({ side: 'mine', species: sp, l: P.docs.mysets.sets.find((s) => s.speciesId === sp) ?? null }));
+    : myRoster.filter((sp) => !P.mech || (P.mech.species[sp] && !P.mech.species[sp].mega)).map((sp) => ({ side: 'mine', species: sp, l: P.mineSets().find((s) => s.speciesId === sp) ?? null }));
   return { theirs, mine, variant: v };
 }
 /** Calcs use "Worst for me" when it exists, else the chosen version (strategist F5). */
@@ -576,7 +576,8 @@ const ws_ = (P) => P.ws.get(P.route.wsId);
 const cdOf = (P) => draftOf(P, ws_(P));
 const touch = (P) => { const cd = cdOf(P); cd.result = null; cd.touched = true; P.wsUi(P.route.wsId).others = null; P.app.rerender(); };
 export const actions = {
-  'calc-new': (t, P) => { const ws = ws_(P); P.wsUi(ws.id).cd = null; draftOf(P, ws); P.go({ view: 'ws', wsId: ws.id, kind: 'calcs', id: 'new' }, { push: true }); },
+  // a new quick check starts empty; an unsaved one is never dropped silently (P.prefill asks first)
+  'calc-new': (t, P) => { const ws = ws_(P); P.prefill(ws, 'cd', { a: null, d: null, move: '', crit: false, hits: 0, firstHitOnly: false, moveState: {}, field: {}, aState: {}, dState: {}, calcId: null, title: '' }, { view: 'ws', wsId: ws.id, kind: 'calcs', id: 'new' }); },
   'calc-open': (t, P) => P.go({ view: 'ws', wsId: P.route.wsId, kind: 'calcs', id: t.dataset.calc }, { push: true }),
   'calc-pick': (t, P) => { const cd = cdOf(P); cd[t.dataset.which] = { side: t.dataset.side, species: t.dataset.species, setId: t.dataset.set || null }; if (t.dataset.which === 'a') cd.move = ''; touch(P); },
   'calc-move': (t, P) => { cdOf(P).move = t.dataset.move; cdOf(P).hits = 0; cdOf(P).firstHitOnly = false; touch(P); },
@@ -586,7 +587,7 @@ export const actions = {
     const ws = ws_(P), cd = cdOf(P), x = cd[t.dataset.which];
     if (!x) return;
     const id = x.side === 'theirs' ? addGuess(P, ws, x.species) : createMySet(P, x.species);
-    if (!id) { P.toast('The Reg M-C data is still loading'); return; }
+    if (!id) { if (!P.mech) P.toast('The Reg M-C data is still loading'); return; } // else the refusal already said why
     x.setId = id;
     P.toast(`${P.spName(x.species)}: started from ladder data. Check it in Sets when you can.`);
     touch(P);
@@ -681,12 +682,12 @@ export const actions = {
   'go-speed': (t, P) => P.go({ view: 'ws', wsId: P.route.wsId, kind: 'speed' }, { push: true }),
   'go-threshold': (t, P) => P.go({ view: 'ws', wsId: P.route.wsId, kind: 'threshold' }, { push: true }),
   'go-threshold-from': (t, P) => {
-    const ws = ws_(P), cd = cdOf(P), ui = P.wsUi(ws.id);
+    const ws = ws_(P), cd = cdOf(P);
     const mineA = cd.a?.side === 'mine';
     // the calc's field and states come along, so the answer is for the same situation (and says so)
     const cond = { field: structuredClone(cd.field ?? {}), aState: structuredClone(cd.aState ?? {}), dState: structuredClone(cd.dState ?? {}), moveState: structuredClone(cd.moveState ?? {}), hits: cd.hits ?? 0, firstHitOnly: !!cd.firstHitOnly };
-    ui.th = { kind: mineA ? 'ko' : 'survive', mine: (mineA ? cd.a : cd.d)?.setId ?? null, their: (mineA ? cd.d : cd.a)?.setId ?? null, theirSpecies: (mineA ? cd.d : cd.a)?.species, move: cd.move, investment: 'max', crit: false, result: null, cond };
-    P.go({ view: 'ws', wsId: ws.id, kind: 'threshold' }, { push: true });
+    P.prefill(ws, 'th', { kind: mineA ? 'ko' : 'survive', mine: (mineA ? cd.a : cd.d)?.setId ?? null, their: (mineA ? cd.d : cd.a)?.setId ?? null, theirSpecies: (mineA ? cd.d : cd.a)?.species, move: cd.move, investment: 'max', crit: false, result: null, cond },
+      { view: 'ws', wsId: ws.id, kind: 'threshold' });
   },
   'th-kind': (t, P) => { const th = P.wsUi(P.route.wsId).th; th.kind = t.dataset.kind; th.result = null; th.move = ''; P.app.rerender(); },
   'th-pick': (t, P) => { const th = P.wsUi(P.route.wsId).th; if (t.dataset.which === 'mine') th.mine = t.dataset.set; else { th.their = t.dataset.set || null; th.theirSpecies = t.dataset.species; } th.result = null; P.app.rerender(); },
@@ -704,13 +705,12 @@ export const actions = {
     const mine = { side: 'mine', species: l.speciesId, setId: l.id };
     const theirs = { side: 'theirs', species: th.theirSpecies ?? P.lineage(th.their, ws)?.speciesId, setId: th.their };
     const c = th.cond ?? {};
-    if (ui.cd && !ui.cd.calcId && ui.cd.move && (ui.cd.a?.species !== (th.kind === 'survive' ? theirs : mine).species || ui.cd.move !== th.move)) P.toast('Your unsaved quick check was replaced by this comparison');
-    ui.cd = { a: th.kind === 'survive' ? theirs : mine, d: th.kind === 'survive' ? mine : theirs, move: th.move, crit: false, hits: c.hits ?? 0, firstHitOnly: !!c.firstHitOnly,
-      moveState: structuredClone(c.moveState ?? {}), field: structuredClone(c.field ?? {}), aState: structuredClone(c.aState ?? {}), dState: structuredClone(c.dState ?? {}), calcId: null };
     ui.cmp ??= { extra: [] };
     const label = `Try: ${t.dataset.label}`;
     if (!ui.cmp.extra.some((x) => x.label === label)) ui.cmp.extra = [...ui.cmp.extra, { label, set: { species: l.speciesId, ...thresholdData(P, l, t.dataset) }, setId: l.id, candidate: true }].slice(-3);
-    P.go({ view: 'ws', wsId: ws.id, kind: 'compare' }, { push: true });
+    // the comparison needs its own quick check; an unsaved one is never replaced silently (P.prefill asks first)
+    P.prefill(ws, 'cd', { a: th.kind === 'survive' ? theirs : mine, d: th.kind === 'survive' ? mine : theirs, move: th.move, crit: false, hits: c.hits ?? 0, firstHitOnly: !!c.firstHitOnly,
+      moveState: structuredClone(c.moveState ?? {}), field: structuredClone(c.field ?? {}), aState: structuredClone(c.aState ?? {}), dState: structuredClone(c.dState ?? {}), calcId: null }, { view: 'ws', wsId: ws.id, kind: 'compare' });
   },
   'sp-flag': (t, P) => { const s = P.wsUi(P.route.wsId).sp; s[t.dataset.key] = !s[t.dataset.key]; P.app.rerender(); },
   'sp-sel': (t, P) => {

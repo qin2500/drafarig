@@ -2,15 +2,18 @@
 // what reveals tell you (with their conditions), Bo3/format facts, the mock brief (never your team) and reveals into sets.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mech, set, CHOMP, INCIN } from './calc-helpers.mjs';
+import { mech, read, set, CHOMP, INCIN } from './calc-helpers.mjs';
 import { flags, startHere, planRung, findingConfidence, recordText, revisionGuards, formatInfo, MAX_FLAGS, FLAG_PRIORITY } from '../lib/prep-coverage.mjs';
 import { itemClauseExclusions, speedBound, boundVsRange, ledgerThem, surprises } from '../lib/prep-infer.mjs';
 import { composeBrief, parseBrief, setupFor, checkNumbers, BRIEF_HEADER, TEAM_SIZE, PICKED } from '../lib/prep-brief.mjs';
-import { closestPlans } from '../lib/prep-plans.mjs';
+import { closestPlans, couldBringAgainst } from '../lib/prep-plans.mjs';
 import { newLineage, addVersion, applyReveal, currentVersion, guessSet, provenanceAll, weakestSource } from '../lib/prep-model.mjs';
 import { newWorkspace, emptyRules } from '../lib/prep-schema.mjs';
 import { parseTeam } from '../lib/paste.mjs';
-import { setStats } from '../lib/calc/mech.mjs';
+import { setStats, canLearn } from '../lib/calc/mech.mjs';
+import { coreContext, detect } from '../lib/cores.mjs';
+import { buildLeague } from '../lib/league.mjs';
+import { RAW } from './ui-harness.mjs';
 
 const NOW = '2026-10-04T10:00:00.000Z';
 const ws0 = (extra = {}) => ({ ...newWorkspace({ id: 'ws_aaaaaaaaaaaa', coach: 'Ning', roster: { fetchedAt: NOW, speciesIds: ['rillaboom', 'gholdengo'], points: {} }, now: NOW }), ...extra });
@@ -187,4 +190,67 @@ test('Game day: the closest plan needs every preview tell; reveals go into their
   assert.equal(currentVersion(it).provenance.item.source, 'seen-vs-me');
   assert.equal(addVersion(it, currentVersion(it).data, { now: NOW }), it, 'equal data is not a new version');
   void CHOMP; void INCIN;
+});
+
+// "Through their eyes" on the fixture league's rosters (test/fixtures/drafts.csv): Jacky fields Trick Room (Farigiraf,
+// Golisopod, Torkoal), Hex fields Psychic Terrain (Indeedee-F, Armarouge). The spec marks "Tailwind doesn't help" (vs
+// Trick Room) and "Fake Out doesn't work here" (vs Psychic Terrain) counts:false: its non-answers for that core, so they
+// aren't counter-prep. Leaving them out says nothing about Tailwind or Fake Out mattering elsewhere in the game.
+const DEX = JSON.parse(read('data/dex.json')), SPEC = JSON.parse(read('data/cores.json'));
+const CX = coreContext(DEX, SPEC);
+const LEAGUE = buildLeague(RAW, DEX, {});
+const roster = (name) => LEAGUE.coaches.find((c) => c.name === name).picks.map((p) => p.id).filter(Boolean);
+const could = (mine, theirs) => couldBringAgainst(CX, mech, mine, theirs, null, { keyMoves: (id) => DEX.species[id]?.keyMoves ?? [] });
+const answerIds = (r, coreId) => r.find((c) => c.coreId === coreId)?.answers.map((a) => a.id) ?? [];
+const answerMons = (r, coreId, id) => r.find((c) => c.coreId === coreId)?.answers.find((a) => a.id === id)?.mons.map((m) => m.id) ?? [];
+const flat = (r) => r.map((c) => [c.coreId, c.answers.map((a) => [a.id, a.mons.map((m) => `${m.id} ${m.via.map((v) => `${v.kind}:${v.id}:${v.ladder}`).join(' ')}`)])]);
+const NON_ANSWERS = SPEC.cores.flatMap((c) => (c.answers ?? []).filter((a) => a.counts === false).map((a) => a.id)).sort();
+
+test('Through their eyes: the spec\'s non-answers (counts:false) are never offered as their counter-prep; real answers stay', () => {
+  assert.deepEqual(NON_ANSWERS, ['pt-fakeout', 'tr-tailwind'], 'the spec\'s non-answers (extend these cases if it adds more)');
+  const core = (id) => SPEC.cores.find((c) => c.id === id);
+  const [jacky, ding, hex, ning] = ['Jacky', 'DIngDIng', 'Hex(法拉)', 'Ning'].map(roster);
+  // the inputs really reach both entries: your core is fielded and their mon learns the move
+  assert.ok(detect(CX, core('trick-room'), jacky), 'Jacky fields Trick Room');
+  assert.ok(detect(CX, core('psychic-terrain'), hex), 'Hex fields Psychic Terrain');
+  assert.ok(ding.includes('whimsicott') && canLearn(mech, 'whimsicott', 'tailwind'));
+  assert.ok(ning.includes('rillaboom') && canLearn(mech, 'rillaboom', 'fakeout'));
+  const tr = could(jacky, ding), pt = could(hex, ning);
+  for (const c of [...tr, ...pt]) for (const a of c.answers) assert.ok(!NON_ANSWERS.includes(a.id), `${c.coreId}/${a.id} is listed`);
+  assert.ok(!answerIds(tr, 'trick-room').includes('tr-tailwind'));
+  assert.ok(!answerIds(pt, 'psychic-terrain').includes('pt-fakeout'));
+  // positive controls: Taunt against your Trick Room setter, Fake Out where the spec counts it
+  assert.deepEqual(answerMons(tr, 'trick-room', 'tr-taunt'), ['whimsicott', 'sableye', 'overqwil']);
+  assert.deepEqual(answerMons(tr, 'trick-room', 'tr-fakeout'), ['sableye']);
+  assert.deepEqual(answerMons(pt, 'tailwind', 'tw-fakeout'), ['rillaboom'], 'Rillaboom\'s Fake Out still answers your Tailwind');
+  assert.deepEqual(answerIds(pt, 'psychic-terrain'), ['pt-terrain', 'pt-terrainmove'], 'your Psychic Terrain keeps its real answers');
+});
+
+test('Through their eyes: everything else is listed exactly as before (cores, answers, mons, tools, ladder words)', () => {
+  const tr = could(roster('Jacky'), roster('DIngDIng')), pt = could(roster('Hex(法拉)'), roster('Ning'));
+  assert.deepEqual(flat(tr), [['trick-room', [
+    ['tr-own', ['whimsicott move:trickroom:unknown', 'audino move:trickroom:yes']],
+    ['tr-taunt', ['whimsicott move:taunt:unknown', 'sableye move:taunt:unknown', 'overqwil move:taunt:unknown']],
+    ['tr-fakeout', ['sableye move:fakeout:yes']]]]]);
+  assert.deepEqual(flat(pt), [
+    ['tailwind', [
+      ['tw-speeddrop', ['milotic move:icywind:yes', 'ninetalesalola move:icywind:unknown']],
+      ['tw-priority', ['rillaboom move:fakeout:yes move:grassyglide:yes', 'lucario move:extremespeed:unknown move:bulletpunch:unknown move:quickattack:unknown move:vacuumwave:unknown', 'ninetalesalola move:iceshard:unknown']],
+      ['tw-fakeout', ['rillaboom move:fakeout:yes']],
+      ['tw-taunt', ['rillaboom move:taunt:unknown']]]],
+    ['psychic-terrain', [
+      ['pt-terrain', ['rillaboom ability:grassysurge:unknown']],
+      ['pt-terrainmove', ['rillaboom move:grassyterrain:unknown', 'ninetalesalola move:mistyterrain:unknown']]]]]);
+  assert.deepEqual([...tr, ...pt].map((c) => [c.label, c.answers.map((a) => a.label)]), [
+    ['Trick Room + slow hitters', ['Own Trick Room', 'Taunt the setter', 'Fake Out the setter']],
+    ['Tailwind + strong attackers', ['Icy Wind / Electroweb', 'Priority attacks', 'Fake Out the setter', 'Taunt the setter']],
+    ['Psychic Terrain spam', ['Own terrain setter', 'Own terrain move']]]);
+  for (const c of [...tr, ...pt]) for (const a of c.answers) for (const m of a.mons) for (const v of m.via) assert.equal(v.onLadder, v.ladder === 'yes' || v.ladder === 'only');
+});
+
+test('Through their eyes: when their only listed tools were non-answers, nothing is offered', () => {
+  const tailwindOnly = ['altaria', 'pidgeot', 'kleavor', 'scizor'];
+  for (const id of tailwindOnly) assert.ok(canLearn(mech, id, 'tailwind'), `${id} learns Tailwind`);
+  assert.deepEqual(could(roster('Jacky'), tailwindOnly), []);
+  assert.deepEqual(answerMons(could(roster('Jacky'), [...tailwindOnly, 'whimsicott']), 'trick-room', 'tr-taunt'), ['whimsicott'], 'one real answer brings the list back');
 });

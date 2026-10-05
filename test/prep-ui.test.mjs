@@ -4,45 +4,66 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolveObjectURL } from 'node:buffer';
-import { bootApp, memoryStorage, parseHtml, parseCss, findAll, find, text, hasClass } from './ui-harness.mjs';
+import { bootApp, memoryStorage, parseHtml, parseCss, findAll, find, text, hasClass, RAW } from './ui-harness.mjs';
 import { KEYS, wsKey } from '../lib/prep-schema.mjs';
+import { buildLeague } from '../lib/league.mjs';
 import { newLineage } from '../lib/prep-model.mjs';
 import { formatRoute } from '../lib/prep-route.mjs';
 import * as C from '../public/prep-copy.js';
 import { resultBlock } from '../public/prep-ui.js';
-import { NOW, WS, SET_MINE, SET_THEIRS, T, btns, flushSaves, device } from './prep-helpers.mjs';
+import { NOW, WS, SET_MINE, SET_THEIRS, T, btns, flushSaves, device, isPortrait } from './prep-helpers.mjs';
 
 const ROOT = new URL('../', import.meta.url);
 const read = (p) => readFileSync(new URL(p, ROOT), 'utf8');
-const HASH_RE = /^#prep(\/(rules|backup|pilot|my-sets(\/(import|[a-z]+_[a-z2-7]{12}))?|w\/[a-z]+_[a-z2-7]{12}(\/[a-z]+(\/([a-z]+_[a-z2-7]{12}|new))?)?))?$/;
+// Battle Prep addresses: seat routes (public sheet positions, never names), tools, and saved workspaces by random id.
+const HASH_RE = /^#prep(\/(rules|backup|pilot|my-sets(\/(import|[a-z]+_[a-z2-7]{12}))?|[1-9][0-9]?(v[1-9][0-9]?(\/(brief|plan|sets|calcs|practice|(their|your)\/[1-9][0-9]?|core\/[a-z][a-z0-9-]*))?)?|w\/[a-z]+_[a-z2-7]{12}(\/[a-z]+(\/([a-z]+_[a-z2-7]{12}|new))?)?))?$/;
 
-test('Prep is a mode of its own, second in the row, and its code loads only when Prep is opened', async (t) => {
+test('Draft and Battle Prep are two apps behind one switch; Draft keeps its modes; Prep code loads only when Battle Prep opens', async (t) => {
   const html = read('public/index.html');
-  assert.deepEqual([...html.matchAll(/data-mode="([a-z]+)"/g)].map((m) => m[1]), ['draft', 'prep', 'team', 'league', 'learn', 'setup']);
+  assert.deepEqual([...html.matchAll(/data-mode="([a-z]+)"/g)].map((m) => m[1]), ['draft', 'team', 'league', 'learn', 'setup'], 'the Draft rail no longer holds Prep');
+  const sw = find(parseHtml(html), (n) => n.tag === 'nav' && hasClass(n, 'appswitch'));
+  assert.equal(sw.attrs['aria-label'], 'Apps');
+  assert.deepEqual(findAll(sw, (n) => n.tag === 'a').map((a) => [a.attrs.href, a.attrs['data-app-link'], text(a)]), [['#draft', 'draft', 'Draft'], ['#prep', 'prep', 'Battle Prep']]);
+  for (const id of ['sync', 'turn', 'budget', 'coach', 'explain', 'main', 'banners', 'live']) assert.match(html, new RegExp(`id="${id}"`), `${id} kept`);
   const app = await bootApp();
   t.after(() => app.restore());
+  assert.equal(app.body.dataset.app, 'draft');
   for (const mode of ['team', 'league', 'learn', 'setup', 'draft']) {
     await app.click({ mode });
     assert.ok(!app.html().includes('class="prep"'), mode);
+    assert.equal(app.body.dataset.app, 'draft', mode);
   }
   assert.ok(!app.fetches.some((f) => f.path === '/data/mechanics.json'), 'the other screens never load the Reg M-C data');
   assert.ok(/import\('\/prep\.js'\)/.test(read('public/app.js')) && !/^import .*prep/m.test(read('public/app.js')), 'app.js imports Prep lazily');
-  await app.click({ mode: 'prep' });
+  await app.click({ mode: 'team' });
+  const n = app.history.length;
+  await app.click({ appLink: 'prep' });
   await app.waitFor(() => app.html().includes('class="prep"'), 'Prep');
-  assert.equal(app.body.dataset.mode, 'prep');
-  assert.equal(app.location.hash, '#prep');
+  assert.deepEqual([app.body.dataset.mode, app.body.dataset.app], ['prep', 'prep']);
+  assert.equal(app.location.hash, '#prep/5', 'Battle Prep opens on the overview from the Draft coach setting (Anthony, seat 5)');
+  await app.click({ appLink: 'draft' });
+  assert.deepEqual([app.body.dataset.app, app.location.hash], ['draft', '#team'], 'Draft returns to the last Draft screen');
+  assert.equal(app.history.length, n, 'switching apps adds no history entries');
+  const css = parseCss(read('public/styles.css'));
+  const hidden = (sel) => css.some((r) => r.selectors.includes(sel) && r.decls.display === 'none');
+  for (const sel of ['body[data-app="prep"] .modes', 'body[data-app="prep"] .budget-pill', 'body[data-app="prep"] .coach', 'body[data-app="prep"] .turn']) assert.ok(hidden(sel), `${sel} hidden in Battle Prep`);
 });
 
-test('first run: the home screen asks who you are, lists opponents, and only static GETs happen (nothing about your prep is sent)', async (t) => {
+test('first run: Battle Prep opens as the Draft coach setting (saying so), lists the 9 others as portrait tabs, and only static GETs happen', async (t) => {
   const app = await bootApp({ mode: 'prep' });
   t.after(() => app.restore());
   const h = T(app);
-  assert.match(h, /Anthony's prep/);
+  assert.match(h, /Preparing as Anthony/);
+  assert.match(h, /from Draft's default coach/, 'it says where the name comes from');
   assert.match(h, /Is this you\?/);
-  assert.equal(btns(app, 'open-coach').length, 9);
-  assert.ok(btns(app, 'open-coach').every((b) => b.coach !== 'Anthony'));
-  await app.click({ pa: 'confirm-me' });
-  await app.click({ pa: 'open-coach', coach: 'Ning' });
+  const strip = find(parseHtml(app.html()), (n) => n.tag === 'nav' && n.attrs['aria-label'] === 'Opponents');
+  const tabs = findAll(strip, (n) => n.attrs['data-pa'] === 'go-opp');
+  assert.deepEqual(tabs.map((a) => Number(a.attrs['data-opp'])), [1, 2, 3, 4, 6, 7, 8, 9, 10], 'seat order, never the perspective');
+  assert.ok(tabs.every((a) => a.tag === 'a' && /^#prep\/5v\d+$/.test(a.attrs.href)), 'real links');
+  assert.equal(btns(app, 'go-opp').filter((b) => b.opp).length >= 9, true);
+  await app.click({ pa: 'confirm-me', coach: 'Anthony' });
+  await app.click({ pa: 'go-opp', opp: '2' });
+  await app.click({ pa: 'tab', tab: 'plan' });
   await flushSaves(app);
   assert.ok(app.fetches.every((f) => f.method === 'GET' && f.body === null), JSON.stringify(app.fetches));
   assert.deepEqual([...new Set(app.fetches.map((f) => f.path))].sort(), ['/api/sheet', '/api/usage', '/data/cores.json', '/data/dex.json', '/data/mechanics.json']);
@@ -73,7 +94,7 @@ test('routes and history: drill-downs push, tabs replace, Back pops to the paren
   await app.waitFor(() => app.location.hash === `#prep/w/${WS}/sets` && /Their team/.test(T(app)), 'Back');
   for (const h of app.history.entries()) assert.match(h, HASH_RE, h);
   assert.ok(app.history.entries().every((h) => !/ning|anthony|charizard|rillaboom/i.test(h)));
-  // deep links: a saved screen opens directly; another device's id says so; junk goes home
+  // deep links: a saved screen opens directly; another device's id says so; junk goes to Battle Prep's overview
   const deep = await bootApp({ mode: `prep/w/${WS}/calcs`, storage: device() });
   t.after(() => deep.restore());
   assert.match(T(deep), /Calcs/);
@@ -82,7 +103,8 @@ test('routes and history: drill-downs push, tabs replace, Back pops to the paren
   assert.match(T(other), /Not on this device/);
   const junk = await bootApp({ mode: 'prep/w/Ning/plan', storage: device() });
   t.after(() => junk.restore());
-  assert.match(T(junk), /Anthony's prep/);
+  assert.match(T(junk), /Battle Prep as Anthony/);
+  assert.equal(junk.location.hash, '#prep/5');
   for (const r of [{ view: 'ws', wsId: WS, kind: 'calcs', id: 'new' }, { view: 'my-sets', id: SET_MINE }, { view: 'ws', wsId: 'Ning', tab: 'plan' }]) assert.match(formatRoute(r), HASH_RE);
 });
 
@@ -243,11 +265,12 @@ test('names and notes are escaped everywhere (no markup injection from the sheet
   for (const tab of ['plan', 'sets', 'calcs', 'practice']) {
     await app.click({ pa: 'tab', tab });
     const root = parseHtml(app.html());
-    assert.equal(findAll(root, (n) => ['img', 'script'].includes(n.tag) || (n.tag === 'b' && text(n) === 'x')).length, 0, tab);
+    assert.equal(findAll(root, (n) => (n.tag === 'img' && !isPortrait(n)) || n.tag === 'script' || (n.tag === 'b' && text(n) === 'x')).length, 0, tab);
   }
   assert.ok(T(app).includes('<img src=x onerror=alert(1)>'), 'shown as text');
   await app.click({ pa: 'go-home' });
-  assert.equal(findAll(parseHtml(app.html()), (n) => n.tag === 'img').length, 0);
+  const imgs = findAll(parseHtml(app.html()), (n) => n.tag === 'img');
+  assert.ok(imgs.length > 0 && imgs.every(isPortrait), 'only the app\'s sprite portraits (id-only paths), never anything from a name');
 });
 
 test('"See it as they do" opens League as the opponent with a way back; your coach stays saved', async (t) => {
@@ -262,6 +285,56 @@ test('"See it as they do" opens League as the opponent with a way back; your coa
   assert.ok(!/Viewing as/.test(app.banners.innerHTML));
 });
 
+// "Could bring against you" with fixture rosters that field Trick Room (Jacky) and Psychic Terrain (Hex). The spec's
+// non-answers for those cores ("Tailwind doesn't help", "Fake Out doesn't work here") aren't offered as counter-prep.
+const openEyes = async (opts) => {
+  const app = await bootApp({ mode: `prep/w/${WS}/eyes`, ...opts });
+  await app.waitFor(() => /Could bring against you/.test(T(app)) && !/Loading the Reg M-C learnsets/.test(T(app)), 'the learnsets', 20000);
+  return app;
+};
+const couldSection = (app) => { const s = T(app); return s.slice(s.indexOf('Could bring against you'), s.indexOf('From Reg M-C learnsets')); };
+
+test('"Could bring against you": Tailwind is not offered against your Trick Room; their Taunt and Fake Out still are', async (t) => {
+  const app = await openEyes({ storage: device({ me: 'Jacky', coach: 'DIngDIng' }) });
+  t.after(() => app.restore());
+  const s = couldSection(app);
+  assert.match(s, /Against your Trick Room \+ slow hitters/);
+  assert.match(s, /Taunt the setter: Whimsicott \(Taunt\)/);
+  assert.match(s, /Fake Out the setter: Sableye \(Fake Out\)/);
+  assert.ok(!/Tailwind doesn't help/.test(s), s);
+  const cs = btns(app, 'eyes-counterset');
+  assert.ok(cs.some((b) => b.species === 'whimsicott' && b.move === 'taunt'), 'Whimsicott\'s Taunt can still become a counter-prep set');
+  assert.ok(!cs.some((b) => b.move === 'tailwind'), 'no "add Tailwind" counter-prep button');
+});
+
+test('"Could bring against you": Fake Out is not offered against your Psychic Terrain, but still against your Tailwind', async (t) => {
+  const app = await openEyes({ storage: device({ me: 'Hex(法拉)', coach: 'Ning' }) });
+  t.after(() => app.restore());
+  const s = couldSection(app);
+  assert.match(s, /Against your Psychic Terrain spam/);
+  assert.match(s, /Own terrain setter: Rillaboom \(Grassy Surge\)/);
+  assert.ok(!/Fake Out doesn't work here/.test(s), s);
+  const pt = s.slice(s.indexOf('Against your Psychic Terrain spam'));
+  assert.ok(!/Fake Out/.test(pt), 'no Fake Out row under your Psychic Terrain');
+  assert.match(s.slice(s.indexOf('Against your Tailwind'), s.indexOf('Against your Psychic Terrain spam')), /Fake Out the setter: Rillaboom \(Fake Out\)/);
+});
+
+test('"Could bring against you": a roster whose only listed tools were non-answers gets the empty state, not false rows', async (t) => {
+  // Synthetic sheet: DIngDIng's picks swapped for four Tailwind users that answer nothing else Jacky fields.
+  const swaps = [['风妖精,Whimsicott,', '七夕青鸟,Altaria,'], ['勾魂眼,Sableye,', '比雕,Pidgeot,'], ['万针鱼,Overqwil ,', '劈斧螳螂,Kleavor,'], ['差不多娃娃,Audino,', '巨钳螳螂,Scizor,']];
+  let draftsCsv = RAW.draftsCsv;
+  for (const [from, to] of swaps) { assert.ok(draftsCsv.includes(from), from); draftsCsv = draftsCsv.replace(from, to); }
+  const raw = { ...RAW, draftsCsv };
+  const ding = buildLeague(raw, JSON.parse(read('data/dex.json')), {}).coaches.find((c) => c.name === 'DIngDIng');
+  assert.deepEqual(ding.picks.map((p) => p.id), ['altaria', 'pidgeot', 'kleavor', 'scizor'], 'the synthetic roster parses');
+  const app = await openEyes({ storage: device({ me: 'Jacky', coach: 'DIngDIng' }), raw });
+  t.after(() => app.restore());
+  const s = couldSection(app);
+  assert.match(s, /No listed counters to your current cores from their roster\./);
+  assert.ok(!/Against your|Tailwind doesn't help/.test(s), s);
+  assert.equal(btns(app, 'eyes-counterset').length, 0);
+});
+
 test('without the league sheet, Prep still opens (and the error screen offers it)', async (t) => {
   const app = await bootApp({ sheet: false, storage: device() });
   t.after(() => app.restore());
@@ -269,7 +342,7 @@ test('without the league sheet, Prep still opens (and the error screen offers it
   assert.ok(findAll(parseHtml(app.html()), (n) => n.attrs['data-mode'] === 'prep').length === 1);
   await app.click({ mode: 'prep' });
   await app.waitFor(() => app.html().includes('class="prep"'), 'Prep');
-  assert.match(T(app), /league sheet hasn't loaded/);
+  assert.match(T(app), /league sheet didn't load/);
   await app.click({ pa: 'open-ws', ws: WS });
   assert.match(T(app), /vs Ning/);
 });

@@ -90,8 +90,9 @@ export function tab(P, ws) {
 function myTeamRows(P, ws) {
   const me = P.myCoach();
   const myRoster = P.coachRoster(me).filter((id) => !P.mech || (P.mech.species[id] && !P.mech.species[id].mega));
-  const lib = P.docs.mysets.sets;
+  const lib = P.mineSets();
   const inSix = new Set(ws.my6.map((m) => m.setId));
+  if (!P.canWriteMine()) return `<p class="small">${esc(C.POV.mineViewing(me))}</p>`;
   const rule = P.docs.rules.rules.sixPerMatch?.value;
   const rows = myRoster.map((sp) => {
     const sets = lib.filter((s) => s.speciesId === sp);
@@ -202,7 +203,7 @@ function importScreen(P, ws) {
   const head = `${btn(ws ? '‹ Sets' : '‹ My sets', 'back', {}, { cls: 'back', aria: 'Back' })}${h2('Paste a team')}
     <p class="small">Paste text from Showdown (Import/Export) or a team page. Links aren't fetched: open the link, copy the team text and paste it here.</p>
     <label class="field" for="paste-text"><span>Team text</span><textarea id="paste-text" class="paste" rows="8" data-pi="paste-text" spellcheck="false" autocapitalize="off">${esc(imp.text)}</textarea></label>
-    <p>${canRead ? btn('Paste from clipboard', 'paste-clipboard') : ''} ${ws ? `<span class="small">Whose sets?</span> ${chipBtn(`${ws.coach}'s`, 'paste-side', { side: 'theirs' }, imp.side === 'theirs')}${chipBtn('Mine', 'paste-side', { side: 'mine' }, imp.side === 'mine')}` : ''} ${btn('Check paste', 'paste-check', {}, { primary: true })}</p>`;
+    <p>${canRead ? btn('Paste from clipboard', 'paste-clipboard') : ''} ${ws ? `<span class="small">Whose sets?</span> ${chipBtn(`${ws.coach}'s`, 'paste-side', { side: 'theirs' }, imp.side === 'theirs')}${P.canWriteMine() ? chipBtn('Mine', 'paste-side', { side: 'mine' }, imp.side === 'mine') : ''}` : ''} ${btn('Check paste', 'paste-check', {}, { primary: true })}</p>`;
   if (!imp.result) return `<section class="panel">${head}</section>`;
   const res = imp.result;
   if (res.rejected) return `<section class="panel">${head}<p class="banner bad" role="alert">${esc(C.PASTE_REJECT[res.rejected.code] ?? C.PASTE_REJECT['paste-empty'])}</p></section>`;
@@ -325,11 +326,11 @@ function guessInto(P, d, sp, variant) {
 export function addGuess(P, ws, species, variantId = null) {
   if (!P.mech || !ws) return null;
   let id = null;
-  P.mutate(`ws:${ws.id}`, (d) => {
+  const ok = P.mutate(`ws:${ws.id}`, (d) => {
     const v = variantId ? d.variants.find((x) => x.id === variantId) : (d.variants.find((x) => x.id === P.wsUi(ws.id).variantId) ?? ensureVariant(P, d, 'likely'));
     id = guessInto(P, d, species, v).id;
   });
-  return id;
+  return ok ? id : null;
 }
 /** Start one of your sets for a species from ladder data (every field to check). Returns its id. */
 export function createMySet(P, sp) {
@@ -338,8 +339,8 @@ export function createMySet(P, sp) {
   const c = commonSpread(P.mech, P.app.usage()?.species?.[sp]);
   const data = { ...g.data, nature: g.data.nature || 'hardy', sp: c?.sp ?? { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 } };
   const id = P.id('set');
-  P.mutate('mysets', (d) => { d.sets.push(newLineage({ id, side: 'mine', speciesId: sp, name: 'Set', data, now: P.now(), reason: 'started from ladder data' })); });
-  return id;
+  // refused (viewing as another coach, read-only data): no id, so callers don't open or report a set that wasn't saved
+  return P.mutate('mysets', (d) => { d.sets.push(newLineage({ id, side: 'mine', speciesId: sp, name: 'Set', data, now: P.now(), reason: 'started from ladder data' })); }) ? id : null;
 }
 
 export const actions = {
