@@ -695,3 +695,105 @@ test('U10 and U11: the "My 6" tray sticks only when it holds something; on phone
   const order = ['#bs-pool', '#bs-threats', '#bs-useful', '#bs-plans', '#bs-speed', '#bs-leads', '#bs-myplans', '#bs-checks'].map((s) => Number(phone(s, tab).order));
   assert.deepEqual(order, [1, 2, 3, 4, 5, 6, 7, 8]);
 });
+
+// ---------- follow-up review: N2 revisions from another coach's side, N5 Re-check vs an unsaved quick check, R1 ----------
+import { addVersion } from '../lib/prep-model.mjs';
+/** device() plus a second version of your Charizard set (v2 current), and a workspace that is Jacky's prep vs Ning. */
+function revisionDevice() {
+  const storage = device();
+  const st = createStore(storage);
+  const lib = st.load(KEYS.mysets).doc;
+  const sets = lib.sets.map((s) => (s.id === SET_MINE ? addVersion(s, { ...s.versions[0].data, nature: 'modest' }, { now: NOW }) : s));
+  assert.ok(st.save(KEYS.mysets, { ...lib, sets }, lib.rev).ok);
+  const jw = newWorkspace({ id: 'ws_jjjjjjjjjjjj', coach: 'Ning', roster: { speciesIds: ['rillaboom'] }, now: NOW, pov: 'Jacky' });
+  assert.ok(st.save(wsKey(jw.id), jw, null).ok);
+  return storage;
+}
+async function makeRevision(app, wsId) {
+  await go(app, `#prep/w/${wsId}/practice`);
+  await app.click({ pa: 'rv-new' });
+  return find(root(app), (n) => n.tag === 'select' && n.attrs['data-pc'] === 'rv-set');
+}
+
+test('N2: as yourself a revision moves your set\'s version and is recorded (control)', async (t) => {
+  const storage = revisionDevice();
+  const app = await open('prep', { storage });
+  t.after(() => app.restore());
+  const sel = await makeRevision(app, WS);
+  assert.ok(findAll(sel, (o) => o.tag === 'option' && o.attrs.value === SET_MINE).length, 'your set is offered');
+  await app.changeData({ pc: 'rv-set' }, { value: SET_MINE });
+  await app.changeData({ pc: 'rv-ver' }, { value: '1' });
+  await app.click({ pa: 'rv-add-set' });
+  await app.click({ pa: 'rv-save' });
+  await flushSaves(app);
+  assert.equal(JSON.parse(storage.getItem(KEYS.mysets)).sets.find((s) => s.id === SET_MINE).currentV, 1);
+  assert.equal(JSON.parse(storage.getItem(wsKey(WS))).revisions.length, 1);
+  assert.match(app.toast.textContent, /Revision saved/);
+});
+
+test('N2: in another coach\'s prep the revision form offers none of your sets, and a set change is refused without a phantom revision', async (t) => {
+  const storage = revisionDevice();
+  const app = await open('prep', { storage });
+  t.after(() => app.restore());
+  const sel = await makeRevision(app, 'ws_jjjjjjjjjjjj');
+  assert.deepEqual(findAll(sel, (o) => o.tag === 'option').map((o) => o.attrs.value), [''], 'no library sets listed');
+  // even if a set change is put in the draft (a stale form), saving refuses it and records nothing
+  const lib = storage.getItem(KEYS.mysets);
+  await app.changeData({ pc: 'rv-set' }, { value: SET_MINE });
+  await app.changeData({ pc: 'rv-ver' }, { value: '1' });
+  await app.click({ pa: 'rv-add-set' });
+  await app.click({ pa: 'rv-save' });
+  await flushSaves(app);
+  assert.equal(storage.getItem(KEYS.mysets), lib, 'your library is unchanged');
+  assert.equal(JSON.parse(storage.getItem(wsKey('ws_jjjjjjjjjjjj'))).revisions.length, 0, 'no revision recorded in Jacky\'s prep');
+  assert.match(app.toast.textContent, /My sets is your own library/);
+  assert.ok(!/Revision saved/.test(app.toast.textContent));
+});
+
+test('N5: Re-check on the Calcs list asks before it drops an unsaved quick check; Cancel keeps it; Replace re-checks; with no draft it just re-checks', async (t) => {
+  const storage = device(), session = memoryStorage();
+  const app = await open(`prep/w/${WS}/calcs`, { storage, session });
+  t.after(() => app.restore());
+  await app.waitFor(() => true);
+  // a saved calc to go out of date
+  await app.click({ pa: 'calc-new' });
+  await app.waitFor(() => !/Loading the calculator/.test(T(app)), 'the engine', 20000);
+  await app.click({ pa: 'calc-pick', which: 'a', side: 'theirs', species: 'rillaboom', set: 'set_tttttttttttt' });
+  await app.click({ pa: 'calc-pick', which: 'd', side: 'mine', species: 'charizard', set: SET_MINE });
+  await app.click({ pa: 'calc-move', move: 'woodhammer' });
+  await app.click({ pa: 'calc-save' });
+  await flushSaves(app);
+  const calcId = JSON.parse(storage.getItem(wsKey(WS))).calcs[0].id;
+  const checkedAt = () => JSON.parse(storage.getItem(wsKey(WS))).calcs[0].checkedAt;
+  // an unsaved quick check
+  await go(app, `#prep/w/${WS}/calcs`);
+  await app.click({ pa: 'calc-new' });
+  await app.click({ pa: 'calc-pick', which: 'a', side: 'mine', species: 'charizard', set: SET_MINE });
+  await app.click({ pa: 'calc-pick', which: 'd', side: 'theirs', species: 'rillaboom', set: 'set_tttttttttttt' });
+  await app.click({ pa: 'calc-move', move: 'heatwave' });
+  await go(app, `#prep/w/${WS}/calcs`);
+  const draft = () => JSON.parse(session.getItem('drafarig.prep.ui') ?? '{}').ws?.[WS]?.cd ?? null;
+  await flushSaves(app);
+  assert.equal(draft()?.move, 'heatwave');
+  const t0 = checkedAt();
+  await app.click({ pa: 'calc-recheck', calc: calcId });
+  assert.match(T(app), /You have an unsaved quick check/);
+  await app.click({ pa: 'draft-cancel' });
+  await flushSaves(app);
+  assert.equal(draft()?.move, 'heatwave', 'Cancel keeps the quick check');
+  assert.equal(checkedAt(), t0, 'and re-checks nothing');
+  await app.click({ pa: 'calc-recheck', calc: calcId });
+  await app.click({ pa: 'draft-replace' });
+  await flushSaves(app);
+  assert.equal(draft(), null, 'Replace: the draft is cleared for the reloaded calc');
+  assert.match(app.toast.textContent, /Re-checked/);
+  // no unsaved quick check: Re-check runs straight away (no question)
+  await app.click({ pa: 'calc-recheck', calc: calcId });
+  assert.ok(!/You have an unsaved quick check/.test(T(app)));
+  assert.match(app.toast.textContent, /Re-checked/);
+});
+
+test('R1: the opponent row is the offset parent of its tabs (centring by offsetLeft is exact)', () => {
+  const decl = Object.assign({}, ...parseCssFile().filter((x) => !x.media && x.selectors.includes('.oppstrip ol')).map((x) => x.decls));
+  assert.equal(decl.position, 'relative');
+});

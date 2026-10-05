@@ -27,7 +27,8 @@ class El {
 
 /**
  * A Storage with the browser's interface (getItem, setItem, removeItem, key, length). quota: a character budget past
- * which setItem throws a QuotaExceededError, as browsers do. Shared by tests that drive lib/prep-store directly.
+ * which setItem throws a QuotaExceededError, as browsers do (a number, or a function for space freed during a test). Shared by
+ * tests that drive lib/prep-store directly.
  */
 export function memoryStorage(seed = {}, { quota = Infinity } = {}) {
   const m = new Map(Object.entries(seed));
@@ -38,7 +39,7 @@ export function memoryStorage(seed = {}, { quota = Infinity } = {}) {
     setItem(k, v) {
       const before = m.get(k);
       m.set(k, String(v));
-      if (used() > quota) { if (before === undefined) m.delete(k); else m.set(k, before); const e = new Error('quota'); e.name = 'QuotaExceededError'; throw e; }
+      if (used() > (typeof quota === 'function' ? quota() : quota)) { if (before === undefined) m.delete(k); else m.set(k, before); const e = new Error('quota'); e.name = 'QuotaExceededError'; throw e; }
     },
     removeItem: (k) => { m.delete(k); },
     key: (i) => [...m.keys()][i] ?? null,

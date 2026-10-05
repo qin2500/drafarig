@@ -226,3 +226,115 @@ test('recovery copies: only for assigned earlier workspaces; dropped on unassign
   assert.equal(old.load(`drafarig.prep.vault.${w.id}`).status, 'error');
   assert.ok(storage.getItem(`drafarig.prep.vault.${w.id}`));
 });
+
+// ---------- V1: a recovery copy that doesn't fit is never silent; an older copy is offered as older ----------
+const usedChars = (s) => [...s.map].reduce((t, [k, v]) => t + k.length + v.length, 0);
+/** An earlier workspace vs Ning assigned to Anthony by this version's store (its recovery copy written), with `extra` fields. */
+function assignedDevice(extra = {}) {
+  const storage = device({ legacy: true });
+  const st = createStore(storage), cur = st.load(wsKey(WS)).doc;
+  const r = st.save(wsKey(WS), { ...cur, pov: 'Anthony', povFrom: 'legacy-confirm', povAssignedAt: NOW, ...extra }, cur.rev);
+  assert.ok(r.ok && !r.vaultFailed);
+  return storage;
+}
+const COPY_WARN = /Couldn't keep a recovery copy of Anthony's prep vs Ning: this device's storage is nearly full/;
+
+test('V1: a later save that fits while its recovery copy does not shows a lasting warning with a backup route; it clears once a copy is written', async (t) => {
+  const base = assignedDevice({ notes: 'v1 notes' });
+  let room = usedChars(base) + 220; // room for the workspace to grow by ~155 characters once, not for its copy to grow too
+  const storage = memoryStorage(Object.fromEntries(base.map), { quota: () => room });
+  const app = await bootApp({ mode: `prep/w/${WS}/plan`, storage });
+  t.after(() => app.restore());
+  assert.ok(!COPY_WARN.test(T(app)), 'no warning while the copy is current');
+  const grow = 'x'.repeat(150);
+  await app.input('ws-premortem', `edit ${grow}`);
+  await flushSaves(app);
+  const saved = JSON.parse(storage.getItem(wsKey(WS))), copy = JSON.parse(storage.getItem(`drafarig.prep.vault.${WS}`));
+  assert.ok(saved.premortem.startsWith('edit'), 'the prep itself is saved');
+  assert.ok(copy.rev < saved.rev && copy.premortem === '', 'its copy is the older one');
+  assert.match(T(app), COPY_WARN);
+  assert.ok(btns(app, 'backup-download').length && btns(app, 'go-backup').length && btns(app, 'vault-retry').length, 'backup, free-space and retry routes');
+  // still there after a reload (worked out from what is stored, not remembered in memory)
+  const again = await bootApp({ mode: 'prep', storage });
+  assert.match(T(again), COPY_WARN);
+  again.restore();
+  // space freed: "Try the copy again" writes it and the warning goes
+  room = Infinity;
+  await app.click({ pa: 'vault-retry', ws: WS });
+  await flushSaves(app);
+  const copy2 = JSON.parse(storage.getItem(`drafarig.prep.vault.${WS}`));
+  assert.deepEqual([copy2.rev, copy2.premortem.startsWith('edit')], [JSON.parse(storage.getItem(wsKey(WS))).rev, true]);
+  assert.ok(!COPY_WARN.test(T(app)), 'cleared once a copy is written');
+});
+
+test('V1: an ordinary later save also clears the warning once space allows', async (t) => {
+  const base = assignedDevice({ notes: 'v1 notes' });
+  let room = usedChars(base) + 220;
+  const storage = memoryStorage(Object.fromEntries(base.map), { quota: () => room });
+  const app = await bootApp({ mode: `prep/w/${WS}/plan`, storage });
+  t.after(() => app.restore());
+  await app.input('ws-premortem', `edit ${'y'.repeat(150)}`);
+  await flushSaves(app);
+  assert.match(T(app), COPY_WARN);
+  room = Infinity;
+  await app.input('ws-premortem', 'short');
+  await flushSaves(app);
+  assert.ok(!COPY_WARN.test(T(app)));
+  assert.equal(JSON.parse(storage.getItem(`drafarig.prep.vault.${WS}`)).premortem, 'short');
+});
+
+test('V1: assigning earlier prep when even its first recovery copy does not fit says so (the assignment itself is saved)', async (t) => {
+  const seed = device({ legacy: true });
+  const st = createStore(seed), cur = st.load(wsKey(WS)).doc;
+  assert.ok(st.save(wsKey(WS), { ...cur, notes: 'n'.repeat(20000) }, cur.rev).ok);
+  const storage = memoryStorage(Object.fromEntries(seed.map), { quota: usedChars(seed) + 2000 });
+  const app = await bootApp({ mode: `prep/w/${WS}/owner`, storage });
+  t.after(() => app.restore());
+  await app.click({ pa: 'owner-assign', ws: WS, owner: 'Anthony' });
+  await flushSaves(app);
+  assert.equal(JSON.parse(storage.getItem(wsKey(WS))).pov, 'Anthony');
+  assert.equal(storage.getItem(`drafarig.prep.vault.${WS}`), null, 'no copy could be written');
+  assert.match(T(app), COPY_WARN);
+});
+
+test('V1: the recovery banner gives the copy\'s own saved time and says later changes aren\'t in it; Recover brings back exactly that copy', async (t) => {
+  const base = assignedDevice({ notes: 'v1 notes', updatedAt: '2026-10-04T11:30:00.000Z' });
+  const storage = memoryStorage(Object.fromEntries(base.map), { quota: usedChars(base) + 400 });
+  // a later edit fits but its copy does not; then a stale v3 tab archives the workspace
+  const st = createStore(storage), cur = st.load(wsKey(WS)).doc;
+  const later = st.save(wsKey(WS), { ...cur, notes: `v2 notes ${'z'.repeat(300)}`, updatedAt: '2026-10-05T09:00:00.000Z' }, cur.rev);
+  assert.ok(later.ok && later.vaultFailed);
+  storage.removeItem(wsKey(WS));
+  const app = await bootApp({ mode: 'prep', storage });
+  t.after(() => app.restore());
+  const s = T(app);
+  assert.match(s, /An older Drafarig tab removed Anthony's prep vs Ning\. A copy saved at 2026-10-04 11:30 UTC was kept on this device\. Changes made after that aren't in it\. If you have a newer backup file, restore that instead\./);
+  await app.click({ pa: 'vault-recover', ws: WS });
+  await flushSaves(app);
+  assert.equal(JSON.parse(storage.getItem(wsKey(WS))).notes, 'v1 notes', 'exactly the copy, as the banner said');
+});
+
+// ---------- N3: a self-matchup (only from an edited file) never gets a recovery copy or a recovery loop ----------
+test('N3: a self-matchup marked as assigned gets no recovery copy; one already there is neither offered nor deleted', async (t) => {
+  const storage = device();
+  const st = createStore(storage);
+  const self = { ...newWorkspace({ id: 'ws_ffffffffffff', coach: 'Ning', roster: { speciesIds: [] }, now: NOW }), pov: 'Ning', povFrom: 'legacy-confirm', povAssignedAt: NOW };
+  assert.ok(st.save(wsKey(self.id), self, null).ok);
+  assert.equal(storage.getItem(`drafarig.prep.vault.${self.id}`), null, 'no copy written for it');
+  // a copy left by an earlier build or a hand-edited device, plus the workspace gone: nothing is offered, nothing deleted
+  storage.setItem(`drafarig.prep.vault.${self.id}`, JSON.stringify({ ...self, schemaVersion: 2, rev: 3 }));
+  storage.removeItem(wsKey(self.id));
+  const before = storage.getItem(`drafarig.prep.vault.${self.id}`);
+  const app = await bootApp({ mode: 'prep', storage });
+  t.after(() => app.restore());
+  assert.ok(!/An older Drafarig tab/.test(T(app)));
+  assert.ok(!btns(app, 'vault-recover').length);
+  assert.equal(storage.getItem(`drafarig.prep.vault.${self.id}`), before);
+  // saving such a document again (e.g. restored from that file) leaves the leftover copy alone too
+  assert.ok(st.save(wsKey(self.id), self, null).ok);
+  assert.equal(storage.getItem(`drafarig.prep.vault.${self.id}`), before);
+  // and a real assignment still gets its copy (positive control)
+  const real = st.load(wsKey(WS)).doc;
+  assert.ok(st.save(wsKey(WS), { ...real, povFrom: 'legacy-confirm' }, real.rev).ok);
+  assert.ok(storage.getItem(`drafarig.prep.vault.${WS}`));
+});

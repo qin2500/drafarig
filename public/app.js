@@ -520,7 +520,9 @@ const prepApp = {
   get dex() { return dex ?? { species: {}, types: [] }; },
   league: () => L ?? null, sheet: () => sheet ?? null, usage: () => usage, coresCx: () => coreCx,
   viewingCoach: () => (viewingAs ? viewingAs.coach : S.coach),
-  shellVersion: 2, // public/prep.js SHELL_VERSION: a Prep from another release refuses to run in this shell (and the reverse)
+  // public/prep.js SHELL_VERSION: a Prep from another release refuses to run in this shell. (This shell doesn't check Prep's
+  // version; an older Prep here would read perspective workspaces as newer and stay read-only.)
+  shellVersion: 2,
   /** The Draft coach setting as stored, or the shipped default when nothing is stored. Never the seat-5 stand-in. */
   identityHint() {
     try {

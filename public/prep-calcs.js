@@ -639,7 +639,13 @@ export const actions = {
   'calc-mark': (t, P) => P.mutate(`ws:${P.route.wsId}`, (d) => { const c = d.calcs.find((x) => x.id === t.dataset.calc); c.mark = c.mark === t.dataset.mark ? null : t.dataset.mark; }),
   'calc-delete': (t, P) => { P.mutate(`ws:${P.route.wsId}`, (d) => { d.calcs = d.calcs.filter((x) => x.id !== t.dataset.calc); }); P.wsUi(P.route.wsId).cd = null; P.back(); P.toast('Calc deleted'); },
   'calc-diff-dismiss': (t, P) => P.mutate(`ws:${P.route.wsId}`, (d) => { d.calcs.find((x) => x.id === t.dataset.calc).lastDiff = null; }, { substantive: false }),
-  'calc-recheck': (t, P) => { const ws = ws_(P); const c = ws.calcs.find((x) => x.id === t.dataset.calc); if (recheck(P, ws, c)) { P.wsUi(ws.id).cd = null; P.toast('Re-checked'); } },
+  // Re-check resets the calc screen's draft so the updated calc reloads; an unsaved quick check there is never dropped
+  // silently (P.prefill asks first; Cancel keeps it and re-checks nothing)
+  'calc-recheck': (t, P) => {
+    const ws = ws_(P), id = t.dataset.calc;
+    if (!ws.calcs.some((x) => x.id === id)) return;
+    P.prefill(ws, 'cd', null, null, { then: () => { const w = P.ws.get(ws.id), c = w?.calcs.find((x) => x.id === id); if (c && recheck(P, w, c)) P.toast('Re-checked'); } });
+  },
   'calc-recheck-all': (t, P) => { const ws = ws_(P); let n = 0; for (const c of ws.calcs.filter((x) => P.staleOf(ws, x).length && !P.staleOf(ws, x).some((r) => r.code === 'set-deleted'))) if (recheck(P, P.ws.get(ws.id), c)) n++; if (n) P.toast(`Re-checked ${n} calc${n === 1 ? '' : 's'}`); },
   'calc-filter': (t, P) => { const f = P.wsUi(P.route.wsId).cf; f[t.dataset.f] = !f[t.dataset.f]; P.app.rerender(); },
   'calc-filter-clear': (t, P) => { P.wsUi(P.route.wsId).cf = null; P.app.rerender(); },

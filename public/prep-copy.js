@@ -433,8 +433,12 @@ export const POV = {
   mineViewing: (p) => `Viewing as ${p}: your own sets (My sets) aren't listed or changed here.`,
   seatsMoved: (p, o) => `The league sheet's seats changed: still showing ${p} vs ${o}.`,
   vaultGroup: 'Recover earlier prep',
-  vaultText: (p, o, d, gone) => `${gone ? 'An older Drafarig tab removed' : 'An older Drafarig tab replaced'} ${p}'s prep vs ${o} (assigned ${d || 'earlier'}). A copy was kept on this device.`,
+  vaultText: (p, o, t, gone) => `${gone ? 'An older Drafarig tab removed' : 'An older Drafarig tab replaced'} ${p}'s prep vs ${o}. A copy saved at ${t} was kept on this device. Changes made after that aren't in it. If you have a newer backup file, restore that instead.`,
   vaultRecover: 'Recover it', vaultDiscard: 'Discard the copy', vaultDone: (p, o) => `${p}'s prep vs ${o} is back`, vaultDropped: 'Copy discarded',
+  vaultDoneNoCopy: (p, o) => `${p}'s prep vs ${o} is back, but its new recovery copy didn't fit on this device`,
+  copyGroup: 'Recovery copy not kept',
+  copyFailed: (p, o) => `Couldn't keep a recovery copy of ${p}'s prep vs ${o}: this device's storage is nearly full. The prep itself is saved; a backup file keeps it safe from older Drafarig tabs.`,
+  copyRetry: 'Try the copy again',
   draftGroup: 'Unsaved draft', draftAsk: 'Replace it with the new check?',
   draftCalc: (a, d) => `You have an unsaved quick check (${a} → ${d}).`, draftThreshold: 'You have an unsaved "What would it take?" question.',
 };

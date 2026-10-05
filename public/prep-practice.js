@@ -214,7 +214,7 @@ function revisions(P, ws) {
   const ui = P.wsUi(ws.id);
   const draft = ui.rv;
   const mine = ws.my6.map((m) => P.lineage(m.setId)).filter(Boolean);
-  const all = P.docs.mysets.sets;
+  const all = P.mineSets(); // your own library only: viewing as another coach offers none of it
   let form = '';
   if (draft) {
     const f = ws.findings.filter((x) => draft.findings.includes(x.id));
@@ -400,13 +400,17 @@ export const actions = {
   'rv-save': (t, P) => {
     const ws = W(P), rv = P.wsUi(ws.id).rv;
     const id = P.id('rvn');
-    for (const c of rv.changes.filter((x) => x.kind === 'set')) P.mutate('mysets', (d) => { const i = d.sets.findIndex((s) => s.id === c.setId); d.sets[i] = setCurrent(d.sets[i], c.toV, P.now()); }, { render: false });
+    const setChanges = rv.changes.filter((x) => x.kind === 'set');
+    // a set change moves your library's version: refused there (viewing as another coach, read-only data) means no revision
+    if (setChanges.length && !P.canWriteMine()) { P.toast(C.POV.mineBlocked(P.myCoach() ?? '')); return; }
+    for (const c of setChanges) if (!P.mutate('mysets', (d) => { const i = d.sets.findIndex((s) => s.id === c.setId); d.sets[i] = setCurrent(d.sets[i], c.toV, P.now()); }, { render: false })) return;
     const invalid = ws.calcs.filter((c) => rv.changes.some((x) => x.kind === 'set' && (c.refs?.attacker?.setId === x.setId || c.refs?.defender?.setId === x.setId))).map((c) => c.id);
-    mut(P, (d) => {
+    const saved = mut(P, (d) => {
       for (const c of rv.changes.filter((x) => x.kind === 'six')) d.my6 = d.my6.map((m) => (m.setId === c.out ? { setId: c.in } : m));
       d.revisions.push({ id, date: P.now().slice(0, 10), changes: rv.changes, reasonFindingIds: rv.findings.length ? rv.findings : 'hunch', structural: rv.changes.some((c) => c.structural), expectedEffect: rv.expectedEffect, invalidates: { calcIds: invalid, cardIds: [] }, retest: null, revertedBy: null });
       for (const f of d.findings) if (rv.findings.includes(f.id) && f.status === 'open') { f.status = 'accepted'; f.statusAt = P.now(); }
     });
+    if (!saved) return; // refused (its toast says why): the draft stays
     P.wsUi(ws.id).rv = null;
     P.toast(`Revision saved${invalid.length ? ` · ${invalid.length} calc${invalid.length === 1 ? ' is' : 's are'} now out of date` : ''}. Next mock's purpose: the expected effect.`);
   },

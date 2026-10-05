@@ -325,7 +325,7 @@ body[data-app="prep"] .layout, body[data-app="prep"] .layout.nodrawer { grid-tem
 .prep .ribbon { background: var(--megabg); color: var(--ink); border-radius: 6px; padding: 4px 8px; }
 .prep select.povpick, .prep select.oppjump { max-width: 100%; }
 .oppstrip { display: flex; align-items: stretch; gap: 8px; margin: 6px 0 10px; }
-.oppstrip ol { display: flex; gap: 6px; list-style: none; margin: 0; padding: 2px; overflow-x: auto; scroll-snap-type: x proximity; flex: 1 1 auto; min-width: 0; }
+.oppstrip ol { display: flex; gap: 6px; list-style: none; margin: 0; padding: 2px; overflow-x: auto; scroll-snap-type: x proximity; flex: 1 1 auto; min-width: 0; position: relative; /* offset parent of its tabs, so centring by offsetLeft is exact */ }
 .oppstrip li { flex: 0 0 auto; scroll-snap-align: start; }
 .opptab { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 64px; min-height: 64px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); text-decoration: none; background: var(--panel); position: relative; }
 .opptab .oppname { font-size: 12px; max-width: 9em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

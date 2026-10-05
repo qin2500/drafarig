@@ -118,20 +118,23 @@ export function createPrep(app) {
   function flush() {
     clearTimeout(P.timer);
     const keys = [...P.dirty].sort((a, b) => (a === KEYS.meta) - (b === KEYS.meta)); // meta last
-    let failed = null;
+    let failed = null, copyMissed = false;
     for (const key of keys) {
       const doc = docFor(key);
       if (!doc) { P.dirty.delete(key); continue; }
       if (P.revs.get(key) === 'corrupt') { failed = { code: 'corrupt', key }; continue; } // never overwrite unread data
       if (P.conflicts.has(key)) { failed = { code: 'conflict', key }; continue; } // never overwrite the other tab's version
       const res = P.store.save(key, doc, P.revs.get(key) ?? null);
-      if (res.ok) { P.revs.set(key, res.doc.rev); P.saveIds.set(key, res.doc.saveId); setDoc(key, res.doc); P.dirty.delete(key); }
+      if (res.ok) { P.revs.set(key, res.doc.rev); P.saveIds.set(key, res.doc.saveId); setDoc(key, res.doc); P.dirty.delete(key); if (res.vaultFailed) copyMissed = true; }
       else { failed = { code: res.code, key }; if (res.code === 'conflict') P.conflicts.add(key); if (res.code === 'newer') P.newer.add(key); }
     }
     P.saveState = failed ? 'error' : 'saved';
     const before = P.saveError;
     P.saveError = failed;
-    if (failed || before) app.rerender();
+    // a save whose recovery copy didn't fit shows its warning at once (P.copyBehind), also when the edit itself didn't re-render
+    const copyWas = P.copyWasBehind ?? false;
+    P.copyWasBehind = copyMissed || P.copyBehind().length > 0;
+    if (failed || before || copyMissed || copyWas !== P.copyWasBehind) app.rerender();
   }
   P.flush = flush;
   // Another tab saved a prep document. If this tab has no unsaved edits to it, take that version quietly; if it does,
@@ -379,12 +382,12 @@ export function createPrep(app) {
    * Put a prefilled draft into a workspace's screen slot ('cd' quick check, 'th' "What would it take?") and open `route`,
    * unless an unsaved draft is there: then nothing is replaced and a banner asks (Open it / Replace it / Cancel).
    */
-  P.prefill = (ws, slot, next, route) => {
+  P.prefill = (ws, slot, next, route, { then = null } = {}) => {
     const ui = P.wsUi(ws.id), cur = ui[slot], spec = DRAFT_SLOTS[slot];
-    if (spec.live(cur) && !spec.same(cur, next)) { P.pendingReplace = { wsId: ws.id, slot, next, route, existing: spec.what(cur) }; app.rerender(); return false; }
+    if (spec.live(cur) && !spec.same(cur, next)) { P.pendingReplace = { wsId: ws.id, slot, next, route, then, existing: spec.what(cur) }; app.rerender(); return false; }
     ui[slot] = next; P.pendingReplace = null;
-    P.go(route, { push: true });
-    return true;
+    then?.();
+    if (route) P.go(route, { push: true }); else { P.saveUi(); app.rerender(); } // P.go keeps screen drafts for this tab itself
   };
   const KIND_OF_SLOT = { cd: { kind: 'calcs', id: 'new' }, th: { kind: 'threshold' } };
 
@@ -470,13 +473,30 @@ export function createPrep(app) {
    * "Replace everything" never saw the assignment). Nothing is put back without a tap.
    */
   P.recoverable = () => P.store.vault.list().filter(({ id, doc }) => {
+    if (!ownerOf(doc)) return false; // a copy with no real owner (a self-matchup from a file) is never offered; it is left as is
     const r = P.store.load(wsKey(id));
     return r.status === 'missing' || (r.status === 'ok' && ownerOf(r.doc) !== doc.pov);
   });
+  /**
+   * Assigned earlier workspaces whose recovery copy is missing or older than what is saved (the copy didn't fit: storage
+   * nearly full). Worked out from storage, so it survives a reload and other tabs, and clears by itself once a later save
+   * writes the copy.
+   */
+  P.copyBehind = () => [...P.ws.values()].filter((w) => {
+    if (w.povFrom !== 'legacy-confirm' || !ownerOf(w)) return false;
+    const rev = P.revs.get(wsKey(w.id));
+    if (!Number.isInteger(rev)) return false;
+    const copy = P.store.vault.get(w.id);
+    return !copy || !Number.isInteger(copy.rev) || copy.rev < rev;
+  });
+  const when = (iso) => (typeof iso === 'string' && !Number.isNaN(Date.parse(iso)) ? `${iso.slice(0, 16).replace('T', ' ')} UTC` : 'an unknown time');
   function banners() {
     const out = [];
     for (const { id, doc } of P.recoverable()) {
-      out.push(`<div class="banner warn" role="group" aria-label="${esc(C.POV.vaultGroup)}">${esc(C.POV.vaultText(doc.pov, doc.coach, (doc.povAssignedAt ?? doc.updatedAt ?? '').slice(0, 10), P.store.load(wsKey(id)).status === 'missing'))} ${btn(C.POV.vaultRecover, 'vault-recover', { ws: id }, { primary: true })} ${btn(C.POV.vaultDiscard, 'vault-discard', { ws: id })}</div>`);
+      out.push(`<div class="banner warn" role="group" aria-label="${esc(C.POV.vaultGroup)}">${esc(C.POV.vaultText(doc.pov, doc.coach, when(doc.updatedAt), P.store.load(wsKey(id)).status === 'missing'))} ${btn(C.POV.vaultRecover, 'vault-recover', { ws: id }, { primary: true })} ${btn(C.POV.vaultDiscard, 'vault-discard', { ws: id })}</div>`);
+    }
+    for (const w of P.copyBehind()) {
+      out.push(`<div class="banner warn" role="group" aria-label="${esc(C.POV.copyGroup)}">⚠ ${esc(C.POV.copyFailed(ownerOf(w), w.coach))} ${btn('Download a backup now', 'backup-download', {}, { primary: true })} ${btn('Free up space…', 'go-backup')} ${btn(C.POV.copyRetry, 'vault-retry', { ws: w.id })}</div>`);
     }
     const pr = P.pendingReplace;
     if (pr && P.ws.has(pr.wsId)) out.push(`<div class="banner warn" role="group" aria-label="${esc(C.POV.draftGroup)}">${esc(pr.existing)} ${esc(C.POV.draftAsk)} ${btn(C.BRIEF.openIt, 'draft-open', {}, { primary: true })} ${btn(C.BRIEF.replaceIt, 'draft-replace')} ${btn(C.BRIEF.cancel, 'draft-cancel', {}, { cls: 'linkish' })}</div>`);
@@ -498,7 +518,8 @@ export function createPrep(app) {
   }
   /** Say each problem banner once, through the app's status region, when it first appears. */
   function announceBanners() {
-    const now = [P.newer.size && C.SAVE.newer, P.saveError && P.saveError.code !== 'conflict' && saveErrorText(), P.conflicts.size && C.SAVE.conflict({ what: 'Your prep' }), P.corrupt.size && C.SAVE.corrupt].filter(Boolean);
+    const now = [P.newer.size && C.SAVE.newer, P.saveError && P.saveError.code !== 'conflict' && saveErrorText(), P.conflicts.size && C.SAVE.conflict({ what: 'Your prep' }), P.corrupt.size && C.SAVE.corrupt,
+      ...P.copyBehind().map((w) => C.POV.copyFailed(ownerOf(w), w.coach))].filter(Boolean);
     const key = now.join('|');
     if (key && key !== P.announcedBanners) app.announce?.(now.join(' '));
     P.announcedBanners = key;
@@ -824,15 +845,30 @@ export function createPrep(app) {
       const gone = P.store.load(wsKey(id)).status === 'missing';
       const copyId = gone ? id : P.id('ws');
       const res = P.store.save(wsKey(copyId), { ...doc, id: copyId }, null);
-      if (!res.ok) { P.toast(C.SAVE.error); return; }
+      if (!res.ok) { P.toast(res.code === 'quota' ? C.SAVE.quota : C.SAVE.error); return; }
+      // its content now lives in a saved workspace: the old copy goes (if the new copy didn't fit, the copy warning says so;
+      // keeping the old one would offer the same recovery again and again)
       if (!gone) P.store.vault.remove(id);
       P.init();
-      P.toast(C.POV.vaultDone(doc.pov, doc.coach));
+      P.copyWasBehind = P.copyBehind().length > 0;
+      P.toast(res.vaultFailed ? C.POV.vaultDoneNoCopy(doc.pov, doc.coach) : C.POV.vaultDone(doc.pov, doc.coach));
       app.rerender();
+    },
+    // Try writing the recovery copy again (after freeing space): saves the workspace unchanged, which rewrites its copy
+    'vault-retry': (t) => {
+      const ws = P.ws.get(t.dataset.ws);
+      if (!ws || !P.copyBehind().some((w) => w.id === ws.id)) { app.rerender(); return; }
+      if (P.mutate(`ws:${ws.id}`, (d) => d, { substantive: false })) flush();
     },
     'vault-discard': (t) => { P.store.vault.remove(t.dataset.ws); P.toast(C.POV.vaultDropped); app.rerender(); },
     'draft-open': () => { const pr = P.pendingReplace; P.pendingReplace = null; if (pr && P.ws.has(pr.wsId)) P.go({ view: 'ws', wsId: pr.wsId, ...KIND_OF_SLOT[pr.slot] }, { push: true }); else app.rerender(); },
-    'draft-replace': () => { const pr = P.pendingReplace; P.pendingReplace = null; if (pr && P.ws.has(pr.wsId)) { P.wsUi(pr.wsId)[pr.slot] = pr.next; P.go(pr.route, { push: true }); } else app.rerender(); },
+    'draft-replace': () => {
+      const pr = P.pendingReplace; P.pendingReplace = null;
+      if (!pr || !P.ws.has(pr.wsId)) { app.rerender(); return; }
+      P.wsUi(pr.wsId)[pr.slot] = pr.next;
+      pr.then?.();
+      if (pr.route) P.go(pr.route, { push: true }); else { P.saveUi(); app.rerender(); }
+    },
     'draft-cancel': () => { P.pendingReplace = null; app.rerender(); },
     'go-owner': (t) => { if (P.ws.has(t.dataset.ws)) P.go({ view: 'ws', wsId: t.dataset.ws, kind: 'owner' }, { push: true }); },
     // Saying whose an earlier workspace is: only from its own review screen, only for an unassigned one, only to a coach on
@@ -1027,7 +1063,7 @@ export function createPrep(app) {
     return true;
   };
   // Actions that create or remove something run once per tap: a double tap within a moment is the same tap.
-  const ONCE = new Set(['open-coach', 'match-start-ws', 'vault-recover', 'owner-assign', 'owner-unassign', 'brief-six', 'brief-next', 'brief-calc', 'brief-calc-replace', 'match-start', 'finding-new', 'calc-save', 'calc-dup', 'card-new', 'plan-new', 'variant-new', 'variant-dup', 'br-start', 'mock-quick',
+  const ONCE = new Set(['open-coach', 'match-start-ws', 'vault-recover', 'vault-retry', 'owner-assign', 'owner-unassign', 'brief-six', 'brief-next', 'brief-calc', 'brief-calc-replace', 'match-start', 'finding-new', 'calc-save', 'calc-dup', 'card-new', 'plan-new', 'variant-new', 'variant-dup', 'br-start', 'mock-quick',
     'guess-all', 'paste-import', 'set-save', 'set-save-copy', 'pilot-save', 'rv-save', 'restore-import', 'restore-replace-confirm', 'backup-download', 'ws-archive', 'ws-archive-confirm', 'delete-all-confirm', 'undo-delete']);
   const recent = new Map();
   const tappedTwice = (t) => {
