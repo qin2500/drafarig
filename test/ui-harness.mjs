@@ -8,7 +8,7 @@ import { readFileSync, existsSync } from 'node:fs';
 const ROOT = new URL('../', import.meta.url);
 const read = (p) => readFileSync(new URL(p, ROOT));
 const fx = (n) => read(`test/fixtures/${n}`).toString('utf8');
-export const RAW = { boardCsv: fx('board.csv'), draftsCsv: fx('drafts.csv'), boardHtml: fx('board.html') };
+export const RAW = { boardCsv: fx('board.csv'), draftsCsv: fx('drafts.csv'), boardHtml: fx('board.html'), pairingCsv: fx('pairing.csv') };
 export const FETCHED_AT = '2026-10-03T12:00:00.000Z';
 
 class El {
@@ -56,15 +56,16 @@ let instances = 0;
  * html, storage, history, location, fetches, downloads, waitFor, fire }.
  * mode: the deep-link hash (without '#'); narrow: what matchMedia('(max-width: 767px)') reports; files: extra (or
  * replacement) fetchable paths; storage: a memoryStorage to start from (prep documents); sheet: false makes /api/sheet fail;
- * raw: the sheet's {boardCsv, draftsCsv, boardHtml} (default: the fixtures).
+ * raw: the sheet's {boardCsv, draftsCsv, boardHtml, pairingCsv} (default: the fixtures); stale: answer as the Worker's
+ * last-saved-copy fallback.
  * data/dex.json, data/mechanics.json and, when it exists, data/cores.json are served from the repo.
  */
-export async function bootApp({ root = ROOT, source = readFileSync(new URL('public/app.js', root)).toString('utf8'), mode = 'draft', narrow = true, files = {}, storage = memoryStorage(), session = memoryStorage(), sheet = true, raw = RAW, clipboardText = null } = {}) {
+export async function bootApp({ root = ROOT, source = readFileSync(new URL('public/app.js', root)).toString('utf8'), mode = 'draft', narrow = true, files = {}, storage = memoryStorage(), session = memoryStorage(), sheet = true, raw = RAW, clipboardText = null, stale = false } = {}) {
   const els = Object.fromEntries(['#sync', '#turn', '#budget', '#coach', '#banners', '#main', '#explain', '#drawer', '#pop', '#toast', '.layout', '.topbar', '#bq', '.oppstrip ol']
     .map((s) => [s, new El(s.slice(1))]));
   // the opponent row's scroller: geometry a test can set (no layout here), and the current tab it finds
   Object.assign(els['.oppstrip ol'], { scrollLeft: 0, clientWidth: 300, current: null, querySelector: (sel) => (sel === '[aria-current="page"]' ? els['.oppstrip ol'].current : null) });
-  let sheetRaw = raw;
+  let sheetRaw = raw, sheetStale = stale;
   const listeners = {}, winListeners = {};
   const clipboard = [], fetches = [], downloads = [];
   const served = { '/data/dex.json': read('data/dex.json').toString('utf8'), '/data/mechanics.json': read('data/mechanics.json').toString('utf8'), ...files };
@@ -109,7 +110,7 @@ export async function bootApp({ root = ROOT, source = readFileSync(new URL('publ
     fetch: async (url, init) => {
       const path = String(url);
       fetches.push({ path, method: init?.method ?? 'GET', body: init?.body ?? null });
-      if (path === '/api/sheet') return sheet ? respond({ fetchedAt: FETCHED_AT, stale: false, raw: sheetRaw }) : respond({ error: 'Sheet unreachable' }, 502);
+      if (path === '/api/sheet') return sheet ? respond({ fetchedAt: FETCHED_AT, stale: sheetStale, ...(sheetStale ? { error: 'Upstream unavailable' } : {}), raw: sheetRaw }) : respond({ error: 'Sheet unreachable' }, 502);
       if (path === '/api/usage') return respond({ error: 'Upstream data unavailable. Please try again.' }, 502);
       return path in served ? respond(served[path]) : respond({ error: 'Not found' }, 404);
     },
@@ -159,6 +160,8 @@ export async function bootApp({ root = ROOT, source = readFileSync(new URL('publ
     waitFor, fire, fireDoc, settle,
     /** What /api/sheet returns from now on (the league sheet changing while the page is open). */
     setSheet(r) { sheetRaw = r; },
+    /** Whether /api/sheet answers with its last saved copy (the Worker's stale fallback) from now on. */
+    setStale(v) { sheetStale = v; },
     /** A stub element the app looks up by selector (e.g. '.oppstrip ol'). */
     el: (sel) => els[sel] ?? null,
     /** A keydown on the document (Escape, arrows), with an optional target. */

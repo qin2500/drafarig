@@ -7,6 +7,7 @@ import { coreContext } from '/lib/cores.mjs';
 import { buildCoresView, createCoresCache, renderCoresPanel, renderCoresError, renderThinPanel, renderCarriesPanel, sheetReadText } from '/lib/cores-view.mjs';
 import { focusKey, focusCandidates, scrollAfterRender } from '/lib/rerender.mjs';
 import { GLOSSARY } from '/glossary.js';
+import { parsePairings } from '/lib/schedule.mjs';
 
 // ---------- settings (per browser) ----------
 const store = {
@@ -23,6 +24,9 @@ const S = {
 };
 
 let dex, sheet, L, usage = null, usageError = null, planCache = null;
+// League pairings from the sheet's "Paring" tab: {state:'ok'|'missing'|'failed'|'unreadable', pairings}. Weeks, groups,
+// pairs and byes only: the tab has no dates, results or current week, so the app shows none.
+let pairings = { state: 'missing', pairings: null };
 let coachIsFallback = false; // S.coach was filled in because the stored coach isn't on the sheet: shown, never saved as a setting
 let sheetFailed = false;
 // Cores to fear: the spec context is built once at boot; the per-coach view is cached and recomputed only by rebuild()
@@ -125,7 +129,16 @@ async function refreshSheet() {
     const r = await fetch('/api/sheet', { cache: 'no-store' });
     const body = await r.json();
     if (!r.ok) return;
-    const changed = body.raw.draftsCsv !== sheet.raw.draftsCsv || body.raw.boardCsv !== sheet.raw.boardCsv;
+    // A failed re-read of the Paring tab alone keeps the schedule already shown, labelled with the time it was read, instead
+    // of blanking it on every flaky refresh. A first read that fails still says so; a page reload reads it afresh.
+    if (body.raw && body.raw.pairingCsv == null && typeof sheet.raw.pairingCsv === 'string') {
+      body.raw.pairingCsv = sheet.raw.pairingCsv; body.pairingReadAt = sheet.pairingReadAt ?? sheet.fetchedAt;
+    }
+    const draftChanged = body.raw.draftsCsv !== sheet.raw.draftsCsv || body.raw.boardCsv !== sheet.raw.boardCsv;
+    const schedChanged = (body.raw.pairingCsv ?? null) !== (sheet.raw.pairingCsv ?? null);
+    // the schedule going from fresh to "kept from an earlier read" (or back) redraws, so its label is never out of date
+    const schedLabel = (body.pairingReadAt ?? null) !== (sheet.pairingReadAt ?? null);
+    const changed = draftChanged || schedChanged || schedLabel;
     const before = L.coaches.reduce((s, c) => s + c.picks.length, 0);
     sheet = body;
     if (!changed) { renderTop(); showReadTime(); return; }
@@ -134,7 +147,8 @@ async function refreshSheet() {
     const typing = !!document.activeElement?.matches?.('input, textarea, select');
     rebuild(); if (S.mode === 'prep') { if (prep?.canRedraw?.() && !typing) render(); else renderTop(); } else render();
     const n = L.coaches.reduce((s, c) => s + c.picks.length, 0) - before;
-    toast(n > 0 ? `Sheet updated: ${n} new pick${n > 1 ? 's' : ''}` : 'Sheet updated');
+    if (draftChanged) toast(n > 0 ? `Sheet updated: ${n} new pick${n > 1 ? 's' : ''}` : 'Sheet updated');
+    else if (schedChanged && pairings.state === 'ok') toast('Schedule updated');
   } catch {} finally { refreshing = false; }
 }
 // A re-read with unchanged picks doesn't redraw #main, but the Cores Sources line must still show the new read time (QA S6).
@@ -144,6 +158,13 @@ function showReadTime() {
 
 function rebuild() {
   L = buildLeague(sheet.raw, dex, S.aliases);
+  // pairings never take the draft data down: an older saved copy has no tab (missing), a failed read is null (failed)
+  try {
+    const csv = sheet.raw.pairingCsv;
+    if (csv === undefined) pairings = { state: 'missing', pairings: null };
+    else if (csv === null) pairings = { state: 'failed', pairings: null };
+    else { const p = parsePairings(csv, L.coaches); pairings = { state: p.weeks.length ? 'ok' : 'unreadable', pairings: p }; }
+  } catch (e) { console.error('Pairings unreadable:', e && e.message); pairings = { state: 'unreadable', pairings: null }; }
   planCache = null;
   coreCache.reset();
   if (!L.coaches.some((c) => c.name === S.coach)) { S.coach = L.coaches.find((c) => c.order === 5)?.name || L.coaches[0].name; coachIsFallback = true; }
@@ -375,6 +396,49 @@ function speedPanel(ids) {
       <b>${r.speed}${r.tie ? ' =' : ''}</b><span class="bar" style="width:${Math.max(4, 100 * r.speed / max)}%" title="${r.invest}${r.tie ? ' · speed tie: 50/50 who moves first' : ''}"></span></div>`).join('')}</div>`;
 }
 
+// ---------- League schedule (the sheet's Paring tab: weeks, groups, pairs and byes; no dates, results or current week) ----------
+/** {state: ok|missing|failed|unreadable, pairings, fetchedAt (when the schedule was read), stale} */
+function scheduleState() {
+  return { ...pairings, fetchedAt: sheet?.pairingReadAt ?? sheet?.fetchedAt ?? null, stale: !!sheet?.stale || !!sheet?.pairingReadAt };
+}
+const hhmm = (iso) => (iso ? new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '');
+// What the sheet doesn't say, said once wherever the schedule is shown
+const SCHED_SOURCE = (iso) => `From the sheet's Paring tab, read ${hhmm(iso)} · the sheet has no dates, results or current week`;
+const SCHED_NOT = {
+  missing: 'Schedule: not in this copy of the sheet.',
+  failed: "Schedule couldn't be read from the sheet right now.",
+  unreadable: "The sheet's Paring tab didn't look like a schedule, so nothing is shown.",
+};
+const SCHED_NOTE = {
+  'listed-twice': (w) => `Week ${w.week}: ${w.coaches.join(', ')} listed more than once`,
+  'not-listed': (w) => `Week ${w.week}: ${w.coaches.join(', ')} not listed`,
+  'unrecognised-row': (w) => `Week ${w.week}: sheet row ${w.row} isn't a pair or a bye, so it's left out`,
+  'duplicate-week': (w) => `Week ${w.week} appears twice; only the first is shown`,
+};
+function schedulePanel() {
+  const s = scheduleState();
+  if (s.state !== 'ok') {
+    return `<div class="panel sched"><h2>Schedule</h2><p class="muted">${esc(SCHED_NOT[s.state] || SCHED_NOT.unreadable)}${s.state === 'failed' ? ' <button data-sheet-retry="">Retry</button>' : ''}</p></div>`;
+  }
+  const P = s.pairings, you = S.coach;
+  const labels = [...new Set(P.weeks.flatMap((w) => w.groups.map((g) => g.label)))];
+  // a matched name shows the Drafts spelling; an unmatched one stays as the sheet wrote it, never linked or guessed
+  const who = (x) => (x.coach ? esc(x.coach) : `<i>${esc(x.raw)}</i> <span class="chip unc" title="Not matched to a coach on the Drafts tab">?</span>`);
+  const seat = (name) => L.coaches.find((c) => c.name === name)?.order;
+  const cell = (g) => (!g ? '<td class="muted">—</td>' : `<td>${g.pairs.map((p) => {
+    const mine = p.a.coach === you || p.b.coach === you, opp = p.a.coach === you ? p.b.coach : p.a.coach;
+    const link = mine && opp && seat(opp) ? ` <button class="linkish" data-prep-vs="${seat(opp)}">Battle Prep</button>` : '';
+    return `<div class="pair${mine ? ' you' : ''}">${mine ? '<span class="chip you-chip">You</span> ' : ''}${who(p.a)} <span class="vs">vs</span> ${who(p.b)}${link}</div>`;
+  }).join('')}${g.byes.map((b) => `<div class="pair bye${b.coach === you ? ' you' : ''}">${b.coach === you ? '<span class="chip you-chip">You</span> ' : ''}${who(b)} · Bye</div>`).join('')}</td>`);
+  const notes = P.warnings.filter((w) => SCHED_NOTE[w.code]);
+  return `<div class="panel sched"><h2>Schedule</h2>
+    <p class="explainer">${esc(SCHED_SOURCE(s.fetchedAt))}.${s.stale ? ` <span class="chip tight">⚠ Sheet unreachable: schedule from ${esc(hhmm(s.fetchedAt))}</span>` : ''}</p>
+    <div class="scroll"><table class="sched-grid"><thead><tr><th scope="col">Week</th>${labels.map((l) => `<th scope="col">${esc(l || 'Pairs')}</th>`).join('')}</tr></thead><tbody>
+    ${P.weeks.map((w) => `<tr><th scope="row">Week ${w.week}</th>${labels.map((l) => cell(w.groups.find((g) => g.label === l))).join('')}</tr>`).join('')}
+    </tbody></table></div>
+    ${notes.length ? `<details class="small"><summary>ⓘ ${notes.length} schedule note${notes.length > 1 ? 's' : ''}</summary><ul>${notes.map((w) => `<li>${esc(SCHED_NOTE[w.code](w))}</li>`).join('')}</ul></details>` : ''}</div>`;
+}
+
 // ---------- League ----------
 function renderLeague() {
   const c = me(), aff = affMap(c), f = S.boardFilter;
@@ -415,7 +479,7 @@ function renderLeague() {
   const counts = Object.fromEntries(['Answered', 'Thin', 'Unchecked'].map((k) => [k, threats.filter((t) => t.status === k).length]));
   const coresV = coresView();
   const cores = coresV ? coresSafe(() => renderCoresPanel(coresV, { scope: S.threatScope, state: S.cores, narrow: narrowScreen.matches, fetchedAt: sheet.fetchedAt }), renderCoresError()) : renderCoresError();
-  return `<div class="panel"><h2>Coaches</h2><p class="explainer">Budget math is the same 10-mon feasibility rule for everyone. A coach can't snipe a mon priced above their max next pick.</p><div class="coach-grid">${coaches}</div></div>
+  return `${schedulePanel()}<div class="panel"><h2>Coaches</h2><p class="explainer">Budget math is the same 10-mon feasibility rule for everyone. A coach can't snipe a mon priced above their max next pick.</p><div class="coach-grid">${coaches}</div></div>
     ${cores}
     <div class="panel"><h2>Threats to ${esc(c.name)}</h2>
       <p class="verdict">${counts.Unchecked} unchecked, ${counts.Thin} thin, ${counts.Answered} answered.</p>
@@ -533,6 +597,8 @@ const prepApp = {
   },
   portrait: (id, opts) => portrait(id, opts),
   sheetFailed: () => sheetFailed,
+  /** The league pairings as read from the sheet (with the sheet's own read time and staleness). */
+  schedule: () => scheduleState(),
   goMode: (m) => goTo(m), toast: (m) => toast(m), announce: (m) => announce(m), rerender: () => render(),
   viewAs(coach, back) {
     viewingAs = { coach: viewingAs?.coach ?? S.coach, back };
@@ -708,7 +774,7 @@ document.addEventListener('click', async (e) => {
   else if (t.dataset.coresAll) { const k = t.dataset.coresAll; S.cores.showAll[k] = !S.cores.showAll[k]; render(); document.querySelector(`[data-cores-all="${CSS.escape(k)}"]`)?.focus(); }
   else if (t.dataset.dtab) { S.draftTab = t.dataset.dtab; render(); }
   else if (t.dataset.check !== undefined) { S.check = t.dataset.check; if (S.check) { S.mode = 'draft'; $('#drawer').hidden = true; document.querySelector('.layout').classList.add('nodrawer'); } render(); if (S.check) window.scrollTo(0, 0); }
-  else if (t.id === 'sync' || t.id === 'retry') location.reload();
+  else if (t.id === 'sync' || t.id === 'retry' || t.dataset.sheetRetry !== undefined) location.reload();
   else if (t.dataset.copy) { try { await navigator.clipboard.writeText(t.dataset.copy); toast('Copied: ' + t.dataset.copy); } catch { prompt('Copy this message:', t.dataset.copy); } }
   else if (t.dataset.accept) { const sel = document.querySelector(`select[data-alias="${CSS.escape(t.dataset.accept)}"]`); S.aliases[t.dataset.accept] = sel.value; save(); rebuild(); render(); toast('Saved name fix'); }
   else if (t.dataset.unalias) { delete S.aliases[t.dataset.unalias]; save(); rebuild(); render(); }

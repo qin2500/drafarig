@@ -10,6 +10,7 @@ import { loadMechanics } from '../lib/calc/mech.mjs';
 import { createCalc } from '../lib/calc/wrapper.mjs';
 import { currentVersion, versionOf, rosterDiff } from '../lib/prep-model.mjs';
 import { staleReasons } from '../lib/calc/keys.mjs';
+import { scheduleFor, groupOf } from '../lib/schedule.mjs';
 import { ENGINE_INFO, importEngine } from './prep-engine.js';
 import * as C from './prep-copy.js';
 import { esc, btn, h2, select, term } from './prep-ui.js';
@@ -550,14 +551,52 @@ export function createPrep(app) {
       const ws = workspacesFor([...P.ws.values()], pov.name, c.name)[0];
       const face = c.picks.find((p) => p.id)?.id;
       const played = ws?.matches.find((m) => (m.games ?? []).some((g) => g.result));
-      const marks = [ws?.isNext ? C.BRIEF.stripNext : '', played ? C.BRIEF.stripPlayed : ''].filter(Boolean);
+      const wk = P.weeksVs(pov.name, c.name)?.weeks ?? [];
+      const marks = [wk.length ? C.SCHED.weeks(wk) : '', ws?.isNext ? C.BRIEF.stripNext : '', played ? C.BRIEF.stripPlayed : ''].filter(Boolean);
       const name = `${c.name}${marks.length ? `, ${marks.join(', ')}` : ''}`;
-      return `<li><a href="${esc(formatRoute({ view: 'ws', pov: pov.order, opp: c.order, tab: 'brief' }))}" data-pa="go-opp" data-opp="${c.order}" class="opptab${c.order === activeSeat ? ' active' : ''}"${c.order === activeSeat ? ' aria-current="page"' : ''} aria-label="${esc(name)}" title="${esc(c.name)}">${face ? P.pt(face, { size: 'sm' }) : '<span class="pt pt-sm noimg" data-ini="?"></span>'}<span class="oppname">${esc(c.name)}</span>${ws?.isNext ? `<span class="tabmark next" aria-hidden="true">${esc(C.BRIEF.stripNext)}</span>` : ''}${played ? `<span class="tabmark played" aria-hidden="true">✓ ${esc(C.BRIEF.stripPlayed)}</span>` : ''}</a></li>`;
+      return `<li><a href="${esc(formatRoute({ view: 'ws', pov: pov.order, opp: c.order, tab: 'brief' }))}" data-pa="go-opp" data-opp="${c.order}" class="opptab${c.order === activeSeat ? ' active' : ''}"${c.order === activeSeat ? ' aria-current="page"' : ''} aria-label="${esc(name)}" title="${esc(c.name)}">${face ? P.pt(face, { size: 'sm' }) : '<span class="pt pt-sm noimg" data-ini="?"></span>'}<span class="oppname">${esc(c.name)}</span>${wk.length ? `<span class="tabmark wk" aria-hidden="true">${weekBadge(wk)}</span>` : ''}${ws?.isNext ? `<span class="tabmark next" aria-hidden="true">${esc(C.BRIEF.stripNext)}</span>` : ''}${played ? `<span class="tabmark played" aria-hidden="true">✓ ${esc(C.BRIEF.stripPlayed)}</span>` : ''}</a></li>`;
     };
     const jump = select('prep-oppjump', [['', C.BRIEF.allOpponents(coaches.length)], ...coaches.map((c) => [String(c.order), `${c.order}. ${c.name}`])], '', { data: { pc: 'opp-jump' }, aria: C.BRIEF.jumpLabel, cls: 'oppjump' });
     return `<nav class="oppstrip" aria-label="Opponents"><ol><li><a href="${esc(formatRoute({ view: 'overview', pov: pov.order }))}" data-pa="go-overview" class="opptab overview${activeSeat === null ? ' active' : ''}"${activeSeat === null ? ' aria-current="page"' : ''}><span class="oppname">${esc(C.BRIEF.overview)}</span></a></li>${coaches.map(tab).join('')}</ol>${jump}</nav>`;
   }
   P.pt = (id, opts = {}) => app.portrait?.(id, opts) ?? `<span class="pt pt-${esc(opts.size ?? 'sm')} noimg" data-ini="${esc(P.spName(id).slice(0, 2))}"></span>`;
+
+  // ---------- league schedule: read-only facts from the sheet's Paring tab ----------
+  // Weeks, groups, pairs and byes only. Nothing here writes prep, identity or "next match", and no week is ever called
+  // current: the sheet has no dates, results or current week.
+  /** One perspective's weeks: {state, fetchedAt, stale, group, rows: [{week, group, opponent|null, raw, bye}], pairings}. */
+  P.weeks = (povName) => {
+    const s = app.schedule?.() ?? { state: 'missing' };
+    if (s.state !== 'ok' || !s.pairings) return { state: s.state ?? 'missing', rows: [] };
+    const rows = scheduleFor(s.pairings, povName);
+    return { state: 'ok', fetchedAt: s.fetchedAt, stale: !!s.stale, group: rows[0]?.group ?? '', rows, pairings: s.pairings };
+  };
+  /** The weeks a perspective plays one opponent, or null when there's no schedule to say it from (or the POV isn't in it). */
+  P.weeksVs = (povName, oppName) => {
+    const w = P.weeks(povName);
+    if (w.state !== 'ok' || !w.rows.length) return null;
+    return { weeks: w.rows.filter((x) => x.opponent === oppName).map((x) => x.week), group: w.group, oppGroup: groupOf(w.pairings, oppName) };
+  };
+  // the read time in the device's local time, as the top bar and Draft › League say it
+  const hhmm = (iso) => (iso ? new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '');
+  /** "W1·W5" for a tab or card badge, or '' */
+  const weekBadge = (weeks) => weeks.map((n) => `W${n}`).join('·');
+  /** The overview's "Your weeks" strip, or the one line that says why there isn't one. */
+  function weeksStrip(pov) {
+    const w = P.weeks(pov.name);
+    if (w.state !== 'ok') return P.league() ? `<p class="small muted sched-line">${esc(C.SCHED[w.state] ?? C.SCHED.unreadable)}</p>` : '';
+    if (!w.rows.length) return `<p class="small muted sched-line">${esc(C.SCHED.notListed(pov.name))}</p>`;
+    const tile = (x) => {
+      if (x.bye) return `<li><span class="wktile bye"><span class="wkchip" aria-hidden="true">W${x.week}</span><span class="wkname" aria-hidden="true">${esc(C.SCHED.bye)}</span><span class="sr-only">${esc(C.SCHED.tileBye(x.week))}</span></span></li>`;
+      const seat = x.opponent && P.seatOf(x.opponent);
+      if (!seat) return `<li><span class="wktile raw"><span class="wkchip" aria-hidden="true">W${x.week}</span><i class="wkname" aria-hidden="true">${esc(x.raw)}</i><span class="chip unc" aria-hidden="true">?</span><span class="sr-only">${esc(C.SCHED.tileRaw(x.week, x.raw))}</span></span></li>`;
+      const c = P.coachBySeat(seat), face = c.picks.find((p) => p.id)?.id;
+      const marked = workspacesFor([...P.ws.values()], pov.name, c.name)[0]?.isNext;
+      return `<li><a class="wktile" href="${esc(formatRoute({ view: 'ws', pov: pov.order, opp: seat, tab: 'brief' }))}" data-pa="go-opp" data-opp="${seat}" aria-label="${esc(C.SCHED.tile(x.week, c.name) + (marked ? `, ${C.SCHED.marked}` : ''))}"><span class="wkchip" aria-hidden="true">W${x.week}</span>${face ? P.pt(face, { size: 'sm' }) : '<span class="pt pt-sm noimg" data-ini="?"></span>'}<span class="wkname">${esc(c.name)}</span>${marked ? `<span class="tabmark next" aria-hidden="true">${esc(C.BRIEF.stripNext)}</span>` : ''}</a></li>`;
+    };
+    return `<div class="weeks"><h3>${esc(C.SCHED.head(w.group))}</h3><ol class="weekstrip">${w.rows.map(tile).join('')}</ol>
+      <p class="small muted sched-line">${esc(C.SCHED.source(hhmm(w.fetchedAt)))}${w.stale ? ` <span class="chip tight">${esc(C.SCHED.stale(hhmm(w.fetchedAt)))}</span>` : ''}</p></div>`;
+  }
 
   // ---------- Battle Prep overview (home) ----------
   function savedLists(povName, coaches) {
@@ -617,13 +656,16 @@ export function createPrep(app) {
       const started = ws && (ws.theirSets.length || ws.calcs.length || ws.cards.length || ws.mockSets.length || ws.plans.length || ws.matchDate || ws.isNext);
       const status = !ws || !started ? C.HOME.notStarted : `${ws.theirSets.length} sets · ${ws.calcs.length} calcs`;
       const legacy = unassignedVs([...P.ws.values()], c.name).length;
+      const vs = P.weeksVs(pov.name, c.name);
+      const wk = vs ? (vs.weeks.length ? `<span class="chip wkc">${weekBadge(vs.weeks)}</span>` : `<span class="small muted">${esc(C.SCHED.notScheduled)}</span>`) : '';
       return `<li><a class="oppcard" href="${esc(formatRoute({ view: 'ws', pov: pov.order, opp: c.order, tab: 'brief' }))}" data-pa="go-opp" data-opp="${c.order}">
-        <span class="oc-head"><b>${esc(c.name)}</b> <span class="small muted">seat ${c.order} · ${ids.length}/10 drafted</span>${ws?.isNext ? ` <span class="chip ok">${esc(C.BRIEF.stripNext)}</span>` : ''}</span>
+        <span class="oc-head"><b>${esc(c.name)}</b> <span class="small muted">seat ${c.order} · ${ids.length}/10 drafted</span> ${wk}${ws?.isNext ? ` <span class="chip ok">${esc(C.BRIEF.stripNext)}</span>` : ''}</span>
         <span class="minis" aria-hidden="true">${ids.map((id) => P.pt(id, { size: 'xs' })).join('')}</span>
         <span class="small">${esc(status)}${legacy ? ` · ${esc(C.POV.earlierChip)}` : ''}</span></a></li>`;
     };
     return `<section class="panel prep-home">${povRow(pov.name, pv.source)}${oppStrip(pov, null)}
       ${h2(C.BRIEF.overviewHead(pov.name))}
+      ${L ? weeksStrip(pov) : ''}
       ${next ? `<div class="nexthero"><p><b>${esc(C.BRIEF.nextMatch)}</b>: vs ${esc(next.coach)}${next.matchDate ? ` · ${esc(next.matchDate)}` : ''}</p><p>${btn(C.BRIEF.openBriefing, 'go-opp', { opp: P.seatOf(next.coach) }, { primary: true })}</p></div>` : ''}
       <h3>${esc(C.HOME.choose)}</h3><p class="small">${esc(C.HOME.chooseHelp)}</p>
       ${L ? `<ul class="oppcards">${opps.map(card).join('')}</ul>` : `<p class="small">${esc(C.BRIEF.sheetLoading)}</p>`}

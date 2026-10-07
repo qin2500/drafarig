@@ -494,7 +494,10 @@ test('Draft links into Battle Prep: League coach cards open that matchup from yo
   const app = await bootApp({ mode: 'league' });
   t.after(() => app.restore());
   const links = findAll(root(app), (n) => n.attrs['data-prep-vs']);
-  assert.equal(links.length, 9);
+  const inCards = links.filter((n) => { for (let x = n.parent; x; x = x.parent) if (hasClass(x, 'coach-card')) return true; return false; });
+  assert.equal(inCards.length, 9);
+  // plus one per scheduled match of yours in the League schedule (Anthony: weeks 1, 3, 4, 5; week 2 is a bye)
+  assert.deepEqual(links.filter((n) => !inCards.includes(n)).map((n) => n.attrs['data-prep-vs']), ['8', '3', '1', '4']);
   await app.click({ prepVs: '6' });
   await app.waitFor(() => app.location.hash === '#prep/5v6', 'the matchup');
   assert.equal(app.body.dataset.app, 'prep');

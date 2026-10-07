@@ -557,3 +557,26 @@ body[data-app="prep"] .layout, body[data-app="prep"] .layout.nodrawer { grid-tem
   .brief .bcol { display: contents; }
   #bs-pool { order: 1; } #bs-threats { order: 2; } #bs-useful { order: 3; } #bs-plans { order: 4; } #bs-speed { order: 5; } #bs-leads { order: 6; } #bs-myplans { order: 7; } #bs-checks { order: 8; }
 }
+
+/* ===== League schedule (the sheet's Paring tab): weeks, pairs, byes; no dates, results or current week ===== */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.weeks h3 { margin: 6px 0 4px; }
+.weekstrip { display: flex; gap: 6px; list-style: none; margin: 0; padding: 2px; overflow-x: auto; scroll-snap-type: x proximity; }
+.weekstrip li { flex: 0 0 auto; scroll-snap-align: start; }
+.wktile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 72px; min-height: 88px; padding: 4px 8px; border: 1px solid var(--line); border-left: 4px solid var(--them); border-radius: 8px; background: var(--panel); color: var(--ink); text-decoration: none; position: relative; }
+.wktile .wkname { font-size: 12px; max-width: 8em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wktile.bye { border-left-color: var(--line); background: var(--tile); color: var(--muted); border-style: dashed; }
+.wktile.raw { border-left-color: var(--warn); }
+.wktile .tabmark { font-size: 12px; font-weight: 700; color: var(--ok); }
+.wkchip { display: inline-block; min-width: 2.2em; padding: 0 6px; border-radius: 999px; background: var(--youbg); color: var(--ink); font-size: 12px; font-weight: 700; text-align: center; }
+.sched-line { margin: 4px 0 8px; }
+.opptab .tabmark.wk { font-size: 12px; color: var(--ink); background: var(--youbg); border-radius: 999px; padding: 0 6px; }
+.chip.wkc { background: var(--youbg); color: var(--ink); border-color: transparent; font-weight: 700; }
+.mhero .weekline { margin: 0 0 2px; }
+.sched-grid td { vertical-align: top; }
+.sched-grid .pair { padding: 4px 6px; margin: 2px 0; border-radius: 6px; border: 1px solid transparent; }
+.sched-grid .pair.you { border-color: var(--you); background: var(--youbg); }
+.sched-grid .pair.bye { color: var(--muted); }
+.sched-grid .vs { color: var(--muted); font-size: 12px; }
+.chip.you-chip { background: var(--you); color: #fff; border-color: transparent; }
+@media (prefers-color-scheme: dark) { .chip.you-chip { color: #1d2330; } }

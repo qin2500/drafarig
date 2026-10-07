@@ -551,3 +551,20 @@ export const REASON = {
   'pair-in-core': (r) => `Both in your ${r.label}`,
   'pair-shared-weakness': (r) => `Both weak to their ${r.items.map((i) => i.type).join('/')} attacks`,
 };
+
+// ---------- League schedule (the sheet's Paring tab) ----------
+// The tab lists week numbers, groups, pairs and byes only: no dates, results or current week, so none is ever said.
+// "Next match" stays the user's own mark, never derived from the schedule.
+export const SCHED = {
+  head: (g) => `Your weeks${g ? ` · ${g}` : ''} (from the sheet)`,
+  source: (t) => `From the sheet's Paring tab, read ${t} · the sheet has no dates, results or current week`,
+  stale: (t) => `⚠ Sheet unreachable: schedule from ${t}`,
+  missing: 'Schedule: not in this copy of the sheet.',
+  failed: "Schedule couldn't be read from the sheet right now. ⟳ at the top re-reads it.",
+  unreadable: "The sheet's Paring tab didn't look like a schedule, so nothing is shown.",
+  notListed: (p) => `${p} isn't listed in the schedule.`,
+  bye: 'Bye', week: (n) => `Week ${n}`, weeks: (ns) => (ns.length === 1 ? `Week ${ns[0]}` : `Weeks ${ns.slice(0, -1).join(', ')} and ${ns[ns.length - 1]}`),
+  tile: (n, o) => `Week ${n}: ${o}. Open the briefing`, tileBye: (n) => `Week ${n}: bye`, tileRaw: (n, raw) => `Week ${n}: ${raw} (not matched to a coach)`,
+  unmatched: 'not matched to a coach', marked: 'next (you marked)',
+  notScheduled: 'Not on your schedule', notScheduledIn: (o, g) => `Not on your schedule · ${o} is in ${g}`,
+};

@@ -15,7 +15,7 @@ const ROOT = new URL('../', import.meta.url);
 const read = (p) => readFileSync(new URL(p, ROOT));
 const fx = (n) => read(`test/fixtures/${n}`).toString('utf8');
 const dex = JSON.parse(read('data/dex.json'));
-const RAW = { boardCsv: fx('board.csv'), draftsCsv: fx('drafts.csv'), boardHtml: fx('board.html') };
+const RAW = { boardCsv: fx('board.csv'), draftsCsv: fx('drafts.csv'), boardHtml: fx('board.html'), pairingCsv: fx('pairing.csv') };
 const SHEET_KEY = 'sheet-last-good.json';
 const USAGE_KEY = 'usage-gen9championsvgc2026regmc.json';
 const UPSTREAM_DOWN = { error: 'Upstream data unavailable. Please try again.' };
@@ -60,15 +60,16 @@ class FakeR2 {
 }
 
 const kind = (url) => url.startsWith('https://www.smogon.com/stats/') ? 'usage' : url.includes('/pubhtml/sheet?') ? 'html'
-  : url.includes(`gid=${GID.board}&`) ? 'board' : url.includes(`gid=${GID.drafts}&`) ? 'drafts' : 'unknown';
+  : url.includes(`gid=${GID.board}&`) ? 'board' : url.includes(`gid=${GID.drafts}&`) ? 'drafts' : url.includes(`gid=${GID.pairing}&`) ? 'pairing' : 'unknown';
 const LIVE = {
   board: () => new Response(RAW.boardCsv),
   drafts: () => new Response(RAW.draftsCsv),
   html: () => new Response(RAW.boardHtml),
+  pairing: () => new Response(RAW.pairingCsv),
   usage: (url) => (url === usageUrl(1) ? Response.json(CHAOS) : new Response('Not Found', { status: 404 })),
 };
 const leak = () => { throw new TypeError('fetch failed: connect ECONNREFUSED 10.1.2.3:443 (/workspace/secret/token.json)'); };
-const DOWN = { board: () => new Response('Internal Server Error', { status: 500 }), drafts: leak, html: leak, usage: () => new Response('Service Unavailable', { status: 503 }) };
+const DOWN = { board: () => new Response('Internal Server Error', { status: 500 }), drafts: leak, html: leak, pairing: leak, usage: () => new Response('Service Unavailable', { status: 503 }) };
 
 // Fake upstream (records every call, rejects the `cache` init field like older Workers runtimes) + captured logs.
 function setup(t, routes = {}, latency = 0) {
@@ -229,7 +230,7 @@ test('/api/sheet reads the live sheet with cache-busting and saves only a valida
   const r = await get(await freshWorker(), '/api/sheet', { BUCKET: bucket });
   assert.equal(r.status, 200);
   assert.deepEqual([r.headers['content-type'], r.headers['cache-control']], [TYPES.json, 'no-store']);
-  assert.deepEqual(calls.map((c) => c.kind).sort(), ['board', 'drafts', 'html']);
+  assert.deepEqual(calls.map((c) => c.kind).sort(), ['board', 'drafts', 'html', 'pairing']);
   for (const c of calls) {
     assert.ok(c.url.startsWith(`${PUB}/pub`), c.url);
     assert.match(c.url, /&_=\d+$/);
@@ -260,6 +261,19 @@ test('board colours are optional: their failure still gives a fresh read', async
   assert.equal(bucket.value(SHEET_KEY).raw.boardHtml, null);
 });
 
+test('pairings are optional: a missing or unreadable pairing tab still gives a fresh draft read (never a stale fallback)', async (t) => {
+  setup(t, { pairing: DOWN.board });
+  const bucket = new FakeR2();
+  const r = await get(await freshWorker(), '/api/sheet', { BUCKET: bucket });
+  assert.deepEqual([r.status, r.body.stale, r.body.raw.pairingCsv], [200, false, null]);
+  assert.deepEqual(r.body.raw.draftsCsv, RAW.draftsCsv);
+  assert.equal(bucket.value(SHEET_KEY).raw.pairingCsv, null);
+  t.mock.restoreAll();
+  setup(t, { pairing: () => new Response('<html>Sign in</html>') }); // not a pairing grid: stored as text, the app reports it unreadable
+  const r2 = await get(await freshWorker(), '/api/sheet', { BUCKET: new FakeR2() });
+  assert.deepEqual([r2.status, r2.body.stale], [200, false]);
+});
+
 test('the last good snapshot survives into a new Worker instance and is served when the sheet is down', async (t) => {
   const up = setup(t);
   const bucket = new FakeR2();
@@ -273,7 +287,7 @@ test('the last good snapshot survives into a new Worker instance and is served w
   assert.deepEqual(r.body.league, first.body.league);
   for (const s of ['HTTP 500', 'ECONNREFUSED', '/workspace', 'retry']) assert.ok(!r.text.includes(s), s); // the upstream error stays in the log
   assert.ok(down.logs.some((l) => l.includes('sheet FAILED') && l.includes('HTTP 500')));
-  assert.equal(up.calls.length, 3);
+  assert.equal(up.calls.length, 4);
 });
 
 test('an unrecognisable sheet (e.g. a Google sign-in page) never replaces the last good snapshot', async (t) => {
@@ -310,9 +324,9 @@ test('DRAFARIG_SHEET_URL and DRAFARIG_OFFLINE work as in server.mjs', async (t) 
   const base = 'https://docs.google.com/spreadsheets/d/e/2PACX-republished';
   const worker = await freshWorker();
   assert.equal((await get(worker, '/api/sheet', { BUCKET: bucket, DRAFARIG_SHEET_URL: base })).body.stale, false);
-  assert.ok(calls.length === 3 && calls.every((c) => c.url.startsWith(`${base}/pub`)));
+  assert.ok(calls.length === 4 && calls.every((c) => c.url.startsWith(`${base}/pub`)));
   const r = await get(worker, '/api/sheet', { BUCKET: bucket, DRAFARIG_OFFLINE: '1' });
-  assert.deepEqual([r.body.stale, r.body.error, calls.length], [true, 'live sheet unavailable', 3]);
+  assert.deepEqual([r.body.stale, r.body.error, calls.length], [true, 'live sheet unavailable', 4]);
 });
 
 test('missing BUCKET binding: live data still works, nothing is cached, failures are a sanitized 502', async (t) => {

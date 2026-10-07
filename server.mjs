@@ -40,12 +40,13 @@ async function getSheet() {
   const t0 = Date.now();
   try {
     if (process.env.DRAFARIG_OFFLINE) throw new Error('offline mode (DRAFARIG_OFFLINE is set)'); // for testing the fallback
-    const [boardCsv, draftsCsv, boardHtml] = await Promise.all([
+    const [boardCsv, draftsCsv, boardHtml, pairingCsv] = await Promise.all([
       get(csvUrl(GID.board, SHEET)),
       get(csvUrl(GID.drafts, SHEET)),
       get(htmlUrl(GID.board, SHEET)).catch(() => null), // colours are a cross-check only
+      get(csvUrl(GID.pairing, SHEET)).catch(() => null), // pairings are optional: the draft data never waits on them
     ]);
-    const raw = { boardCsv, draftsCsv, boardHtml };
+    const raw = { boardCsv, draftsCsv, boardHtml, pairingCsv };
     buildLeague(raw, dex); // throws if the layout is unrecognisable: never save a bad snapshot
     const snap = { fetchedAt: new Date().toISOString(), raw };
     await writeJson(snapFile, snap);
