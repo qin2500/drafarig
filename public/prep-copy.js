@@ -48,19 +48,6 @@ export const RULES_MAIN = ['matchLength', 'disclosure', 'sixPerMatch', 'platform
 export const RULES_MORE = ['setLockWithinBo3', 'bringPick', 'replaysPublic', 'notesDuringSet', 'rosterChanges'];
 export const GAME_RULES = 'Game rules (not league settings): one Mega Evolution per battle · Level 50 · Stat Points: 66 in total, at most 32 in one stat.';
 
-// ---------- prep path ----------
-export const STEP = {
-  0: { title: 'Rules', help: 'What your league has told you.' },
-  1: { title: 'Their plans', help: 'What could they be trying to do? Two likely plans plus one where they prepped against you are a good start.' },
-  2: { title: 'Through their eyes', help: 'What they could bring against your 10. Could, not will.' },
-  3: { title: 'Your 6', help: 'The 6 you are thinking of bringing.' },
-  4: { title: 'Plan cards', help: 'Your 4, your lead, turn 1 and a few if-then lines per plan (three cover most leads), plus two cards for game 2.' },
-  5: { title: 'Speed check', help: 'Who moves first in the pairs that decide turn 1.' },
-  6: { title: 'Key calcs', help: 'The few numbers that decide this match, checked against their worst-for-you sets.' },
-  7: { title: 'Mocks + premortem', help: 'Practice with a purpose; one line on how you could lose.' },
-};
-export const START_HERE = 'Start here';
-export const START_HERE_RECHECK = 'Start here: re-check your out-of-date calcs';
 export const CANT_KNOW = "Can't know before the match: their real sets and Stat Points, which 6 and 4 they bring, how they lead.";
 export const PREMORTEM_Q = 'Imagine you lost this set 0–2. What is the most likely reason?';
 export const EYES_Q = 'If you were them, what would you bring against you?';
@@ -83,7 +70,7 @@ export const FLAG = {
   F19: () => 'A mock used a Showdown format that shows different team info than you meant to practise.',
   F20: () => "Your partner's paste wasn't checked against the brief's numbers; it may not match.",
 };
-export const FLAG_ACTION = { F11: 'Re-check', F12: 'Review roster', F14: 'Open step 2', F15: 'Add a plan', F16: 'Rules', F19: 'Open mock', F20: 'Open mock', F4: 'Open calc', F5: 'Open calc', F6: 'Open calc', F7: 'Speed', F1: 'Practice', F2: 'Practice', F9: 'Practice' };
+export const FLAG_ACTION = { F11: 'Re-check', F12: 'Review roster', F14: 'Through their eyes', F15: 'Add a plan', F16: 'Rules', F19: 'Open mock', F20: 'Open mock', F4: 'Open calc', F5: 'Open calc', F6: 'Open calc', F7: 'Speed', F1: 'Practice', F2: 'Practice', F9: 'Practice' };
 
 // ---------- calc results ----------
 export const CLASS = { exact: '', approx: '≈ Approximation', 'knife-edge': 'Knife-edge', 'needs-state': 'No number yet', refused: 'No number', 'no-damage': 'No damage', status: 'No damage' };
@@ -567,4 +554,57 @@ export const SCHED = {
   tile: (n, o) => `Week ${n}: ${o}. Open the briefing`, tileBye: (n) => `Week ${n}: bye`, tileRaw: (n, raw) => `Week ${n}: ${raw} (not matched to a coach)`,
   unmatched: 'not matched to a coach', marked: 'next (you marked)',
   notScheduled: 'Not on your schedule', notScheduledIn: (o, g) => `Not on your schedule · ${o} is in ${g}`,
+};
+
+// ---------- Battle Prep: the Plan board ----------
+// Type and Speed pressure and the Cores spec's listed answers only: never "beats", "counters", "wins", "safe", odds or
+// percentages. Suggestions order what you tap; the app never picks your 6, lead or Mega.
+export const BOARD = {
+  theirPlans: 'Their plans', pick: 'Tap one to plan against it',
+  kind: { likely: 'Likely', alt: 'Other', counterprep: 'They prepped vs you', idea: 'Idea' },
+  suggested: 'suggested', seedWord: 'seed', unsavedNote: 'Not saved yet: your first pick below saves it.',
+  seed: { 'seed-trick-room': 'Trick Room possible', 'seed-tailwind': 'Their Tailwind possible', 'seed-sun': 'Sun possible', 'seed-rain': 'Rain possible', 'seed-sand': 'Sand possible', 'seed-snow': 'Snow possible', 'look-first': 'Their look-first mons' },
+  seedNote: 'Not one of the common team patterns. Built from their setters (ladder data) and their look-first mons.',
+  lookFirstNote: 'The mons of theirs to look at first, by type and Speed.',
+  couldAlso: (what, names) => `Could also: ${what} (${names}, learnable: could, not will)`,
+  couldWhat: { 'seed-trick-room': 'Trick Room', 'seed-tailwind': 'Tailwind' },
+  addPlan: '+ Their plan', ideas: 'Ideas', edit: 'Edit this plan', noTargets: (o) => `No common team pattern fits ${o}'s pool yet. Add your own plan.`,
+  theirSide: 'Their side', yourSide: 'Your side', vs: 'vs', tell: 'preview tell', theirMega: 'their Mega',
+  lead: 'Lead', back: 'Back', mega: 'Mega', noMega: 'No Mega', next: 'next', megaOne: 'One Mega per battle.',
+  slotEmpty: (role, n) => `${role} ${n}: empty. Pick from your 6`,
+  slotFilled: (role, n, name, set) => `${role} ${n}: ${name}${set ? ', set attached' : ', no set yet'}. Change`,
+  tapHint: 'Tap your Pokémon below: the first two lead, the next two go in the back.',
+  placed: (name, role) => `${name} placed in ${role}`, removed: (name) => `${name} taken off this plan`, full: 'Lead and Back are full: tap a slot to change it.',
+  moveBack: 'Move to Back', moveLead: 'Move to Lead', remove: 'Remove', startSet: 'Start a set', openSet: 'Open its set', setAttached: 'set attached', noSet: 'no set yet',
+  attachedSay: (name) => `Your ${name} set is attached (your only set for it).`,
+  ready: 'Card ready: 2 lead, 2 back', readyHelp: 'A fact about the slots, not a verdict.',
+  headline: { has: 'Has listed answers', weaker: 'Has a weaker listed answer', pressures: 'Pressures it by type', walls: 'Takes its hits', none: 'No clear link' },
+  headFor: (lead) => `Your lead ${lead}:`, notChecked: 'type and Speed, not damage-checked', checked: 'a calc exists for this pair',
+  tryHead: 'Lead ideas from your 6', tryBtn: 'Use as lead', backHead: 'Back ideas', backBtn: 'Use as back', backOpen: (names) => `Not yet answered by your lead: ${names}`,
+  backAllDone: 'Your lead already pressures everything listed here. Pick the back for your other plans.',
+  needSix: 'Pick 2 or more for your 6 to see lead ideas.',
+  glyph: {
+    answer: (label, anchor) => `✓ ${label}${anchor ? '' : ' (weaker)'}`, contested: (n) => `contested by ${n}`,
+    hit: (m, t, mult, mega) => `×${mult} ${m} → ${t}${mega ? ' (as Mega)' : ''}`, hitSay: (m, t) => `${m} hits ${t} hard by type (not damage)`,
+    wall: (m, t) => `🛡 ${m} vs ${t}`, wallSay: (m, t) => `${m} takes ${t}'s attacks by type`,
+    speed: { first: '⚡▲', second: '⚡▼', depends: '⚡◆', tie: '⚡=' },
+    speedSay: { first: (m, t, mode) => `${m} is faster than ${t}${mode}`, second: (m, t, mode) => `${m} is slower than ${t}${mode}`, depends: (m, t, mode) => `${m} vs ${t}: depends on spreads${mode}`, tie: (m, t, mode) => `${m} and ${t}: coin flip${mode}` },
+    mode: { 'trick-room': ' (Trick Room)', tailwind: ' (their Tailwind)', none: '' },
+    shared: (t) => `⚠ Both hit hard by ${t}`, twoMegas: '⚠ needs 2 Megas (one per battle)',
+  },
+  lights: { speed: 'Speed', calcs: 'Calcs', practised: 'Practised' },
+  lightSay: { speed: (n, of) => `Speed: ${n} of ${of} looked at`, calcs: (n, of, stale) => `Calcs: ${n} of ${of} run${stale ? `, ${stale} out of date` : ''}`, practised: (n, rung) => `Practised: ${n} game${n === 1 ? '' : 's'} (${rung})` },
+  lightNone: 'Pick a lead first', calcsHead: 'Key calcs for this lead', calcAsk: (mine, theirs) => `Does your ${mine} survive their ${theirs}?`, calcOpen: 'Open', calcRun: 'Run it', calcStale: 'out of date',
+  six: 'Your 6', sixEdit: 'Change your 6', sixDone: 'Done', sixMore: 'More than 6: a match uses 6.', sixFromSets: 'chosen in Sets',
+  sixSay: (n) => `${n} of 6 picked`, sixAdd: (name) => `Add ${name} to your 6`, sixRemove: (name) => `Take ${name} out of your 6`,
+  coverage: 'What your 6 covers', covSay: { solid: 'covered', outline: 'covered (weaker)', gap: 'not covered' },
+  fillGap: 'Fill a gap', gapNone: 'No gaps: every plan and look-first mon here has an answer in your 6 (by listed answers or type).',
+  gapFor: (what) => `Gap: ${what}`, gapAdd: (n) => `Add ${n}`, another: 'Another idea', skip: 'Skip this gap',
+  gapWhy: { 4: 'listed answer (anchor)', 3: 'listed answer', 2: 'hits it hard or takes its hits, by type', 1: 'hits it hard only as a Mega', 0.5: 'a super-effective type, but a weaker attacker by stats' },
+  noCandidate: (n) => `None of your 10 hits ${n} hard or takes its hits by type. Check it with a calc.`,
+  freeSwap: (names) => `Your 6 is full. Free to swap (taking it out uncovers nothing): ${names}`,
+  notes: 'Notes: turn 1, win condition, if-then lines', editLines: 'Edit if-then lines', ifThen: (lead, resp) => `IF they lead ${lead} → ${resp}`,
+  game2: 'Game 2 cards', before: 'Before the match: premortem, date, next', more: 'More',
+  locked: { earlier: 'Earlier prep: say whose it is to edit it.', newer: 'Saved by a newer Drafarig: read-only here.' },
+  sheetWait: 'Suggestions appear when the league sheet loads; your saved plans are below.',
 };

@@ -580,3 +580,81 @@ body[data-app="prep"] .layout, body[data-app="prep"] .layout.nodrawer { grid-tem
 .sched-grid .vs { color: var(--muted); font-size: 12px; }
 .chip.you-chip { background: var(--you); color: #fff; border-color: transparent; }
 @media (prefers-color-scheme: dark) { .chip.you-chip { color: #1d2330; } }
+
+/* ===== Battle Prep › Plan: the game-plan board (their plans → your Lead / Back / Mega, lights, your 6) ===== */
+.pboard h3 { margin: 10px 0 6px; }
+.ppills { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 6px; scroll-snap-type: x proximity; }
+.ppill { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-height: 64px; max-width: 14em; padding: 6px 10px; border: 2px solid var(--line); border-left: 6px solid var(--them); border-radius: 10px; background: var(--panel); color: var(--ink); text-align: left; scroll-snap-align: start; }
+.ppill.unsaved { border-style: dashed; border-left-style: solid; }
+.ppill.on { border-color: var(--them); background: var(--thembg); box-shadow: inset 0 -3px 0 var(--them); }
+.ppill.add { border-left-color: var(--line); justify-content: center; font-weight: 600; }
+.ppill .pp-top { display: flex; align-items: center; gap: 4px; font-weight: 700; }
+.ppill .pp-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 11em; }
+.ppill .pp-minis { display: flex; gap: 2px; }
+.ppill .pp-word { font-size: 12px; color: var(--muted); }
+.pb-card { margin: 8px 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+.pb-card.ready { border: 2px solid var(--you); }
+.pb-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 10px; }
+.pb-head h3 { margin: 0; }
+.pb-side { padding: 8px 10px; border-radius: 10px; }
+.pb-side.them { background: var(--thembg); border-left: 4px solid var(--them); background-image: repeating-linear-gradient(135deg, transparent 0 10px, rgba(196, 87, 15, 0.06) 10px 12px); }
+.pb-side.you { background: var(--youbg); border-left: 4px solid var(--you); }
+.pb-lab { display: inline-block; min-width: 3.4em; font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--muted); }
+.pb-mons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.pb-mon { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; min-width: 56px; position: relative; }
+.pb-mon.tell .pt { box-shadow: 0 0 0 3px var(--them); }
+.ps-name { font-size: 12px; max-width: 7em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pb-vs { text-align: center; font-weight: 800; color: var(--muted); margin: 4px 0; letter-spacing: 0.1em; }
+.pb-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 6px 0; }
+.pslot { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; width: 88px; min-height: 96px; padding: 4px; border: 2px solid var(--you); border-radius: 12px; background: var(--panel); color: var(--ink); position: relative; }
+.pslot.empty { border-style: dashed; border-color: var(--muted); background: transparent; }
+.pslot.next { border-color: var(--accent); box-shadow: 0 0 0 3px var(--youbg), 0 0 0 5px var(--accent); }
+.pslot .ps-plus { font-size: 28px; line-height: 1; color: var(--muted); }
+.pslot .ps-next { font-size: 12px; font-weight: 700; color: var(--accent); }
+.pslot .ps-dot { position: absolute; top: 6px; right: 6px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--you); }
+.pslot .ps-dot.set { background: var(--you); }
+.slotmenu { display: flex; flex-wrap: wrap; gap: 6px; padding: 6px 0; }
+.ready-line { color: var(--ok); font-weight: 600; }
+.pb-tray { margin-top: 8px; padding-top: 6px; border-top: 1px dashed var(--line); }
+.pb-trayh { margin: 0 0 4px; }
+.tray-tiles, .six-edit { display: flex; flex-wrap: wrap; gap: 6px; }
+.tslot.btn { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; min-width: 64px; min-height: 64px; padding: 4px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); color: var(--ink); position: relative; }
+.tslot.btn.on { border: 2px solid var(--you); background: var(--youbg); }
+.tslot .tmark { position: absolute; top: 2px; right: 4px; font-size: 12px; font-weight: 800; color: var(--you); }
+.pb-verdict { margin: 10px 0 4px; }
+.pb-verdict p { margin: 0 0 4px; }
+.hl { display: inline-block; padding: 0 8px; border-radius: 999px; font-weight: 700; font-size: 13px; }
+.hl-has { background: var(--okbg); color: var(--ok); } .hl-weaker, .hl-pressures, .hl-walls { background: var(--warnbg); color: var(--warn); } .hl-none { background: var(--tile); color: var(--muted); }
+.glyphs { display: flex; flex-wrap: wrap; gap: 4px; list-style: none; margin: 4px 0; padding: 0; }
+.gl { font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid transparent; }
+.gl.ok { background: var(--okbg); color: var(--ok); } .gl.ok.weak { background: transparent; border-color: var(--ok); }
+.gl.bad { background: var(--badbg); color: var(--bad); } .gl.warn { background: var(--warnbg); color: var(--warn); } .gl.mute { background: var(--tile); color: var(--muted); }
+.pb-try h4 { margin: 10px 0 4px; }
+.tries { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.try { padding: 6px 8px; border: 1px dashed var(--you); border-radius: 10px; }
+.tpair { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
+.lights { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 4px; }
+.light { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); }
+.light .lg { font-size: 16px; }
+.light.l-done { border-color: var(--ok); } .light.l-done .lg { color: var(--ok); }
+.light.l-some .lg { color: var(--you); } .light.l-warn { border-color: var(--warn); background: var(--warnbg); color: var(--warn); }
+.pcalcs { list-style: none; margin: 4px 0; padding: 0; display: grid; gap: 4px; }
+.pcalcs li { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.pb-notes { margin-top: 8px; }
+.pb-six { margin: 8px 0; }
+.covstrip { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 4px 0 8px; padding: 0; }
+.cov { display: inline-flex; align-items: center; gap: 4px; min-height: 32px; padding: 2px 8px; border-radius: 999px; font-size: 12px; position: relative; }
+.cov.c-solid { background: var(--okbg); color: var(--ok); } .cov.c-outline { border: 1px solid var(--ok); color: var(--ok); } .cov.c-gap { background: var(--tile); color: var(--muted); border: 1px dashed var(--muted); }
+.cov .cov-n { max-width: 9em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gapbox { margin: 6px 0; padding: 8px 10px; border: 1px solid var(--warn); border-radius: 10px; background: var(--warnbg); color: var(--ink); }
+.g2cards { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; }
+.g2card { min-height: 44px; border-radius: 10px; } .g2card.empty { border-style: dashed; }
+.pb-before { margin: 10px 0; }
+.pb-before > summary { min-height: 44px; display: list-item; padding-top: 10px; font-weight: 600; }
+@media (min-width: 1024px) {
+  .pboard { display: grid; grid-template-columns: minmax(12em, 16em) minmax(0, 1fr); gap: 0 16px; align-items: start; }
+  .pboard .pb-plans { grid-column: 1; grid-row: 1 / span 2; }
+  .pboard .ppills { flex-direction: column; overflow: visible; }
+  .pboard .ppill { max-width: none; width: 100%; }
+  .pboard .pb-card, .pboard .pb-six { grid-column: 2; }
+}

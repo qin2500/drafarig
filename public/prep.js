@@ -30,7 +30,7 @@ const MODULES = [Sets, Calcs, Plan, Practice, Matchup];
  * copyText(text) -> Promise, readClipboard() -> Promise<string>, persist: {persisted(), persist()} | null, appBuild }
  */
 /** The app shell this Prep needs (public/app.js prepApp.shellVersion). An older shell gets a "Reload" screen and no writes. */
-export const SHELL_VERSION = 2;
+export const SHELL_VERSION = 3; // 3: the shell provides schedule() (the league pairings)
 function outdatedShell(app) {
   const msg = 'Drafarig was updated while this page was open. Reload the page to open Battle Prep. Nothing was changed.';
   return {

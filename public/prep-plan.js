@@ -3,13 +3,14 @@
 // and two Bo3 cards, key-calc slots, coverage in words with at most three flags, and Game day for the real best of three.
 import { suggestPlans, couldBringAgainst, closestPlans } from '../lib/prep-plans.mjs';
 import { ownerOf } from '../lib/prep-matchup.mjs';
-import { flags as computeFlags, planRung, startHere, MAX_FLAGS, recordText } from '../lib/prep-coverage.mjs';
+import { flags as computeFlags, MAX_FLAGS, recordText } from '../lib/prep-coverage.mjs';
 import { itemClauseExclusions, speedBound, boundVsRange, ledgerThem } from '../lib/prep-infer.mjs';
 import { currentVersion, asSet, addVersion, newLineage, defaultVariant, applyReveal, setForSpecies, addRevealed } from '../lib/prep-model.mjs';
 import { speedRange, statValue, natureSign, speedOf } from '../lib/calc/stats.mjs';
 import { battleForme, legalAbilities, learnset } from '../lib/calc/mech.mjs';
 import * as C from './prep-copy.js';
 import { esc, btn, chipBtn, h2, select, term } from './prep-ui.js';
+import * as Board from './prep-board.js';
 import { variantOf, theirSetFor } from './prep-sets.js';
 import { logForm, logActions, logChanges, logInputs } from './prep-practice.js';
 
@@ -44,85 +45,49 @@ function flagText(P, f) {
   return C.FLAG[f.code]?.(p) ?? f.code;
 }
 
-// ---------- Plan tab ----------
+// ---------- Plan tab: the game-plan board ----------
+// The board (public/prep-board.js) replaces the old step list: their plans as pills, your Lead / Back / Mega slots, lead
+// ideas with reasons, the Speed / Calcs / Practised lights and your 6 with what it covers. Around it: game 2 cards, at most
+// three flags, "Before the match" (date, next, premortem, mocks) and Game day. The steps' tools stay reachable from these.
 export function tab(P, ws) {
   const F = facts(P, ws);
-  const st = startHere(ws, F.start);
-  const rules = P.docs.rules.rules;
-  const known = Object.values(rules).filter((r) => r.value !== 'unknown').length;
   const diff = P.rosterDiffOf(ws);
-  const sheet = P.app.sheet();
   const plans = ws.plans.filter((p) => p.kind !== 'idea');
-  const ideas = ws.plans.filter((p) => p.kind === 'idea');
-  const cards = ws.cards.filter((c) => c.kind === 'plan');
   const bo3 = ws.cards.filter((c) => c.kind !== 'plan');
-  const ifThen = ws.cards.reduce((t, c) => t + (c.ifThen ?? []).filter((x) => x.response).length, 0);
-  const slots = keySlots(P, ws);
-  const ran = slots.filter((s) => s.calcId).length;
-  // Game day is the main action only once a match is under way (a game logged or their 6 entered)
   const matchOn = ws.matches.some((m) => (m.games ?? []).length || (m.their6 ?? []).length);
-  const step = (n, facts, action, data = {}) => `<li class="pstep${st?.step === n ? ' start' : ''}"><span class="num">${n}</span> <span class="title">${esc(C.STEP[n].title)}</span>${st?.step === n ? ` <span class="chip ok">${esc(C.START_HERE)}</span>` : ''}<div class="small">${facts}</div>${btn('Open', action, data, { cls: st?.step === n ? '' : 'linkish', primary: st?.step === n && !matchOn, aria: `Open: ${C.STEP[n].title}` })}</li>`;
-  const planList = plans.map((p) => `${esc(p.label || C.PLAN_KIND[p.kind])}${p.kind === 'counterprep' ? ` (${esc(C.PLAN_KIND.counterprep)})` : ''}`).join(' · ') || 'none yet';
-  const rungs = plans.map((p) => `<li>${esc(p.label || C.PLAN_KIND[p.kind])} → ${esc(C.RUNG[planRung(ws, p.id, F)])}</li>`).join('');
   const allFlags = computeFlags(ws, F.flagCtx);
   const shown = allFlags.slice(0, MAX_FLAGS), rest = allFlags.slice(MAX_FLAGS);
   const flagLi = (f) => `<li>⚠ ${esc(flagText(P, f))} ${C.FLAG_ACTION[f.code] ? btn(C.FLAG_ACTION[f.code], 'flag-go', { code: f.code, ref: f.ref ?? '' }, { cls: 'linkish' }) : ''} ${btn('Dismiss', 'flag-dismiss', { code: f.code, ref: f.ref ?? '' }, { cls: 'linkish', aria: `Dismiss: ${flagText(P, f)}` })}</li>`;
   const recs = recordText(ws.mockSets);
+  const boardHtml = Board.board(P, ws, F) ?? savedOnly(P, ws, plans);
+  const g2 = (kind, text) => {
+    const c = bo3.find((x) => x.kind === kind);
+    return c ? `<li>${btn(`${kind === 'bo3-won-g1' ? '🏆' : '↺'} ${C.CARD_KIND[kind]}`, 'open-card', { card: c.id }, { cls: 'g2card' })}${c.turn1Intent ? `<span class="small"> ${esc(c.turn1Intent.slice(0, 80))}</span>` : ''}</li>`
+      : `<li>${btn(`+ ${text}`, 'card-new', { kind }, { cls: 'g2card empty' })}</li>`;
+  };
   return `${h2(`vs ${ws.coach} · Plan`)}
-    <div class="frow"><label class="field" for="ws-date"><span>Match date</span><input id="ws-date" type="date" data-pi="ws-date" value="${esc(/^\d{4}-\d\d-\d\d$/.test(ws.matchDate ?? '') ? ws.matchDate : '')}"></label> ${chipBtn('Next opponent', 'ws-next', {}, ws.isNext)}</div>
-    <p class="small">Known: their ${ws.roster.speciesIds.length} (league sheet${ws.roster.fetchedAt ? `, read ${esc(ws.roster.fetchedAt.slice(0, 16).replace('T', ' '))}` : ''}${sheet?.stale ? '; sheet unreachable now' : ''}). Not known: their 6, sets, Mega, leads, Stat Points.</p>
     ${diff.added.length || diff.removed.length ? `<p class="banner warn">${esc(ws.coach)}'s roster on the sheet changed since you started: ${diff.added.map((x) => `+ ${esc(P.spName(x))}`).join(', ')}${diff.added.length && diff.removed.length ? ', ' : ''}${diff.removed.map((x) => `− ${esc(P.spName(x))}`).join(', ')}. ${btn('Update prep', 'roster-update', {}, { primary: true })} ${btn('Keep old roster', 'roster-keep')}</p>` : ''}
     ${ws.roster.speciesIds.length < 10 ? `<p class="small">${esc(ws.coach)} has ${ws.roster.speciesIds.length} Pokémon so far; plans use what is drafted.</p>` : ''}
-    <h3>Prep path <span class="small muted">(guidance: do steps in any order)</span></h3>
-    <ol class="ppath">
-      ${step(0, `${known} known · ${Object.keys(rules).length - known} don't know`, 'go-rules')}
-      ${step(1, esc(planList), 'plan-step1')}
-      ${step(2, ws.eyesAnswer ? 'Answered' : 'What they could bring against you', 'go-eyes')}
-      ${step(3, `${ws.my6.length} chosen`, 'go-sets-tab')}
-      ${step(4, `${cards.length} card${cards.length === 1 ? '' : 's'} · ${ifThen} if-then line${ifThen === 1 ? '' : 's'} · game 2 cards: ${bo3.length}`, 'plan-step4')}
-      ${step(5, `${ws.speedChecks.length} Speed comparison${ws.speedChecks.length === 1 ? '' : 's'} looked at`, 'go-speed')}
-      ${step(6, `${slots.length ? `${ran} of ${slots.length} key calcs run` : `${ws.calcs.length} calc${ws.calcs.length === 1 ? '' : 's'} saved; key calc ideas appear once a plan card has your lead`}${F.stale.length ? ` · ${F.stale.length} out of date` : ''}`, 'plan-step6')}
-      ${step(7, `${ws.mockSets.length} mock set${ws.mockSets.length === 1 ? '' : 's'}${ws.premortem ? ' · premortem written' : ''}`, 'plan-step7')}
-    </ol>
-    ${st?.step === 'recheck' ? `<p class="chip ok">${esc(C.START_HERE_RECHECK)}</p>` : ''}
-    <p>${btn('Open Game day', 'go-gameday', {}, { primary: matchOn })}${matchOn ? '' : ' <span class="small muted">for the real best of three</span>'}</p>
-    <div id="plan-plans" data-key="plans" tabindex="-1"><h3>1 · Their plans ${term('Their plan')}</h3>
-      ${plans.length ? '' : `<p class="small">What could ${esc(ws.coach)} be trying to do? Two likely plans plus one "they prepped against me" plan are a good start.</p>`}
-      <ul class="plans">${[...plans, ...ideas].map((p) => `<li>${btn(p.label || C.PLAN_KIND[p.kind], 'open-plan', { plan: p.id }, { cls: 'linkish' })} <span class="small muted">${esc(C.PLAN_KIND[p.kind])}${p.members?.length ? ` · ${esc(p.members.map((m) => P.spName(m)).join(', '))}` : ''}${p.megaUser ? ` · Mega ${esc(P.spName(p.megaUser))}` : ''}</span></li>`).join('')}</ul>
-      <p>${btn('Add suggested plans', 'plans-suggest')} ${btn('+ Plan', 'plan-new')}${plans.length > 3 ? ' <span class="small muted">Keep the plans that change a decision; extras can be ideas.</span>' : ''}</p></div>
-    <div id="plan-cards" data-key="cards" tabindex="-1"><h3>4 · Plan cards ${term('If-then line')}</h3>
-      <ul class="plans">${ws.cards.map((c) => `<li>${btn(c.kind === 'plan' ? `Card vs ${(c.vsPlanIds ?? []).map((id) => ws.plans.find((p) => p.id === id)?.label || 'plan').join(', ') || '…'}` : C.CARD_KIND[c.kind], 'open-card', { card: c.id }, { cls: 'linkish' })} <span class="small muted">${esc((c.lead ?? []).map((id) => P.spName(P.lineage(id)?.speciesId)).join(' + '))}</span></li>`).join('')}</ul>
-      <p>${btn('+ Plan card', 'card-new', { kind: 'plan' })} ${bo3.some((c) => c.kind === 'bo3-won-g1') ? '' : btn('+ If I win game 1', 'card-new', { kind: 'bo3-won-g1' })} ${bo3.some((c) => c.kind === 'bo3-lost-g1') ? '' : btn('+ If I lose game 1', 'card-new', { kind: 'bo3-lost-g1' })}</p></div>
-    <div id="plan-slots" data-key="slots"><h3>6 · Key calcs</h3>${slots.length ? `<ul class="plans">${slots.map((s) => `<li>${btn(s.label, 'slot-open', { slot: s.key }, { cls: 'linkish' })} <span class="small muted">${s.calcId ? (s.mark ? { fine: 'Fine', 'not-fine': 'Not fine', unsure: 'Unsure' }[s.mark] : 'run') : 'not run'}</span></li>`).join('')}</ul>` : '<p class="small">Key calc ideas appear once a plan card has your lead and their plan has members.</p>'}</div>
-    <div id="plan-premortem" data-key="premortem"><h3>7 · Mocks + ${term('premortem', 'Premortem')}</h3>
-      <label class="field" for="ws-premortem"><span>${esc(C.PREMORTEM_Q)}</span><input id="ws-premortem" data-pi="ws-premortem" value="${esc(ws.premortem ?? '')}" maxlength="200"></label>
-      <p>${btn('Make a mock brief', 'go-brief')} ${recs.length ? `<span class="small">Mock sets: ${esc(recs.join(', '))}. ${esc(C.RECORD_NOTE)}</span>` : ''}</p></div>
-    <h3>What you've checked <span class="small muted">(not a score)</span> ${term('Prep coverage')}</h3>
-    <ul class="small">${rungs || `<li>No plans yet.</li>`}</ul>
+    <div class="pboard" id="plan-plans" data-key="plans" tabindex="-1">${boardHtml}</div>
     ${shown.length ? `<ul class="flags">${shown.map(flagLi).join('')}</ul>${rest.length ? `<details class="small"><summary>${rest.length} more</summary><ul class="flags">${rest.map(flagLi).join('')}</ul></details>` : ''}` : ''}
+    <section class="pb-g2" id="plan-cards" data-key="cards" tabindex="-1" aria-labelledby="pb-g2-h"><h3 id="pb-g2-h">${esc(C.BOARD.game2)} ${term('If-then line')}</h3>
+      <ul class="g2cards">${g2('bo3-won-g1', 'If I win game 1')}${g2('bo3-lost-g1', 'If I lose game 1')}</ul></section>
+    <p>${btn('⚔ Game day', 'go-gameday', {}, { primary: matchOn })}${matchOn ? '' : ' <span class="small muted">for the real best of three</span>'}</p>
+    <details class="pb-before" id="plan-premortem" data-key="premortem"><summary>${esc(C.BOARD.before)}</summary>
+      <div class="frow"><label class="field" for="ws-date"><span>Match date (yours)</span><input id="ws-date" type="date" data-pi="ws-date" value="${esc(/^\d{4}-\d\d-\d\d$/.test(ws.matchDate ?? '') ? ws.matchDate : '')}"></label> ${chipBtn('Next opponent', 'ws-next', {}, ws.isNext)}</div>
+      <label class="field" for="ws-premortem"><span>${esc(C.PREMORTEM_Q)}</span><input id="ws-premortem" data-pi="ws-premortem" value="${esc(ws.premortem ?? '')}" maxlength="200"></label>
+      <p>${btn('Make a mock brief', 'go-brief')} ${btn('Through their eyes', 'go-eyes', {}, { cls: 'linkish' })} ${btn('Rules you know', 'go-rules', {}, { cls: 'linkish' })} ${recs.length ? `<span class="small">Mock sets: ${esc(recs.join(', '))}. ${esc(C.RECORD_NOTE)}</span>` : ''}</p></details>
     <p class="cantknow">${esc(C.CANT_KNOW)}</p>`;
 }
-
-/** Key calc slots generated from plan cards: does each of your leads survive the first two members of the plan it answers (at most 8). */
-function keySlots(P, ws) {
-  const out = [];
-  if (!P.mech) return out;
-  const v = defaultVariant(ws) ?? variantOf(P, ws);
-  for (const card of ws.cards.filter((c) => c.kind === 'plan')) {
-    const plan = ws.plans.find((p) => card.vsPlanIds?.includes(p.id));
-    if (!plan) continue;
-    const leads = (card.lead ?? []).map((id) => P.lineage(id)).filter(Boolean);
-    for (const mine of leads) {
-      for (const sp of plan.members.slice(0, 2)) {
-        const theirs = theirSetFor(ws, v, sp);
-        const key = `${card.id}|${sp}|${mine.id}`;
-        const calc = ws.calcs.find((c) => c.slotKey === key);
-        out.push({ key, label: `Does your ${P.spName(mine.speciesId)} survive their ${P.spName(sp)}?`, card: card.id, theirSpecies: sp, theirSet: theirs?.id ?? null, mineSet: mine.id, dir: 'survive', calcId: calc?.id ?? null, mark: calc?.mark ?? null });
-        if (out.length >= 8) return out;
-      }
-    }
-  }
-  return out;
+/** Without a readable matchup (earlier prep, or the sheet not loaded): the saved plans and cards, as saved. */
+function savedOnly(P, ws, plans) {
+  const owner = ownerOf(ws);
+  return `<p class="small muted">${esc(owner ? C.BOARD.sheetWait : C.BOARD.locked.earlier)}</p>
+    <ul class="plans">${[...plans, ...ws.plans.filter((p) => p.kind === 'idea')].map((p) => {
+      const card = Board.cardFor(ws, p.id), picks = Board.cardPicks(P, card);
+      return `<li>${btn(p.label || C.PLAN_KIND[p.kind], 'open-plan', { plan: p.id }, { cls: 'linkish' })} <span class="small muted">${esc(C.PLAN_KIND[p.kind])}${p.members?.length ? ` · ${esc(p.members.map((m) => P.spName(m)).join(', '))}` : ''}</span>${picks.bring.length ? `<div class="small">${esc(C.BOARD.lead)}: ${esc(picks.lead.map((x) => P.spName(x)).join(' + ') || '—')} · ${esc(C.BOARD.back)}: ${esc(picks.back.map((x) => P.spName(x)).join(' + ') || '—')}</div>` : ''}</li>`;
+    }).join('') || '<li class="small">No plans yet.</li>'}</ul>
+    ${owner ? `<p>${btn('+ Plan', 'plan-new')}</p>` : ''}`;
 }
 
 // ---------- their plan editor ----------
@@ -168,8 +133,6 @@ function eyes(P, ws) {
 function cardEditor(P, ws, r) {
   const c = ws.cards.find((x) => x.id === r.id);
   if (!c) return `${h2('Not found')}<p>${esc(C.NOT_ON_DEVICE)}</p>`;
-  const six = ws.my6.map((m) => P.lineage(m.setId)).filter(Boolean);
-  const pool = six.length ? six : P.mineSets();
   const theirRoster = P.rosterSpecies(ws);
   if (c.kind !== 'plan') {
     return `${btn('‹ Plan', 'back', {}, { cls: 'back', aria: 'Back to Plan' })}${h2(C.CARD_KIND[c.kind])}
@@ -178,12 +141,11 @@ function cardEditor(P, ws, r) {
       <p class="small">${esc(C.TENDENCY)}</p>${btn('Delete this card', 'card-delete', { card: c.id })}`;
   }
   const lines = c.ifThen ?? [];
+  const picks = Board.cardPicks(P, c);
+  // Lead / Back / Mega are picked on the Plan board (species; sets attach there); this screen keeps the rest of the card
   return `${btn('‹ Plan', 'back', {}, { cls: 'back', aria: 'Back to Plan' })}${h2('Plan card')}
     <p class="small">Against</p><div class="choices" role="group" aria-label="Against their plans">${ws.plans.map((p) => chipBtn(p.label || C.PLAN_KIND[p.kind], 'card-vs', { card: c.id, plan: p.id }, (c.vsPlanIds ?? []).includes(p.id))).join('')}</div>
-    <p class="small">Your 4 ${pool.length > 6 ? '' : ''}</p><div class="choices" role="group" aria-label="Your 4">${pool.map((l) => chipBtn(`${P.spName(l.speciesId)}`, 'card-bring', { card: c.id, set: l.id }, (c.bring4 ?? []).includes(l.id))).join('')}</div>
-    ${(c.bring4 ?? []).length > 4 ? '<p class="small">More than 4: you play 4 per game.</p>' : ''}
-    <p class="small">Your lead (2 of your 4)</p><div class="choices" role="group" aria-label="Lead">${(c.bring4 ?? []).map((id) => chipBtn(P.spName(P.lineage(id)?.speciesId), 'card-lead', { card: c.id, set: id }, (c.lead ?? []).includes(id))).join('')}</div>
-    <p class="small">Mega</p><div class="choices" role="group" aria-label="Your Mega">${chipBtn('No Mega', 'card-mega', { card: c.id, set: '' }, !c.mega)}${(c.bring4 ?? []).filter((id) => P.mech?.items[currentVersion(P.lineage(id) ?? { versions: [{ data: {} }], currentV: 0 })?.data?.item ?? '']?.megaStone).map((id) => chipBtn(P.spName(P.lineage(id).speciesId), 'card-mega', { card: c.id, set: id }, c.mega === id)).join('')}</div>
+    <p class="small">${esc(C.BOARD.lead)}: ${esc(picks.lead.map((x) => P.spName(x)).join(' + ') || '—')} · ${esc(C.BOARD.back)}: ${esc(picks.back.map((x) => P.spName(x)).join(' + ') || '—')}${picks.mega ? ` · ${esc(C.BOARD.mega)}: ${esc(P.spName(picks.megaForm || picks.mega))}` : ''} ${btn('Change on the board', 'back', {}, { cls: 'linkish' })}</p>
     <label class="field" for="card-t1"><span>What your lead does turn 1</span><input id="card-t1" data-pi="card-t1" data-card="${esc(c.id)}" value="${esc(c.turn1Intent ?? '')}" maxlength="160"></label>
     <label class="field" for="card-win"><span>Win condition: what has to be true at the end?${P.docs.meta.prefs?.beginnerPrompts !== false ? '' : ' (optional)'}</span><input id="card-win" data-pi="card-win" data-card="${esc(c.id)}" value="${esc(c.winCondition ?? '')}" maxlength="160"></label>
     <h3>If-then lines ${term('If-then line')}</h3>
@@ -232,7 +194,7 @@ function gameday(P, ws) {
     ${gi === 1 && g1?.result ? (branch ? `<div class="card branch"><p><b>Your card for game 2 (you ${g1.result === 'W' ? 'won' : 'lost'} game 1)</b></p><p>${esc(branch.turn1Intent ?? '')}</p></div>`
       : `<div class="card branch"><p><b>No card for game 2 after a ${g1.result === 'W' ? 'win' : 'loss'}.</b> One question: ${esc(C.BETWEEN_GAMES_Q[0])}</p></div>`) : ''}
     ${gi === 2 ? `<div class="card branch"><p><b>Game 3.</b> What did game 2 show? ${esc(C.BETWEEN_GAMES_Q[0])}</p></div>` : ''}
-    ${card ? `<div class="card"><p><b>${esc(plan.label || '')} card</b>: lead ${(card.lead ?? []).map((id) => esc(P.spName(P.lineage(id)?.speciesId))).join(' + ')}${card.turn1Intent ? `. Turn 1: ${esc(card.turn1Intent)}` : ''}</p>${(card.ifThen ?? []).filter((l) => l.response).map((l) => `<p class="small">IF they lead ${(l.trigger?.theirLead ?? []).map((s) => esc(P.spName(s))).join(' + ')} THEN ${esc(l.response)}</p>`).join('')}</div>` : ''}
+    ${card ? `<div class="card"><p><b>${esc(plan.label || '')} card</b>: lead ${Board.cardPicks(P, card).lead.map((id) => esc(P.spName(id))).join(' + ')}${card.turn1Intent ? `. Turn 1: ${esc(card.turn1Intent)}` : ''}</p>${(card.ifThen ?? []).filter((l) => l.response).map((l) => `<p class="small">IF they lead ${(l.trigger?.theirLead ?? []).map((s) => esc(P.spName(s))).join(' + ')} THEN ${esc(l.response)}</p>`).join('')}</div>` : ''}
     <h3>After game ${gi + 1}</h3>${logForm(P, ws, { kind: 'match', id: m.id, index: gi })}
     <h3>Reveals</h3>${revealForm(P, ws, m)}
     <div class="ledger"><div><h4>What you know about them</h4><ul class="small reveal-list">${[...them].map(([sp, rs]) => `<li><b>${esc(P.spName(sp))}</b><ul>${rs.map((x) => revealRow(P, ws, x)).join('')}</ul></li>`).join('') || '<li>Nothing yet.</li>'}${theirMega ? `<li>Mega: ${esc(P.spName(theirMega))}</li>` : ''}</ul></div>
@@ -297,10 +259,6 @@ export const actions = {
   'go-gameday': (t, P) => P.go({ view: 'ws', wsId: P.route.wsId, kind: 'gameday' }, { push: true }),
   'go-sets-tab': (t, P) => P.go({ view: 'ws', wsId: P.route.wsId, tab: 'sets' }, { push: false }),
   'go-brief': (t, P) => P.go({ view: 'ws', wsId: P.route.wsId, kind: 'brief' }, { push: true }),
-  'plan-step1': (t, P) => P.focusOn('plan-plans'),
-  'plan-step4': (t, P) => P.focusOn('plan-cards'),
-  'plan-step6': (t, P) => P.go({ view: 'ws', wsId: P.route.wsId, tab: 'calcs' }, { push: false }),
-  'plan-step7': (t, P) => P.go({ view: 'ws', wsId: P.route.wsId, tab: 'practice' }, { push: false }),
   // "Next opponent" is one per owner: only this workspace's owner's other workspaces are cleared (never another coach's
   // perspective, and an unassigned workspace only clears other unassigned ones)
   'ws-next': (t, P) => {
@@ -381,24 +339,10 @@ export const actions = {
   },
   'open-card': (t, P) => P.go({ view: 'ws', wsId: P.route.wsId, kind: 'card', id: t.dataset.card }, { push: true }),
   'card-vs': (t, P) => mut(P, (d) => { const c = d.cards.find((x) => x.id === t.dataset.card); const a = c.vsPlanIds ?? []; c.vsPlanIds = a.includes(t.dataset.plan) ? a.filter((x) => x !== t.dataset.plan) : [...a, t.dataset.plan]; }),
-  'card-bring': (t, P) => mut(P, (d) => { const c = d.cards.find((x) => x.id === t.dataset.card); const a = c.bring4 ?? []; c.bring4 = a.includes(t.dataset.set) ? a.filter((x) => x !== t.dataset.set) : [...a, t.dataset.set]; c.lead = (c.lead ?? []).filter((x) => c.bring4.includes(x)); c.back = c.bring4.filter((x) => !c.lead.includes(x)); if (c.mega && !c.bring4.includes(c.mega)) c.mega = null; }),
-  'card-lead': (t, P) => mut(P, (d) => { const c = d.cards.find((x) => x.id === t.dataset.card); const a = c.lead ?? []; c.lead = a.includes(t.dataset.set) ? a.filter((x) => x !== t.dataset.set) : [...a, t.dataset.set].slice(-2); c.back = (c.bring4 ?? []).filter((x) => !c.lead.includes(x)); }),
-  'card-mega': (t, P) => mut(P, (d) => { d.cards.find((x) => x.id === t.dataset.card).mega = t.dataset.set || null; }),
   'card-delete': (t, P) => { mut(P, (d) => { d.cards = d.cards.filter((c) => c.id !== t.dataset.card); }); P.back(); },
   'ifthen-add': (t, P) => mut(P, (d) => { d.cards.find((x) => x.id === t.dataset.card).ifThen.push({ trigger: { theirLead: [] }, response: '' }); }),
   'ifthen-remove': (t, P) => mut(P, (d) => { d.cards.find((x) => x.id === t.dataset.card).ifThen.splice(Number(t.dataset.i), 1); }),
   'ifthen-lead': (t, P) => mut(P, (d) => { const l = d.cards.find((x) => x.id === t.dataset.card).ifThen[Number(t.dataset.i)]; const a = l.trigger.theirLead ?? []; l.trigger.theirLead = a.includes(t.dataset.species) ? a.filter((x) => x !== t.dataset.species) : [...a, t.dataset.species].slice(-2); }),
-  'slot-open': (t, P) => {
-    const ws = W(P);
-    const s = keySlots(P, ws).find((x) => x.key === t.dataset.slot);
-    if (!s) return;
-    if (s.calcId) return P.go({ view: 'ws', wsId: ws.id, kind: 'calcs', id: s.calcId }, { push: true });
-    const theirL = s.theirSet ? P.lineage(s.theirSet, ws) : null;
-    const mv = theirL ? currentVersion(theirL).data.moves.filter((m) => P.mech.moves[m]?.category !== 'Status').sort((a, b) => P.mech.moves[b].basePower - P.mech.moves[a].basePower)[0] ?? '' : '';
-    // an unsaved quick check is never replaced silently (P.prefill asks first)
-    P.prefill(ws, 'cd', { a: { side: 'theirs', species: s.theirSpecies, setId: s.theirSet }, d: { side: 'mine', species: P.lineage(s.mineSet).speciesId, setId: s.mineSet }, move: mv, crit: false, hits: 0, firstHitOnly: false, moveState: {}, field: {}, aState: {}, dState: {}, calcId: null, slotFromCardId: s.card, slotKey: s.key },
-      { view: 'ws', wsId: ws.id, kind: 'calcs', id: 'new' });
-  },
   'match-start': (t, P) => {
     const ws = W(P), ui = P.wsUi(ws.id), cur = currentMatch(ws, ui);
     // mid-set, a stray tap must not bury the match in progress
@@ -451,6 +395,7 @@ export const actions = {
   },
   'rv-del': (t, P) => { mut(P, (d) => { d.reveals = d.reveals.filter((x) => x.id !== t.dataset.reveal); }); P.toast('Reveal removed'); },
   ...logActions,
+  ...Board.actions,
 };
 export const changes = {
   'plan-field': (t, P) => mut(P, (d) => { d.plans.find((x) => x.id === t.dataset.plan).field = t.value; }),

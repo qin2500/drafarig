@@ -18,13 +18,13 @@ const MODE_ICON = { 'trick-room': 'i-tr', tailwind: 'i-tw', sun: 'i-sun', rain: 
 const keyOf = (pov, opp) => `${pov}|${opp}`;
 export const briefUi = (P, pov, opp) => ((P.ui.brief ??= {})[keyOf(pov, opp)] ??= { scenario: 'none', sel: [], showAll: false, lens: '10' });
 /** "Your 6" for a matchup: the shortlist plus the species of the sets chosen for the match. */
-function sixOf(P, ws) {
+export function sixOf(P, ws) {
   if (!ws) return [];
   const fromSets = (ws.my6 ?? []).map((m) => P.lineage(m.setId)?.speciesId).filter(Boolean);
   return [...new Set([...(ws.shortlist ?? []), ...fromSets])];
 }
 /** Saved Speed facts: yours only for the confirmed identity (sets in My sets), theirs from this workspace's sets. */
-function savedSpeeds(P, pov, ws) {
+export function savedSpeeds(P, pov, ws) {
   const out = { mine: {}, theirs: {} };
   if (!P.mech) return out;
   const entry = (l) => {
@@ -52,11 +52,11 @@ function savedSpeeds(P, pov, ws) {
   }
   return out;
 }
-/** The briefing for (pov, opp), memoised on everything it reads. */
-export function modelFor(P, pov, opp, ws) {
+/** The briefing for (pov, opp), memoised on everything it reads. lens '10' forces your whole pool (the Plan board's input). */
+export function modelFor(P, pov, opp, ws, { lens: forced = null } = {}) {
   const st = briefUi(P, pov.name, opp.name);
   const six = sixOf(P, ws).filter((id) => pov.picks.some((p) => p.id === id));
-  const lens = st.lens === '6' && six.length ? '6' : '10';
+  const lens = forced === '10' ? '10' : st.lens === '6' && six.length ? '6' : '10';
   const mineIds = lens === '6' ? six : pov.picks.map((p) => p.id).filter(Boolean);
   const saved = savedSpeeds(P, pov, ws);
   const L = P.league();

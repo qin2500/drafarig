@@ -113,11 +113,14 @@ test('Game day: game 3 never shows the game-2 card; a new match mid-set asks fir
   assert.match(T(app), /Set 1–1/);
 });
 
-test('Plan tab: on a new opponent the only primary action is the "Start here" step, and it goes to its section', async (t) => {
+test('Plan tab: on a new opponent nothing competes with the one ringed "next" slot (the board replaces the step list)', async (t) => {
   const app = await bootApp({ mode: `prep/w/${WS}/plan`, storage: device() });
   t.after(() => app.restore());
   const primaries = findAll(parseHtml(app.html()), (n) => n.tag === 'button' && hasClass(n, 'primary'));
-  assert.deepEqual(primaries.map((n) => n.attrs['data-pa']), ['plan-step1']);
+  assert.deepEqual(primaries.map((n) => n.attrs['data-pa']), []);
+  const next = findAll(parseHtml(app.html()), (n) => n.tag === 'button' && hasClass(n, 'next'));
+  assert.deepEqual(next.map((n) => [n.attrs['data-pa'], n.attrs['data-role'], n.attrs['data-i']]), [['pb-slot', 'lead', '0']]);
+  assert.match(next[0].attrs['aria-label'], /^Lead 1: empty/);
   assert.ok(find(parseHtml(app.html()), (n) => n.attrs.id === 'plan-plans' && n.attrs.tabindex === '-1'));
   assert.equal(find(parseHtml(app.html()), (n) => n.attrs.id === 'ws-date').attrs.type, 'date');
 });
