@@ -34,6 +34,35 @@ export function koWords(ko, { hits = 1, uses = 1 } = {}) {
   return `${uses === 1 ? 'the move KOs' : `${uses} uses KO`} in ${n} of ${d} cases (${about})`;
 }
 
+// ---------- calc pictures (the words always come first; bars and strips are aria-hidden) ----------
+/**
+ * Good or bad for you, from the side you prepare (VGC §7.1): your hit that KOs every roll is good, their hit that KOs every
+ * roll is bad, a split is "depends". ko: {num, den}; attackerSide: 'mine' | 'theirs'. -> {cls: ok|bad|warn, glyph}
+ */
+export function outcomeOf(ko, attackerSide) {
+  const n = BigInt(ko.num), d = BigInt(ko.den);
+  if (n !== 0n && n !== d) return { cls: 'warn', glyph: '◐' };
+  const good = attackerSide === 'mine' ? n === d : n === 0n;
+  return { cls: good ? 'ok' : 'bad', glyph: good ? '✓' : '✕' };
+}
+/** The defender's HP bar with the damage band (first hit, min to max % of max HP; capped at the bar's end). */
+export function hpBar(range, maxHP, cls = '') {
+  const lo = Math.min(100, pct(range.min, maxHP)), hi = Math.min(100, pct(range.max, maxHP));
+  return `<span class="hpbar ${esc(cls)}" aria-hidden="true"><span class="hpband" style="left:${100 - hi}%;width:${Math.max(1, hi - lo)}%"></span><span class="hpleft" style="width:${100 - hi}%"></span></span>`;
+}
+/**
+ * The KO picture: 16 cells when the fraction is exactly k of 16 (one hit, one use); otherwise a proportional bar with the
+ * exact fraction in the words. Never cells for a fraction that isn't over 16.
+ */
+export function rollStrip(ko, { hits = 1, cls = '' } = {}) {
+  const n = BigInt(ko.num), d = BigInt(ko.den);
+  if (hits === 1 && 16n % d === 0n) {
+    const k = Number((n * 16n) / d);
+    return `<span class="rollstrip ${esc(cls)}" aria-hidden="true">${Array.from({ length: 16 }, (_, i) => `<span class="cell${i < k ? ' ko' : ''}"></span>`).join('')}</span>`;
+  }
+  return `<span class="fracbar ${esc(cls)}" aria-hidden="true"><span class="fill" style="width:${Number((n * 1000n) / d) / 10}%"></span></span>`;
+}
+
 /** Headline for one exact result: "48–56% of Pelipper's HP · no roll KOs (0 of 16)". */
 export function headline(r, defName) {
   const lo = pct(r.range.min, r.maxHP), hi = pct(r.range.max, r.maxHP);

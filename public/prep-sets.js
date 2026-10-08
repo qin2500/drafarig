@@ -4,10 +4,10 @@
 import { checkSet, setStats, legalAbilities, learnset, battleForme, toID } from '../lib/calc/mech.mjs';
 import { STAT_IDS, SP_PER_STAT, SP_TOTAL, spTotal, speedRange, natureSign, statValue } from '../lib/calc/stats.mjs';
 import { parseTeam, exportSet, setKey } from '../lib/paste.mjs';
-import { newLineage, addVersion, setCurrent, currentVersion, versionOf, asSet, provenanceAll, weakestSource, guessSet, commonSpread, cleanSetData, emptyCosmetic, seenByWho, pruneVersions, referencedVersions } from '../lib/prep-model.mjs';
+import { newLineage, addVersion, setCurrent, currentVersion, versionOf, asSet, provenanceAll, weakestSource, guessSet, commonSpread, cleanSetData, emptyCosmetic, seenByWho, pruneVersions, referencedVersions, SOURCE_RANK } from '../lib/prep-model.mjs';
 import { SOURCES } from '../lib/prep-schema.mjs';
 import * as C from './prep-copy.js';
-import { esc, btn, chipBtn, h2, select, sourceChip, term } from './prep-ui.js';
+import { esc, attrs, btn, chipBtn, h2, select, sourceChip, term } from './prep-ui.js';
 
 const THEIR_SOURCES = ['sheet-open', 'seen-vs-me', 'seen-vs-others', 'ladder', 'my-guess', 'counterprep-guess'];
 const SP_SOURCES = ['seen-vs-me', 'seen-vs-others', 'ladder', 'my-guess', 'counterprep-guess'];
@@ -58,19 +58,44 @@ export function spMeter(sp) {
 }
 
 // ---------- Sets tab ----------
+// ---------- the team grid (UX §3): portraits with a set ring, the source in words underneath ----------
+const RING_STYLE = { mine: 'solid', 'sheet-open': 'solid', 'seen-vs-me': 'solid', 'seen-vs-others': 'solid', fixed: 'solid', ladder: 'dashed', 'my-guess': 'dotted', 'counterprep-guess': 'dotted' };
+const RING_FIELDS = ['item', 'ability', 'moves', 'sp'];
+/** Each field's source on a set version: {item, ability, moves (the weakest of its moves), sp}; null = unknown. */
+export function fieldSources(cur, side = 'theirs') {
+  if (!cur) return { item: null, ability: null, moves: null, sp: null };
+  const prov = cur.provenance ?? {}, data = cur.data;
+  // your own set is yours: every filled field is known (shown solid, said "yours")
+  if (side === 'mine') return { item: data.item ? 'mine' : null, ability: data.ability ? 'mine' : null, moves: (data.moves ?? []).some(Boolean) ? 'mine' : null, sp: data.sp === 'unknown' ? null : 'mine' };
+  const one = (f) => (data[f] ? prov[f]?.source ?? null : null);
+  const moves = (data.moves ?? []).map((m, i) => (m ? prov.moves?.[i]?.source ?? null : null)).filter(Boolean);
+  return { item: one('item'), ability: one('ability'), moves: moves.length ? moves.sort((x, y) => (SOURCE_RANK[x] ?? 0) - (SOURCE_RANK[y] ?? 0))[0] : null,
+    sp: data.sp === 'unknown' ? null : prov.sp?.source ?? null };
+}
+/** A portrait inside its set ring: each quarter is one field, styled by its source (gap = unknown). Words carry the meaning. */
+export function setRing(P, sp, cur, side, size = 'md') {
+  const src = fieldSources(cur, side);
+  const cls = RING_FIELDS.map((f) => `r-${f}-${src[f] ? RING_STYLE[src[f]] ?? 'dotted' : 'gap'}`).join(' ');
+  return `<span class="sring ${side} ${cls}" aria-hidden="true">${P.pt(sp, { size })}</span>`;
+}
+const ringSay = (cur, side = 'theirs') => { const src = fieldSources(cur, side); return RING_FIELDS.map((f) => `${C.SETGRID.field[f]}: ${src[f] ? (src[f] === 'mine' ? C.SETGRID.yours : C.SOURCE[src[f]]) : C.SETGRID.unknown}`).join('; '); };
+
 export function tab(P, ws) {
   const v = variantOf(P, ws);
   const roster = P.rosterSpecies(ws);
   const diff = P.rosterDiffOf(ws);
-  const rows = roster.map((sp) => {
+  const tiles = roster.map((sp) => {
     const l = theirSetFor(ws, v, sp);
     const others = ws.theirSets.filter((s) => s.speciesId === sp && s.id !== l?.id).length;
     const cur = l ? currentVersion(l) : null;
     const weak = cur ? weakestSource(cur.provenance, cur.data) : null;
-    return `<li class="setrow">${btn(P.spName(sp), l ? 'open-their-set' : 'guess-one', { set: l?.id ?? '', species: sp }, { cls: 'linkish' })} <span class="small">${esc(l ? setLabel(P, l) : 'no set yet')}</span> ${weak ? sourceChip(weak) : ''}${others ? ` <span class="small muted">+${others} other set${others === 1 ? '' : 's'}</span>` : ''}${diff.removed.includes(sp) ? ' <span class="chip unc">No longer on their roster</span>' : ''}</li>`;
+    const word = l ? (weak ? C.SOURCE[weak] : C.SETGRID.unknown) : C.SETGRID.noSet;
+    const label = `${P.spName(sp)}: ${l ? `${setLabel(P, l)}. ${ringSay(cur)}` : C.SETGRID.noSetSay}`;
+    return `<li class="settile${l ? '' : ' none'}${diff.removed.includes(sp) ? ' removed' : ''}"><button${attrs({ type: 'button', class: 'st-btn', 'data-pa': l ? 'open-their-set' : 'guess-one', 'data-set': l?.id ?? '', 'data-species': sp, 'aria-label': label })}>${setRing(P, sp, cur, 'theirs')}<span class="st-name">${esc(P.spName(sp))}</span></button>
+      <span class="st-src small">${weak ? sourceChip(weak) : `<span class="chip">${esc(word)}</span>`}</span>${others ? `<span class="small muted">+${others} other set${others === 1 ? '' : 's'}</span>` : ''}${diff.removed.includes(sp) ? '<span class="chip unc">No longer on their roster</span>' : ''}</li>`;
   }).join('');
   const removedSets = ws.theirSets.filter((s) => !roster.includes(s.speciesId));
-  const vchips = ws.variants.map((x) => chipBtn(`${C.VARIANT_ROLE[x.role]}${x.name ? `: ${x.name}` : ''}`, 'pick-variant', { variant: x.id }, x.id === v?.id)).join('');
+  const vchips = ws.variants.map((x) => chipBtn(`${C.SETGRID.roleIcon[x.role] ?? ''} ${C.VARIANT_ROLE[x.role]}${x.name ? `: ${x.name}` : ''}`.trim(), 'pick-variant', { variant: x.id }, x.id === v?.id)).join('');
   const my6 = myTeamRows(P, ws);
   const mega = roster.filter((sp) => P.mech && Object.values(P.mech.items).some((i) => i.megaStone?.[sp]));
   return `${h2('Sets')}
@@ -79,7 +104,8 @@ export function tab(P, ws) {
     <div class="choices" role="group" aria-label="Versions of their team">${vchips}${btn('+ New version', 'variant-new')}</div>
     ${v ? `<p class="small">${esc(C.VARIANT_ROLE_HELP[v.role])}${v.whyBuilt ? ` Why: ${esc(v.whyBuilt)}` : ''} ${btn('Edit', 'open-variant', { variant: v.id })}</p>` : '<p class="small">Start from labelled ladder guesses or paste a team you have seen. Guesses are labelled "Ladder", never shown as their set.</p>'}
     ${ws.variants.length > 3 ? `<p class="small muted">You have ${ws.variants.length} versions. Keep the ones that change one of your decisions.</p>` : ''}
-    <ul class="setrows">${rows}</ul>
+    ${roster.length ? `<p class="small muted ringkey">${esc(C.SETGRID.key)}</p>` : ''}
+    <ul class="setgrid">${tiles}</ul>
     ${removedSets.length ? `<p class="small">Kept for Pokémon no longer on their roster: ${removedSets.map((s) => esc(P.spName(s.speciesId))).join(', ')}.</p>` : ''}
     ${mega.length > 1 ? `<p class="small">${mega.length} of their Pokémon can Mega Evolve; only one can per battle.</p>` : ''}
     <div class="actions">${btn('Start from guesses', 'guess-all', {}, { primary: !ws.theirSets.length })} ${btn('Paste a team', 'go-import')} ${btn('Export…', 'go-export')}</div>
@@ -92,18 +118,21 @@ function myTeamRows(P, ws) {
   const myRoster = P.coachRoster(me).filter((id) => !P.mech || (P.mech.species[id] && !P.mech.species[id].mega));
   const lib = P.mineSets();
   const inSix = new Set(ws.my6.map((m) => m.setId));
-  if (!P.canWriteMine()) return `<p class="small">${esc(C.POV.mineViewing(me))}</p>`;
+  if (!P.canWriteMine()) return `<p class="small">🔒 ${esc(C.POV.mineViewing(me))}</p>`;
   const rule = P.docs.rules.rules.sixPerMatch?.value;
-  const rows = myRoster.map((sp) => {
+  const tiles = myRoster.map((sp) => {
     const sets = lib.filter((s) => s.speciesId === sp);
-    if (!sets.length) return `<li class="setrow">${esc(P.spName(sp))} <span class="small muted">no set yet</span> ${btn('Create set', 'my-create', { species: sp })}</li>`;
-    return `<li class="setrow">${esc(P.spName(sp))} ${sets.map((s) => chipBtn(`${s.name || 'Set'} v${s.currentV}${seenByWho(s).length ? ` · seen by ${seenByWho(s).length}` : ''}`, 'toggle-six', { set: s.id }, inSix.has(s.id))).join('')} ${btn('Edit', 'open-my-set', { set: sets.find((s) => inSix.has(s.id))?.id ?? sets[0].id }, { cls: 'linkish' })}</li>`;
+    if (!sets.length) return `<li class="settile none mine"><span class="st-btn static">${setRing(P, sp, null, 'mine')}<span class="st-name">${esc(P.spName(sp))}</span></span><span class="small muted">${esc(C.SETGRID.noSet)}</span> ${btn('Create set', 'my-create', { species: sp })}</li>`;
+    const chosen = sets.find((s) => inSix.has(s.id)) ?? sets[0];
+    const cur = currentVersion(chosen);
+    return `<li class="settile mine${sets.some((s) => inSix.has(s.id)) ? ' in6' : ''}"><span class="st-btn static" role="img" aria-label="${esc(`${P.spName(sp)}: ${ringSay(cur, 'mine')}`)}">${setRing(P, sp, cur, 'mine')}<span class="st-name">${esc(P.spName(sp))}</span>${sets.some((s) => inSix.has(s.id)) ? `<span class="st-six" aria-hidden="true">✓</span>` : ''}</span>
+      <span class="st-sets">${sets.map((s) => chipBtn(`${s.name || 'Set'} v${s.currentV}${seenByWho(s).length ? ` · 👁 seen by ${seenByWho(s).length}` : ''}`, 'toggle-six', { set: s.id }, inSix.has(s.id))).join('')}</span> ${btn('Edit', 'open-my-set', { set: chosen.id }, { cls: 'linkish' })}</li>`;
   }).join('');
   const items = ws.my6.map((m) => P.lineage(m.setId)).filter(Boolean).map((l) => currentVersion(l).data.item).filter(Boolean);
   const dupItem = items.find((it, i) => items.indexOf(it) !== i);
   return `<p class="small">${ws.my6.length} of 6 chosen${rule === 'unknown' || !rule ? ' (your 6 for the whole set while that rule is "don\'t know")' : ''}.${ws.my6.length > 6 ? ' Showdown teams have 6; keep the extra ones as alternatives.' : ''}</p>
     ${dupItem ? `<p class="banner warn">${esc(C.TEAM_WARNING['item-clause']({ name: P.name('items', dupItem) }))}</p>` : ''}
-    <ul class="setrows">${rows || '<li>No roster found for you on the sheet.</li>'}</ul>`;
+    <ul class="setgrid">${tiles || '<li>No roster found for you on the sheet.</li>'}</ul>`;
 }
 
 // ---------- set editor (theirs and mine) ----------

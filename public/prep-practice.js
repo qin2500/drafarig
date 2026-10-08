@@ -19,24 +19,42 @@ const games = (m) => (m.games ?? []).filter((g) => !g.draft);
 const rec = (m) => `${games(m).filter((g) => g.result === 'W').length}–${games(m).filter((g) => g.result === 'L').length}`;
 
 // ---------- Practice tab ----------
+/**
+ * Practice as a record board (UX §5, VGC §7.4): mock sets as cards with one pip per game (won ✓ / lost ✕ / not logged ○)
+ * and counts in words, never a rate; findings as cards with a severity bar and word, the mechanism, status and 0–3
+ * confidence bars from the existing confidence rule.
+ */
 export function tab(P, ws) {
   const recs = recordText(ws.mockSets);
   const open = ws.findings.filter((f) => !['fixed', 'rejected'].includes(f.status));
   const unretested = ws.revisions.filter((r) => !r.retest && !r.revertedBy);
   return `${h2('Practice')}
     ${ws.mockSets.length ? '' : `<p>Mocks are practice games against a friend playing ${esc(ws.coach)}'s team. Send them a brief, then log each game in under a minute. ${term('Mock')}</p>`}
-    <ul class="mocks">${ws.mockSets.slice().reverse().map((m) => `<li>${btn(`${m.date} · ${m.partner || 'partner'}`, 'open-mock', { mock: m.id }, { cls: 'linkish' })} <span class="small">${esc(m.purpose || 'no purpose')} · ${rec(m)} · ${esc(C.FIDELITY[m.fidelity] ?? '')} · ${esc(C.CONDITION[m.simulatedDisclosure] ?? '')}</span></li>`).join('')}</ul>
-    ${recs.length ? `<p class="small">Records: ${esc(recs.join(', '))}. ${esc(C.RECORD_NOTE)}</p>` : ''}
+    ${ws.mockSets.length ? `<h3>${esc(C.PRACTICE.mocks)}</h3><ul class="mockcards">${ws.mockSets.slice().reverse().map((m) => mockCard(P, ws, m)).join('')}</ul>` : ''}
+    ${recs.length ? `<p class="small muted">${esc(C.RECORD_NOTE)}</p>` : ''}
     <h3>Findings ${term('Finding')}</h3>
-    ${open.length ? `<ul class="findings">${open.map((f) => findingRow(P, ws, f)).join('')}</ul>` : '<p class="small">No open findings. Debrief a mock to turn its games into findings.</p>'}
+    ${open.length ? `<ul class="findcards">${open.map((f) => findingRow(P, ws, f)).join('')}</ul>` : `<p class="small ok-line">✓ ${esc(C.PRACTICE.noOpen)}</p>`}
     <p>${btn('+ Finding', 'finding-new', {}, { cls: 'linkish' })}</p>
-    ${unretested.length ? `<p class="small">${unretested.length} change${unretested.length === 1 ? '' : 's'} not retested yet.</p>` : ''}
+    ${unretested.length ? `<p class="small">⟳ ${unretested.length} change${unretested.length === 1 ? '' : 's'} not retested yet.</p>` : ''}
     <p>${btn('Revision log', 'go-revisions')} ${btn('Help a friend practise (pilot card)', 'go-pilot')} ${term('What is a pilot card?', 'Pilot card')}</p>
     <div class="bottombar">${btn('Make a mock brief', 'go-brief', {}, { primary: true })}${btn('Log a game', 'go-log')}</div>`;
 }
+function mockCard(P, ws, m) {
+  const all = m.games ?? [];
+  const w = all.filter((g) => !g.draft && g.result === 'W').length, l = all.filter((g) => !g.draft && g.result === 'L').length;
+  const role = ws.variants.find((v) => (m.variantIds ?? []).includes(v.id))?.role;
+  const pip = (g, i) => { const k = g.draft || !g.result ? 'draft' : g.result; return `<li class="pip pip-${k}" title="${esc(`Game ${i + 1}: ${C.PRACTICE.pip[k]}`)}"><span aria-hidden="true">${C.PRACTICE.pipGlyph[k]}</span><span class="vh">Game ${i + 1}: ${esc(C.PRACTICE.pip[k])}</span></li>`; };
+  return `<li class="mockcard">${btn(`${m.date} · ${m.partner || 'partner'}`, 'open-mock', { mock: m.id }, { cls: 'linkish' })} <span class="small">${esc(m.purpose || 'no purpose')}</span>
+    <p class="small">${role ? `<span class="chip">${esc(`${C.SETGRID.roleIcon[role] ?? ''} ${C.VARIANT_ROLE[role]}`.trim())}</span> ` : ''}${m.fidelity ? `<span class="chip">${esc(C.FIDELITY[m.fidelity] ?? '')}</span> ` : ''}${m.simulatedDisclosure ? `<span class="small muted">${esc(C.CONDITION[m.simulatedDisclosure] ?? '')}</span>` : ''}</p>
+    ${all.length ? `<ul class="pips">${all.map(pip).join('')}</ul>` : ''}<p class="small">${esc(C.PRACTICE.recordLine(w, l))}</p></li>`;
+}
 function findingRow(P, ws, f) {
   const conf = confidenceOf(ws, f);
-  return `<li>${btn(f.statement || 'Finding', 'open-finding', { finding: f.id }, { cls: 'linkish' })} <span class="small">${esc(C.SEVERITY[f.severity])} · confidence ${esc(C.CONFIDENCE[conf.level])} · ${esc(C.FINDING_STATUS[f.status])}</span></li>`;
+  const bars = { none: 0, low: 1, medium: 2, high: 3 }[conf.level] ?? 0;
+  const mech = f.mechanism && C.MECHANISM[f.mechanism] ? `${C.PRACTICE.mechGlyph[f.mechanism] ?? '•'} ${C.MECHANISM[f.mechanism]}` : '';
+  return `<li class="findcard sev-${esc(f.severity)}">${btn(f.statement || 'Finding', 'open-finding', { finding: f.id }, { cls: 'linkish' })}
+    <p class="small"><b class="sevword">${esc(C.SEVERITY[f.severity])}</b>${mech ? ` · ${esc(mech)}` : ''} · <span class="chip">${esc(C.FINDING_STATUS[f.status])}</span>
+    <span class="confbars c${bars}" role="img" aria-label="${esc(`confidence ${C.CONFIDENCE[conf.level]}`)}">${[1, 2, 3].map((i) => `<span class="cb${i <= bars ? ' on' : ''}"></span>`).join('')}</span> <span class="muted">confidence ${esc(C.CONFIDENCE[conf.level])}</span></p></li>`;
 }
 export function confidenceOf(ws, f) {
   const all = [...ws.mockSets.flatMap((m) => games(m).map((g) => ({ ...g, variantId: m.blind ? `blind:${m.id}` : (m.variantIds ?? []).join(','), partner: m.partner }))), ...ws.matches.flatMap((m) => games(m).map((g) => ({ ...g, variantId: 'match', partner: 'match' })))];

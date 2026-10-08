@@ -629,6 +629,7 @@ export function createPrep(app) {
         <li>${btn('My sets', 'go-mysets', {}, { cls: 'linkish' })} <span class="small muted">${mineCount} set${mineCount === 1 ? '' : 's'} in your library</span> ${btn('Paste your team', 'go-mysets-import', {}, { cls: 'linkish' })}</li>
         <li>${btn('Help a friend practise (pilot card)', 'go-pilot', {}, { cls: 'linkish' })}</li>
         <li>${btn('Backup & restore', 'go-backup', {}, { cls: 'linkish' })} <span class="small muted backup-line">${esc(C.HOME.savedLocal)} Last backup: ${meta.lastBackupAt ? `${backupAge} days ago` : 'never'} (${meta.changesSinceBackup ?? 0} changes since).</span></li>
+        <li class="chat-off"><span>${esc(C.CHAT.name)}</span> <span class="small muted">${esc(C.CHAT.notConnected)}</span></li>
       </ul>
       <details class="howto"><summary>How prep works here (1 minute)</summary><ol>${C.HOME.how.map((x) => `<li>${esc(x)}</li>`).join('')}</ol></details>
       ${usage > USAGE_BUDGET_CHARS * 0.85 ? `<p class="banner warn">Prep is using most of the space this browser allows. Archive finished opponents to a file. ${btn('Backup & restore', 'go-backup')}</p>` : ''}`;

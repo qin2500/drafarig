@@ -9,7 +9,7 @@ import { battleForme, setStats, checkSet, toID } from '../lib/calc/mech.mjs';
 import { speedOf, statValue, natureSign, speedRange, compareSpeed, STAT_IDS } from '../lib/calc/stats.mjs';
 import { currentVersion, versionOf, asSet, addVersion, defaultVariant, commonSpread } from '../lib/prep-model.mjs';
 import * as C from './prep-copy.js';
-import { esc, btn, chipBtn, h2, select, resultBlock, rollsDetail, howCalculated, ladder, koWords, headline, term, noDigits } from './prep-ui.js';
+import { esc, btn, chipBtn, h2, select, resultBlock, rollsDetail, howCalculated, ladder, koWords, headline, term, noDigits, outcomeOf, hpBar, rollStrip } from './prep-ui.js';
 import { variantOf, theirSetFor, addGuess, createMySet } from './prep-sets.js';
 
 const MAX_GRID = 3;
@@ -106,19 +106,50 @@ export function tab(P, ws) {
     <p>${btn('What would it take?', 'go-threshold', {}, { cls: 'linkish' })} <span class="small muted">the cheapest Stat Points to outspeed, survive or KO</span></p>
     <div class="bottombar">${btn('Quick check', 'calc-new', {}, { primary: true })}${btn('Speed', 'go-speed')}</div>`;
 }
+/**
+ * A notebook card (UX §4, VGC §7.1): attacker → type-coloured move → defender as portraits; for an exact result the words
+ * first, then the defender's HP band and the KO picture (16 roll cells only when the fraction is k of 16; otherwise an
+ * exact-fraction bar). Colour says good or bad for you (from the side you prepare), always beside a glyph and words. An
+ * out-of-date card is grey with no number and a Re-check; "no number" results stay a grey tile with no digits.
+ */
 function calcCard(P, ws, c, stale) {
-  const sc = c.scenario;
-  const who = `${P.spName(sc.attacker.set.species)} ${P.name('moves', sc.move.id)} → ${P.spName(sc.defender.set.species)}`;
+  const sc = c.scenario, A = sc.attacker.set.species, D = sc.defender.set.species;
+  const side = c.refs?.attacker?.side ?? null;
+  const mv = P.mech?.moves[sc.move.id];
+  const label = `${P.spName(A)} ${P.name('moves', sc.move.id)} → ${P.spName(D)}`;
+  const cat = mv ? C.CALCCARD.category[mv.category] ?? '' : '';
+  const pic = `<span class="cc-who" aria-hidden="true">${P.pt(A, { size: 'sm' })}<span class="cc-arrow">→</span><span class="ty ty-${esc((mv?.type ?? '').toLowerCase())} movechip">${esc(P.name('moves', sc.move.id))}</span>${cat ? `<span class="cc-cat" title="${esc(mv.category)}">${esc(cat)}</span>` : ''}<span class="cc-arrow">→</span>${P.pt(D, { size: 'sm' })}</span>`;
   const reason = stale[0];
-  let body;
+  let body, tone = 'none';
   if (reason) {
     const nm = reason.side ? P.spName(sc[reason.side].set.species) : '';
-    body = `<p class="stale">⚠ ${esc((C.STALE[reason.code] ?? C.STALE['engine-changed'])({ ...reason, name: `your ${nm} set` }))}</p>`;
+    body = `<p class="stale">⟳ ${esc((C.STALE[reason.code] ?? C.STALE['engine-changed'])({ ...reason, name: `your ${nm} set` }))}</p><p class="small muted">${esc(C.CALCCARD.staleHidden)}</p>`;
   } else if (c.summary?.class === 'exact') {
-    const s = c.summary;
-    body = `<p class="headline">${s.envelope?.length ? `${esc(envRange(s))} ${esc(C.ENVELOPE_HEAD)}` : esc(headline({ range: s.range, maxHP: s.maxHP, move: { dist: s.dist ?? [{ n: 1 }] }, ko: s.ko }, P.spName(sc.defender.set.species)))}</p><p class="small">${(s.chips ?? []).slice(0, 3).map((x) => esc(C.chipText(x, { attacker: P.spName(sc.attacker.set.species), defender: P.spName(sc.defender.set.species) }))).join(' · ')}</p>`;
-  } else body = `<p class="noresult">${esc(C.CLASS[c.summary?.class] ?? '')}</p>`;
-  return `<div class="calccard${c.pinned ? ' pinned' : ''}">${c.title ? `<p class="q"><b>${esc(c.title)}</b></p>` : ''}<p class="small">${btn(who, 'calc-open', { calc: c.id }, { cls: 'linkish' })}</p>${body}${reason && reason.code !== 'set-deleted' ? btn('Re-check', 'calc-recheck', { calc: c.id }) : ''}${c.mark ? ` <span class="chip">${esc({ fine: 'Fine', 'not-fine': 'Not fine', unsure: 'Unsure' }[c.mark])}</span>` : ''}</div>`;
+    const s = c.summary, hits = hitsOf(s.dist);
+    const knife = s.flags?.includes('knife-edge') ? `<span class="badge knife">◇ ${esc(C.CLASS['knife-edge'])}</span> ` : '';
+    if (s.envelope?.length) {
+      const rows = s.envelope.map((e) => ({ e, ko: e.class === 'exact' ? e.ko?.one ?? null : null }));
+      const exact = rows.filter((r) => r.ko);
+      const all = exact.length === rows.length && exact.every((r) => BigInt(r.ko.num) === BigInt(r.ko.den));
+      const none = exact.length === rows.length && exact.every((r) => BigInt(r.ko.num) === 0n);
+      const o = all || none ? outcomeOf(all ? { num: '1', den: '1' } : { num: '0', den: '1' }, side) : { cls: 'warn', glyph: '◐' };
+      tone = o.cls;
+      body = `<p class="headline">${knife}<span class="oc oc-${o.cls}">${o.glyph} ${esc(all ? C.CALCCARD.envAll : none ? C.CALCCARD.envNone : C.CALCCARD.envSplit)}</span></p>
+        <p class="small">${esc(envRange(s))} ${esc(C.ENVELOPE_HEAD)}</p>
+        <div class="envrows">${rows.map(({ e, ko }) => `<div class="envrow"><span class="small">${esc(e.label ?? C.ENVELOPE_ROW[e.key] ?? e.key)}</span>${ko ? rollStrip(ko, { hits, cls: outcomeOf(ko, side).cls }) : `<span class="small muted">∅ ${esc(C.CALCCARD.noNumber)}</span>`}</div>`).join('')}</div>`;
+    } else {
+      const o = outcomeOf(s.ko.one, side);
+      tone = o.cls;
+      body = `<p class="headline">${knife}${esc(headline({ range: s.range, maxHP: s.maxHP, move: { dist: s.dist ?? [{ n: 1 }] }, ko: s.ko }, P.spName(D)))}</p>
+        ${hpBar(s.range, s.maxHP, o.cls)}
+        <p class="oc oc-${o.cls}">${o.glyph} ${rollStrip(s.ko.one, { hits, cls: o.cls })} <span class="small">${esc(koWords(s.ko.one, { hits: hitsOf(s.dist) }) ?? '')}</span></p>`;
+    }
+    body += `<p class="small">${(s.chips ?? []).slice(0, 3).map((x) => esc(C.chipText(x, { attacker: P.spName(A), defender: P.spName(D) }))).join(' · ')}</p>`;
+  } else body = `<p class="noresult cc-none">∅ ${esc(C.CLASS[c.summary?.class] ?? C.CALCCARD.noNumber)}</p>`;
+  const mark = c.mark ? ` <span class="chip mark-${esc(c.mark)}">${esc(C.CALCCARD.mark[c.mark])}</span>` : '';
+  return `<div class="calccard cc-${reason ? 'stale' : tone}${c.pinned ? ' pinned' : ''}">${c.title ? `<p class="q"><b>${esc(c.title)}</b></p>` : ''}
+    ${pic}<p class="small">${btn(label, 'calc-open', { calc: c.id }, { cls: 'linkish' })}${c.pinned ? ' <span aria-label="pinned">📌</span>' : ''}${side ? ` <span class="small muted">${esc(C.CALCCARD.side[side])}</span>` : ''}</p>
+    ${body}${reason && reason.code !== 'set-deleted' ? btn('Re-check', 'calc-recheck', { calc: c.id }, { primary: true }) : ''}${mark}</div>`;
 }
 const envRange = (s) => { const ex = s.envelope.filter((e) => e.class === 'exact'); return ex.length ? `${Math.min(...ex.map((e) => Math.floor((1000 * e.range.min) / e.maxHP) / 10))}–${Math.max(...ex.map((e) => Math.floor((1000 * e.range.max) / e.maxHP) / 10))}% of HP,` : ''; };
 

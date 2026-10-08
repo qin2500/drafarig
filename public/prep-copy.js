@@ -608,3 +608,34 @@ export const BOARD = {
   locked: { earlier: 'Earlier prep: say whose it is to edit it.', newer: 'Saved by a newer Drafarig: read-only here.' },
   sheetWait: 'Suggestions appear when the league sheet loads; your saved plans are below.',
 };
+
+// ---------- Calcs notebook cards (picture first, words always beside it) ----------
+export const CALCCARD = {
+  envAll: 'KO at every example investment', envNone: 'No KO at any example investment', envSplit: 'Depends on their investment',
+  noNumber: 'No number', staleHidden: 'The number is hidden until you re-check.',
+  category: { Physical: '⚔ physical', Special: '✦ special' },
+  side: { mine: 'your hit', theirs: 'their hit on you' },
+  mark: { fine: '✓ Fine', 'not-fine': '✕ Not fine', unsure: '? Unsure' },
+};
+
+// ---------- Sets: the team grid ----------
+export const SETGRID = {
+  field: { item: 'Item', ability: 'Ability', moves: 'Moves', sp: 'Stat Points' }, unknown: 'unknown', yours: 'yours',
+  noSet: 'No set', noSetSay: 'no set yet. Make a labelled ladder guess',
+  key: 'Ring, clockwise from the top: item, ability, moves, Stat Points. Solid = on a sheet or seen; dashed = ladder; dotted = a guess; missing = unknown.',
+  roleIcon: { likely: '●', 'worst-plausible': '▲', counterprep: '⚔', idea: '✎' },
+};
+
+// ---------- Practice: the record board (counts, never a rate) ----------
+export const PRACTICE = {
+  mocks: 'Mock sets', noOpen: 'No open findings',
+  pip: { W: 'Won', L: 'Lost', draft: 'Not logged' }, pipGlyph: { W: '✓', L: '✕', draft: '○' },
+  recordLine: (w, l) => `${w} won · ${l} lost (counts only)`,
+  mechGlyph: { speed: '⚡', 'unexpected-ko': '✸', 'fakeout-redirect': '✋', 'setup-mega': '⬆', 'weather-terrain': '☀', other: '•' },
+};
+
+// ---------- Expert chat: not built until a real, private connection exists (nothing here sends or replies) ----------
+export const CHAT = {
+  name: 'Expert chat with the VGC agent',
+  notConnected: 'Not connected yet: it needs a one-time private setup first. Nothing from this page is sent anywhere.',
+};
