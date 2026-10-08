@@ -205,7 +205,7 @@ export function board(P, ws, facts) {
   const locked = P.readOnly() || !ownerOf(ws);
   const ideas = ws.plans.filter((p) => p.kind === 'idea');
   const rungOf = (t) => (t.planId ? C.RUNG[planRung(ws, t.planId, facts)] : '');
-  const pills = `<div class="ppills" role="group" aria-label="${esc(C.BOARD.theirPlans)}">${targets.map((t) => pill(P, t, t === target, rungOf(t))).join('')}${btn(C.BOARD.addPlan, 'plan-new', {}, { cls: 'ppill add', disabled: locked })}</div>
+  const pills = `<div class="ppills" role="group" aria-label="${esc(C.BOARD.theirPlans)}">${targets.map((t) => pill(P, t, t === target, rungOf(t))).join('')}${btn(C.BOARD.addPlan, 'pb-plan-new', {}, { cls: 'ppill add', disabled: locked })}</div>
     ${ideas.length ? `<p class="small">${esc(C.BOARD.ideas)}: ${ideas.map((p) => btn(p.label || C.PLAN_KIND.idea, 'open-plan', { plan: p.id }, { cls: 'linkish' })).join(' · ')}</p>` : ''}
     ${m.couldAlso.map((c) => `<p class="small muted">${esc(C.BOARD.couldAlso(C.BOARD.couldWhat[c.seed], c.ids.map(name(P)).join(', ')))}</p>`).join('')}`;
   const head = `<section class="pb-plans" aria-labelledby="pb-plans-h"><h3 id="pb-plans-h">${esc(C.BOARD.theirPlans)} <span class="small muted">${esc(C.BOARD.pick)}</span></h3>${pills}</section>`;
@@ -386,6 +386,17 @@ export const actions = {
     if (!sixOf(P, ws).length) boardUi(P, ws).edit6 = true;
     const ok = P.mutate(`ws:${ws.id}`, (d) => { const a = d.shortlist ?? []; d.shortlist = a.includes(sp) ? a.filter((x) => x !== sp) : [...a, sp].slice(0, 10); });
     if (ok) { const ui = boardUi(P, ws); ui.gapIdx = 0; P.app.announce?.(((P.ws.get(ws.id)?.shortlist ?? []).includes(sp) ? C.BOARD.sixAdded : C.BOARD.sixRemoved)(P.spName(sp))); }
+  },
+  // "+ Their plan" from the board: on a matchup with no prep yet this tap creates it (as every write here does), then
+  // opens the new plan's editor; Back returns to the board with that plan selected
+  'pb-plan-new': (t, P) => {
+    const ws = Wc(P);
+    if (!ws) return;
+    const id = P.id('plan');
+    const ok = P.mutate(`ws:${ws.id}`, (d) => { d.plans.push({ id, label: '', kind: d.plans.some((p) => p.kind === 'likely') ? 'alt' : 'likely', members: [], megaUser: null, speedMode: 'unknown', field: '', needs: '', basis: [], falsifiers: { atPreview: [], inGame: [] }, updatedAt: P.now() }); }, { render: false });
+    if (!ok) return;
+    boardUi(P, ws).sel = `plan:${id}`;
+    P.go({ view: 'ws', wsId: ws.id, kind: 'theirplan', id }, { push: true });
   },
   'pb-six-edit': (t, P) => { const ui = boardUi(P, W(P)); ui.edit6 = !ui.edit6; P.app.rerender(); },
   'pb-gap': (t, P) => { const ui = boardUi(P, W(P)); ui.gap = ui.gap ? null : true; ui.gapIdx = 0; P.app.rerender(); },

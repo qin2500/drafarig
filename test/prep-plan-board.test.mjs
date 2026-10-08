@@ -337,3 +337,19 @@ test('UX R1/R2: the first tap that creates the prep keeps your place (no jump to
   assert.equal(six().length, 0, 'Done closes it');
   assert.equal(app.scrollY, 640);
 });
+
+test('UX R4: "+ Their plan" on a matchup with no prep yet creates the prep and opens the new plan; Back returns to the board with it selected', async (t) => {
+  const s = device();
+  const app = await open('prep/5v8/plan', { storage: s });
+  t.after(() => app.restore());
+  assert.ok(btns(app, 'pb-plan-new').length === 1 && btns(app, 'plan-new').length === 0, 'the board\'s own action');
+  await app.click({ pa: 'pb-plan-new' });
+  await flushSaves(app);
+  const ws = [...s.map.keys()].filter((k) => k.startsWith('drafarig.prep.ws.')).map((k) => JSON.parse(s.getItem(k))).find((w) => w.coach === 'Calvin');
+  assert.ok(ws, 'the prep was created');
+  assert.equal(ws.plans.length, 1);
+  assert.equal(app.location.hash, `#prep/w/${ws.id}/theirplan/${ws.plans[0].id}`, 'the new plan\'s editor, not the overview');
+  app.history.back();
+  await app.waitFor(() => /\/plan$/.test(app.location.hash), 'Back to the board');
+  assert.equal(pills(app).find((n) => n.attrs['aria-pressed'] === 'true')?.attrs['data-key'], `plan:${ws.plans[0].id}`);
+});
