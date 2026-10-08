@@ -1111,7 +1111,7 @@ export function createPrep(app) {
     return true;
   };
   // Actions that create or remove something run once per tap: a double tap within a moment is the same tap.
-  const ONCE = new Set(['open-coach', 'match-start-ws', 'vault-recover', 'vault-retry', 'owner-assign', 'owner-unassign', 'brief-six', 'brief-next', 'brief-calc', 'brief-calc-replace', 'match-start', 'finding-new', 'calc-save', 'calc-dup', 'card-new', 'plan-new', 'variant-new', 'variant-dup', 'br-start', 'mock-quick',
+  const ONCE = new Set(['open-coach', 'match-start-ws', 'pb-plan-new', 'vault-recover', 'vault-retry', 'owner-assign', 'owner-unassign', 'brief-six', 'brief-next', 'brief-calc', 'brief-calc-replace', 'match-start', 'finding-new', 'calc-save', 'calc-dup', 'card-new', 'plan-new', 'variant-new', 'variant-dup', 'br-start', 'mock-quick',
     'guess-all', 'paste-import', 'set-save', 'set-save-copy', 'pilot-save', 'rv-save', 'restore-import', 'restore-replace-confirm', 'backup-download', 'ws-archive', 'ws-archive-confirm', 'delete-all-confirm', 'undo-delete']);
   const recent = new Map();
   const tappedTwice = (t) => {
