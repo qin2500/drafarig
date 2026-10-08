@@ -97,7 +97,7 @@ export async function bootApp({ root = ROOT, source = readFileSync(new URL('publ
       createElement: () => new El(),
       addEventListener: (type, fn) => (listeners[type] ??= []).push(fn),
     },
-    window: { scrollY: 0, scrollTo() {} },
+    window: { scrollY: 0, scrollTo(x, y) { this.scrollY = typeof x === 'object' ? x?.top ?? 0 : y ?? 0; } },
     localStorage: storage, sessionStorage: session,
     location, history,
     navigator: { clipboard: { writeText: async (t) => { clipboard.push(t); }, ...(clipboardText !== null ? { readText: async () => clipboardText } : {}) } },
@@ -162,6 +162,9 @@ export async function bootApp({ root = ROOT, source = readFileSync(new URL('publ
     setSheet(r) { sheetRaw = r; },
     /** Whether /api/sheet answers with its last saved copy (the Worker's stale fallback) from now on. */
     setStale(v) { sheetStale = v; },
+    /** The page's scroll position (no layout here: the app's own scrollTo calls set it); set it to stand mid-page. */
+    get scrollY() { return stubs.window.scrollY; },
+    setScroll(y) { stubs.window.scrollY = y; },
     /** A stub element the app looks up by selector (e.g. '.oppstrip ol'). */
     el: (sel) => els[sel] ?? null,
     /** A keydown on the document (Escape, arrows), with an optional target. */

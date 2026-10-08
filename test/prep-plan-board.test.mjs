@@ -315,3 +315,25 @@ test('a matchup with no prep yet opens straight on the board: looking saves noth
   assert.match(app.location.hash, /^#prep\/5v8\/plan$/);
   assert.match(T(app), /Game 2 cards/, 'the rest of Plan appears once the prep exists');
 });
+
+test('UX R1/R2: the first tap that creates the prep keeps your place (no jump to the top); the "Pick your 6" picker stays open until Done', async (t) => {
+  const s = device();
+  const app = await open('prep/5v8/plan', { storage: s });
+  t.after(() => app.restore());
+  const six = () => findAll(root(app), (n) => n.attrs['data-pa'] === 'pb-six');
+  assert.ok(six().length >= 4, 'your 10 to pick from (no 6 yet)');
+  app.setScroll(640); // mid-page, in the picker
+  await app.click({ pa: 'pb-six', species: 'sinistcha' });
+  await flushSaves(app);
+  assert.ok([...s.map.keys()].some((k) => k.startsWith('drafarig.prep.ws.') && JSON.parse(s.getItem(k)).coach === 'Calvin'), 'the prep was created by that tap');
+  assert.equal(app.scrollY, 640, 'still where you were');
+  assert.ok(six().length >= 4, 'the picker is still open');
+  await app.click({ pa: 'pb-six', species: 'pelipper' });
+  await flushSaves(app);
+  const ws = [...s.map.keys()].filter((k) => k.startsWith('drafarig.prep.ws.')).map((k) => JSON.parse(s.getItem(k))).find((w) => w.coach === 'Calvin');
+  assert.deepEqual(ws.shortlist, ['sinistcha', 'pelipper']);
+  assert.ok(six().length >= 4, 'still open after the second pick');
+  await app.click({ pa: 'pb-six-edit' });
+  assert.equal(six().length, 0, 'Done closes it');
+  assert.equal(app.scrollY, 640);
+});

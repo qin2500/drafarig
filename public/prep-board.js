@@ -323,12 +323,13 @@ function sixTray(P, ws, m, card, locked) {
 // ---------- the board before anything is saved ----------
 // A matchup with no prep yet shows the board itself, built on an unsaved preview of its workspace: looking around saves
 // nothing, and the first tap that writes (a pick, your 6, a light, a calc) creates the workspace, then writes.
-const PREVIEW = 'ws_preview';
+// Its UI state (selected plan, picker, gap) is kept per matchup and moves to the prep when that is created.
+const previewKey = (m) => `ws_preview:${m.pov.name}|${m.opp.name}`;
 /** The unsaved preview for the open matchup (no workspace yet), or null. */
 export function previewWs(P) {
   const m = P.match?.();
   if (!m || m.ws || workspacesFor([...P.ws.values()], m.pov.name, m.opp.name).length) return null;
-  return newWorkspace({ id: PREVIEW, coach: m.opp.name, roster: { fetchedAt: null, speciesIds: m.opp.picks.map((x) => x.id).filter(Boolean) }, now: P.now(), pov: m.pov.name });
+  return newWorkspace({ id: previewKey(m), coach: m.opp.name, roster: { fetchedAt: null, speciesIds: m.opp.picks.map((x) => x.id).filter(Boolean) }, now: P.now(), pov: m.pov.name });
 }
 
 // ---------- actions ----------
@@ -342,8 +343,10 @@ function Wc(P) {
   if (!m) return null;
   const made = P.ensureWorkspace(m.pov.name, m.opp.name);
   if (!made) return null;
-  if (P.ui.ws[PREVIEW]) { P.ui.ws[made.id] = { ...(P.ui.ws[made.id] ?? {}), ...P.ui.ws[PREVIEW] }; delete P.ui.ws[PREVIEW]; }
-  P.go({ view: 'ws', pov: m.pov.order, opp: m.opp.order, tab: 'plan' }, { push: false });
+  const key = previewKey(m);
+  if (P.ui.ws[key]) { P.ui.ws[made.id] = { ...(P.ui.ws[made.id] ?? {}), ...P.ui.ws[key] }; delete P.ui.ws[key]; }
+  // the same screen, now with its prep: re-resolved quietly, so the tap that created it doesn't move scroll or focus
+  P.go({ view: 'ws', pov: m.pov.order, opp: m.opp.order, tab: 'plan' }, { push: false, quiet: true });
   return P.ws.get(made.id) ?? made;
 }
 export const actions = {
@@ -379,6 +382,8 @@ export const actions = {
   'pb-six': (t, P) => {
     const ws = Wc(P), sp = t.dataset.species;
     if (!ws) return;
+    // the picker opened by itself for an empty 6 stays open until Done (picking a 6 is several taps)
+    if (!sixOf(P, ws).length) boardUi(P, ws).edit6 = true;
     const ok = P.mutate(`ws:${ws.id}`, (d) => { const a = d.shortlist ?? []; d.shortlist = a.includes(sp) ? a.filter((x) => x !== sp) : [...a, sp].slice(0, 10); });
     if (ok) { const ui = boardUi(P, ws); ui.gapIdx = 0; P.app.announce?.(((P.ws.get(ws.id)?.shortlist ?? []).includes(sp) ? C.BOARD.sixAdded : C.BOARD.sixRemoved)(P.spName(sp))); }
   },

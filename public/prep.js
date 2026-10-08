@@ -284,7 +284,8 @@ export function createPrep(app) {
   P.staleOf = (ws, entry) => (P.mech ? staleReasons(entry, P.mech, ENGINE_INFO, (id) => P.versionOf(id, ws)) : []);
 
   // ---------- navigation ----------
-  P.go = (route, { push = null } = {}) => {
+  /** quiet: the same screen, re-resolved (e.g. its prep was just created): keeps scroll and focus instead of moving them. */
+  P.go = (route, { push = null, quiet = false } = {}) => {
     const to = P.resolve(P.canonical(route));
     const kind = push === null ? navKind(P.route, to) : push ? 'push' : 'replace';
     // Unsaved work lands before the screen changes: pending autosaves are written and screen drafts kept for this tab.
@@ -295,7 +296,7 @@ export function createPrep(app) {
     try { if (kind === 'push') app.history.pushState({ prep: true, names, wsId }, '', hash); else app.history.replaceState({ prep: !!app.history.state?.prep, names, wsId }, '', hash); } catch { /* history unavailable */ }
     P.route = P.resolve({ ...(parseRoute(hash) ?? { view: 'home' }), ...(names ? { names, wsId } : {}) });
     if (P.route.view === 'ws' && P.ws.has(P.route.wsId)) P.store.hint('lastRoute', hash); // for "Continue"; not a document
-    P.pendingFocus = true;
+    if (!quiet) P.pendingFocus = true;
     app.rerender();
   };
   /**
