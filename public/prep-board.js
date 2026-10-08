@@ -6,7 +6,8 @@
 // Picks are species (card.species); a set is attached only when it's your only set for that species. Nothing is saved
 // until a tap, and the app never picks for you.
 import { boardTargets, boardContext, coverage, fillGap, rankLeadPairs, rankBackPairs, SEEDS, LOOK_FIRST } from '../lib/prep-board.mjs';
-import { ownerOf } from '../lib/prep-matchup.mjs';
+import { ownerOf, workspacesFor } from '../lib/prep-matchup.mjs';
+import { newWorkspace } from '../lib/prep-schema.mjs';
 import { currentVersion, defaultVariant } from '../lib/prep-model.mjs';
 import { planRung } from '../lib/prep-coverage.mjs';
 import * as C from './prep-copy.js';
@@ -130,23 +131,36 @@ function pill(P, t, on, rung) {
     'aria-label': `${label}${word ? `, ${word}` : ''}${rung ? `, ${rung}` : ''}` })}><span class="pp-top">${icon(t.coreId ?? t.seed)}<span class="pp-label">${esc(label)}</span></span><span class="pp-minis" aria-hidden="true">${minis}</span><span class="pp-word" aria-hidden="true">${esc([word, rung].filter(Boolean).join(' · '))}</span></button>`;
 }
 /** A slot: a 64 px portrait button (filled) or a dashed "+" (empty); the next empty slot is ringed with the word "next". */
-function slot(P, role, i, sp, { next, card, locked }) {
+function slot(P, role, i, sp, { next, card, locked, open = null }) {
   const label = role === 'lead' ? C.BOARD.lead : C.BOARD.back;
   if (!sp) {
     return `<button${attrs({ type: 'button', class: `pslot empty${next ? ' next' : ''}`, 'data-pa': 'pb-slot', 'data-role': role, 'data-i': i, disabled: locked, 'aria-label': C.BOARD.slotEmpty(label, i + 1) })}><span class="ps-plus" aria-hidden="true">+</span>${next ? `<span class="ps-next">${esc(C.BOARD.next)}</span>` : ''}</button>`;
   }
   const set = attachedSet(P, card, sp);
-  return `<button${attrs({ type: 'button', class: 'pslot', 'data-pa': 'pb-slot', 'data-role': role, 'data-i': i, 'data-species': sp, disabled: locked, 'aria-label': C.BOARD.slotFilled(label, i + 1, P.spName(sp), !!set) })}>${pt(P, sp, 'md')}<span class="ps-name">${esc(P.spName(sp))}</span><span class="ps-dot ${set ? 'set' : 'noset'}" aria-hidden="true" title="${esc(set ? C.BOARD.setAttached : C.BOARD.noSet)}"></span></button>`;
+  return `<button${attrs({ type: 'button', class: 'pslot', 'data-pa': 'pb-slot', 'data-role': role, 'data-i': i, 'data-species': sp, disabled: locked, 'aria-expanded': String(open === sp), 'aria-label': C.BOARD.slotFilled(label, i + 1, P.spName(sp), !!set) })}>${pt(P, sp, 'md')}<span class="ps-name">${esc(P.spName(sp))}</span><span class="ps-dot ${set ? 'set' : 'noset'}" aria-hidden="true" title="${esc(set ? C.BOARD.setAttached : C.BOARD.noSet)}"></span></button>`;
 }
-/** Glyph chips for a pair's evidence (each a fact with its words; colour always beside a glyph and a word). */
-function glyphs(P, ev, mode, { max = 6 } = {}) {
+/**
+ * Glyph chips for a pair's evidence (each a fact with its words; colour always beside a glyph and a word; glyphs are hidden
+ * from screen readers, the words say it). picks: the card's Mega pick, so a hit that needs another Mega form says so.
+ */
+function glyphs(P, ev, mode, { max = 6, picks = null } = {}) {
   const n = name(P), G = C.BOARD.glyph, out = [];
-  for (const a of ev.answers) out.push(`<li class="gl ok${a.anchor ? '' : ' weak'}">${esc(G.answer(a.label, a.anchor))} <span class="small muted">(${esc(n(a.mon))}${a.contestedBy ? `, ${esc(G.contested(n(a.contestedBy)))}` : ''})</span></li>`);
-  for (const h of ev.hits) out.push(`<li class="gl ok${h.mega ? ' weak' : ''}" aria-label="${esc(G.hitSay(n(h.mon), n(h.t)))}">${esc(G.hit(n(h.mon), n(h.t), h.mult, h.mega))}</li>`);
-  for (const w of ev.walls) out.push(`<li class="gl ok" aria-label="${esc(G.wallSay(n(w.mon), n(w.t)))}">${esc(G.wall(n(w.mon), n(w.t)))}</li>`);
-  for (const s of ev.speed.filter((x) => x.result !== 'depends')) out.push(`<li class="gl ${s.result === 'first' ? 'ok' : s.result === 'second' ? 'bad' : 'mute'}">${esc(G.speed[s.result])} ${esc(G.speedSay[s.result](n(s.mon), n(s.t), G.mode[mode] ?? ''))}</li>`);
-  for (const t of ev.shared) out.push(`<li class="gl bad">${esc(G.shared(n(t)))}</li>`);
-  if (ev.needsTwoMegas) out.push(`<li class="gl warn">${esc(G.twoMegas)}</li>`);
+  const gl = (glyph, words) => `<span aria-hidden="true">${esc(glyph)}</span> ${esc(words)}`;
+  const formId = (sp, formName) => (P.app.dex.species[sp]?.forms ?? []).find((f) => f.name === formName)?.id ?? null;
+  for (const a of ev.answers) out.push(`<li class="gl ok${a.anchor ? '' : ' weak'}">${gl('✓', G.answer(a.label, a.anchor))} <span class="small muted">(${esc(n(a.mon))}${a.contestedBy ? `, ${esc(G.contested(n(a.contestedBy)))}` : ''})</span></li>`);
+  for (const h of ev.hits) {
+    const form = h.mega ? h.formName : null;
+    const other = form && picks?.mega === h.mon && picks.megaForm && picks.megaForm !== formId(h.mon, form) ? (P.app.dex.species[h.mon]?.forms ?? []).find((f) => f.id === picks.megaForm)?.name : null;
+    out.push(`<li class="gl ok${h.mega ? ' weak' : ''}">${gl(`×${h.mult}`, G.hitSay(n(h.mon), n(h.t), form))}${other ? ` <span class="small">${esc(G.megaMismatch(form, other))}</span>` : ''}</li>`);
+  }
+  for (const w of ev.walls) out.push(`<li class="gl ok">${gl('🛡', G.wallSay(n(w.mon), n(w.t)))}</li>`);
+  for (const sp of ev.speed.filter((x) => x.result === 'first' || x.result === 'second' || x.result === 'tie')) out.push(`<li class="gl ${sp.result === 'first' ? 'ok' : sp.result === 'second' ? 'bad' : 'mute'}">${gl(G.speed[sp.result], G.speedSay[sp.result](n(sp.mon), n(sp.t), G.mode[mode] ?? ''))}</li>`);
+  // Speed that depends on spreads: one grey chip per mon of yours (not hidden: it's a fact too)
+  const dep = new Map();
+  for (const sp of ev.speed.filter((x) => x.result === 'depends')) dep.set(sp.mon, [...(dep.get(sp.mon) ?? []), sp.t]);
+  for (const [m, ts] of dep) out.push(`<li class="gl mute">${gl(G.speed.depends, G.speedDepends(n(m), ts.map(n).join(', '), G.mode[mode] ?? ''))}</li>`);
+  for (const t of ev.shared) out.push(`<li class="gl bad">${gl('⚠', G.shared(n(t)))}</li>`);
+  if (ev.needsTwoMegas) out.push(`<li class="gl warn">${gl('⚠', G.twoMegas)}</li>`);
   const shown = out.slice(0, max), rest = out.slice(max);
   return `<ul class="glyphs">${shown.join('')}</ul>${rest.length ? `<details class="small"><summary>${esc(C.BOARD.more)} (${rest.length})</summary><ul class="glyphs">${rest.join('')}</ul></details>` : ''}`;
 }
@@ -202,13 +216,13 @@ export function board(P, ws, facts) {
   const lead = picks.lead, back = picks.back;
   const filled = { lead, back };
   const nextSlot = ROLES.find(([r, i]) => !filled[r][i]);
-  const slotRow = (role) => [0, 1].map((i) => slot(P, role, i, filled[role][i], { next: !locked && nextSlot && nextSlot[0] === role && nextSlot[1] === i, card, locked })).join('');
+  const slotRow = (role) => [0, 1].map((i) => slot(P, role, i, filled[role][i], { next: !locked && nextSlot && nextSlot[0] === role && nextSlot[1] === i, card, locked, open: ui.slot })).join('');
   // the tapped slot's actions (move, remove, its set)
   const open = ui.slot && picks.bring.includes(ui.slot) ? ui.slot : null;
   const slotMenu = open ? `<div class="slotmenu" role="group" aria-label="${esc(P.spName(open))}">${lead.includes(open) ? btn(C.BOARD.moveBack, 'pb-move', { species: open, to: 'back' }, { disabled: back.length >= 2 }) : btn(C.BOARD.moveLead, 'pb-move', { species: open, to: 'lead' })}
     ${btn(C.BOARD.remove, 'pb-remove', { species: open })} ${attachedSet(P, card, open) ? btn(C.BOARD.openSet, 'brief-set', { side: 'mine', species: open }, { cls: 'linkish' }) : P.canWriteMine() ? btn(C.BOARD.startSet, 'brief-set', { side: 'mine', species: open }, { cls: 'linkish' }) : ''}</div>` : '';
   const megaOpts = picks.bring.flatMap((sp) => megaForms(P, sp).map((f) => ({ sp, f })));
-  const megaRow = megaOpts.length ? `<div class="pb-row"><span class="pb-lab">${esc(C.BOARD.mega)}</span><span class="choices" role="group" aria-label="${esc(C.BOARD.mega)}">${chipBtn(C.BOARD.noMega, 'pb-mega', { species: '', form: '' }, !picks.mega, { disabled: locked })}${megaOpts.map(({ sp, f }) => chipBtn(`◆ ${f.name.replace(/-Mega/, ' Mega')}`, 'pb-mega', { species: sp, form: f.id }, picks.mega === sp && (picks.megaForm || megaForms(P, sp)[0].id) === f.id, { disabled: locked })).join('')}</span> <span class="small muted">${esc(C.BOARD.megaOne)}</span></div>` : '';
+  const megaRow = megaOpts.length ? `<div class="pb-row"><span class="pb-lab">${esc(C.BOARD.mega)}</span><span class="choices" role="group" aria-label="${esc(C.BOARD.mega)}">${chipBtn(C.BOARD.noMega, 'pb-mega', { species: '', form: '' }, !picks.mega, { disabled: locked })}${megaOpts.map(({ sp, f }) => chipBtn(`◆ ${f.name.replace(/-Mega/, ' Mega')}`, 'pb-mega', { species: sp, form: f.id }, picks.mega === sp && (picks.megaForm === f.id || (!picks.megaForm && megaForms(P, sp).length === 1)), { disabled: locked })).join('')}</span> <span class="small muted">${esc(C.BOARD.megaOne)}</span>${picks.mega && !picks.megaForm && megaForms(P, picks.mega).length > 1 ? ` <span class="chip tight">${esc(C.BOARD.megaWhich(megaForms(P, picks.mega).map((f) => f.name.replace(/-Mega/, ' Mega')).join(' or ')))}</span>` : ''}</div>` : '';
   const ready = lead.length === 2 && back.length >= 2;
   // their side: focus portraits (tells marked ◎, their Mega ◆)
   const them = target.focus.map((id) => `<span class="pb-mon${target.tells.includes(id) && target.tells.length < target.focus.length ? ' tell' : ''}">${pt(P, id, 'sm')}<span class="ps-name">${esc(P.spName(id))}</span>${target.megaUser === id ? `<span class="megad inline" title="${esc(C.BOARD.theirMega)}">◆</span>` : ''}${target.tells.includes(id) && target.tells.length < target.focus.length ? `<span class="small muted">◎ ${esc(C.BOARD.tell)}</span>` : ''}</span>`).join('');
@@ -216,10 +230,10 @@ export function board(P, ws, facts) {
   const ranked = six.length >= 2 ? rankLeadPairs(m.ctx, six, target) : [];
   const leadEv = lead.length === 2 ? (ranked.find((r) => r.pair.every((x) => lead.includes(x)))?.evidence ?? rankLeadPairs(m.ctx, lead, target)[0]?.evidence) : null;
   const calcExists = lead.length === 2 && checksFor(P, ws, m, lead).calcs.some((c) => c.calc && !c.stale);
-  const verdict = leadEv ? `<div class="pb-verdict"><p><b>${esc(C.BOARD.headFor(lead.map(name(P)).join(' + ')))}</b> <span class="hl hl-${leadEv.headline}">${esc(C.BOARD.headline[leadEv.headline])}</span> <span class="small muted">· ${esc(calcExists ? C.BOARD.checked : C.BOARD.notChecked)}</span></p>${glyphs(P, leadEv, target.speedMode)}</div>` : '';
+  const verdict = leadEv ? `<div class="pb-verdict"><p><b>${esc(C.BOARD.headFor(lead.map(name(P)).join(' + ')))}</b> <span class="hl hl-${leadEv.headline}">${esc(C.BOARD.headline[leadEv.headline])}</span> <span class="small muted">· ${esc(calcExists ? C.BOARD.checked : C.BOARD.notChecked)}</span></p>${glyphs(P, leadEv, target.speedMode, { picks })}</div>` : '';
   const tries = ranked.filter((r) => !(lead.length === 2 && r.pair.every((x) => lead.includes(x)))).slice(0, 2);
   const tryBlock = six.length < 2 ? `<p class="small muted">${esc(C.BOARD.needSix)}</p>`
-    : `<div class="pb-try"><h4>${esc(C.BOARD.tryHead)}</h4><ul class="tries">${tries.map((r) => `<li class="try"><span class="tpair">${r.pair.map((id) => pt(P, id, 'sm')).join('')}<b>${esc(r.pair.map(name(P)).join(' + '))}</b> <span class="hl hl-${r.evidence.headline}">${esc(C.BOARD.headline[r.evidence.headline])}</span></span>${glyphs(P, r.evidence, target.speedMode, { max: 4 })}${btn(C.BOARD.tryBtn, 'pb-try', { a: r.pair[0], b: r.pair[1] }, { disabled: locked })}</li>`).join('')}</ul>
+    : `<div class="pb-try"><h4>${esc(C.BOARD.tryHead)}</h4><ul class="tries">${tries.map((r) => `<li class="try"><span class="tpair">${r.pair.map((id) => pt(P, id, 'sm')).join('')}<b>${esc(r.pair.map(name(P)).join(' + '))}</b> <span class="hl hl-${r.evidence.headline}">${esc(C.BOARD.headline[r.evidence.headline])}</span></span>${glyphs(P, r.evidence, target.speedMode, { max: 4, picks })}${btn(C.BOARD.tryBtn, 'pb-try', { a: r.pair[0], b: r.pair[1] }, { disabled: locked })}</li>`).join('')}</ul>
       <p class="small muted">${esc(C.BOARD.notChecked)}</p></div>`;
   let backBlock = '';
   if (lead.length === 2 && six.length >= 4) {
@@ -234,6 +248,9 @@ export function board(P, ws, facts) {
       <label class="field" for="card-win"><span>Win condition: what has to be true at the end?</span><input id="card-win" data-pi="card-win" data-card="${esc(card.id)}" value="${esc(card.winCondition ?? '')}" maxlength="160"${locked ? ' disabled' : ''}></label>
       ${lines.map((l) => `<p class="small">${esc(C.BOARD.ifThen((l.trigger?.theirLead ?? []).map(name(P)).join(' + ') || '…', l.response))}</p>`).join('')}
       <p>${btn(C.BOARD.editLines, 'open-card', { card: card.id }, { cls: 'linkish' })}</p></details>` : '';
+  // more than one card against this plan (made in v4 or with "+ Plan card against this"): the board edits the first; the rest stay listed
+  const otherCards = target.planId ? ws.cards.filter((c) => c.kind === 'plan' && c !== card && (c.vsPlanIds ?? []).includes(target.planId)) : [];
+  const others = otherCards.length ? `<p class="small">${esc(C.BOARD.otherCards)} ${otherCards.map((c, i) => btn(C.BOARD.cardN(i + 2, cardPicks(P, c).lead.map(name(P)).join(' + ')), 'open-card', { card: c.id }, { cls: 'linkish' })).join(' · ')}</p>` : '';
   const note = target.source === 'seed' ? C.BOARD.seedNote : target.source === 'look-first' ? C.BOARD.lookFirstNote : target.source === 'suggested' ? C.BOARD.unsavedNote : '';
   const why = target.coreId ? m.b.theirPlans.find((p) => p.coreId === target.coreId)?.oneLineWhy : '';
   const tray = sixTray(P, ws, m, card, locked);
@@ -247,12 +264,12 @@ export function board(P, ws, facts) {
       <div class="pb-row"><span class="pb-lab">${esc(C.BOARD.lead)}</span>${slotRow('lead')}</div>
       <div class="pb-row"><span class="pb-lab">${esc(C.BOARD.back)}</span>${slotRow('back')}</div>
       ${slotMenu}${megaRow}
-      ${!picks.bring.length ? `<p class="small muted">${esc(C.BOARD.tapHint)}</p>` : ''}
+      ${!picks.bring.length ? `<p class="small muted">${esc(six.length ? C.BOARD.tapHint : C.BOARD.tapHintNoSix)}</p>` : ''}
       ${tray.tiles}
       ${ready ? `<p class="small ready-line">✓ ${esc(C.BOARD.ready)} <span class="muted">(${esc(C.BOARD.readyHelp)})</span></p>` : ''}</div>
-    ${verdict}${tryBlock}${backBlock}
     ${lights(P, ws, m, card, lead)}
-    ${notes}</section>`;
+    ${verdict}${tryBlock}${backBlock}
+    ${notes}${others}</section>`;
   return `${head}${cardHtml}${tray.cover}`;
 }
 
@@ -266,11 +283,13 @@ function sixTray(P, ws, m, card, locked) {
     return `<button${attrs({ type: 'button', class: `tslot btn${on ? ' on' : ''}`, 'data-pa': 'pb-pick', 'data-species': id, 'aria-pressed': String(on), disabled: locked || !target,
       'aria-label': `${P.spName(id)}${on ? `, ${picks.lead.includes(id) ? C.BOARD.lead : C.BOARD.back}` : ''}` })}>${pt(P, id, 'sm')}<span class="ps-name">${esc(P.spName(id))}</span>${on ? `<span class="tmark" aria-hidden="true">${picks.lead.includes(id) ? 'L' : 'B'}</span>` : ''}</button>`;
   };
-  const edit = ui.edit6 ? `<div class="six-edit" role="group" aria-label="${esc(C.BOARD.sixEdit)}">${roster.map((id) => {
+  // with no 6 yet, the picker is open from the start (the slots ask for your 6, so it must be right there)
+  const editing = ui.edit6 || !six.length;
+  const edit = editing ? `${!six.length ? `<p class="small"><b>${esc(C.BOARD.pickSix)}</b></p>` : ''}<div class="six-edit" role="group" aria-label="${esc(C.BOARD.sixEdit)}">${roster.map((id) => {
     const inSix = six.includes(id), locked6 = fromSets.has(id);
     return `<button${attrs({ type: 'button', class: `tslot btn${inSix ? ' on' : ''}`, 'data-pa': 'pb-six', 'data-species': id, 'aria-pressed': String(inSix), disabled: locked || locked6,
       'aria-label': locked6 ? `${P.spName(id)}, ${C.BOARD.sixFromSets}` : inSix ? C.BOARD.sixRemove(P.spName(id)) : C.BOARD.sixAdd(P.spName(id)) })}>${pt(P, id, 'sm')}<span class="ps-name">${esc(P.spName(id))}</span>${inSix ? '<span class="tmark" aria-hidden="true">✓</span>' : ''}</button>`;
-  }).join('')}${btn(C.BOARD.sixDone, 'pb-six-edit', {}, { primary: true })}</div>` : '';
+  }).join('')}${six.length ? btn(C.BOARD.sixDone, 'pb-six-edit', {}, { primary: true }) : ''}</div>` : '';
   // what your 6 covers
   const items = coverage(m.ctx, m.targets, six);
   const covTile = (i) => {
@@ -293,7 +312,7 @@ function sixTray(P, ws, m, card, locked) {
         ${g.freeToSwap.length ? `<p class="small">${esc(C.BOARD.freeSwap(g.freeToSwap.map(name(P)).join(', ')))}</p>` : ''}</div>`;
     }
   }
-  const tiles = `<div class="pb-tray${six.length ? ' has-six' : ''}"><p class="pb-trayh"><b>${esc(C.BOARD.six)}</b> <span class="small muted">${esc(C.BOARD.sixSay(six.length))}</span> ${btn(ui.edit6 ? C.BOARD.sixDone : C.BOARD.sixEdit, 'pb-six-edit', {}, { cls: 'linkish', disabled: locked })}</p>
+  const tiles = `<div class="pb-tray${six.length ? ' has-six' : ''}" id="pb-tray" tabindex="-1"><p class="pb-trayh"><b>${esc(C.BOARD.six)}</b> <span class="small muted">${esc(C.BOARD.sixSay(six.length))}</span> ${six.length ? btn(ui.edit6 ? C.BOARD.sixDone : C.BOARD.sixEdit, 'pb-six-edit', {}, { cls: 'linkish', disabled: locked, pressed: !!ui.edit6 }) : ''}</p>
     ${six.length ? `<div class="tray-tiles" role="group" aria-label="${esc(C.BOARD.six)}">${six.map(tile).join('')}</div>` : ''}${six.length > 6 ? `<p class="small">${esc(C.BOARD.sixMore)}</p>` : ''}${edit}</div>`;
   const cover = `<section class="pb-six" aria-labelledby="pb-six-h"><h3 id="pb-six-h">${esc(C.BOARD.coverage)}</h3>
     ${items.length ? `<ul class="covstrip">${items.map(covTile).join('')}</ul>` : ''}
@@ -301,13 +320,37 @@ function sixTray(P, ws, m, card, locked) {
   return { tiles, cover };
 }
 
+// ---------- the board before anything is saved ----------
+// A matchup with no prep yet shows the board itself, built on an unsaved preview of its workspace: looking around saves
+// nothing, and the first tap that writes (a pick, your 6, a light, a calc) creates the workspace, then writes.
+const PREVIEW = 'ws_preview';
+/** The unsaved preview for the open matchup (no workspace yet), or null. */
+export function previewWs(P) {
+  const m = P.match?.();
+  if (!m || m.ws || workspacesFor([...P.ws.values()], m.pov.name, m.opp.name).length) return null;
+  return newWorkspace({ id: PREVIEW, coach: m.opp.name, roster: { fetchedAt: null, speciesIds: m.opp.picks.map((x) => x.id).filter(Boolean) }, now: P.now(), pov: m.pov.name });
+}
+
 // ---------- actions ----------
-const W = (P) => P.ws.get(P.route.wsId);
+/** The board's workspace for reading: the open one, else the unsaved preview. */
+const W = (P) => P.ws.get(P.route.wsId) ?? previewWs(P);
+/** The workspace to write to: the open one, or this matchup's, created now (the tap itself is the explicit action). */
+function Wc(P) {
+  const open = P.ws.get(P.route.wsId);
+  if (open) return open;
+  const m = P.match?.();
+  if (!m) return null;
+  const made = P.ensureWorkspace(m.pov.name, m.opp.name);
+  if (!made) return null;
+  if (P.ui.ws[PREVIEW]) { P.ui.ws[made.id] = { ...(P.ui.ws[made.id] ?? {}), ...P.ui.ws[PREVIEW] }; delete P.ui.ws[PREVIEW]; }
+  P.go({ view: 'ws', pov: m.pov.order, opp: m.opp.order, tab: 'plan' }, { push: false });
+  return P.ws.get(made.id) ?? made;
+}
 export const actions = {
   'pb-target': (t, P) => { const ui = boardUi(P, W(P)); ui.sel = t.dataset.key; ui.slot = null; ui.calcs = false; P.saveUi?.(); P.app.rerender(); },
   'pb-pick': (t, P) => {
-    const ws = W(P), sp = t.dataset.species;
-    const m = boardModel(P, ws);
+    const ws = Wc(P), sp = t.dataset.species;
+    const m = ws && boardModel(P, ws);
     if (!m?.target) return;
     const cur = cardPicks(P, cardFor(ws, m.target.planId));
     if (cur.bring.includes(sp)) { editPicks(P, ws, (p) => ({ ...p, bring: p.bring.filter((x) => x !== sp), lead: p.lead.filter((x) => x !== sp), mega: p.mega === sp ? '' : p.mega }), C.BOARD.removed(P.spName(sp))); return; }
@@ -315,20 +358,29 @@ export const actions = {
     const toLead = cur.lead.length < 2;
     editPicks(P, ws, (p) => ({ ...p, bring: [...p.bring, sp], lead: toLead ? [...p.lead, sp] : p.lead }), C.BOARD.placed(P.spName(sp), toLead ? C.BOARD.lead : C.BOARD.back));
   },
-  'pb-slot': (t, P) => { const ui = boardUi(P, W(P)); const sp = t.dataset.species ?? null; ui.slot = sp && ui.slot !== sp ? sp : null; P.app.rerender(); },
+  // a filled slot opens its menu; an empty one points at where its Pokémon come from (never a dead tap)
+  'pb-slot': (t, P) => {
+    const ws = W(P), ui = boardUi(P, ws), sp = t.dataset.species ?? null;
+    if (sp) { ui.slot = ui.slot !== sp ? sp : null; P.app.rerender(); return; }
+    ui.slot = null;
+    const six = boardModel(P, ws)?.six ?? [];
+    P.app.announce?.(six.length ? C.BOARD.pickFromSix : C.BOARD.pickSix);
+    P.focusOn('pb-tray');
+  },
   'pb-move': (t, P) => {
     const sp = t.dataset.species, toLead = t.dataset.to === 'lead';
-    editPicks(P, W(P), (p) => ({ ...p, lead: toLead ? [...p.lead.filter((x) => x !== sp), sp].slice(-2) : p.lead.filter((x) => x !== sp) }), C.BOARD.placed(P.spName(sp), toLead ? C.BOARD.lead : C.BOARD.back));
+    editPicks(P, Wc(P), (p) => ({ ...p, lead: toLead ? [...p.lead.filter((x) => x !== sp), sp].slice(-2) : p.lead.filter((x) => x !== sp) }), C.BOARD.placed(P.spName(sp), toLead ? C.BOARD.lead : C.BOARD.back));
   },
-  'pb-remove': (t, P) => { const sp = t.dataset.species; editPicks(P, W(P), (p) => ({ ...p, bring: p.bring.filter((x) => x !== sp), lead: p.lead.filter((x) => x !== sp), mega: p.mega === sp ? '' : p.mega }), C.BOARD.removed(P.spName(sp))); },
-  'pb-mega': (t, P) => editPicks(P, W(P), (p) => ({ ...p, mega: t.dataset.species || '', megaForm: t.dataset.form || '' })),
+  'pb-remove': (t, P) => { const sp = t.dataset.species; editPicks(P, Wc(P), (p) => ({ ...p, bring: p.bring.filter((x) => x !== sp), lead: p.lead.filter((x) => x !== sp), mega: p.mega === sp ? '' : p.mega }), C.BOARD.removed(P.spName(sp))); },
+  'pb-mega': (t, P) => editPicks(P, Wc(P), (p) => ({ ...p, mega: t.dataset.species || '', megaForm: t.dataset.form || '' })),
   // an idea to try becomes your lead (the back keeps whoever isn't in the new lead)
-  'pb-try': (t, P) => { const pair = [t.dataset.a, t.dataset.b]; editPicks(P, W(P), (p) => ({ ...p, bring: uniq([...pair, ...p.bring.filter((x) => !pair.includes(x))]).slice(0, 4), lead: pair }), C.BOARD.placed(pair.map((x) => P.spName(x)).join(' + '), C.BOARD.lead)); },
-  'pb-back': (t, P) => { const pair = [t.dataset.a, t.dataset.b]; editPicks(P, W(P), (p) => ({ ...p, bring: uniq([...p.lead, ...pair]), lead: p.lead }), C.BOARD.placed(pair.map((x) => P.spName(x)).join(' + '), C.BOARD.back)); },
+  'pb-try': (t, P) => { const pair = [t.dataset.a, t.dataset.b]; editPicks(P, Wc(P), (p) => ({ ...p, bring: uniq([...pair, ...p.bring.filter((x) => !pair.includes(x))]).slice(0, 4), lead: pair }), C.BOARD.placed(pair.map((x) => P.spName(x)).join(' + '), C.BOARD.lead)); },
+  'pb-back': (t, P) => { const pair = [t.dataset.a, t.dataset.b]; editPicks(P, Wc(P), (p) => ({ ...p, bring: uniq([...p.lead, ...pair]), lead: p.lead }), C.BOARD.placed(pair.map((x) => P.spName(x)).join(' + '), C.BOARD.back)); },
   'pb-six': (t, P) => {
-    const ws = W(P), sp = t.dataset.species;
+    const ws = Wc(P), sp = t.dataset.species;
+    if (!ws) return;
     const ok = P.mutate(`ws:${ws.id}`, (d) => { const a = d.shortlist ?? []; d.shortlist = a.includes(sp) ? a.filter((x) => x !== sp) : [...a, sp].slice(0, 10); });
-    if (ok) { const ui = boardUi(P, ws); ui.gapIdx = 0; P.app.announce?.(((ws.shortlist ?? []).includes(sp) ? C.BOARD.sixRemove : C.BOARD.sixAdd)(P.spName(sp))); }
+    if (ok) { const ui = boardUi(P, ws); ui.gapIdx = 0; P.app.announce?.(((P.ws.get(ws.id)?.shortlist ?? []).includes(sp) ? C.BOARD.sixAdded : C.BOARD.sixRemoved)(P.spName(sp))); }
   },
   'pb-six-edit': (t, P) => { const ui = boardUi(P, W(P)); ui.edit6 = !ui.edit6; P.app.rerender(); },
   'pb-gap': (t, P) => { const ui = boardUi(P, W(P)); ui.gap = ui.gap ? null : true; ui.gapIdx = 0; P.app.rerender(); },
@@ -337,7 +389,7 @@ export const actions = {
   'pb-light-calcs': (t, P) => { const ui = boardUi(P, W(P)); ui.calcs = !ui.calcs; P.app.rerender(); },
   // Speed: the Speed tool with the lead and their first focus mon selected, under this plan's speed mode
   'pb-light-speed': (t, P) => {
-    const ws = W(P), m = boardModel(P, ws);
+    const ws = Wc(P), m = ws && boardModel(P, ws);
     if (!m?.target) return;
     const lead = cardPicks(P, cardFor(ws, m.target.planId)).lead;
     const mode = m.target.speedMode;
@@ -346,7 +398,7 @@ export const actions = {
   },
   // Practised: a mock brief with a purpose suggestion for this plan (a suggestion only: the purpose stays yours)
   'pb-light-practised': (t, P) => {
-    const ws = W(P), m = boardModel(P, ws);
+    const ws = Wc(P), m = ws && boardModel(P, ws);
     if (!m?.target) return;
     const label = m.target.source === 'saved' ? (m.target.label || C.PLAN_KIND[m.target.kind]) : m.target.label || C.BOARD.seed[m.target.seed];
     P.wsUi(ws.id).brPurposeHint = C.BRIEF.q.practice(label).slice(0, 160);
@@ -354,11 +406,12 @@ export const actions = {
   },
   // a key calc for this lead: the saved one, or a quick check prefilled (ask-first) with their hit into your mon
   'pb-calc': (t, P) => {
-    const ws = W(P), mine = t.dataset.mine, theirs = t.dataset.theirs;
+    const ws = Wc(P), mine = t.dataset.mine, theirs = t.dataset.theirs;
+    if (!ws) return;
     const existing = ws.calcs.filter((x) => { const a = x.scenario?.attacker?.set?.species, d = x.scenario?.defender?.set?.species; return (a === theirs && d === mine) || (a === mine && d === theirs); });
     const fresh = existing.find((x) => !P.staleOf(ws, x).length) ?? existing[0];
     if (fresh) return P.go({ view: 'ws', wsId: ws.id, kind: 'calcs', id: fresh.id }, { push: true });
-    if (!P.mech) return;
+    if (!P.mech) { P.toast(C.BOARD.calcLoading); return; }
     const card = ws.cards.find((c) => c.id === t.dataset.card) ?? null;
     const v = defaultVariant(ws) ?? variantOf(P, ws);
     const theirL = theirSetFor(ws, v, theirs);

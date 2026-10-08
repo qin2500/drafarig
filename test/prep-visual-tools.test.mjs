@@ -95,3 +95,13 @@ test('expert chat is honestly not connected: one line in Tools, no input, button
   assert.doesNotMatch(app.html(), /data-pa="chat|aria-live|\bassistant\b|\blive chat\b/i);
   assert.ok(!app.fetches.some((f) => /chat/i.test(f.path)), 'no request is made for chat');
 });
+
+test('an off-script mock game is a grey pip and isn\'t counted as won or lost', async (t) => {
+  const games = [{ id: 'game_aaaaaaaaaaaa', index: 0, result: 'W' }, { id: 'game_bbbbbbbbbbbb', index: 1, result: 'W', tag: 'partner-off-script' }];
+  const s = device({ ws: { mockSets: [{ id: 'mock_aaaaaaaaaaaa', date: '2026-10-06', partner: 'Sam', purpose: '', variantIds: [], fidelity: 2, simulatedDisclosure: 'closed', games }] } });
+  const app = await open(`prep/w/${WS}/practice`, { storage: s });
+  t.after(() => app.restore());
+  const card = find(root(app), (n) => hasClass(n, 'mockcard'));
+  assert.deepEqual(findAll(card, (n) => hasClass(n, 'pip')).map((n) => n.attrs.class.split(' ')[1]), ['pip-W', 'pip-off']);
+  assert.match(text(card), /1 won · 0 lost \(counts only\) · 1 off-script, not counted/);
+});

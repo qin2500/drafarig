@@ -16,7 +16,7 @@ const tabs = (app) => findAll(find(root(app), (n) => n.tag === 'nav' && n.attrs[
 const CLAIMS = /this week|current week|next match|upcoming|today|tomorrow|\b(mon|tue|wed|thu|fri|sat|sun)day\b|\b\d{1,2}\/\d{1,2}\b|\bwon\b|\blost\b|standings?/i;
 const schedText = (app) => {
   const r = root(app);
-  return [find(r, (n) => hasClass(n, 'weeks')), find(r, (n) => hasClass(n, 'sched')), find(r, (n) => hasClass(n, 'weekline'))].filter(Boolean).map(text).join(' ').replace(/\s+/g, ' ')
+  return [find(r, (n) => hasClass(n, 'weeks')), find(r, (n) => hasClass(n, 'sched')), find(r, (n) => hasClass(n, 'weekfact'))].filter(Boolean).map(text).join(' ').replace(/\s+/g, ' ')
     .replace(/the sheet has no dates, results or current week/g, '');
 };
 
@@ -75,16 +75,16 @@ test('Opponent tabs, overview cards and the hero say the week(s) from the sheet;
   const cards = findAll(root(app), (n) => n.tag === 'a' && hasClass(n, 'oppcard'));
   const card = (seat) => text(cards.find((a) => a.attrs['data-opp'] === seat)).replace(/\s+/g, ' ');
   assert.match(card('1'), /W4/);
-  assert.match(card('2'), /Not on your schedule/);
+  assert.match(card('2'), /Not paired with you in the sheet's weeks 1–5/);
   await app.click({ pa: 'go-opp', opp: '1' });
   assert.match(T(app), /W4 Week 4 · Group A/);
   await app.click({ pa: 'go-opp', opp: '2' });
-  assert.match(T(app), /Not on your schedule · Ning is in Group B/);
+  assert.match(T(app), /Not paired with you in the sheet's weeks 1–5 · Ning is in Group B on the sheet/);
   assert.doesNotMatch(schedText(app), CLAIMS);
   // another perspective sees its own weeks
   await app.click({ pa: 'flip' });
   assert.equal(app.location.hash, '#prep/2v5');
-  assert.match(T(app), /Not on your schedule · Anthony is in Group A/);
+  assert.match(T(app), /Not paired with you in the sheet's weeks 1–5 · Anthony is in Group A on the sheet/);
 });
 
 test('"next" stays your own mark: a schedule never sets it, and a marked opponent is labelled "next (you marked)" on its week', async (t) => {
@@ -115,7 +115,7 @@ test('missing, failed and unreadable tabs: one honest line, no strip or badges, 
     assert.equal(tabs(app).filter((a) => find(a, (n) => hasClass(n, 'wk'))).length, 0);
     assert.match(T(app), /Battle Prep as Anthony/);
     await app.click({ pa: 'go-opp', opp: '8' });
-    assert.equal(find(root(app), (n) => hasClass(n, 'weekline')), null, 'no hero week line');
+    assert.equal(find(root(app), (n) => hasClass(n, 'weekfact')), null, 'no hero week fact');
     const league = await open('league', { raw });
     t.after(() => league.restore());
     const panel = find(root(league), (n) => hasClass(n, 'sched'));

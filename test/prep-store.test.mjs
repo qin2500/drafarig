@@ -197,3 +197,23 @@ test('restore plans: replace removes what the backup lacks; import adds, replace
   const od = opponentDocs({ ...wsA, my6: [{ setId }] }, { sets: [lin, newLineage({ id: id('set'), side: 'mine', speciesId: 'kingambit', name: 'x', data: { ability: 'defiant', nature: 'adamant', moves: ['ironhead'], sp: {} }, now: NOW })] });
   assert.deepEqual(od[KEYS.mysets].sets.map((s) => s.id), [setId], 'archive keeps only the sets that opponent uses');
 });
+
+test('card.species (Plan board picks) is validated: lead within the 4 brought, at most 2 lead and 10 brought, ids only, a Mega that is brought, a form that needs its species', () => {
+  const ws = newWorkspace({ id: 'ws_aaaaaaaaaaaa', coach: 'Ning', roster: { fetchedAt: null, speciesIds: ['rillaboom'] }, now: '2026-10-08T00:00:00.000Z', pov: 'Anthony' });
+  const withSpecies = (species) => ({ ...ws, cards: [{ id: 'card_aaaaaaaaaaaa', kind: 'plan', vsPlanIds: [], species }] });
+  const ok = { bring4: ['charizard', 'sinistcha'], lead: ['charizard'], mega: 'charizard', megaForm: 'charizardmegay' };
+  assert.deepEqual(validate('ws', withSpecies(ok)), []);
+  assert.deepEqual(validate('ws', withSpecies({ ...ok, speed: 'trick-room' })), []);
+  for (const [why, bad] of [
+    ['a lead not brought', { ...ok, lead: ['pelipper'] }],
+    ['three leads', { ...ok, bring4: ['a', 'b', 'c'], lead: ['a', 'b', 'c'], mega: '', megaForm: '' }],
+    ['more than 10 brought', { ...ok, bring4: Array.from({ length: 11 }, (_, i) => `mon${i}`), lead: [], mega: '', megaForm: '' }],
+    ['markup in an id', { ...ok, bring4: ['<img src=x>'], lead: [], mega: '', megaForm: '' }],
+    ['an unknown speed mode', { ...ok, speed: 'fast' }],
+    ['not an object', 'charizard'],
+    ['a Mega that is not brought', { ...ok, mega: 'kangaskhan', megaForm: '' }],
+    ['a Mega form without its species', { ...ok, mega: '', megaForm: 'charizardmegay' }],
+  ]) assert.deepEqual(validate('ws', withSpecies(bad)), ['cards[0]'], why);
+  assert.equal(docVersion('ws', withSpecies(ok)), 3);
+  assert.equal(docVersion('ws', ws), 2);
+});

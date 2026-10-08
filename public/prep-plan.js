@@ -60,6 +60,8 @@ export function tab(P, ws) {
   const flagLi = (f) => `<li>⚠ ${esc(flagText(P, f))} ${C.FLAG_ACTION[f.code] ? btn(C.FLAG_ACTION[f.code], 'flag-go', { code: f.code, ref: f.ref ?? '' }, { cls: 'linkish' }) : ''} ${btn('Dismiss', 'flag-dismiss', { code: f.code, ref: f.ref ?? '' }, { cls: 'linkish', aria: `Dismiss: ${flagText(P, f)}` })}</li>`;
   const recs = recordText(ws.mockSets);
   const boardHtml = Board.board(P, ws, F) ?? savedOnly(P, ws, plans);
+  // plan cards linked to no current plan (their plan was deleted, or from an older file): kept and reachable, never hidden
+  const orphans = ws.cards.filter((c) => c.kind === 'plan' && !(c.vsPlanIds ?? []).some((id) => ws.plans.some((p) => p.id === id)));
   const g2 = (kind, text) => {
     const c = bo3.find((x) => x.kind === kind);
     return c ? `<li>${btn(`${kind === 'bo3-won-g1' ? '🏆' : '↺'} ${C.CARD_KIND[kind]}`, 'open-card', { card: c.id }, { cls: 'g2card' })}${c.turn1Intent ? `<span class="small"> ${esc(c.turn1Intent.slice(0, 80))}</span>` : ''}</li>`
@@ -69,6 +71,7 @@ export function tab(P, ws) {
     ${diff.added.length || diff.removed.length ? `<p class="banner warn">${esc(ws.coach)}'s roster on the sheet changed since you started: ${diff.added.map((x) => `+ ${esc(P.spName(x))}`).join(', ')}${diff.added.length && diff.removed.length ? ', ' : ''}${diff.removed.map((x) => `− ${esc(P.spName(x))}`).join(', ')}. ${btn('Update prep', 'roster-update', {}, { primary: true })} ${btn('Keep old roster', 'roster-keep')}</p>` : ''}
     ${ws.roster.speciesIds.length < 10 ? `<p class="small">${esc(ws.coach)} has ${ws.roster.speciesIds.length} Pokémon so far; plans use what is drafted.</p>` : ''}
     <div class="pboard" id="plan-plans" data-key="plans" tabindex="-1">${boardHtml}</div>
+    ${orphans.length ? `<p class="small">${esc(C.BOARD.orphanCards)} ${orphans.map((c) => btn(C.BOARD.orphanCard(Board.cardPicks(P, c).lead.map((x) => P.spName(x)).join(' + ')), 'open-card', { card: c.id }, { cls: 'linkish' })).join(' · ')}</p>` : ''}
     ${shown.length ? `<ul class="flags">${shown.map(flagLi).join('')}</ul>${rest.length ? `<details class="small"><summary>${rest.length} more</summary><ul class="flags">${rest.map(flagLi).join('')}</ul></details>` : ''}` : ''}
     <section class="pb-g2" id="plan-cards" data-key="cards" tabindex="-1" aria-labelledby="pb-g2-h"><h3 id="pb-g2-h">${esc(C.BOARD.game2)} ${term('If-then line')}</h3>
       <ul class="g2cards">${g2('bo3-won-g1', 'If I win game 1')}${g2('bo3-lost-g1', 'If I lose game 1')}</ul></section>
@@ -78,6 +81,17 @@ export function tab(P, ws) {
       <label class="field" for="ws-premortem"><span>${esc(C.PREMORTEM_Q)}</span><input id="ws-premortem" data-pi="ws-premortem" value="${esc(ws.premortem ?? '')}" maxlength="200"></label>
       <p>${btn('Make a mock brief', 'go-brief')} ${btn('Through their eyes', 'go-eyes', {}, { cls: 'linkish' })} ${btn('Rules you know', 'go-rules', {}, { cls: 'linkish' })} ${recs.length ? `<span class="small">Mock sets: ${esc(recs.join(', '))}. ${esc(C.RECORD_NOTE)}</span>` : ''}</p></details>
     <p class="cantknow">${esc(C.CANT_KNOW)}</p>`;
+}
+/**
+ * Plan for a matchup with nothing saved yet: the board itself (it saves nothing until the first tap that writes, which
+ * creates the prep). Game 2 cards, notes and "Before the match" appear once the prep exists. null when there's no preview.
+ */
+export function previewTab(P, m) {
+  const ws = Board.previewWs(P);
+  const html = ws && Board.board(P, ws, {});
+  if (!html) return null;
+  return `${h2(`vs ${m.opp.name} · Plan`)}<div class="pboard" id="plan-plans" data-key="plans" tabindex="-1">${html}</div>
+    <p class="small muted">${esc(C.BOARD.previewNote(m.pov.name, m.opp.name))}</p>`;
 }
 /** Without a readable matchup (earlier prep, or the sheet not loaded): the saved plans and cards, as saved. */
 function savedOnly(P, ws, plans) {

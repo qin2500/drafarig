@@ -553,7 +553,9 @@ export const SCHED = {
   bye: 'Bye', week: (n) => `Week ${n}`, weeks: (ns) => (ns.length === 1 ? `Week ${ns[0]}` : `Weeks ${ns.slice(0, -1).join(', ')} and ${ns[ns.length - 1]}`),
   tile: (n, o) => `Week ${n}: ${o}. Open the briefing`, tileBye: (n) => `Week ${n}: bye`, tileRaw: (n, raw) => `Week ${n}: ${raw} (not matched to a coach)`,
   unmatched: 'not matched to a coach', marked: 'next (you marked)',
-  notScheduled: 'Not on your schedule', notScheduledIn: (o, g) => `Not on your schedule · ${o} is in ${g}`,
+  // the tab pairs coaches within their group for the weeks it lists; nothing is said about other matches
+  span: (ns) => (ns.length ? (ns.every((n, i) => i === 0 || n === ns[i - 1] + 1) && ns.length > 1 ? `weeks ${ns[0]}–${ns[ns.length - 1]}` : `week${ns.length > 1 ? 's' : ''} ${ns.join(', ')}`) : 'weeks'),
+  notScheduled: (span) => `Not paired with you in the sheet's ${span}`, notScheduledIn: (o, g, span) => `Not paired with you in the sheet's ${span} · ${o} is in ${g} on the sheet`,
 };
 
 // ---------- Battle Prep: the Plan board ----------
@@ -564,7 +566,7 @@ export const BOARD = {
   kind: { likely: 'Likely', alt: 'Other', counterprep: 'They prepped vs you', idea: 'Idea' },
   suggested: 'suggested', seedWord: 'seed', unsavedNote: 'Not saved yet: your first pick below saves it.',
   seed: { 'seed-trick-room': 'Trick Room possible', 'seed-tailwind': 'Their Tailwind possible', 'seed-sun': 'Sun possible', 'seed-rain': 'Rain possible', 'seed-sand': 'Sand possible', 'seed-snow': 'Snow possible', 'look-first': 'Their look-first mons' },
-  seedNote: 'Not one of the common team patterns. Built from their setters (ladder data) and their look-first mons.',
+  seedNote: 'Not one of the common team patterns. Built from their setters (ladder data or a forced ability).',
   lookFirstNote: 'The mons of theirs to look at first, by type and Speed.',
   couldAlso: (what, names) => `Could also: ${what} (${names}, learnable: could, not will)`,
   couldWhat: { 'seed-trick-room': 'Trick Room', 'seed-tailwind': 'Tailwind' },
@@ -574,22 +576,27 @@ export const BOARD = {
   slotEmpty: (role, n) => `${role} ${n}: empty. Pick from your 6`,
   slotFilled: (role, n, name, set) => `${role} ${n}: ${name}${set ? ', set attached' : ', no set yet'}. Change`,
   tapHint: 'Tap your Pokémon below: the first two lead, the next two go in the back.',
+  tapHintNoSix: 'First pick your 6 below (tap portraits), then tap them to fill Lead and Back.',
+  pickSix: 'Pick your 6: tap portraits from your 10.', pickFromSix: 'Pick from your 6 below.',
   placed: (name, role) => `${name} placed in ${role}`, removed: (name) => `${name} taken off this plan`, full: 'Lead and Back are full: tap a slot to change it.',
+  megaWhich: (forms) => `Pick ${forms}`, calcLoading: 'Loading the calculator… try again in a moment.',
   moveBack: 'Move to Back', moveLead: 'Move to Lead', remove: 'Remove', startSet: 'Start a set', openSet: 'Open its set', setAttached: 'set attached', noSet: 'no set yet',
   attachedSay: (name) => `Your ${name} set is attached (your only set for it).`,
   ready: 'Card ready: 2 lead, 2 back', readyHelp: 'A fact about the slots, not a verdict.',
   headline: { has: 'Has listed answers', weaker: 'Has a weaker listed answer', pressures: 'Pressures it by type', walls: 'Takes its hits', none: 'No clear link' },
   headFor: (lead) => `Your lead ${lead}:`, notChecked: 'type and Speed, not damage-checked', checked: 'a calc exists for this pair',
-  tryHead: 'Lead ideas from your 6', tryBtn: 'Use as lead', backHead: 'Back ideas', backBtn: 'Use as back', backOpen: (names) => `Not yet answered by your lead: ${names}`,
-  backAllDone: 'Your lead already pressures everything listed here. Pick the back for your other plans.',
+  tryHead: 'Lead ideas from your 6', tryBtn: 'Use as lead', backHead: 'Back ideas', backBtn: 'Use as back', backOpen: (names) => `Not yet hit hard or walled by your lead: ${names}`,
+  backAllDone: 'Your lead already hits hard or walls everything listed here (by type). Pick the back for your other plans.',
   needSix: 'Pick 2 or more for your 6 to see lead ideas.',
   glyph: {
     answer: (label, anchor) => `✓ ${label}${anchor ? '' : ' (weaker)'}`, contested: (n) => `contested by ${n}`,
-    hit: (m, t, mult, mega) => `×${mult} ${m} → ${t}${mega ? ' (as Mega)' : ''}`, hitSay: (m, t) => `${m} hits ${t} hard by type (not damage)`,
-    wall: (m, t) => `🛡 ${m} vs ${t}`, wallSay: (m, t) => `${m} takes ${t}'s attacks by type`,
+    hitSay: (m, t, form) => `${m} hits ${t} hard by type${form ? ` as ${form}` : ''} (not damage)`, megaMismatch: (form, picked) => `(needs ${form}; you picked ${picked})`,
+    wallSay: (m, t) => `${m} takes ${t}'s attacks by type`,
     speed: { first: '⚡▲', second: '⚡▼', depends: '⚡◆', tie: '⚡=' },
-    speedSay: { first: (m, t, mode) => `${m} is faster than ${t}${mode}`, second: (m, t, mode) => `${m} is slower than ${t}${mode}`, depends: (m, t, mode) => `${m} vs ${t}: depends on spreads${mode}`, tie: (m, t, mode) => `${m} and ${t}: coin flip${mode}` },
-    mode: { 'trick-room': ' (Trick Room)', tailwind: ' (their Tailwind)', none: '' },
+    // who moves when (never "faster/slower": under Trick Room the slower one moves first)
+    speedSay: { first: (m, t, mode) => `${m} moves before ${t}${mode}`, second: (m, t, mode) => `${m} moves after ${t}${mode}`, depends: (m, t, mode) => `${m} vs ${t}: depends on spreads${mode}`, tie: (m, t, mode) => `${m} and ${t}: coin flip${mode}` },
+    speedDepends: (m, ts, mode) => `${m} vs ${ts}: depends on spreads${mode}`,
+    mode: { 'trick-room': ' (Trick Room: slower moves first)', tailwind: ' (their Tailwind)', none: '' },
     shared: (t) => `⚠ Both hit hard by ${t}`, twoMegas: '⚠ needs 2 Megas (one per battle)',
   },
   lights: { speed: 'Speed', calcs: 'Calcs', practised: 'Practised' },
@@ -597,22 +604,26 @@ export const BOARD = {
   lightNone: 'Pick a lead first', calcsHead: 'Key calcs for this lead', calcAsk: (mine, theirs) => `Does your ${mine} survive their ${theirs}?`, calcOpen: 'Open', calcRun: 'Run it', calcStale: 'out of date',
   six: 'Your 6', sixEdit: 'Change your 6', sixDone: 'Done', sixMore: 'More than 6: a match uses 6.', sixFromSets: 'chosen in Sets',
   sixSay: (n) => `${n} of 6 picked`, sixAdd: (name) => `Add ${name} to your 6`, sixRemove: (name) => `Take ${name} out of your 6`,
+  sixAdded: (name) => `${name} added to your 6`, sixRemoved: (name) => `${name} taken out of your 6`,
   coverage: 'What your 6 covers', covSay: { solid: 'covered', outline: 'covered (weaker)', gap: 'not covered' },
-  fillGap: 'Fill a gap', gapNone: 'No gaps: every plan and look-first mon here has an answer in your 6 (by listed answers or type).',
+  fillGap: 'Fill a gap', gapNone: 'No gaps: each plan here has a listed answer in your 6, and each look-first mon is hit hard or walled by type (not damage-checked).',
   gapFor: (what) => `Gap: ${what}`, gapAdd: (n) => `Add ${n}`, another: 'Another idea', skip: 'Skip this gap',
   gapWhy: { 4: 'listed answer (anchor)', 3: 'listed answer', 2: 'hits it hard or takes its hits, by type', 1: 'hits it hard only as a Mega', 0.5: 'a super-effective type, but a weaker attacker by stats' },
   noCandidate: (n) => `None of your 10 hits ${n} hard or takes its hits by type. Check it with a calc.`,
   freeSwap: (names) => `Your 6 is full. Free to swap (taking it out uncovers nothing): ${names}`,
   notes: 'Notes: turn 1, win condition, if-then lines', editLines: 'Edit if-then lines', ifThen: (lead, resp) => `IF they lead ${lead} → ${resp}`,
   game2: 'Game 2 cards', before: 'Before the match: premortem, date, next', more: 'More',
+  otherCards: 'Other cards vs this plan:', orphanCards: 'Cards not linked to a plan:', orphanCard: (lead) => `Card${lead ? ` (${lead})` : ''}`, cardN: (n, lead) => `Card ${n}${lead ? ` (${lead})` : ''}`,
   locked: { earlier: 'Earlier prep: say whose it is to edit it.', newer: 'Saved by a newer Drafarig: read-only here.' },
   sheetWait: 'Suggestions appear when the league sheet loads; your saved plans are below.',
+  previewNote: (p, o) => `Nothing is saved for ${p} vs ${o} yet: your first pick starts the prep on this device. Game 2 cards and notes appear then.`,
 };
 
 // ---------- Calcs notebook cards (picture first, words always beside it) ----------
 export const CALCCARD = {
   envAll: 'KO at every example investment', envNone: 'No KO at any example investment', envSplit: 'Depends on their investment',
-  noNumber: 'No number', staleHidden: 'The number is hidden until you re-check.',
+  noNumber: 'No number', staleHidden: 'The number is hidden until you re-check.', noKo: 'No KO number for this hit.',
+  twoHits: (words) => words, // koWords already says "2 uses …"
   category: { Physical: '⚔ physical', Special: '✦ special' },
   side: { mine: 'your hit', theirs: 'their hit on you' },
   mark: { fine: '✓ Fine', 'not-fine': '✕ Not fine', unsure: '? Unsure' },
@@ -629,13 +640,13 @@ export const SETGRID = {
 // ---------- Practice: the record board (counts, never a rate) ----------
 export const PRACTICE = {
   mocks: 'Mock sets', noOpen: 'No open findings',
-  pip: { W: 'Won', L: 'Lost', draft: 'Not logged' }, pipGlyph: { W: '✓', L: '✕', draft: '○' },
-  recordLine: (w, l) => `${w} won · ${l} lost (counts only)`,
+  pip: { W: 'Won', L: 'Lost', draft: 'Not logged', off: 'Partner off-script' }, pipGlyph: { W: '✓', L: '✕', draft: '○', off: '–' },
+  recordLine: (w, l) => `${w} won · ${l} lost (counts only)`, offLine: (n) => `${n} off-script, not counted`,
   mechGlyph: { speed: '⚡', 'unexpected-ko': '✸', 'fakeout-redirect': '✋', 'setup-mega': '⬆', 'weather-terrain': '☀', other: '•' },
 };
 
 // ---------- Expert chat: not built until a real, private connection exists (nothing here sends or replies) ----------
 export const CHAT = {
   name: 'Expert chat with the VGC agent',
-  notConnected: 'Not connected yet: it needs a one-time private setup first. Nothing from this page is sent anywhere.',
+  notConnected: 'Not connected. Nothing from this page is sent anywhere.',
 };

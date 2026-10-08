@@ -274,6 +274,21 @@ test('pairings are optional: a missing or unreadable pairing tab still gives a f
   assert.deepEqual([r2.status, r2.body.stale], [200, false]);
 });
 
+test('the Paring tab is read once (no retry); a failed read on a fresh sheet keeps the saved schedule with its own read time', async (t) => {
+  setup(t);
+  const bucket = new FakeR2();
+  const first = await get(await freshWorker(), '/api/sheet', { BUCKET: bucket });
+  assert.equal(first.body.raw.pairingCsv, RAW.pairingCsv);
+  assert.equal(first.body.pairingReadAt, undefined, 'a fresh schedule has no separate read time');
+  t.mock.restoreAll();
+  const down = setup(t, { pairing: DOWN.board });
+  const r = await get(await freshWorker(), '/api/sheet', { BUCKET: bucket });
+  assert.equal(down.count('pairing'), 1, 'no retry for the optional tab');
+  assert.deepEqual([r.status, r.body.stale, r.body.raw.pairingCsv, r.body.pairingReadAt], [200, false, RAW.pairingCsv, first.body.fetchedAt]);
+  assert.equal(bucket.value(SHEET_KEY).pairingReadAt, first.body.fetchedAt, 'the saved copy keeps the schedule and when it was read');
+  assert.ok(down.logs.some((l) => l.includes('pairing tab unavailable')));
+});
+
 test('the last good snapshot survives into a new Worker instance and is served when the sheet is down', async (t) => {
   const up = setup(t);
   const bucket = new FakeR2();

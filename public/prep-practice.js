@@ -41,12 +41,14 @@ export function tab(P, ws) {
 }
 function mockCard(P, ws, m) {
   const all = m.games ?? [];
-  const w = all.filter((g) => !g.draft && g.result === 'W').length, l = all.filter((g) => !g.draft && g.result === 'L').length;
+  const w = all.filter((g) => !g.draft && g.result === 'W' && g.tag !== 'partner-off-script').length, l = all.filter((g) => !g.draft && g.result === 'L' && g.tag !== 'partner-off-script').length;
+  const off = all.filter((g) => !g.draft && g.result && g.tag === 'partner-off-script').length;
   const role = ws.variants.find((v) => (m.variantIds ?? []).includes(v.id))?.role;
-  const pip = (g, i) => { const k = g.draft || !g.result ? 'draft' : g.result; return `<li class="pip pip-${k}" title="${esc(`Game ${i + 1}: ${C.PRACTICE.pip[k]}`)}"><span aria-hidden="true">${C.PRACTICE.pipGlyph[k]}</span><span class="vh">Game ${i + 1}: ${esc(C.PRACTICE.pip[k])}</span></li>`; };
+  // an off-script game (the partner didn't play the brief) is greyed: it doesn't count as practice of the plan
+  const pip = (g, i) => { const k = g.draft || !g.result ? 'draft' : g.tag === 'partner-off-script' ? 'off' : g.result; return `<li class="pip pip-${k}" title="${esc(`Game ${i + 1}: ${C.PRACTICE.pip[k]}`)}"><span aria-hidden="true">${C.PRACTICE.pipGlyph[k]}</span><span class="vh">Game ${i + 1}: ${esc(C.PRACTICE.pip[k])}</span></li>`; };
   return `<li class="mockcard">${btn(`${m.date} · ${m.partner || 'partner'}`, 'open-mock', { mock: m.id }, { cls: 'linkish' })} <span class="small">${esc(m.purpose || 'no purpose')}</span>
     <p class="small">${role ? `<span class="chip">${esc(`${C.SETGRID.roleIcon[role] ?? ''} ${C.VARIANT_ROLE[role]}`.trim())}</span> ` : ''}${m.fidelity ? `<span class="chip">${esc(C.FIDELITY[m.fidelity] ?? '')}</span> ` : ''}${m.simulatedDisclosure ? `<span class="small muted">${esc(C.CONDITION[m.simulatedDisclosure] ?? '')}</span>` : ''}</p>
-    ${all.length ? `<ul class="pips">${all.map(pip).join('')}</ul>` : ''}<p class="small">${esc(C.PRACTICE.recordLine(w, l))}</p></li>`;
+    ${all.length ? `<ul class="pips">${all.map(pip).join('')}</ul>` : ''}<p class="small">${esc(C.PRACTICE.recordLine(w, l))}${off ? ` · ${esc(C.PRACTICE.offLine(off))}` : ''}</p></li>`;
 }
 function findingRow(P, ws, f) {
   const conf = confidenceOf(ws, f);

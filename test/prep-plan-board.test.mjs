@@ -240,3 +240,78 @@ test('accessibility and honesty: unique names for slots, tiles and lights; portr
   for (const re of [/\bcounters?\b/i, /\bbeats?\b/i, /\bwins\b/i, /favou?red/i, /\bsafe\b/i, /guaranteed/i, /%/, /odds/i]) assert.doesNotMatch(words, re);
   assert.match(words, /\(Trick Room\)|not damage-checked/);
 });
+
+test('two cards against one plan (as v4 allowed): the board edits the first and lists the other, which still opens', async (t) => {
+  const plan = { id: 'plan_aaaaaaaaaaaa', label: 'Their sun', kind: 'likely', members: ['gholdengo'], megaUser: null, speedMode: 'none', field: '', needs: '', basis: [], falsifiers: { atPreview: [], inGame: [] }, updatedAt: NOW };
+  const mk = (id, lead) => ({ id, kind: 'plan', vsPlanIds: [plan.id], bring4: lead, lead, back: [], mega: null, turn1Intent: '', winCondition: '', ifThen: [], infoPlan: [], updatedAt: NOW });
+  const s = device({ ws: { plans: [plan], cards: [mk('card_aaaaaaaaaaaa', [SET_MINE]), mk('card_bbbbbbbbbbbb', [])] } });
+  const app = await open('prep/5v2/plan', { storage: s });
+  t.after(() => app.restore());
+  assert.match(T(app), /Other cards vs this plan: Card 2/);
+  const other = btns(app, 'open-card').find((b) => b.card === 'card_bbbbbbbbbbbb');
+  assert.ok(other);
+  await app.click({ pa: 'pb-pick', species: 'sinistcha' });
+  await flushSaves(app);
+  const cards = doc(s).cards;
+  assert.deepEqual([cards[0].species?.bring4, cards[1].species], [['charizard', 'sinistcha'], undefined], 'only the first card changed');
+  await app.click(other);
+  assert.match(app.location.hash, /\/card\/card_bbbbbbbbbbbb$/);
+});
+
+test('review fixes on the board: first use with no 6 opens your 10 right away and an empty slot is never a dead tap; Trick Room words; an unchosen Mega form is not shown as chosen', async (t) => {
+  const fresh = device({ ws: { my6: [] } });
+  const app = await open('prep/5v2/plan', { storage: fresh });
+  t.after(() => app.restore());
+  assert.ok(T(app).includes(C.BOARD.pickSix));
+  assert.ok(findAll(root(app), (n) => n.attrs['data-pa'] === 'pb-six').length >= 4, 'your 10 to pick from, without a tap');
+  assert.ok(T(app).includes(C.BOARD.tapHintNoSix));
+  const before = snap(fresh);
+  await app.click({ pa: 'pb-slot', role: 'lead', i: '0' });
+  assert.ok(findAll(root(app), (n) => n.attrs['data-pa'] === 'pb-six').length >= 4, 'still right there');
+  await flushSaves(app);
+  assert.equal(snap(fresh), before);
+  // Trick Room: Charizard and Sinistcha are faster than Torkoal at any investment, so under Trick Room they move after it
+  const plan = { id: 'plan_aaaaaaaaaaaa', label: 'Their Trick Room', kind: 'likely', members: ['torkoal'], megaUser: null, speedMode: 'trick-room', field: '', needs: '', basis: [], falsifiers: { atPreview: ['torkoal'], inGame: [] }, updatedAt: NOW };
+  const s = device({ coach: 'Jacky', ws: { plans: [plan], shortlist: ['sinistcha'] } });
+  const tr = await open('prep/5v4/plan', { storage: s });
+  t.after(() => tr.restore());
+  await tr.click({ pa: 'pb-pick', species: 'charizard' });
+  await tr.click({ pa: 'pb-pick', species: 'sinistcha' });
+  const verdict = text(find(root(tr), (n) => hasClass(n, 'pb-verdict')));
+  assert.match(verdict, /Charizard moves after Torkoal \(Trick Room: slower moves first\)/);
+  assert.doesNotMatch(text(find(root(tr), (n) => hasClass(n, 'pboard'))), /faster than|slower than/);
+  // a v4 card whose Mega set holds no stone: Charizard has two Mega forms and none was chosen
+  const noStone = device({ mine: { item: 'heavydutyboots' }, ws: { plans: [plan], cards: [{ id: 'card_aaaaaaaaaaaa', kind: 'plan', vsPlanIds: [plan.id], bring4: [SET_MINE], lead: [SET_MINE], back: [], mega: SET_MINE, turn1Intent: '', winCondition: '', ifThen: [], infoPlan: [], updatedAt: NOW }] } });
+  const m = await open('prep/5v2/plan', { storage: noStone });
+  t.after(() => m.restore());
+  const chips = findAll(root(m), (n) => n.attrs['data-pa'] === 'pb-mega' && n.attrs['data-species'] === 'charizard');
+  assert.equal(chips.length, 2);
+  assert.ok(chips.every((n) => n.attrs['aria-pressed'] === 'false'), 'neither form is shown as chosen');
+  assert.match(T(m), /Pick Charizard Mega-X or Charizard Mega-Y/);
+});
+
+test('a matchup with no prep yet opens straight on the board: looking saves nothing; the first pick creates the prep and keeps the plan you selected', async (t) => {
+  const s = device();
+  const app = await open('prep/5v8/plan', { storage: s });
+  t.after(() => app.restore());
+  assert.equal(slots(app).length, 4, 'the board, not a "Start" panel');
+  assert.equal(btns(app, 'match-start-ws').length, 0);
+  assert.match(T(app), /Nothing is saved for Anthony vs Calvin yet: your first pick starts the prep/);
+  const before = snap(s);
+  const keys = pills(app).map((n) => n.attrs['data-key']);
+  await app.click({ pa: 'pb-target', key: keys[keys.length - 1] });
+  await app.click({ pa: 'pb-gap' });
+  await app.click({ pa: 'pb-slot', role: 'lead', i: '0' });
+  await flushSaves(app);
+  assert.equal(snap(s), before, 'looking around saves nothing');
+  await app.click({ pa: 'pb-pick', species: 'charizard' });
+  await flushSaves(app);
+  const made = [...s.map.keys()].filter((k) => k.startsWith('drafarig.prep.ws.')).map((k) => JSON.parse(s.getItem(k))).find((w) => w.coach === 'Calvin');
+  assert.ok(made, 'the prep exists now');
+  assert.equal(made.pov, 'Anthony');
+  const plan = made.plans.find((p) => made.cards[0].vsPlanIds.includes(p.id));
+  assert.equal(plan.basis[0], keys[keys.length - 1].startsWith('core:') ? keys[keys.length - 1].split(':')[1] : keys[keys.length - 1], 'the plan you had selected');
+  assert.deepEqual(made.cards[0].species.lead, ['charizard']);
+  assert.match(app.location.hash, /^#prep\/5v8\/plan$/);
+  assert.match(T(app), /Game 2 cards/, 'the rest of Plan appears once the prep exists');
+});

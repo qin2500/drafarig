@@ -103,13 +103,14 @@ export function hero(P, { r, pov, opp, ws, legacy }) {
   const diff = ws ? P.rosterDiffOf(ws) : { added: [], removed: [] };
   const titleText = `vs ${opp.name}`;
   const isBrief = (r.tab ?? 'brief') === 'brief' && !r.detail;
-  // the sheet's schedule, when there is one and this perspective is in it: which week(s), never "this week" or a date
+  // the sheet's schedule, when there is one and this perspective is in it: which week(s), never "this week" or a date. It
+  // leads the facts line (one line on a phone, as v4's compact hero)
   const vs = P.weeksVs?.(pov.name, opp.name);
   const week = !vs ? '' : vs.weeks.length
-    ? `<p class="weekline small"><span class="wkchip" aria-hidden="true">${vs.weeks.map((n) => `W${n}`).join('·')}</span> ${esc(C.SCHED.weeks(vs.weeks))}${vs.group ? ` · ${esc(vs.group)}` : ''}</p>`
-    : `<p class="weekline small muted">${esc(vs.oppGroup && vs.oppGroup !== vs.group ? C.SCHED.notScheduledIn(opp.name, vs.oppGroup) : C.SCHED.notScheduled)}</p>`;
-  return `<div class="mhero">${isBrief ? h2(titleText) : `<p class="herotitle">${esc(titleText)}</p>`}${week}
-    <p class="facts small muted">${esc(facts.join(' · '))}</p>
+    ? `<span class="weekfact"><span class="wkchip" aria-hidden="true">${vs.weeks.map((n) => `W${n}`).join('·')}</span> <b>${esc(C.SCHED.weeks(vs.weeks))}${vs.group ? ` · ${esc(vs.group)}` : ''}</b></span> · `
+    : `<span class="weekfact">${esc(vs.oppGroup && vs.oppGroup !== vs.group ? C.SCHED.notScheduledIn(opp.name, vs.oppGroup, vs.span) : C.SCHED.notScheduled(vs.span))}</span> · `;
+  return `<div class="mhero">${isBrief ? h2(titleText) : `<p class="herotitle">${esc(titleText)}</p>`}
+    <p class="facts small muted">${week}${esc(facts.join(' · '))}</p>
     <div class="heroacts">${chipBtn(C.BRIEF.next, 'brief-next', {}, ws?.isNext)} <details class="more"><summary>${esc(C.BRIEF.more)}</summary>${btn(`⇄ ${C.BRIEF.flip(opp.name)}`, 'flip', {}, { cls: 'linkish' })} ${btn(C.BRIEF.viewAs, 'brief-viewas', {}, { cls: 'linkish' })}</details></div>
     ${ws ? `<p class="small muted owner-line">${esc(C.POV.savedAs(ownerOf(ws)))}${ws.povFrom === 'legacy-confirm' ? ` · ${btn(C.POV.review, 'go-owner', { ws: ws.id }, { cls: 'linkish' })}` : ''}</p>` : ''}
     ${list.length > 1 ? select('brief-ws', list.map((w, i) => [w.id, `${i ? 'Other copy' : 'Most recent'} · changed ${(w.updatedAt ?? '').slice(0, 10)}`]), ws?.id ?? '', { label: C.BRIEF.wsPick, data: { pc: 'brief-ws' } }) : ''}

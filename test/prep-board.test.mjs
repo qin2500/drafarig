@@ -135,3 +135,25 @@ test('G1 the board\'s words never claim damage, wins or odds', () => {
   for (const re of [/\bcounters?\b/i, /\bbeats?\b/i, /\bwins\b/i, /favou?red/i, /\bsafe\b/i, /guaranteed/i, /win chance/i, /%/, /odds/i]) assert.doesNotMatch(all, re);
   assert.match(all, /not damage-checked/);
 });
+
+test('VGC review fixes: free to swap compares item by item (a lost anchor answer counts); Mega-only hits carry their form', () => {
+  const H = setup('Hex');
+  const g = fillGap(H.ctx, H.targets, SIX);
+  assert.ok(!g.freeToSwap.includes('pelipper'), 'Pelipper\'s Tailwind is the 6\'s only anchor answer to their Tailwind plan');
+  assert.ok(g.freeToSwap.length > 0);
+  const lf = H.targets.find((t) => t.key === 'look-first');
+  const ev = pairEvidence(H.ctx, ['charizard', 'sinistcha'], lf);
+  const hit = ev.hits.find((h) => h.mon === 'charizard' && h.t === 'garchomp');
+  assert.deepEqual([hit.mega, hit.formName], [true, 'Charizard-Mega-X']);
+  assert.equal(C.BOARD.glyph.hitSay('Charizard', 'Garchomp', hit.formName), 'Charizard hits Garchomp hard by type as Charizard-Mega-X (not damage)');
+});
+
+test('VGC B1: Speed words say who moves when, never "faster/slower" (under Trick Room the slower one moves first)', () => {
+  const Z = setup('ZhuZi');
+  const tr = Z.targets.find((t) => t.key === 'seed-trick-room');
+  const ev = pairEvidence(Z.ctx, ['charizard', 'aegislash'], tr);
+  const s = ev.speed.find((x) => x.mon === 'charizard' && x.t === 'slowkinggalar');
+  assert.equal(s.result, 'second');
+  assert.equal(C.BOARD.glyph.speedSay[s.result]('Charizard', 'Slowking-Galar', C.BOARD.glyph.mode['trick-room']), 'Charizard moves after Slowking-Galar (Trick Room: slower moves first)');
+  for (const f of Object.values(C.BOARD.glyph.speedSay)) assert.doesNotMatch(f('A', 'B', ''), /faster|slower than/);
+});

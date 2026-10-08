@@ -127,8 +127,9 @@ function calcCard(P, ws, c, stale) {
   } else if (c.summary?.class === 'exact') {
     const s = c.summary, hits = hitsOf(s.dist);
     const knife = s.flags?.includes('knife-edge') ? `<span class="badge knife">◇ ${esc(C.CLASS['knife-edge'])}</span> ` : '';
+    const hasNum = (ko) => !!ko && ko.num !== undefined && ko.den !== undefined;
     if (s.envelope?.length) {
-      const rows = s.envelope.map((e) => ({ e, ko: e.class === 'exact' ? e.ko?.one ?? null : null }));
+      const rows = s.envelope.map((e) => ({ e, ko: e.class === 'exact' && hasNum(e.ko?.one) ? e.ko.one : null }));
       const exact = rows.filter((r) => r.ko);
       const all = exact.length === rows.length && exact.every((r) => BigInt(r.ko.num) === BigInt(r.ko.den));
       const none = exact.length === rows.length && exact.every((r) => BigInt(r.ko.num) === 0n);
@@ -137,12 +138,20 @@ function calcCard(P, ws, c, stale) {
       body = `<p class="headline">${knife}<span class="oc oc-${o.cls}">${o.glyph} ${esc(all ? C.CALCCARD.envAll : none ? C.CALCCARD.envNone : C.CALCCARD.envSplit)}</span></p>
         <p class="small">${esc(envRange(s))} ${esc(C.ENVELOPE_HEAD)}</p>
         <div class="envrows">${rows.map(({ e, ko }) => `<div class="envrow"><span class="small">${esc(e.label ?? C.ENVELOPE_ROW[e.key] ?? e.key)}</span>${ko ? rollStrip(ko, { hits, cls: outcomeOf(ko, side).cls }) : `<span class="small muted">∅ ${esc(C.CALCCARD.noNumber)}</span>`}</div>`).join('')}</div>`;
+    } else if (!hasNum(s.ko?.one)) {
+      // an exact damage range whose KO chance isn't a number (e.g. healing between hits isn't modelled): the HP band only
+      const why = C.REPEAT_REFUSED[s.ko?.one?.refused] ?? '';
+      body = `<p class="headline">${knife}${esc(headline({ range: s.range, maxHP: s.maxHP, move: { dist: s.dist ?? [{ n: 1 }] }, ko: { one: { refused: s.ko?.one?.refused ?? 'unknown' } } }, P.spName(D)))}</p>
+        ${hpBar(s.range, s.maxHP, 'none')}<p class="oc oc-none">∅ ${esc(C.CALCCARD.noKo)}${why ? ` <span class="small">${esc(why)}</span>` : ''}</p>`;
     } else {
       const o = outcomeOf(s.ko.one, side);
       tone = o.cls;
+      // no KO in one hit: the second hit is the useful fact (VGC §7.1), with its own colour
+      const two = BigInt(s.ko.one.num) === 0n && hasNum(s.ko.two) ? outcomeOf(s.ko.two, side) : null;
       body = `<p class="headline">${knife}${esc(headline({ range: s.range, maxHP: s.maxHP, move: { dist: s.dist ?? [{ n: 1 }] }, ko: s.ko }, P.spName(D)))}</p>
         ${hpBar(s.range, s.maxHP, o.cls)}
-        <p class="oc oc-${o.cls}">${o.glyph} ${rollStrip(s.ko.one, { hits, cls: o.cls })} <span class="small">${esc(koWords(s.ko.one, { hits: hitsOf(s.dist) }) ?? '')}</span></p>`;
+        <p class="oc oc-${o.cls}">${o.glyph} ${rollStrip(s.ko.one, { hits, cls: o.cls })} <span class="small">${esc(koWords(s.ko.one, { hits: hitsOf(s.dist) }) ?? '')}</span></p>
+        ${two ? `<p class="oc oc-${two.cls} small">${two.glyph} ${esc(C.CALCCARD.twoHits(koWords(s.ko.two, { hits: hitsOf(s.dist), uses: 2 }) ?? ''))}</p>` : ''}`;
     }
     body += `<p class="small">${(s.chips ?? []).slice(0, 3).map((x) => esc(C.chipText(x, { attacker: P.spName(A), defender: P.spName(D) }))).join(' · ')}</p>`;
   } else body = `<p class="noresult cc-none">∅ ${esc(C.CLASS[c.summary?.class] ?? C.CALCCARD.noNumber)}</p>`;

@@ -44,11 +44,19 @@ async function getSheet() {
       get(csvUrl(GID.board, SHEET)),
       get(csvUrl(GID.drafts, SHEET)),
       get(htmlUrl(GID.board, SHEET)).catch(() => null), // colours are a cross-check only
-      get(csvUrl(GID.pairing, SHEET)).catch(() => null), // pairings are optional: the draft data never waits on them
+      // pairings are optional: one short read, no retry (as the Worker)
+      fetchText(csvUrl(GID.pairing, SHEET) + bust(), 8000).catch((e) => { log(`pairing tab unavailable: ${e.message || e}`); return null; }),
     ]);
     const raw = { boardCsv, draftsCsv, boardHtml, pairingCsv };
     buildLeague(raw, dex); // throws if the layout is unrecognisable: never save a bad snapshot
     const snap = { fetchedAt: new Date().toISOString(), raw };
+    // a failed Paring read keeps the saved copy's schedule, with the time it was read (as the Worker)
+    if (pairingCsv === null) {
+      try {
+        const prev = JSON.parse(await readFile(snapFile, 'utf8'));
+        if (typeof prev?.raw?.pairingCsv === 'string') { raw.pairingCsv = prev.raw.pairingCsv; snap.pairingReadAt = prev.pairingReadAt ?? prev.fetchedAt; }
+      } catch { /* no saved copy yet */ }
+    }
     await writeJson(snapFile, snap);
     const out = withLeague({ ...snap, stale: false });
     log(`sheet ok in ${Date.now() - t0} ms: ${out.league.coaches.reduce((s, c) => s + c.picks.length, 0)} picks${boardHtml ? '' : ' (board colours unavailable)'}`);

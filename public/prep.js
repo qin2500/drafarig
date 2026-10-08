@@ -473,28 +473,32 @@ export function createPrep(app) {
    * Recovery copies whose workspace an older Drafarig tab removed, or replaced with an unassigned copy (its Archive or
    * "Replace everything" never saw the assignment). Nothing is put back without a tap.
    */
-  P.recoverable = () => P.store.vault.list().filter(({ id, doc }) => {
+  P.recoverable = () => [...P.store.vault.list().map((x) => ({ ...x, src: 'vault' })), ...P.store.keep.list().map((x) => ({ ...x, src: 'keep' }))].filter(({ id, doc, src }) => {
     if (!ownerOf(doc)) return false; // a copy with no real owner (a self-matchup from a file) is never offered; it is left as is
     const r = P.store.load(wsKey(id));
-    return r.status === 'missing' || (r.status === 'ok' && ownerOf(r.doc) !== doc.pov);
+    if (r.status === 'missing') return true;
+    // an older tab put back a copy without the assignment, or (keep copies) one without the Plan board picks (version < 3)
+    return r.status === 'ok' && (ownerOf(r.doc) !== doc.pov || (src === 'keep' && (r.doc.schemaVersion ?? 1) < 3));
   });
+  const copyStore = (src) => (src === 'keep' ? P.store.keep : P.store.vault);
   /**
    * Assigned earlier workspaces whose recovery copy is missing or older than what is saved (the copy didn't fit: storage
    * nearly full). Worked out from storage, so it survives a reload and other tabs, and clears by itself once a later save
    * writes the copy.
    */
   P.copyBehind = () => [...P.ws.values()].filter((w) => {
-    if (w.povFrom !== 'legacy-confirm' || !ownerOf(w)) return false;
+    const keep = (w.schemaVersion ?? 1) >= 3;
+    if ((!keep && w.povFrom !== 'legacy-confirm') || !ownerOf(w)) return false;
     const rev = P.revs.get(wsKey(w.id));
     if (!Number.isInteger(rev)) return false;
-    const copy = P.store.vault.get(w.id);
+    const copy = (keep ? P.store.keep : P.store.vault).get(w.id);
     return !copy || !Number.isInteger(copy.rev) || copy.rev < rev;
   });
   const when = (iso) => (typeof iso === 'string' && !Number.isNaN(Date.parse(iso)) ? `${iso.slice(0, 16).replace('T', ' ')} UTC` : 'an unknown time');
   function banners() {
     const out = [];
-    for (const { id, doc } of P.recoverable()) {
-      out.push(`<div class="banner warn" role="group" aria-label="${esc(C.POV.vaultGroup)}">${esc(C.POV.vaultText(doc.pov, doc.coach, when(doc.updatedAt), P.store.load(wsKey(id)).status === 'missing'))} ${btn(C.POV.vaultRecover, 'vault-recover', { ws: id }, { primary: true })} ${btn(C.POV.vaultDiscard, 'vault-discard', { ws: id })}</div>`);
+    for (const { id, doc, src } of P.recoverable()) {
+      out.push(`<div class="banner warn" role="group" aria-label="${esc(C.POV.vaultGroup)}">${esc(C.POV.vaultText(doc.pov, doc.coach, when(doc.updatedAt), P.store.load(wsKey(id)).status === 'missing'))} ${btn(C.POV.vaultRecover, 'vault-recover', { ws: id, src }, { primary: true })} ${btn(C.POV.vaultDiscard, 'vault-discard', { ws: id, src })}</div>`);
     }
     for (const w of P.copyBehind()) {
       out.push(`<div class="banner warn" role="group" aria-label="${esc(C.POV.copyGroup)}">⚠ ${esc(C.POV.copyFailed(ownerOf(w), w.coach))} ${btn('Download a backup now', 'backup-download', {}, { primary: true })} ${btn('Free up space…', 'go-backup')} ${btn(C.POV.copyRetry, 'vault-retry', { ws: w.id })}</div>`);
@@ -575,7 +579,7 @@ export function createPrep(app) {
   P.weeksVs = (povName, oppName) => {
     const w = P.weeks(povName);
     if (w.state !== 'ok' || !w.rows.length) return null;
-    return { weeks: w.rows.filter((x) => x.opponent === oppName).map((x) => x.week), group: w.group, oppGroup: groupOf(w.pairings, oppName) };
+    return { weeks: w.rows.filter((x) => x.opponent === oppName).map((x) => x.week), group: w.group, oppGroup: groupOf(w.pairings, oppName), span: C.SCHED.span(w.pairings.weeks.map((x) => x.week)) };
   };
   // the read time in the device's local time, as the top bar and Draft › League say it
   const hhmm = (iso) => (iso ? new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '');
@@ -658,7 +662,7 @@ export function createPrep(app) {
       const status = !ws || !started ? C.HOME.notStarted : `${ws.theirSets.length} sets · ${ws.calcs.length} calcs`;
       const legacy = unassignedVs([...P.ws.values()], c.name).length;
       const vs = P.weeksVs(pov.name, c.name);
-      const wk = vs ? (vs.weeks.length ? `<span class="chip wkc">${weekBadge(vs.weeks)}</span>` : `<span class="small muted">${esc(C.SCHED.notScheduled)}</span>`) : '';
+      const wk = vs ? (vs.weeks.length ? `<span class="chip wkc">${weekBadge(vs.weeks)}</span>` : `<span class="small muted">${esc(C.SCHED.notScheduled(vs.span))}</span>`) : '';
       return `<li><a class="oppcard" href="${esc(formatRoute({ view: 'ws', pov: pov.order, opp: c.order, tab: 'brief' }))}" data-pa="go-opp" data-opp="${c.order}">
         <span class="oc-head"><b>${esc(c.name)}</b> <span class="small muted">seat ${c.order} · ${ids.length}/10 drafted</span> ${wk}${ws?.isNext ? ` <span class="chip ok">${esc(C.BRIEF.stripNext)}</span>` : ''}</span>
         <span class="minis" aria-hidden="true">${ids.map((id) => P.pt(id, { size: 'xs' })).join('')}</span>
@@ -700,7 +704,7 @@ export function createPrep(app) {
     let body;
     if (tab === 'brief') body = Matchup.brief(P, { r, pov: m.pov, opp: m.opp, ws, legacy });
     else if (ws) body = tab === 'sets' ? Sets.tab(P, ws) : tab === 'calcs' ? Calcs.tab(P, ws) : tab === 'practice' ? Practice.tab(P, ws) : Plan.tab(P, ws);
-    else body = startPanel(m, legacy, tab);
+    else body = (tab === 'plan' && !legacy.length && Plan.previewTab(P, m)) || startPanel(m, legacy, tab);
     return `<section class="panel prep-match" data-key="match">${povRow(m.pov.name, src)}${oppStrip(m.pov, m.opp.order)}
       ${Matchup.hero(P, { r, pov: m.pov, opp: m.opp, ws, legacy })}${tabs}<div id="ptab-panel">${body}</div>
       <p class="small muted ws-foot">${esc(C.HOME.savedLocal)} ${ws ? (P.saveState === 'saving' ? esc(C.SAVE.saving) : P.saveState === 'error' ? '' : esc(C.SAVE.saved)) : esc(C.BRIEF.nothingSaved)}</p></section>`;
@@ -881,8 +885,8 @@ export function createPrep(app) {
     // Put an assigned earlier workspace back from its recovery copy: under its own id when it is gone, else as a second copy
     // beside the one that replaced it (nothing is overwritten).
     'vault-recover': (t) => {
-      const id = t.dataset.ws, doc = P.store.vault.get(id);
-      if (!doc || !P.recoverable().some((x) => x.id === id)) { app.rerender(); return; }
+      const id = t.dataset.ws, src = t.dataset.src === 'keep' ? 'keep' : 'vault', doc = copyStore(src).get(id);
+      if (!doc || !P.recoverable().some((x) => x.id === id && x.src === src)) { app.rerender(); return; }
       if (P.readOnly()) { P.toast(C.SAVE.newer); return; }
       if (P.dirty.size) flush();
       const gone = P.store.load(wsKey(id)).status === 'missing';
@@ -891,7 +895,7 @@ export function createPrep(app) {
       if (!res.ok) { P.toast(res.code === 'quota' ? C.SAVE.quota : C.SAVE.error); return; }
       // its content now lives in a saved workspace: the old copy goes (if the new copy didn't fit, the copy warning says so;
       // keeping the old one would offer the same recovery again and again)
-      if (!gone) P.store.vault.remove(id);
+      if (!gone) copyStore(src).remove(id);
       P.init();
       P.copyWasBehind = P.copyBehind().length > 0;
       P.toast(res.vaultFailed ? C.POV.vaultDoneNoCopy(doc.pov, doc.coach) : C.POV.vaultDone(doc.pov, doc.coach));
@@ -903,7 +907,7 @@ export function createPrep(app) {
       if (!ws || !P.copyBehind().some((w) => w.id === ws.id)) { app.rerender(); return; }
       if (P.mutate(`ws:${ws.id}`, (d) => d, { substantive: false })) flush();
     },
-    'vault-discard': (t) => { P.store.vault.remove(t.dataset.ws); P.toast(C.POV.vaultDropped); app.rerender(); },
+    'vault-discard': (t) => { copyStore(t.dataset.src === 'keep' ? 'keep' : 'vault').remove(t.dataset.ws); P.toast(C.POV.vaultDropped); app.rerender(); },
     'draft-open': () => { const pr = P.pendingReplace; P.pendingReplace = null; if (pr && P.ws.has(pr.wsId)) P.go({ view: 'ws', wsId: pr.wsId, ...KIND_OF_SLOT[pr.slot] }, { push: true }); else app.rerender(); },
     'draft-replace': () => {
       const pr = P.pendingReplace; P.pendingReplace = null;
@@ -1037,7 +1041,7 @@ export function createPrep(app) {
     'delete-all-confirm': () => {
       if ((P.ui.backup?.deleteText ?? '').trim().toLowerCase() !== 'delete') { P.toast('Type delete to confirm'); return; }
       for (const k of P.store.keys()) P.store.remove(k);
-      P.store.vault.clear(); // "delete all" includes the recovery copies
+      P.store.vault.clear(); P.store.keep.clear(); // "delete all" includes the recovery copies
       P.ui = { ws: {} }; P.saveUi(); P.store.hint('lastRoute', null); P.init(); P.go({ view: 'home' }, { push: false }); P.toast('All prep on this device was deleted');
     },
   };

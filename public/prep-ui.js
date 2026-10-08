@@ -40,8 +40,12 @@ export function koWords(ko, { hits = 1, uses = 1 } = {}) {
  * roll is bad, a split is "depends". ko: {num, den}; attackerSide: 'mine' | 'theirs'. -> {cls: ok|bad|warn, glyph}
  */
 export function outcomeOf(ko, attackerSide) {
+  // no KO number (refused: e.g. healing between hits isn't modelled) is no claim either way
+  if (!ko || ko.num === undefined || ko.den === undefined) return { cls: 'none', glyph: '∅' };
   const n = BigInt(ko.num), d = BigInt(ko.den);
   if (n !== 0n && n !== d) return { cls: 'warn', glyph: '◐' };
+  // whose hit it is unknown (only from imported data): neither good nor bad for you
+  if (attackerSide !== 'mine' && attackerSide !== 'theirs') return { cls: 'warn', glyph: '◐' };
   const good = attackerSide === 'mine' ? n === d : n === 0n;
   return { cls: good ? 'ok' : 'bad', glyph: good ? '✓' : '✕' };
 }
@@ -55,6 +59,7 @@ export function hpBar(range, maxHP, cls = '') {
  * exact fraction in the words. Never cells for a fraction that isn't over 16.
  */
 export function rollStrip(ko, { hits = 1, cls = '' } = {}) {
+  if (!ko || ko.num === undefined || ko.den === undefined) return '';
   const n = BigInt(ko.num), d = BigInt(ko.den);
   if (hits === 1 && 16n % d === 0n) {
     const k = Number((n * 16n) / d);

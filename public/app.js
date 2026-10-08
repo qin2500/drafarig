@@ -420,7 +420,8 @@ function schedulePanel() {
   if (s.state !== 'ok') {
     return `<div class="panel sched"><h2>Schedule</h2><p class="muted">${esc(SCHED_NOT[s.state] || SCHED_NOT.unreadable)}${s.state === 'failed' ? ' <button data-sheet-retry="">Retry</button>' : ''}</p></div>`;
   }
-  const P = s.pairings, you = S.coach;
+  // "You" only for your own Draft coach; while viewing as another coach (or on the seat-5 stand-in) their name is shown
+  const P = s.pairings, you = S.coach, youWord = viewingAs || coachIsFallback ? S.coach : 'You';
   const labels = [...new Set(P.weeks.flatMap((w) => w.groups.map((g) => g.label)))];
   // a matched name shows the Drafts spelling; an unmatched one stays as the sheet wrote it, never linked or guessed
   const who = (x) => (x.coach ? esc(x.coach) : `<i>${esc(x.raw)}</i> <span class="chip unc" title="Not matched to a coach on the Drafts tab">?</span>`);
@@ -428,8 +429,8 @@ function schedulePanel() {
   const cell = (g) => (!g ? '<td class="muted">—</td>' : `<td>${g.pairs.map((p) => {
     const mine = p.a.coach === you || p.b.coach === you, opp = p.a.coach === you ? p.b.coach : p.a.coach;
     const link = mine && opp && seat(opp) ? ` <button class="linkish" data-prep-vs="${seat(opp)}">Battle Prep</button>` : '';
-    return `<div class="pair${mine ? ' you' : ''}">${mine ? '<span class="chip you-chip">You</span> ' : ''}${who(p.a)} <span class="vs">vs</span> ${who(p.b)}${link}</div>`;
-  }).join('')}${g.byes.map((b) => `<div class="pair bye${b.coach === you ? ' you' : ''}">${b.coach === you ? '<span class="chip you-chip">You</span> ' : ''}${who(b)} · Bye</div>`).join('')}</td>`);
+    return `<div class="pair${mine ? ' you' : ''}">${mine ? `<span class="chip you-chip">${esc(youWord)}</span> ` : ''}${who(p.a)} <span class="vs">vs</span> ${who(p.b)}${link}</div>`;
+  }).join('')}${g.byes.map((b) => `<div class="pair bye${b.coach === you ? ' you' : ''}">${b.coach === you ? `<span class="chip you-chip">${esc(youWord)}</span> ` : ''}${who(b)} · Bye</div>`).join('')}</td>`);
   const notes = P.warnings.filter((w) => SCHED_NOTE[w.code]);
   return `<div class="panel sched"><h2>Schedule</h2>
     <p class="explainer">${esc(SCHED_SOURCE(s.fetchedAt))}.${s.stale ? ` <span class="chip tight">⚠ Sheet unreachable: schedule from ${esc(hhmm(s.fetchedAt))}</span>` : ''}</p>

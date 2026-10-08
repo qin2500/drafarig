@@ -18,8 +18,8 @@ const USAGE_KEY = `usage-${FORMAT}.json`;
 
 // lib/sheet.mjs fetchText minus `cache: 'no-store'`, which Workers rejects on older compatibility dates;
 // the per-call `&_=` cache-buster keeps every read live either way.
-async function fetchText(url) {
-  const r = await fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(15000) });
+async function fetchText(url, timeoutMs = 15000) {
+  const r = await fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(timeoutMs) });
   if (!r.ok) throw new Error(`HTTP ${r.status} for ${url}`);
   return r.text();
 }
@@ -45,6 +45,8 @@ function withLeague(snap, dex) {
   return { ...snap, league: { coaches, warnings, unmatched, taken: board.filter((b) => b.taken).length, boardSize: board.length } };
 }
 
+const PAIRING_MS = 8000;
+
 async function getSheet(env, dex) {
   // Optional override if the league re-publishes the sheet under a new link (the …/2PACX-… part, without /pub…).
   const sheet = env.DRAFARIG_SHEET_URL || PUB;
@@ -58,11 +60,17 @@ async function getSheet(env, dex) {
       get(csvUrl(GID.board, sheet)),
       get(csvUrl(GID.drafts, sheet)),
       get(htmlUrl(GID.board, sheet)).catch(() => null), // colours are a cross-check only
-      get(csvUrl(GID.pairing, sheet)).catch(() => null), // pairings are optional: the draft data never waits on them
+      // pairings are optional: one short read, no retry, so a slow Paring tab delays the draft data by at most PAIRING_MS
+      fetchText(csvUrl(GID.pairing, sheet) + bust(), PAIRING_MS).catch((e) => { log(`pairing tab unavailable: ${e.message || e}`); return null; }),
     ]);
     const raw = { boardCsv, draftsCsv, boardHtml, pairingCsv };
     buildLeague(raw, dex); // throws if the layout is unrecognisable: never save a bad snapshot
     const snap = { fetchedAt: new Date().toISOString(), raw };
+    // a failed Paring read keeps the saved copy's schedule, with the time it was read (the app labels it as earlier)
+    if (pairingCsv === null) {
+      const prev = (await readCache(env.BUCKET, SHEET_KEY))?.value;
+      if (typeof prev?.raw?.pairingCsv === 'string') { raw.pairingCsv = prev.raw.pairingCsv; snap.pairingReadAt = prev.pairingReadAt ?? prev.fetchedAt; }
+    }
     await writeCache(env.BUCKET, SHEET_KEY, snap);
     const out = withLeague({ ...snap, stale: false }, dex);
     log(`sheet ok in ${Date.now() - t0} ms: ${out.league.coaches.reduce((s, c) => s + c.picks.length, 0)} picks${boardHtml ? '' : ' (board colours unavailable)'}`);

@@ -12,6 +12,7 @@ import { pathToFileURL, fileURLToPath } from 'node:url';
 import { bootApp } from './ui-harness.mjs';
 import { T, flushSaves, device, WS, SET_MINE, NOW } from './prep-helpers.mjs';
 import { wsKey, KEYS } from '../lib/prep-schema.mjs';
+import { createStore } from '../lib/prep-store.mjs';
 
 const V4 = '3591a02aeea08ea7dff99833efca64bff13dfe0b';
 const REPO = fileURLToPath(new URL('../', import.meta.url));
@@ -75,4 +76,60 @@ test('this Prep loaded inside v4\'s page (a tab opened before the update) shows 
   await app.click({ pa: 'pb-pick', species: 'charizard' });
   await flushSaves(app);
   assert.deepEqual([...storage.map].sort(), before);
+});
+
+test('S1: a stale v4 tab that missed the storage event archives a workspace with board picks; its keep copy survives, and this version puts it back', async (t) => {
+  if (!v4(t)) return;
+  const storage = device();
+  const v4app = await bootApp({ root: V4_ROOT, mode: `prep/w/${WS}/plan`, storage });
+  t.after(() => v4app.restore());
+  // meanwhile this version (another tab) adds board picks: the workspace becomes version 3; the v4 tab never hears of it
+  const st = createStore(storage), cur = st.load(wsKey(WS)).doc;
+  const card = { id: 'card_aaaaaaaaaaaa', kind: 'plan', vsPlanIds: [], bring4: [SET_MINE], lead: [SET_MINE], back: [], mega: null, turn1Intent: 'board work', winCondition: '', ifThen: [], infoPlan: [], updatedAt: NOW,
+    species: { bring4: ['charizard', 'sinistcha'], lead: ['charizard', 'sinistcha'], mega: '', megaForm: '' } };
+  const saved = st.save(wsKey(WS), { ...cur, cards: [card] }, cur.rev);
+  assert.ok(saved.ok && !saved.vaultFailed);
+  assert.equal(JSON.parse(storage.getItem(`drafarig.prep.keep.${WS}`)).schemaVersion, 3, 'the keep copy is written with the save');
+  // the stale tab archives it (two steps: file, then remove)
+  v4app.location.hash = '#prep/backup'; await v4app.fire('popstate');
+  await v4app.click({ pa: 'ws-archive', ws: WS });
+  await v4app.waitFor(() => /was downloaded\. Check it is in your downloads/.test(T(v4app)), 'v4 archive step 1 (the file)');
+  await v4app.click({ pa: 'ws-archive-confirm', ws: WS });
+  await flushSaves(v4app);
+  assert.equal(storage.getItem(wsKey(WS)), null, 'v4 really removed it (its rev check skips a newer document)');
+  assert.ok(storage.getItem(`drafarig.prep.keep.${WS}`), 'v4 cannot remove the keep copy');
+  v4app.restore();
+  const app = await bootApp({ mode: 'prep', storage });
+  t.after(() => app.restore());
+  assert.match(T(app), /An older Drafarig tab removed Anthony's prep vs Ning/);
+  await app.click({ pa: 'vault-recover', ws: WS, src: 'keep' });
+  await flushSaves(app);
+  const back = JSON.parse(storage.getItem(wsKey(WS)));
+  assert.deepEqual([back.schemaVersion, back.cards[0].species.lead, back.cards[0].turn1Intent], [3, ['charizard', 'sinistcha'], 'board work']);
+  assert.ok(!/An older Drafarig tab removed/.test(T(app)), 'nothing left to recover');
+});
+
+test('S1: a stale v4 "Delete all" leaves the keep copies; this version offers them back; its own Delete all and removals drop them', async (t) => {
+  if (!v4(t)) return;
+  const storage = device();
+  const v4app = await bootApp({ root: V4_ROOT, mode: 'prep/backup', storage });
+  t.after(() => v4app.restore());
+  const st = createStore(storage), cur = st.load(wsKey(WS)).doc;
+  assert.ok(st.save(wsKey(WS), { ...cur, cards: [{ id: 'card_aaaaaaaaaaaa', kind: 'plan', vsPlanIds: [], bring4: [], lead: [], back: [], mega: null, turn1Intent: '', winCondition: '', ifThen: [], infoPlan: [], updatedAt: NOW, species: { bring4: ['charizard'], lead: ['charizard'], mega: '', megaForm: '' } }] }, cur.rev).ok);
+  await v4app.click({ pa: 'delete-all' });
+  await v4app.input('delete-confirm', 'delete');
+  await v4app.click({ pa: 'delete-all-confirm' });
+  await flushSaves(v4app);
+  assert.equal(storage.getItem(wsKey(WS)), null);
+  assert.ok(storage.getItem(`drafarig.prep.keep.${WS}`), 'v4 cannot remove it');
+  v4app.restore();
+  const app = await bootApp({ mode: 'prep/backup', storage });
+  t.after(() => app.restore());
+  assert.match(T(app), /An older Drafarig tab removed Anthony's prep vs Ning/);
+  // this version's own Delete all is deliberate: the copies go too
+  await app.click({ pa: 'delete-all' });
+  await app.input('delete-confirm', 'delete');
+  await app.click({ pa: 'delete-all-confirm' });
+  await flushSaves(app);
+  assert.equal([...storage.map.keys()].filter((k) => k.startsWith('drafarig.prep.keep.') || k.startsWith('drafarig.prep.vault.')).length, 0);
 });

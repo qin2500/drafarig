@@ -572,7 +572,7 @@ body[data-app="prep"] .layout, body[data-app="prep"] .layout.nodrawer { grid-tem
 .sched-line { margin: 4px 0 8px; }
 .opptab .tabmark.wk { font-size: 12px; color: var(--ink); background: var(--youbg); border-radius: 999px; padding: 0 6px; }
 .chip.wkc { background: var(--youbg); color: var(--ink); border-color: transparent; font-weight: 700; }
-.mhero .weekline { margin: 0 0 2px; }
+.mhero .weekfact { color: var(--ink); }
 .sched-grid td { vertical-align: top; }
 .sched-grid .pair { padding: 4px 6px; margin: 2px 0; border-radius: 6px; border: 1px solid transparent; }
 .sched-grid .pair.you { border-color: var(--you); background: var(--youbg); }
@@ -671,8 +671,11 @@ body[data-app="prep"] .layout, body[data-app="prep"] .layout.nodrawer { grid-tem
 .movechip { font-size: 12px; line-height: 20px; padding: 0 8px; border-radius: 999px; }
 .cc-cat { font-size: 12px; color: var(--muted); }
 .hpbar { display: block; position: relative; height: 12px; margin: 4px 0; border-radius: 6px; background: var(--tile); border: 1px solid var(--line); overflow: hidden; }
-.hpbar .hpleft { position: absolute; left: 0; top: 0; bottom: 0; background: var(--ok); }
+.hpbar .hpleft { position: absolute; left: 0; top: 0; bottom: 0; background: var(--muted); opacity: 0.45; } /* neutral: colour is the outcome's, never the HP's */
 .hpbar .hpband { position: absolute; top: 0; bottom: 0; background: repeating-linear-gradient(135deg, var(--warn) 0 4px, transparent 4px 7px); }
+.hpbar.ok .hpband { background: repeating-linear-gradient(135deg, var(--ok) 0 4px, transparent 4px 7px); }
+.hpbar.bad .hpband { background: repeating-linear-gradient(135deg, var(--bad) 0 4px, transparent 4px 7px); }
+.hpbar.none .hpband { background: repeating-linear-gradient(135deg, var(--muted) 0 4px, transparent 4px 7px); }
 .rollstrip { display: inline-grid; grid-template-columns: repeat(16, 1fr); gap: 2px; width: 12em; max-width: 60%; vertical-align: middle; }
 .rollstrip .cell { height: 12px; border-radius: 2px; border: 1px solid var(--muted); background: transparent; }
 .rollstrip.ok .cell.ko { background: var(--ok); border-color: var(--ok); }
@@ -713,7 +716,7 @@ button.st-btn:hover, button.st-btn:focus-visible { border-color: var(--line); }
 .mockcard p, .findcard p { margin: 4px 0; }
 .pips { display: flex; gap: 6px; list-style: none; margin: 4px 0; padding: 0; }
 .pip { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; font-weight: 800; }
-.pip-W { background: var(--okbg); color: var(--ok); } .pip-L { background: var(--badbg); color: var(--bad); border: 2px solid var(--bad); } .pip-draft { background: var(--tile); color: var(--muted); border: 1px dashed var(--muted); }
+.pip-W { background: var(--okbg); color: var(--ok); } .pip-off { background: var(--tile); color: var(--muted); border: 1px solid var(--muted); } .pip-L { background: var(--badbg); color: var(--bad); border: 2px solid var(--bad); } .pip-draft { background: var(--tile); color: var(--muted); border: 1px dashed var(--muted); }
 .findcard { border-left: 6px solid var(--muted); }
 .findcard.sev-critical { border-left-color: var(--bad); } .findcard.sev-major { border-left-color: var(--warn); }
 .findcard.sev-critical .sevword { color: var(--bad); } .findcard.sev-major .sevword { color: var(--warn); }
@@ -722,3 +725,7 @@ button.st-btn:hover, button.st-btn:focus-visible { border-color: var(--line); }
 .confbars .cb.on { background: var(--you); border-color: var(--you); }
 .confbars.c0 .cb { border-style: dashed; }
 .ok-line { color: var(--ok); font-weight: 600; }
+
+/* focus rings stay visible inside the new horizontal scrollers (v4 U9 rule, as for .oppstrip and .dtabs) */
+.ppills, .weekstrip { padding: 4px; }
+.ppills button:focus-visible, .weekstrip a:focus-visible { outline-offset: -3px; }

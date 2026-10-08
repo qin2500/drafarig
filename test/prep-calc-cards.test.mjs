@@ -100,3 +100,25 @@ test('no number, out of date and any class v4 never emits: a grey tile, no strip
   assert.deepEqual(cs.map(tone), ['none', 'none', 'none', 'stale']);
   assert.ok(find(cs[3], (x) => x.attrs['data-pa'] === 'calc-recheck' && hasClass(x, 'primary')));
 });
+
+test('review fixes: an exact range with no KO number (refused) renders its band and the reason instead of failing the tab; no KO in one hit shows the second-hit fact; an unknown side is neither good nor bad', async (t) => {
+  const refusedKo = exact(0, 1, { ko: { one: { refused: 'between-hits:oran-berry' }, two: { refused: 'between-hits:oran-berry' } }, dist: [{ n: 3 }] });
+  const envRefused = env([['frail', 16, 16]]);
+  envRefused.envelope.push({ key: 'max', label: null, class: 'exact', range: { min: 50, max: 90 }, maxHP: 150, ko: { one: { refused: 'between-hits:oran-berry' } } });
+  const twoHko = exact(0, 16, { ko: { one: { num: '0', den: '16' }, two: { num: '16', den: '16' } } });
+  const noSide = calc('theirs', exact(16, 16));
+  delete noSide.refs;
+  const { app, cards: cs } = await cards([calc('mine', refusedKo), calc('mine', envRefused), calc('theirs', twoHko), noSide]);
+  t.after(() => app.restore());
+  assert.ok(!/couldn't be shown/.test(app.html()), 'the tab renders');
+  assert.equal(cs.length, 4);
+  assert.match(text(cs[0]), new RegExp(`∅ ${C.CALCCARD.noKo}`));
+  assert.match(text(cs[0]), new RegExp(C.REPEAT_REFUSED['between-hits:oran-berry']));
+  assert.ok(find(cs[0], (x) => hasClass(x, 'hpbar')), 'the damage band still shows');
+  assert.equal(cells(cs[0]).length, 0);
+  assert.match(text(cs[1]), new RegExp(C.CALCCARD.envSplit), 'a row without a KO number makes the envelope "depends"');
+  const lines = findAll(cs[2], (x) => hasClass(x, 'oc')).map((x) => text(x).replace(/\s+/g, ' ').trim());
+  assert.match(lines[0], /^✓ .*no roll KOs/);
+  assert.match(lines[1], /^✕ 2 uses: every roll combination KOs if they hit/, 'their second hit always KOs: bad for you');
+  assert.equal(tone(cs[3]), 'warn', 'whose hit it is is unknown: no ✓ or ✕');
+});
