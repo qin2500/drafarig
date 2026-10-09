@@ -751,4 +751,5 @@ button.st-btn:hover, button.st-btn:focus-visible { border-color: var(--line); }
 .chat-entry { white-space: nowrap; }
 .chat-entry, .chat .linkish { min-height: 44px; }
 .primary-link { display: inline-flex; align-items: center; min-height: 44px; padding: 4px 14px; border-radius: 6px; background: var(--accent); color: #fff; text-decoration: none; font-weight: 600; }
+@media (prefers-color-scheme: dark) { .primary-link { color: #1d2330; } } /* contrast on the light dark-mode accent */
 .chat-notes-preview .chat-text { margin: 4px 0; padding: 6px 8px; border: 1px dashed var(--line); border-radius: 6px; }

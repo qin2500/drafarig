@@ -665,11 +665,11 @@ export const CHATUI = {
   chipOn: 'included', chipOff: 'left out',
   chip: {
     // the page chip says when a screen's own content isn't attached (a set list, a calc list, Practice)
-    page: (p, ctx = {}) => `Page: ${VIEW_NAME[p?.view] ?? 'Battle Prep'}${(p?.view === 'sets' && !ctx.set) || (p?.view === 'calcs' && !ctx.calc) ? ' (no set or calc open)' : p?.view === 'practice' ? ' (records not included)' : ''}`,
+    page: (p, ctx = {}) => `Page: ${VIEW_NAME[p?.view] ?? 'Battle Prep'}${(p?.view === 'sets' && !ctx.set) || (p?.view === 'calcs' && !ctx.calc) ? ' (nothing open)' : p?.view === 'practice' ? ' (records not included)' : ''}`,
     pov: (p) => (p?.you ? `You: ${p.coach}` : `Preparing as ${p?.coach ?? ''}`),
-    opponent: (o) => `Opponent: ${o?.coach ?? ''}${o?.weeks?.length ? ` (W${o.weeks.join('·W')})` : ''}`, schedule: (x) => `League weeks (${x?.weeks?.length ?? 0})${x?.next ? `, next: ${x.next}` : ''}`,
+    opponent: (o) => `Opponent: ${o?.coach ?? ''}${o?.weeks?.length ? ` (W${o.weeks.join('·W')})` : ''}`, schedule: (x) => `League weeks (${x?.weeks?.length ?? 0})${x?.next ? `, you marked ${x.next} next` : ''}`,
     rosters: (r) => (r?.theirs ? 'Both pools' : 'Your pool'), six: (x) => `Your 6 (${x?.length ?? 0})`,
-    briefing: (b) => `The brief: look first, ${b?.plans?.length ?? 0} plans, Speed facts`, plan: (p) => `Plan: ${p?.name ?? ''}`,
+    briefing: (b) => `The brief: top threats, ${b?.plans?.length ?? 0} plans, Speed facts`, plan: (p) => `Plan: ${p?.name ?? ''}`,
     set: (x) => `${x?.side === 'mine' ? 'Your' : 'Their'} set: ${x?.species ?? ''}`, calc: (c) => `Calc: ${c?.attacker ?? ''} → ${c?.defender ?? ''}`,
     rules: () => 'League rules you set', notes: () => 'Your notes',
   },

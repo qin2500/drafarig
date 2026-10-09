@@ -209,6 +209,10 @@ test('screen context: the Brief sends its own reading (look-first codes, plans, 
   const b = brief.ctx.briefing;
   assert.ok(Array.isArray(b.key) && Array.isArray(b.plans) && Array.isArray(b.speed));
   assert.ok(b.key.every((k) => typeof k.id === 'string' && k.reasons.every((r) => /^[a-z0-9-]+$/.test(r))), 'codes, not prose');
+  // a Speed fact about their Mega names the Mega form (Garchomp-Mega-Z is far faster than Garchomp): review NB1
+  const hex = await askFrom(t, 'prep/5v1');
+  assert.ok(hex.ctx.briefing.speed.some((f) => f.b === 'garchompmegaz'), JSON.stringify(hex.ctx.briefing.speed));
+  assert.ok(!hex.ctx.briefing.speed.some((f) => f.b === 'garchomp'), 'the facts here are about the Mega-Z: none is labelled as the base species');
   const over = await askFrom(t, 'prep/5');
   assert.ok(over.chips.some((c) => /^League weeks \(\d+\)/.test(c)), over.chips.join(' | '));
   assert.ok(over.ctx.schedule.weeks.length > 0 && over.ctx.schedule.weeks.every((w) => Number.isInteger(w.week) && typeof w.bye === 'boolean'));
@@ -224,7 +228,7 @@ test('screen context: an open set goes as you see it (their sources included); y
   assert.deepEqual(mine.ctx.set, { side: 'mine', species: 'charizard', item: 'charizarditey', ability: 'blaze', nature: 'timid', moves: ['heatwave', 'solarbeam', 'weatherball', 'protect'], sp: { hp: 2, atk: 0, def: 0, spa: 32, spd: 0, spe: 32 } });
   assert.ok(!/Sun Zard|Pasted|set_/.test(JSON.stringify(mine.ctx) + JSON.stringify(theirs.ctx)), 'no set names (your text) or storage ids');
   const list = await askFrom(t, 'prep/5v8/sets');
-  assert.ok(list.chips.includes('Page: Sets (no set or calc open)'), list.chips.join(' | '));
+  assert.ok(list.chips.includes('Page: Sets (nothing open)'), list.chips.join(' | '));
   assert.equal(list.ctx.set, undefined);
 });
 

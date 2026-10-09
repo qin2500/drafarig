@@ -11,6 +11,7 @@ import { isMatch } from '../lib/prep-route.mjs';
 import { ownerOf, workspacesFor } from '../lib/prep-matchup.mjs';
 import { currentVersion } from '../lib/prep-model.mjs';
 import { SOURCES } from '../lib/prep-schema.mjs';
+import { toID } from '../lib/calc/mech.mjs';
 import * as C from './prep-copy.js';
 import { esc, attrs, btn, koWords } from './prep-ui.js';
 import { sixOf, modelFor } from './prep-matchup.js';
@@ -57,7 +58,9 @@ function planPart(P, ws) {
   const detected = t.coreId ? m.b.theirPlans.find((x) => x.coreId === t.coreId) : null;
   // a saved plan's own label is your free text: it goes only with your notes (notesOf), so the name here is generated
   const name = (t.source === 'suggested' ? t.label : t.source === 'saved' ? detected?.label || C.BOARD.seed[t.seed] || C.PLAN_KIND[t.kind] : C.BOARD.seed[t.seed]) ?? '';
-  return { name: name.slice(0, 60), source: SOURCE_OF[t.source], members: t.members.slice(0, 10), tells: t.tells.slice(0, 10), theirSpeed: t.speedMode,
+  // where the plan comes from: a saved plan keeps the origin it was saved from (a detected pattern, a seed, look-first)
+  const source = t.source !== 'saved' ? SOURCE_OF[t.source] : t.coreId ? 'detected' : t.seed === 'look-first' ? 'look-first' : t.seed ? 'seed' : 'saved';
+  return { name: name.slice(0, 60), source, members: t.members.slice(0, 10), tells: t.tells.slice(0, 10), theirSpeed: t.speedMode,
     lead: picks.lead.slice(0, 2), back: picks.back.slice(0, 4), mega: picks.megaForm || picks.mega || '', myStatus: detected?.myStatus ?? null };
 }
 /** The Brief's own reading: look-first mons and why (codes), their plans with your listed-answer status, and the Speed facts. */
@@ -68,7 +71,8 @@ function briefingPart(P, m) {
   return {
     key: b.key.slice(0, 3).map((id) => ({ id, reasons: [...new Set((threat(id)?.reasons ?? []).map((r) => r.code))].slice(0, 8) })),
     plans: b.theirPlans.slice(0, 6).map((x) => ({ core: x.coreId, tells: x.tells.slice(0, 6), status: x.myStatus ?? null })),
-    speed: b.speed.facts.flat().slice(0, 12).map((x) => ({ a: x.aId, b: x.bId, scenario: x.scenario, result: x.result })),
+    // the form each fact is about (their Mega is its own row: Garchomp-Mega-Z is not Garchomp)
+    speed: b.speed.facts.flat().slice(0, 12).map((x) => ({ a: toID(x.aForm ?? '') || x.aId, b: toID(x.bForm ?? '') || x.bId, scenario: x.scenario, result: x.result })),
   };
 }
 const ID = /^[a-z0-9]{1,40}$/;
