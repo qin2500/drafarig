@@ -4,11 +4,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { EventEmitter } from 'node:events';
+import { createServer } from 'node:http';
 import { mkdtempSync, writeFileSync, chmodSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { chat } from '../worker/chat.mjs';
-import { createRelay, buildPrompt, claudeProvider, preflight, cliConfig, OPT_OUTS, RELAY } from '../tools/chat-relay.mjs';
+import { createRelay, buildPrompt, claudeProvider, preflight, cliConfig, fitReply, OPT_OUTS, RELAY } from '../tools/chat-relay.mjs';
 import { CondR2, chatEnv, ownerReq, RELAY_TOKEN, CONTEXT, CONV, clientId, ORIGIN } from './chat-helpers.mjs';
 
 const OK_AUTH = { loggedIn: true, authMethod: 'claude.ai', apiProvider: 'firstParty', subscriptionType: 'max' };
@@ -120,7 +121,10 @@ test('long replies are cut to the reply limit; the relay\'s requests carry its t
   await relay.tick();
   const m = await send(env);
   await relay.tick();
-  assert.equal((await msgState(env, m.body.id)).reply.text.length, RELAY.maxReply);
+  const cut = (await msgState(env, m.body.id)).reply.text;
+  assert.equal(cut.length, RELAY.maxReply);
+  assert.ok(cut.endsWith('… (cut)'), 'a cut reply says so');
+  assert.equal(fitReply('short'), 'short');
   assert.ok(paths.every(([p, run, tok]) => p.startsWith('/api/chat/relay/') && run === relay.run && tok));
 });
 
@@ -182,4 +186,81 @@ test('the command line checks everything before any network: https origin, a ses
     [{ 'token-file': open }, /chmod 600/], [{ claude: null }, /missing --claude/]]) {
     await assert.rejects(cliConfig(args(o), {}), re);
   }
+});
+
+test('the relay never follows a redirect (the token would go with it), and refuses a 3xx even from a fetch that ignores that', async () => {
+  // two loopback origins: the "Site" redirects the relay to another one, which must never be reached
+  const reached = [];
+  const other = createServer((req, res) => { reached.push(req.headers['x-drafarig-relay-token'] ?? 'no token'); res.end('{}'); });
+  await new Promise((r) => other.listen(0, '127.0.0.1', r));
+  const site = createServer((req, res) => { res.writeHead(302, { location: `http://127.0.0.1:${other.address().port}/elsewhere` }); res.end(); });
+  await new Promise((r) => site.listen(0, '127.0.0.1', r));
+  try {
+    const relay = createRelay({ site: `http://127.0.0.1:${site.address().port}`, token: RELAY_TOKEN, provider: async () => ({ text: 'x', session: 's' }), check: okCheck, sleep: fastSleep });
+    await assert.rejects(relay.start(), (e) => /redirect/.test(`${e.message} ${e.cause?.message}`), 'refused as a redirect (not some other failure)');
+    assert.deepEqual(reached, [], 'the other origin got nothing, so no token');
+  } finally { site.close(); other.close(); }
+  const inits = [];
+  const stub = createRelay({ site: ORIGIN, token: RELAY_TOKEN, fetchImpl: async (url, init) => { inits.push(init); return new Response(null, { status: 307, headers: { location: 'https://elsewhere.example/' } }); },
+    provider: async () => ({ text: 'x', session: 's' }), check: okCheck, sleep: fastSleep });
+  await assert.rejects(stub.start(), /redirect refused/);
+  assert.ok(inits.length && inits.every((i) => i.redirect === 'error' && i.signal instanceof AbortSignal), 'every request: no redirects, a time limit');
+});
+
+test('a CLI that ignores SIGTERM gets SIGKILL after the grace period (on cancel and on too much output); one that exits in time doesn\'t', async () => {
+  const child = (signals, { flood = false, exitsOnTerm = false } = {}) => () => {
+    const c = new EventEmitter();
+    c.stdout = new EventEmitter(); c.stderr = new EventEmitter();
+    c.stdin = { on() {}, end() { if (flood) setImmediate(() => c.stdout.emit('data', 'x'.repeat(RELAY.maxOutput + 1))); } };
+    c.kill = (sig) => { signals.push(sig); if (sig === 'SIGKILL' || exitsOnTerm) setImmediate(() => c.emit('close', null)); };
+    return c;
+  };
+  const provider = (spawnImpl) => claudeProvider({ bin: 'c', env: {}, baseSession: 'b', spawnImpl, killGraceMs: 20 });
+  const pause = () => new Promise((r) => setTimeout(r, 80));
+  const stubborn = [], ac = new AbortController();
+  const turn = provider(child(stubborn))({ prompt: 'q', session: null, signal: ac.signal });
+  ac.abort();
+  await assert.rejects(turn, /aborted/);
+  await pause();
+  assert.deepEqual(stubborn, ['SIGTERM', 'SIGKILL']);
+  const flooding = [];
+  await assert.rejects(provider(child(flooding, { flood: true }))({ prompt: 'q', session: null }), /output too large/);
+  await pause();
+  assert.deepEqual(flooding, ['SIGTERM', 'SIGKILL']);
+  const polite = [], ac2 = new AbortController();
+  const t2 = provider(child(polite, { exitsOnTerm: true }))({ prompt: 'q', session: null, signal: ac2.signal });
+  ac2.abort();
+  await assert.rejects(t2, /aborted/);
+  await pause();
+  assert.deepEqual(polite, ['SIGTERM']);
+});
+
+test('clearing the conversation mid-turn stops the provider too (its message is gone) and writes nothing back', async () => {
+  const env = await chatEnv();
+  let aborted = 0;
+  const hang = ({ signal }) => new Promise((_, rej) => signal.addEventListener('abort', () => { aborted++; rej(new Error('aborted')); }));
+  const relay = relayFor(env, hang);
+  await relay.start();
+  await relay.tick();
+  const m = await send(env);
+  const turn = relay.tick();
+  await new Promise((r) => setTimeout(r, 20));
+  assert.equal((await owner(env, 'clear', { method: 'POST', body: { conv: CONV } })).status, 200);
+  assert.equal(await turn, 'cancelled');
+  assert.equal(aborted, 1);
+  assert.equal((await owner(env, `message?conv=${CONV}&id=${m.body.id}`)).status, 404);
+  assert.deepEqual(env.BUCKET.keys().filter((k) => k.includes(CONV)), [], 'nothing of that conversation was written back');
+});
+
+test('the relay re-checks the ids the Site hands it before using them (defence in depth)', async () => {
+  let calls = 0;
+  const fetchImpl = async (url) => {
+    if (url.includes('/relay/selftest')) return Response.json({ createOnly: true, compareAndSwap: true });
+    if (url.includes('/relay/next')) return Response.json({ message: { conv: '../../x', id: 'not-an-id', text: 'q', context: {} } });
+    calls++; return Response.json({});
+  };
+  const relay = createRelay({ site: ORIGIN, token: RELAY_TOKEN, fetchImpl, provider: async () => { calls++; return { text: 'x', session: 's' }; }, check: okCheck, sleep: fastSleep });
+  await relay.start();
+  assert.equal(await relay.tick(), 'idle');
+  assert.equal(calls, 0, 'no turn, and no request built from those ids');
 });

@@ -742,10 +742,13 @@ button.st-btn:hover, button.st-btn:focus-visible { border-color: var(--line); }
 .chat-state.st-queued, .chat-state.st-working { color: var(--you); }
 .chat-state.st-expired, .chat-state.st-timeout, .chat-state.st-error, .chat-state.st-rate-limited { color: var(--warn); }
 .chat-chips { display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0; }
-.chat-chips .pchip { min-height: 36px; }
+.chat-chips .pchip { min-height: 44px; }
 .chat-chips .pchip:not(.on) { text-decoration: line-through; opacity: 0.7; }
 .chat-chips .pchip.fixed { cursor: default; }
 .chat-notes { display: flex; gap: 6px; align-items: center; min-height: 44px; font-size: 13px; }
 .chat-online { color: var(--ok); }
 .chat-id { font-size: 13px; overflow-wrap: anywhere; }
 .chat-entry { white-space: nowrap; }
+.chat-entry, .chat .linkish { min-height: 44px; }
+.primary-link { display: inline-flex; align-items: center; min-height: 44px; padding: 4px 14px; border-radius: 6px; background: var(--accent); color: #fff; text-decoration: none; font-weight: 600; }
+.chat-notes-preview .chat-text { margin: 4px 0; padding: 6px 8px; border: 1px dashed var(--line); border-radius: 6px; }

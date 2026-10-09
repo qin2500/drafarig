@@ -88,12 +88,13 @@ export async function bootApp({ root = ROOT, source = readFileSync(new URL('publ
     forward() { if (at < stack.length - 1) { at++; location.hash = stack[at].hash; setImmediate(() => fire('popstate', { state: stack[at].state })); } },
   };
   El.clicked = (el) => { if (el.download) downloads.push({ name: el.download, url: el.href }); };
+  const lookedUp = []; // ids the app asked for (focus targets after a render: no real elements here)
   const body = new El('body');
   body.appendChild = () => {};
   const stubs = {
     document: {
       hidden: false, activeElement: null, body, documentElement: new El('html'),
-      querySelector: (s) => els[s] ?? null, querySelectorAll: () => [], getElementById: () => null,
+      querySelector: (s) => els[s] ?? null, querySelectorAll: () => [], getElementById: (id) => { lookedUp.push(id); return null; },
       createElement: () => new El(),
       addEventListener: (type, fn) => (listeners[type] ??= []).push(fn),
     },
@@ -166,6 +167,8 @@ export async function bootApp({ root = ROOT, source = readFileSync(new URL('publ
     setStale(v) { sheetStale = v; },
     /** The page's scroll position (no layout here: the app's own scrollTo calls set it); set it to stand mid-page. */
     get scrollY() { return stubs.window.scrollY; },
+    /** The ids the app looked up (it does so to move focus after a render), in order. */
+    lookedUp,
     setScroll(y) { stubs.window.scrollY = y; },
     /** A stub element the app looks up by selector (e.g. '.oppstrip ol'). */
     el: (sel) => els[sel] ?? null,

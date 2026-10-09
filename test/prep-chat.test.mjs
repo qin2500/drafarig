@@ -8,12 +8,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { bootApp, parseHtml, findAll, find, text, hasClass } from './ui-harness.mjs';
-import { T, device, flushSaves, NOW } from './prep-helpers.mjs';
+import { T, device, flushSaves, NOW, WS, SET_MINE, SET_THEIRS } from './prep-helpers.mjs';
 import { chat } from '../worker/chat.mjs';
 import { createRelay } from '../tools/chat-relay.mjs';
 import { checkContext } from '../lib/chat-context.mjs';
 import { CondR2, chatEnv, OWNER, OTHER, RELAY_TOKEN, ORIGIN } from './chat-helpers.mjs';
 import * as C from '../public/prep-copy.js';
+import { POLL, when } from '../public/prep-chat.js';
 
 const ready = (app) => app.waitFor(() => !/Checking what they can learn/.test(app.html()), 'the Reg M-C data', 20000);
 const root = (app) => parseHtml(app.html());
@@ -86,7 +87,7 @@ test('a question goes with the visible page context; a removed chip and unticked
   t.after(() => app.restore());
   await openChat(app);
   const chips = findAll(panel(app), (n) => hasClass(n, 'pchip')).map((n) => text(n));
-  assert.deepEqual(chips, ['Page: Plan', 'You: Anthony', 'Opponent: Calvin (W1)', 'Both pools', 'Your 6 (2)', 'Plan: Their Tailwind', 'League rules you set']);
+  assert.deepEqual(chips, ['Page: Plan', 'You: Anthony', 'Opponent: Calvin (W1)', 'Both pools', 'Your 6 (2)', 'Plan: Likely plan', 'League rules you set']);
   await app.click({ pa: 'chat-chip', key: 'rosters' });
   assert.equal(find(panel(app), (n) => n.attrs['data-key'] === 'rosters').attrs['aria-pressed'], 'false');
   await app.input('chat-draft', 'What leads into <their> Tailwind?');
@@ -97,7 +98,8 @@ test('a question goes with the visible page context; a removed chip and unticked
   assert.deepEqual(Object.keys(ctx).sort(), ['opponent', 'page', 'plan', 'pov', 'rules', 'six', 'v']);
   assert.deepEqual(ctx.rules, { matchLength: 'bo3' }, 'only rules you set (unknown ones aren\'t sent)');
   assert.equal(ctx.notes, undefined, 'notes only when ticked');
-  assert.ok(!/ws_|set_|plan_|card_|secret/.test(JSON.stringify(ctx)), 'no storage ids, no notes');
+  assert.ok(!/ws_|set_|plan_|card_|secret|Their Tailwind/.test(JSON.stringify(ctx)), 'no storage ids, no notes, not your own plan name');
+  assert.deepEqual(ctx.plan, { name: 'Likely plan', source: 'saved', members: ['staraptor'], tells: ['staraptor'], theirSpeed: 'tailwind', lead: [], back: [], mega: '', myStatus: null });
   assert.match(text(panel(app)), /Waiting for the agent/);
   assert.ok(find(panel(app), (n) => n.attrs['data-pa'] === 'chat-send').attrs.disabled !== undefined, 'one question at a time');
   await relay.tick();
@@ -106,13 +108,13 @@ test('a question goes with the visible page context; a removed chip and unticked
   assert.ok(text(html).includes('Lead Pelipper <script>alert(1)</script> & Aegislash'), 'shown as text');
   assert.equal(findAll(html, (n) => ['script', 'a', 'img'].includes(n.tag) && n.parent && findAll(find(html, (x) => hasClass(x, 'chat-log')) ?? html, (y) => y === n).length).length, 0, 'no markup from the reply');
   assert.ok(text(html).includes('What leads into <their> Tailwind?'));
-  assert.ok(seen[0].includes('"plan":{"name":"Their Tailwind"'), 'the agent got the page');
+  assert.ok(seen[0].includes('"plan":{"name":"Likely plan","source":"saved"'), 'the agent got the page');
   // with notes ticked, the notes go too (and only for that message)
   await app.changeData({ pc: 'chat-notes' }, { checked: true });
   await app.input('chat-draft', 'And with my notes?');
   await app.click({ pa: 'chat-send' });
   await app.waitFor(() => sentMessages(env).length === 2, 'sent');
-  assert.match(sentMessages(env).find((m) => m.text === 'And with my notes?').context.notes, /Premortem: my secret premortem/);
+  assert.match(sentMessages(env).find((m) => m.text === 'And with my notes?').context.notes, /^Plan name: Their Tailwind\nPremortem: my secret premortem/);
 });
 
 test('cancel stops a waiting question; a failed send keeps your text and its retry is the same message; clearing asks first', async (t) => {
@@ -178,4 +180,122 @@ test('an unreachable Site is said as such, with a retry; a broken chat never tak
   await openChat(weird);
   assert.match(T(weird), /vs Calvin/);
   void env;
+});
+
+/** One question from a screen (after `before` sets it up): the chips shown and the context the Site stored. */
+async function askFrom(t, mode, { storage = device(), before = async () => {}, engine = false } = {}) {
+  const env = await chatEnv();
+  const relay = agent(env, async () => ({ text: 'ok', session: 's' }));
+  await relay.start(); await relay.tick();
+  const app = await open(mode, { storage, chat: site(env) });
+  t.after(() => app.restore());
+  if (engine) await app.waitFor(() => !/Loading the calculator/.test(T(app)), 'the engine', 20000);
+  await before(app);
+  await openChat(app);
+  const chips = findAll(panel(app), (n) => hasClass(n, 'pchip')).map((n) => text(n));
+  await app.input('chat-draft', 'What about this screen?');
+  await app.click({ pa: 'chat-send' });
+  await app.waitFor(() => sentMessages(env).length === 1, 'sent');
+  const ctx = sentMessages(env)[0].context;
+  assert.deepEqual(checkContext(ctx), [], `${mode}: the allowlisted shape`);
+  await relay.tick();
+  await app.waitFor(() => !/Waiting for the agent/.test(text(panel(app))), 'answered (so its polling ends)', 6000);
+  return { app, chips, ctx };
+}
+
+test('screen context: the Brief sends its own reading (look-first codes, plans, Speed facts); the Overview its league weeks', async (t) => {
+  const brief = await askFrom(t, 'prep/5v8');
+  assert.ok(brief.chips.some((c) => c.startsWith('The brief:')), brief.chips.join(' | '));
+  const b = brief.ctx.briefing;
+  assert.ok(Array.isArray(b.key) && Array.isArray(b.plans) && Array.isArray(b.speed));
+  assert.ok(b.key.every((k) => typeof k.id === 'string' && k.reasons.every((r) => /^[a-z0-9-]+$/.test(r))), 'codes, not prose');
+  const over = await askFrom(t, 'prep/5');
+  assert.ok(over.chips.some((c) => /^League weeks \(\d+\)/.test(c)), over.chips.join(' | '));
+  assert.ok(over.ctx.schedule.weeks.length > 0 && over.ctx.schedule.weeks.every((w) => Number.isInteger(w.week) && typeof w.bye === 'boolean'));
+  assert.equal(over.ctx.briefing, undefined);
+});
+
+test('screen context: an open set goes as you see it (their sources included); your own set only as yourself; a set list says nothing is open', async (t) => {
+  const theirs = await askFrom(t, `prep/w/${WS}/sets/${SET_THEIRS}`);
+  assert.ok(theirs.chips.includes('Their set: rillaboom') && theirs.chips.includes('Page: Sets'), theirs.chips.join(' | '));
+  assert.deepEqual(theirs.ctx.set, { side: 'theirs', species: 'rillaboom', item: 'miracleseed', ability: 'grassysurge', nature: 'adamant', moves: ['fakeout', 'grassyglide', 'woodhammer', 'uturn'], sp: 'unknown',
+    src: { item: 'seen-vs-others', ability: 'seen-vs-others', nature: null, sp: null, moves: [null, null, null, null] } });
+  const mine = await askFrom(t, `prep/w/${WS}/sets/${SET_MINE}`);
+  assert.deepEqual(mine.ctx.set, { side: 'mine', species: 'charizard', item: 'charizarditey', ability: 'blaze', nature: 'timid', moves: ['heatwave', 'solarbeam', 'weatherball', 'protect'], sp: { hp: 2, atk: 0, def: 0, spa: 32, spd: 0, spe: 32 } });
+  assert.ok(!/Sun Zard|Pasted|set_/.test(JSON.stringify(mine.ctx) + JSON.stringify(theirs.ctx)), 'no set names (your text) or storage ids');
+  const list = await askFrom(t, 'prep/5v8/sets');
+  assert.ok(list.chips.includes('Page: Sets (no set or calc open)'), list.chips.join(' | '));
+  assert.equal(list.ctx.set, undefined);
+});
+
+test('screen context: the calc being worked on goes with its conditions; with their Stat Points unknown it says the number is max investment, not "the" result', async (t) => {
+  const { chips, ctx } = await askFrom(t, `prep/w/${WS}/calcs/new`, { engine: true, before: async (app) => {
+    await app.click({ pa: 'calc-pick', which: 'a', side: 'theirs', species: 'rillaboom', set: SET_THEIRS });
+    await app.click({ pa: 'calc-pick', which: 'd', side: 'mine', species: 'charizard', set: SET_MINE });
+    await app.click({ pa: 'calc-move', move: 'woodhammer' });
+    await app.click({ pa: 'calc-set', scope: 'field', key: 'terrain', value: 'Grassy' });
+  } });
+  assert.ok(chips.includes('Calc: rillaboom → charizard'), chips.join(' | '));
+  assert.deepEqual([ctx.calc.attacker, ctx.calc.defender, ctx.calc.move], ['rillaboom', 'charizard', 'woodhammer']);
+  assert.match(ctx.calc.result, /^depends on their investment \(Stat Points unknown\); max investment: \d+(\.\d)?–\d+(\.\d)?% of HP · /);
+  assert.ok(ctx.calc.chips.includes('terrain=grassy'), ctx.calc.chips.join());
+  assert.deepEqual(ctx.calc.envelope.map((e) => e.key).sort(), ctx.calc.envelope.map((e) => e.key).filter((k) => ['frail', 'common', 'max'].includes(k)).sort());
+  assert.ok(ctx.calc.envelope.every((e) => e.ko === null || /^\d+\/16$|^\d+(\.\d)?%$/.test(e.ko)));
+});
+
+test('honest states: a message the Site never settles stops polling with "No update yet" and Check again; another 403 isn\'t called "not yours"; an old last-seen has its date', async (t) => {
+  const env = await chatEnv();
+  const relay = agent(env, () => new Promise(() => {}));
+  await relay.start(); await relay.tick();
+  const saved = { ...POLL };
+  Object.assign(POLL, { fastMs: 20, slowMs: 20, fastForMs: 40, forMs: 150 });
+  const app = await open('prep/5v8', { storage: device(), chat: site(env) });
+  try {
+    await openChat(app);
+    await app.input('chat-draft', 'still there?');
+    await app.click({ pa: 'chat-send' });
+    await app.waitFor(() => /No update yet\./.test(text(panel(app))), 'polling gives up honestly', 4000);
+    assert.ok(findAll(panel(app), (n) => n.attrs['data-pa'] === 'chat-refresh' && text(n) === C.CHATUI.checkAgain).length >= 1);
+    assert.ok(!/Waiting for the agent/.test(text(panel(app))), 'no live "waiting" once it stopped checking');
+    await app.click({ pa: 'chat-refresh' });
+    await app.waitFor(() => /Waiting for the agent/.test(text(panel(app))), 'checking again resumes it');
+    await app.click({ pa: 'chat-cancel', msg: sentMessages(env)[0].id });
+    await app.waitFor(() => /Cancelled\./.test(text(panel(app))), 'cancelled');
+    await new Promise((r) => setTimeout(r, 100)); // its polling sees the final state and stops
+  } finally { Object.assign(POLL, saved); app.restore(); }
+  // a 403 that isn't "not the owner" (here: not from the app's own page) is a plain "not available", with a retry
+  const crossSite = await open('prep/5v8', { storage: device(), chat: async (path, init) => {
+    const headers = new Headers(init.headers);
+    headers.set('sec-fetch-site', 'cross-site'); headers.set('oai-authenticated-user-id', OWNER);
+    const req = new Request(`${ORIGIN}${path}`, { method: init.method ?? 'GET', headers, body: init.body });
+    return chat(req, env, new URL(req.url));
+  } });
+  t.after(() => crossSite.restore());
+  await openChat(crossSite);
+  assert.ok(text(panel(crossSite)).includes(C.CHATUI.storage) && !text(panel(crossSite)).includes(C.CHATUI.notYours));
+  const now = Date.parse('2026-10-09T15:00:00Z');
+  assert.doesNotMatch(when(now - 60_000, now), /Oct/);
+  assert.match(when(now - 3 * 864e5, now), /Oct/, 'another day: with its date');
+  assert.ok(when(now - 3 * 864e5, now).length > when(now, now).length, 'the same clock time, plus its date');
+});
+
+test('the privacy line says where chat text goes and how long each copy is kept; Prep\'s "stays on this device" line names chat as the exception', () => {
+  const p = C.CHATUI.privacy;
+  assert.doesNotMatch(p, /own machine/);
+  for (const must of [/private chat store/, /Drafarig cloud VM/, /Claude \(Anthropic\)/, /personal Claude account/, /clear/, /14 days/, /session history stays on the VM/]) assert.match(p, must);
+  assert.match(C.HOME.chooseHelp, /Chat messages you send are the exception/);
+  assert.match(C.CHATUI.empty, /only the items listed below/);
+});
+
+test('closing the panel returns focus to the "Ask the VGC agent" entry; drill-downs have that entry too', async (t) => {
+  const app = await open(`prep/w/${WS}/sets/${SET_THEIRS}`, { storage: device(), chat: site(await chatEnv()) });
+  t.after(() => app.restore());
+  assert.ok(find(root(app), (n) => n.attrs.id === 'chat-entry'), 'an entry on a set editor');
+  await openChat(app);
+  assert.equal(find(root(app), (n) => n.attrs.id === 'chat-entry'), null, 'hidden while the panel is open');
+  const before = app.lookedUp.length;
+  await app.click({ pa: 'chat-close' });
+  await app.settle(5);
+  assert.ok(app.lookedUp.slice(before).includes('chat-entry'), 'focus goes back to the entry (not the top of the page)');
+  assert.ok(find(root(app), (n) => n.attrs.id === 'chat-entry'));
 });

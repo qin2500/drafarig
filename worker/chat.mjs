@@ -16,8 +16,10 @@
 // - R2 has no multi-object transactions. Every invariant that matters is one object written with a documented condition:
 //   - create-only (`If-None-Match: *`): claims, replies, cancels, idempotency keys, rate tickets;
 //   - compare-and-swap (`etagMatches`): the single pending-message lock.
-//   So one pending message, first claim wins and N tickets per hour/day hold across isolates, as long as the runtime honours
-//   R2 conditions. The relay checks that at startup (relay/selftest) and refuses to run if not.
+//   So one pending message, first claim wins and N tickets per UTC clock hour / day hold across isolates, as long as the
+//   runtime honours R2 conditions (the relay checks that at startup, relay/selftest, and refuses to run if not). Clock
+//   buckets allow up to 2 × 30 across an hour boundary; the relay's own cap is a rolling hour.
+// - A cancel and a reply racing each other may both be stored; the cancel wins when the state is read (stateOf).
 // - A crash between two writes can leave a used ticket or a lock with no message. Locks are recovered by age (see `stale`);
 //   tickets are never returned, which errs toward fewer turns, never more.
 import { checkContext, CHAT_LIMITS, CONV_RE, CLIENT_RE, MSG_RE, newMessageId, randomB32 } from '../lib/chat-context.mjs';
@@ -110,7 +112,7 @@ export function mailbox(env, now) {
   const k = {
     relay: async () => `${await P()}relay.json`,
     pending: async () => `${await P()}pending.json`,
-    idem: async (c) => `${await P()}idem/${c}.json`,
+    idem: async (conv, c) => `${await P()}conv/${conv}/idem/${c}.json`, // with its conversation: Clear removes it too
     conv: async (conv) => `${await P()}conv/${conv}/`,
     convIndex: async (conv) => `${await P()}convs/${conv}.json`,
     part: async (conv, id, part) => `${await P()}conv/${conv}/${id}/${part}.json`,
@@ -121,15 +123,18 @@ export function mailbox(env, now) {
     const [msg, claim, rep, cancel] = await Promise.all(['msg', 'claim', 'reply', 'cancel'].map(async (p) => (await s.get(await k.part(conv, id, p)))?.value ?? null));
     return { msg, claim, reply: rep, cancel };
   };
-  /** A message's state, worked out from its parts (never written by reading). */
+  /**
+   * A message's state, worked out from its parts (never written by reading). A cancel wins over a reply: a reply racing
+   * the cancel (both stored) stays hidden, so the owner never sees "answered" after "cancelled".
+   */
   const stateOf = ({ msg, claim, reply: rep, cancel }) => {
     if (!msg) return 'missing';
-    if (rep) return rep.kind === 'reply' ? 'answered' : rep.kind;
     if (cancel) return 'cancelled';
+    if (rep) return rep.kind === 'reply' ? 'answered' : rep.kind;
     if (claim) return now - claim.at > CHAT.replyDeadlineMs ? 'timeout' : 'working';
     return now - msg.at > CHAT.unclaimedMs ? 'expired' : 'queued';
   };
-  const view = (p) => ({ id: p.msg.id, conv: p.msg.conv, clientId: p.msg.clientId, text: p.msg.text, at: p.msg.at, state: stateOf(p), ...(p.reply ? { reply: { kind: p.reply.kind, text: p.reply.text, at: p.reply.at } } : {}) });
+  const view = (p) => ({ id: p.msg.id, conv: p.msg.conv, clientId: p.msg.clientId, text: p.msg.text, at: p.msg.at, state: stateOf(p), ...(p.reply && !p.cancel ? { reply: { kind: p.reply.kind, text: p.reply.text, at: p.reply.at } } : {}) });
   /** Is the pending lock still holding a live message? (Its message may be done, cancelled, abandoned or never written.) */
   const live = async (lock) => {
     if (!lock || lock.state !== 'held') return false;
@@ -170,9 +175,15 @@ export function mailbox(env, now) {
     for (let n = used; n < cap; n++) if (await s.create(`${prefix}${String(n).padStart(3, '0')}`, { at: now })) return true;
     return false;
   };
+  /** Rate tickets of past hours and days are deleted (they hold only a time). */
+  const prune = async (hour, day) => {
+    const old = [];
+    for (const [root, cur] of [[`${await P()}rate/h/`, hour], [`${await P()}rate/d/`, day]]) for (const key of await s.keys(root, 500)) if (!key.startsWith(cur)) old.push(key);
+    if (old.length) await s.remove(old);
+  };
   const relaySeen = async () => (await s.get(await k.relay()))?.value ?? null;
   const online = (seen) => !!seen && now - seen.seenAt <= CHAT.onlineMs;
-  return { s, k, P, parts, stateOf, view, live, settle, release, acquire, ticket, relaySeen, online };
+  return { s, k, P, parts, stateOf, view, live, settle, release, acquire, ticket, prune, relaySeen, online };
 }
 
 // ---------- owner routes ----------
@@ -194,7 +205,7 @@ const OWNER = {
     const errors = checkContext(b.context);
     if (errors.length) throw new HttpError(400, 'bad-context', { errors: errors.slice(0, 5) });
     // the same message sent twice (a retry) is the same message
-    const known = await m.s.get(await m.k.idem(b.clientId));
+    const known = await m.s.get(await m.k.idem(b.conv, b.clientId));
     if (known?.value) {
       const p = await m.parts(known.value.conv, known.value.id);
       if (p.msg) return { id: p.msg.id, conv: p.msg.conv, state: m.stateOf(p), repeat: true };
@@ -205,13 +216,14 @@ const OWNER = {
     const slot = await m.acquire(b.conv, id);
     if (!slot.ok) throw new HttpError(409, 'busy', { pending: slot.busy });
     const hour = await m.k.hour(now), day = await m.k.day(now);
+    await m.prune(hour, day);
     if (!(await m.ticket(hour, CHAT.hourCap)) || !(await m.ticket(day, CHAT.dayCap))) {
       await m.release(id);
       throw new HttpError(429, 'rate-limited', { retryAfter: 'later' });
     }
     try {
       await m.s.create(await m.k.part(b.conv, id, 'msg'), { id, conv: b.conv, clientId: b.clientId, text, context: b.context, at: now });
-      await m.s.create(await m.k.idem(b.clientId), { conv: b.conv, id, at: now });
+      await m.s.create(await m.k.idem(b.conv, b.clientId), { conv: b.conv, id, at: now });
       await m.s.put(await m.k.convIndex(b.conv), { conv: b.conv, lastAt: now });
     } catch (e) { await m.release(id).catch(() => {}); throw e; }
     return { id, conv: b.conv, state: 'queued' };

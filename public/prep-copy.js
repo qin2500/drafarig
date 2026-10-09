@@ -377,7 +377,7 @@ export const GLOSSARY_PREP = {
 
 // ---------- misc ----------
 export const HOME = {
-  whose: (name) => `${name}'s prep`, isThisYou: 'Is this you?', choose: 'Prep for a match', chooseHelp: 'Pick an opponent. Everything you add stays in this browser on this device: not on the league sheet, not on Drafarig\'s server.',
+  whose: (name) => `${name}'s prep`, isThisYou: 'Is this you?', choose: 'Prep for a match', chooseHelp: 'Pick an opponent. Your prep stays in this browser on this device: not on the league sheet, not on Drafarig\'s server. Chat messages you send are the exception (see the chat panel).',
   how: ['Their 10 are public. Their 6, sets and leads aren\'t.', 'Save the few numbers that decide games.', 'Mock with a friend; log what decided each game.', 'Change one thing, then test it again.', 'On match day, note what each side has revealed.'],
   savedLocal: 'Saved on this device only.', notStarted: 'Not started',
 };
@@ -660,19 +660,25 @@ export const CHATUI = {
   storage: "Chat isn't available right now.",
   online: 'Connected: the VGC agent is online.',
   offline: (t) => `Not connected: the VGC agent is offline${t ? ` (last seen ${t})` : ''}. Nothing can be sent until it's back.`,
-  empty: 'Ask about the page you have open: the agent sees what\'s listed below.',
+  empty: 'Ask about the page you have open. The agent sees only the items listed below, not the rest of the screen.',
   sees: 'The agent sees:', seesHelp: 'tap one to leave it out of your next message',
   chipOn: 'included', chipOff: 'left out',
   chip: {
-    page: (p) => `Page: ${VIEW_NAME[p?.view] ?? 'Battle Prep'}`, pov: (p) => (p?.you ? `You: ${p.coach}` : `Preparing as ${p?.coach ?? ''}`),
-    opponent: (o) => `Opponent: ${o?.coach ?? ''}${o?.weeks?.length ? ` (W${o.weeks.join('·W')})` : ''}`, rosters: (r) => (r?.theirs ? 'Both pools' : 'Your pool'),
-    six: (x) => `Your 6 (${x?.length ?? 0})`, plan: (p) => `Plan: ${p?.name ?? ''}`, calc: (c) => `Calc: ${c?.attacker ?? ''} → ${c?.defender ?? ''}`,
+    // the page chip says when a screen's own content isn't attached (a set list, a calc list, Practice)
+    page: (p, ctx = {}) => `Page: ${VIEW_NAME[p?.view] ?? 'Battle Prep'}${(p?.view === 'sets' && !ctx.set) || (p?.view === 'calcs' && !ctx.calc) ? ' (no set or calc open)' : p?.view === 'practice' ? ' (records not included)' : ''}`,
+    pov: (p) => (p?.you ? `You: ${p.coach}` : `Preparing as ${p?.coach ?? ''}`),
+    opponent: (o) => `Opponent: ${o?.coach ?? ''}${o?.weeks?.length ? ` (W${o.weeks.join('·W')})` : ''}`, schedule: (x) => `League weeks (${x?.weeks?.length ?? 0})${x?.next ? `, next: ${x.next}` : ''}`,
+    rosters: (r) => (r?.theirs ? 'Both pools' : 'Your pool'), six: (x) => `Your 6 (${x?.length ?? 0})`,
+    briefing: (b) => `The brief: look first, ${b?.plans?.length ?? 0} plans, Speed facts`, plan: (p) => `Plan: ${p?.name ?? ''}`,
+    set: (x) => `${x?.side === 'mine' ? 'Your' : 'Their'} set: ${x?.species ?? ''}`, calc: (c) => `Calc: ${c?.attacker ?? ''} → ${c?.defender ?? ''}`,
     rules: () => 'League rules you set', notes: () => 'Your notes',
   },
-  includeNotes: 'Include my notes on this page (premortem, turn 1, win condition, if-then lines)', noNotes: 'No notes on this page to include',
+  includeNotes: 'Include my notes on this page (plan name, premortem, turn 1, win condition, if-then lines)', noNotes: 'No notes on this page to include',
+  notesPreview: 'What your notes would send',
   ask: 'Your question', placeholder: 'e.g. What leads into their Tailwind plan?', max: (n) => `up to ${n} characters`,
   send: 'Send', sending: 'Sending…', sent: 'Sent to the agent', typeFirst: 'Type a question first.', oneAtATime: 'One question at a time: wait for the answer or cancel it.',
-  cancel: 'Cancel', cancelError: "Couldn't cancel it (it may already be answered).",
+  cancel: 'Cancel', cancelError: "Couldn't cancel it (it may already be answered).", checkAgain: 'Check again',
+  noUpdate: 'No update yet.', noText: "Answered, but the reply couldn't be shown.",
   youSaid: 'You asked:', agentSaid: 'The agent answered:',
   state: { queued: 'Waiting for the agent…', working: 'The agent is answering…', expired: 'Not delivered: the agent was offline.', timeout: 'No reply: it took too long.', cancelled: 'Cancelled.',
     'rate-limited': 'Not answered: too many messages for now.', error: "The agent couldn't answer this one.", declined: "The agent didn't answer this one.", missing: 'This message is gone.' },
@@ -683,5 +689,6 @@ export const CHATUI = {
   limits: (h, d) => `Left: ${Math.max(0, h)} this hour, ${Math.max(0, d)} today.`,
   newConv: 'New conversation', newSaid: 'New conversation started', clear: 'Clear this conversation', clearAsk: 'Delete this conversation from the Site?', clearYes: 'Delete it', clearNo: 'Keep it',
   cleared: 'Conversation deleted', clearError: "Couldn't delete it right now.",
-  privacy: "Your messages and the details above go to this Site's private chat store and to your VGC agent on your own machine. Kept 14 days, or until you clear them.",
+  // where chat text goes and how long it's kept, as the code does it (CHAT-SETUP-PROPOSAL.md §9; CHAT-ACTIVATION-REQUIRED.md)
+  privacy: "Your messages and the details above go to this Site's private chat store, then to the VGC agent on the Drafarig cloud VM, which asks Claude (Anthropic) through your personal Claude account. The Site deletes them when you clear the conversation, or about 14 days after its last message (the next time chat is opened). The agent's own session history stays on the VM until it's deleted there.",
 };

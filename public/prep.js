@@ -471,6 +471,9 @@ export function createPrep(app) {
     // chat sits under the open screen (it talks about that screen); a chat failure never takes the screen with it
     let chat = '';
     try { chat = Chat.panel(P); } catch (e) { console.error('Chat panel failed:', e && e.message); }
+    // drill-downs (a set, a calc, a variant…) get the same "ask about this screen" line as the matchup screens
+    const drill = ((r.view === 'ws' && r.kind && P.ws.has(r.wsId)) || (r.view === 'my-sets' && r.id)) && !Chat.chatUi(P).open;
+    if (drill) chat = `<p class="chat-foot">${Chat.entry(C.CHATUI.openHere)}</p>`;
     return `<div class="prep" data-prep-view="${esc(r.view)}">${banners()}${body}${chat}</div>`;
   };
 
@@ -638,7 +641,7 @@ export function createPrep(app) {
         <li>${btn('My sets', 'go-mysets', {}, { cls: 'linkish' })} <span class="small muted">${mineCount} set${mineCount === 1 ? '' : 's'} in your library</span> ${btn('Paste your team', 'go-mysets-import', {}, { cls: 'linkish' })}</li>
         <li>${btn('Help a friend practise (pilot card)', 'go-pilot', {}, { cls: 'linkish' })}</li>
         <li>${btn('Backup & restore', 'go-backup', {}, { cls: 'linkish' })} <span class="small muted backup-line">${esc(C.HOME.savedLocal)} Last backup: ${meta.lastBackupAt ? `${backupAge} days ago` : 'never'} (${meta.changesSinceBackup ?? 0} changes since).</span></li>
-        <li>${btn(C.CHATUI.open, 'chat-open', {}, { cls: 'linkish' })} <span class="small muted">${esc(C.CHATUI.title)}: it sees the screen you have open</span></li>
+        <li>${Chat.chatUi(P).open ? btn(C.CHATUI.open, 'chat-open', {}, { cls: 'linkish' }) : Chat.entry(C.CHATUI.open)} <span class="small muted">${esc(C.CHATUI.title)}: it sees the screen you have open</span></li>
       </ul>
       <details class="howto"><summary>How prep works here (1 minute)</summary><ol>${C.HOME.how.map((x) => `<li>${esc(x)}</li>`).join('')}</ol></details>
       ${usage > USAGE_BUDGET_CHARS * 0.85 ? `<p class="banner warn">Prep is using most of the space this browser allows. Archive finished opponents to a file. ${btn('Backup & restore', 'go-backup')}</p>` : ''}`;
@@ -712,7 +715,7 @@ export function createPrep(app) {
     else body = (tab === 'plan' && !legacy.length && Plan.previewTab(P, m)) || startPanel(m, legacy, tab);
     return `<section class="panel prep-match" data-key="match">${povRow(m.pov.name, src)}${oppStrip(m.pov, m.opp.order)}
       ${Matchup.hero(P, { r, pov: m.pov, opp: m.opp, ws, legacy })}${tabs}<div id="ptab-panel">${body}</div>
-      ${Chat.chatUi(P).open ? '' : `<p class="chat-foot">${btn(C.CHATUI.openHere, 'chat-open', {}, { cls: 'linkish chat-entry' })}</p>`}
+      ${Chat.chatUi(P).open ? '' : `<p class="chat-foot">${Chat.entry(C.CHATUI.openHere)}</p>`}
       <p class="small muted ws-foot">${esc(C.HOME.savedLocal)} ${ws ? (P.saveState === 'saving' ? esc(C.SAVE.saving) : P.saveState === 'error' ? '' : esc(C.SAVE.saved)) : esc(C.BRIEF.nothingSaved)}</p></section>`;
   }
   /** A section tab without saved prep for this matchup: nothing is created until the user says so. */

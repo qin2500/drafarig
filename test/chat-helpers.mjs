@@ -71,7 +71,7 @@ export function relayReq(path, { method = 'GET', body, token = RELAY_TOKEN, run 
 }
 /** A valid page context (ChatContext/1). */
 export const CONTEXT = Object.freeze({ v: 1, page: { area: 'prep', view: 'plan' }, pov: { coach: 'Anthony', seat: 5, you: true }, opponent: { coach: 'Calvin', seat: 8, weeks: [1], group: 'Group A' },
-  rosters: { mine: ['charizard', 'sinistcha'], theirs: ['staraptor', 'grimmsnarl'] }, six: ['charizard'], plan: { name: 'Their Tailwind', members: ['staraptor'], speed: 'tailwind', lead: ['charizard'], back: [], mega: '' } });
+  rosters: { mine: ['charizard', 'sinistcha'], theirs: ['staraptor', 'grimmsnarl'] }, six: ['charizard'], plan: { name: 'Likely plan', source: 'saved', members: ['staraptor'], tells: ['staraptor'], theirSpeed: 'tailwind', lead: ['charizard'], back: [], mega: '', myStatus: null } });
 let n = 0;
 export const clientId = () => `m_${String(++n).padStart(16, 'a').replace(/[0-9]/g, (d) => 'abcdefghij'[d]).slice(-16)}`;
 export const CONV = 'c_aaaaaaaaaaaaaaaa';

@@ -257,3 +257,38 @@ test('the built Worker routes /api/chat/* (POST allowed there only) and is fail-
   const w = await worker.fetch(relayReq('next'), env, ctx);
   assert.deepEqual([w.status, (await w.json()).message], [200, null]);
 });
+
+test('a cancel wins over a reply that slipped in past it: the message stays "cancelled" and the reply is never shown', async () => {
+  const env = await chatEnv();
+  await online(env);
+  const w = await send(env);
+  await next(env);
+  await call(env, ownerReq('cancel', { method: 'POST', body: { conv: CONV, id: w.body.id } }));
+  // the race: a reply that passed its "not cancelled" check before the cancel landed, written after it
+  const cancelKey = env.BUCKET.keys().find((k) => k.endsWith(`/${w.body.id}/cancel.json`));
+  await env.BUCKET.put(cancelKey.replace(/cancel\.json$/, 'reply.json'), JSON.stringify({ kind: 'reply', text: 'late answer', at: clock }));
+  const m = await call(env, ownerReq(`message?conv=${CONV}&id=${w.body.id}`));
+  assert.equal(m.body.state, 'cancelled');
+  assert.equal(m.body.reply, undefined, 'the late reply is not shown');
+  assert.equal((await call(env, ownerReq(`history?conv=${CONV}`))).body.messages[0].reply, undefined);
+});
+
+test('housekeeping: retry keys live with their conversation (Clear removes them); past rate buckets are pruned on the next send', async () => {
+  const env = await chatEnv();
+  await online(env);
+  const prefix = `chat/v1/${(await sha256Hex(OWNER)).slice(0, 16)}/`;
+  await send(env);
+  const idem = env.BUCKET.keys().filter((k) => k.includes('/idem/'));
+  assert.equal(idem.length, 1);
+  assert.ok(idem[0].startsWith(`${prefix}conv/${CONV}/idem/`));
+  await call(env, ownerReq('clear', { method: 'POST', body: { conv: CONV } }));
+  assert.deepEqual(env.BUCKET.keys().filter((k) => k.includes('/idem/')), [], 'cleared with the conversation');
+  assert.equal(env.BUCKET.keys(`${prefix}rate/`).length, 2, 'one hour ticket, one day ticket');
+  at(clock + 2 * 864e5);
+  await online(env);
+  const s2 = await send(env);
+  assert.equal(s2.status, 200);
+  const rate = env.BUCKET.keys(`${prefix}rate/`);
+  assert.equal(rate.length, 2, 'only this hour\'s and today\'s tickets remain');
+  assert.ok(rate.every((k) => k.includes(new Date(clock).toISOString().slice(0, 10))));
+});
