@@ -19,10 +19,11 @@ import * as Calcs from './prep-calcs.js';
 import * as Plan from './prep-plan.js';
 import * as Practice from './prep-practice.js';
 import * as Matchup from './prep-matchup.js';
+import * as Chat from './prep-chat.js';
 
 const SAVE_DELAY = 400;
 const TAB_LABEL = { brief: 'Brief', plan: 'Plan', sets: 'Sets', calcs: 'Calcs', practice: 'Practice' };
-const MODULES = [Sets, Calcs, Plan, Practice, Matchup];
+const MODULES = [Sets, Calcs, Plan, Practice, Matchup, Chat];
 
 /**
  * app: { dex, league(), sheet(), usage(), coresCx(), viewingCoach(), setViewingCoach(name), goMode(mode), toast(msg),
@@ -467,7 +468,10 @@ export function createPrep(app) {
       console.error('Prep screen failed:', e && e.message);
       body = `<section class="panel">${h2('Prep')}<p class="banner bad" role="alert">This screen couldn't be shown. Your prep is unchanged.</p>${btn('Go to Prep home', 'go-home')}</section>`;
     }
-    return `<div class="prep" data-prep-view="${esc(r.view)}">${banners()}${body}</div>`;
+    // chat sits under the open screen (it talks about that screen); a chat failure never takes the screen with it
+    let chat = '';
+    try { chat = Chat.panel(P); } catch (e) { console.error('Chat panel failed:', e && e.message); }
+    return `<div class="prep" data-prep-view="${esc(r.view)}">${banners()}${body}${chat}</div>`;
   };
 
   /**
@@ -634,7 +638,7 @@ export function createPrep(app) {
         <li>${btn('My sets', 'go-mysets', {}, { cls: 'linkish' })} <span class="small muted">${mineCount} set${mineCount === 1 ? '' : 's'} in your library</span> ${btn('Paste your team', 'go-mysets-import', {}, { cls: 'linkish' })}</li>
         <li>${btn('Help a friend practise (pilot card)', 'go-pilot', {}, { cls: 'linkish' })}</li>
         <li>${btn('Backup & restore', 'go-backup', {}, { cls: 'linkish' })} <span class="small muted backup-line">${esc(C.HOME.savedLocal)} Last backup: ${meta.lastBackupAt ? `${backupAge} days ago` : 'never'} (${meta.changesSinceBackup ?? 0} changes since).</span></li>
-        <li class="chat-off"><span>${esc(C.CHAT.name)}</span> <span class="small muted">${esc(C.CHAT.notConnected)}</span></li>
+        <li>${btn(C.CHATUI.open, 'chat-open', {}, { cls: 'linkish' })} <span class="small muted">${esc(C.CHATUI.title)}: it sees the screen you have open</span></li>
       </ul>
       <details class="howto"><summary>How prep works here (1 minute)</summary><ol>${C.HOME.how.map((x) => `<li>${esc(x)}</li>`).join('')}</ol></details>
       ${usage > USAGE_BUDGET_CHARS * 0.85 ? `<p class="banner warn">Prep is using most of the space this browser allows. Archive finished opponents to a file. ${btn('Backup & restore', 'go-backup')}</p>` : ''}`;
@@ -708,6 +712,7 @@ export function createPrep(app) {
     else body = (tab === 'plan' && !legacy.length && Plan.previewTab(P, m)) || startPanel(m, legacy, tab);
     return `<section class="panel prep-match" data-key="match">${povRow(m.pov.name, src)}${oppStrip(m.pov, m.opp.order)}
       ${Matchup.hero(P, { r, pov: m.pov, opp: m.opp, ws, legacy })}${tabs}<div id="ptab-panel">${body}</div>
+      ${Chat.chatUi(P).open ? '' : `<p class="chat-foot">${btn(C.CHATUI.openHere, 'chat-open', {}, { cls: 'linkish chat-entry' })}</p>`}
       <p class="small muted ws-foot">${esc(C.HOME.savedLocal)} ${ws ? (P.saveState === 'saving' ? esc(C.SAVE.saving) : P.saveState === 'error' ? '' : esc(C.SAVE.saved)) : esc(C.BRIEF.nothingSaved)}</p></section>`;
   }
   /** A section tab without saved prep for this matchup: nothing is created until the user says so. */
@@ -1111,7 +1116,7 @@ export function createPrep(app) {
     return true;
   };
   // Actions that create or remove something run once per tap: a double tap within a moment is the same tap.
-  const ONCE = new Set(['open-coach', 'match-start-ws', 'pb-plan-new', 'vault-recover', 'vault-retry', 'owner-assign', 'owner-unassign', 'brief-six', 'brief-next', 'brief-calc', 'brief-calc-replace', 'match-start', 'finding-new', 'calc-save', 'calc-dup', 'card-new', 'plan-new', 'variant-new', 'variant-dup', 'br-start', 'mock-quick',
+  const ONCE = new Set(['open-coach', 'match-start-ws', 'pb-plan-new', 'chat-send', 'chat-cancel', 'chat-clear', 'vault-recover', 'vault-retry', 'owner-assign', 'owner-unassign', 'brief-six', 'brief-next', 'brief-calc', 'brief-calc-replace', 'match-start', 'finding-new', 'calc-save', 'calc-dup', 'card-new', 'plan-new', 'variant-new', 'variant-dup', 'br-start', 'mock-quick',
     'guess-all', 'paste-import', 'set-save', 'set-save-copy', 'pilot-save', 'rv-save', 'restore-import', 'restore-replace-confirm', 'backup-download', 'ws-archive', 'ws-archive-confirm', 'delete-all-confirm', 'undo-delete']);
   const recent = new Map();
   const tappedTwice = (t) => {

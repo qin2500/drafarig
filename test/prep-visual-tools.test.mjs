@@ -85,17 +85,6 @@ test('practice board: one pip per game (won, lost, not logged) with words; count
   assert.ok(T(empty).includes(`✓ ${C.PRACTICE.noOpen}`));
 });
 
-test('expert chat is honestly not connected: one line in Tools, no input, button or reply area, nothing sent', async (t) => {
-  const app = await open('prep/5', { storage: device() });
-  t.after(() => app.restore());
-  const line = find(root(app), (n) => n.tag === 'li' && hasClass(n, 'chat-off'));
-  assert.ok(line);
-  assert.equal(text(line).replace(/\s+/g, ' ').trim(), `${C.CHAT.name} ${C.CHAT.notConnected}`);
-  assert.equal(findAll(line, (n) => ['input', 'textarea', 'button', 'a', 'form'].includes(n.tag)).length, 0);
-  assert.doesNotMatch(app.html(), /data-pa="chat|aria-live|\bassistant\b|\blive chat\b/i);
-  assert.ok(!app.fetches.some((f) => /chat/i.test(f.path)), 'no request is made for chat');
-});
-
 test('an off-script mock game is a grey pip and isn\'t counted as won or lost', async (t) => {
   const games = [{ id: 'game_aaaaaaaaaaaa', index: 0, result: 'W' }, { id: 'game_bbbbbbbbbbbb', index: 1, result: 'W', tag: 'partner-off-script' }];
   const s = device({ ws: { mockSets: [{ id: 'mock_aaaaaaaaaaaa', date: '2026-10-06', partner: 'Sam', purpose: '', variantIds: [], fidelity: 2, simulatedDisclosure: 'closed', games }] } });

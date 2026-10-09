@@ -580,6 +580,30 @@ const deviceStorage = (() => {
     return { getItem: fail, setItem: fail, removeItem: fail, key: fail, get length() { return fail(); } };
   }
 })();
+// Chat with the VGC agent (worker/chat.mjs): same-origin calls only, made only after the chat panel is opened. The Site
+// checks the signed-in owner on every call; the app adds the header that marks a call as its own. Network failures come
+// back as status 0 (never thrown), so the panel can say "can't reach Drafarig".
+async function chatCall(path, { method = 'GET', body } = {}) {
+  try {
+    const r = await fetch(`/api/chat/${path}`, { method, cache: 'no-store', credentials: 'same-origin', headers: { 'x-drafarig-chat': '1', ...(body ? { 'content-type': 'application/json' } : {}) }, body: body ? JSON.stringify(body) : undefined });
+    let json = null;
+    try { json = await r.json(); } catch { /* not JSON */ }
+    return { status: r.status, body: json && typeof json === 'object' ? json : {} };
+  } catch { return { status: 0, body: {} }; }
+}
+const chatQuery = (o) => Object.entries(o).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&');
+const chatApi = {
+  status: () => chatCall('status'),
+  whoami: () => chatCall('whoami'),
+  send: (b) => chatCall('send', { method: 'POST', body: b }),
+  message: (conv, id) => chatCall(`message?${chatQuery({ conv, id })}`),
+  history: (conv) => chatCall(`history?${chatQuery({ conv })}`),
+  cancel: (conv, id) => chatCall('cancel', { method: 'POST', body: { conv, id } }),
+  clear: (conv) => chatCall('clear', { method: 'POST', body: { conv } }),
+  /** The Site's own sign-in page (a normal top-level link), returning to this Battle Prep screen (same-origin, relative). */
+  signInHref: (hash) => `/signin-with-chatgpt?return_to=${encodeURIComponent(/^#prep(\/[\w/-]*)?$/.test(hash ?? '') ? `/${hash}` : '/#prep')}`,
+};
+
 // What Prep may use. Clipboard, share and storage protection run only from a tap on the matching button.
 const prepApp = {
   get dex() { return dex ?? { species: {}, types: [] }; },
@@ -611,6 +635,7 @@ const prepApp = {
   copyText: (text) => navigator.clipboard.writeText(text),
   readClipboard: navigator.clipboard?.readText ? () => navigator.clipboard.readText() : null,
   share: navigator.share ? (d) => navigator.share(d) : null,
+  chat: chatApi,
   persist: navigator.storage?.persist ? { persisted: () => navigator.storage.persisted(), persist: () => navigator.storage.persist() } : null,
   appBuild: '',
 };

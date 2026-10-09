@@ -57,10 +57,10 @@ let instances = 0;
  * mode: the deep-link hash (without '#'); narrow: what matchMedia('(max-width: 767px)') reports; files: extra (or
  * replacement) fetchable paths; storage: a memoryStorage to start from (prep documents); sheet: false makes /api/sheet fail;
  * raw: the sheet's {boardCsv, draftsCsv, boardHtml, pairingCsv} (default: the fixtures); stale: answer as the Worker's
- * last-saved-copy fallback.
+ * last-saved-copy fallback; chat: (path, init) => Response for /api/chat/* (default: 404).
  * data/dex.json, data/mechanics.json and, when it exists, data/cores.json are served from the repo.
  */
-export async function bootApp({ root = ROOT, source = readFileSync(new URL('public/app.js', root)).toString('utf8'), mode = 'draft', narrow = true, files = {}, storage = memoryStorage(), session = memoryStorage(), sheet = true, raw = RAW, clipboardText = null, stale = false } = {}) {
+export async function bootApp({ root = ROOT, source = readFileSync(new URL('public/app.js', root)).toString('utf8'), mode = 'draft', narrow = true, files = {}, storage = memoryStorage(), session = memoryStorage(), sheet = true, raw = RAW, clipboardText = null, stale = false, chat = null } = {}) {
   const els = Object.fromEntries(['#sync', '#turn', '#budget', '#coach', '#banners', '#main', '#explain', '#drawer', '#pop', '#toast', '.layout', '.topbar', '#bq', '.oppstrip ol']
     .map((s) => [s, new El(s.slice(1))]));
   // the opponent row's scroller: geometry a test can set (no layout here), and the current tab it finds
@@ -112,6 +112,8 @@ export async function bootApp({ root = ROOT, source = readFileSync(new URL('publ
       fetches.push({ path, method: init?.method ?? 'GET', body: init?.body ?? null });
       if (path === '/api/sheet') return sheet ? respond({ fetchedAt: FETCHED_AT, stale: sheetStale, ...(sheetStale ? { error: 'Upstream unavailable' } : {}), raw: sheetRaw }) : respond({ error: 'Sheet unreachable' }, 502);
       if (path === '/api/usage') return respond({ error: 'Upstream data unavailable. Please try again.' }, 502);
+      // chat: a test may answer /api/chat/* itself (e.g. with the real Worker chat code over a fake R2); otherwise 404
+      if (chat && path.startsWith('/api/chat/')) return chat(path, init ?? {});
       return path in served ? respond(served[path]) : respond({ error: 'Not found' }, 404);
     },
   };

@@ -10,6 +10,7 @@
 import { csvUrl, htmlUrl, GID, PUB } from '../lib/sheet.mjs';
 import { buildLeague } from '../lib/league.mjs';
 import { slimChaos } from '../lib/usage.mjs';
+import { chat } from './chat.mjs';
 
 const log = (msg) => console.log(`${new Date().toISOString()} ${msg}`);
 const FORMAT = 'gen9championsvgc2026regmc';
@@ -136,8 +137,10 @@ export function createApp(files) {
   };
 
   async function route(request, env) {
-    if (request.method !== 'GET' && request.method !== 'HEAD') return json({ error: 'Method not allowed' }, 405, { allow: 'GET, HEAD' });
     const url = new URL(request.url);
+    // the private chat mailbox (worker/chat.mjs): its own auth on every route; 503 until both chat settings exist
+    if (url.pathname.startsWith('/api/chat/')) return chat(request, env, url, { log });
+    if (request.method !== 'GET' && request.method !== 'HEAD') return json({ error: 'Method not allowed' }, 405, { allow: 'GET, HEAD' });
     try {
       if (API[url.pathname]) {
         if (!env.BUCKET && !warned) { warned = true; log('R2 binding BUCKET is missing: no last-good sheet fallback and no usage cache'); }

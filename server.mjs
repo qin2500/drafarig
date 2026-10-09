@@ -99,6 +99,11 @@ const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; ch
 const STATIC = [['/lib/', join(ROOT, 'lib')], ['/data/dex.json', join(ROOT, 'data', 'dex.json')], ['/data/cores.json', join(ROOT, 'data', 'cores.json')], ['/data/mechanics.json', join(ROOT, 'data', 'mechanics.json')], ['/', join(ROOT, 'public')]];
 
 createServer(async (req, res) => {
+  // chat runs only on the Site (its mailbox and auth live in the Worker); the local server never offers it
+  if ((req.url ?? '').startsWith('/api/chat/')) {
+    res.writeHead(503, { 'content-type': TYPES['.json'], 'cache-control': 'no-store' });
+    return res.end(JSON.stringify({ error: 'chat-not-set-up' }));
+  }
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     res.writeHead(405, { 'allow': 'GET, HEAD', 'content-type': TYPES['.json'] });
     return res.end(JSON.stringify({ error: 'Method not allowed' }));

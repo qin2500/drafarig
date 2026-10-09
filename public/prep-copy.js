@@ -645,8 +645,43 @@ export const PRACTICE = {
   mechGlyph: { speed: '⚡', 'unexpected-ko': '✸', 'fakeout-redirect': '✋', 'setup-mega': '⬆', 'weather-terrain': '☀', other: '•' },
 };
 
-// ---------- Expert chat: not built until a real, private connection exists (nothing here sends or replies) ----------
-export const CHAT = {
-  name: 'Expert chat with the VGC agent',
-  notConnected: 'Not connected. Nothing from this page is sent anywhere.',
+// ---------- Chat with the VGC agent (public/prep-chat.js) ----------
+// Every state is said as it is; nothing pretends to be an answer. "Not connected" whenever the Site's chat isn't set up or
+// the agent's relay is offline.
+const VIEW_NAME = { overview: 'Overview', brief: 'Brief', plan: 'Plan', sets: 'Sets', calcs: 'Calcs', practice: 'Practice', other: 'This screen' };
+export const CHATUI = {
+  open: 'Ask the VGC agent', openHere: 'Ask the VGC agent about this screen', title: 'Chat with the VGC agent', close: 'Close', retry: 'Try again',
+  checking: 'Checking chat…', unreachable: "Can't reach Drafarig right now.",
+  notSetUp: "Not connected: chat isn't set up yet. Nothing is sent.",
+  setup: 'Setting it up', setupHelp: "Chat needs a one-time setup by whoever runs this Site. It starts with your account id on this Site: sign in, then show it here.",
+  showId: 'Show my id', yourId: 'Your id on this Site:', yourIdHelp: 'Give it to whoever sets up chat. It identifies your sign-in on this Site only; it is not a password.',
+  signIn: 'Sign in with ChatGPT to use chat. It is private to this Site\'s owner.', signInLink: 'Sign in with ChatGPT',
+  notYours: 'This chat is private to its owner.',
+  storage: "Chat isn't available right now.",
+  online: 'Connected: the VGC agent is online.',
+  offline: (t) => `Not connected: the VGC agent is offline${t ? ` (last seen ${t})` : ''}. Nothing can be sent until it's back.`,
+  empty: 'Ask about the page you have open: the agent sees what\'s listed below.',
+  sees: 'The agent sees:', seesHelp: 'tap one to leave it out of your next message',
+  chipOn: 'included', chipOff: 'left out',
+  chip: {
+    page: (p) => `Page: ${VIEW_NAME[p?.view] ?? 'Battle Prep'}`, pov: (p) => (p?.you ? `You: ${p.coach}` : `Preparing as ${p?.coach ?? ''}`),
+    opponent: (o) => `Opponent: ${o?.coach ?? ''}${o?.weeks?.length ? ` (W${o.weeks.join('·W')})` : ''}`, rosters: (r) => (r?.theirs ? 'Both pools' : 'Your pool'),
+    six: (x) => `Your 6 (${x?.length ?? 0})`, plan: (p) => `Plan: ${p?.name ?? ''}`, calc: (c) => `Calc: ${c?.attacker ?? ''} → ${c?.defender ?? ''}`,
+    rules: () => 'League rules you set', notes: () => 'Your notes',
+  },
+  includeNotes: 'Include my notes on this page (premortem, turn 1, win condition, if-then lines)', noNotes: 'No notes on this page to include',
+  ask: 'Your question', placeholder: 'e.g. What leads into their Tailwind plan?', max: (n) => `up to ${n} characters`,
+  send: 'Send', sending: 'Sending…', sent: 'Sent to the agent', typeFirst: 'Type a question first.', oneAtATime: 'One question at a time: wait for the answer or cancel it.',
+  cancel: 'Cancel', cancelError: "Couldn't cancel it (it may already be answered).",
+  youSaid: 'You asked:', agentSaid: 'The agent answered:',
+  state: { queued: 'Waiting for the agent…', working: 'The agent is answering…', expired: 'Not delivered: the agent was offline.', timeout: 'No reply: it took too long.', cancelled: 'Cancelled.',
+    'rate-limited': 'Not answered: too many messages for now.', error: "The agent couldn't answer this one.", declined: "The agent didn't answer this one.", missing: 'This message is gone.' },
+  stateSay: { answered: 'The agent answered.', expired: 'Not delivered.', timeout: 'No reply in time.', cancelled: 'Cancelled.', 'rate-limited': 'Too many messages for now.', error: "The agent couldn't answer.", declined: "The agent didn't answer." },
+  sendError: { 'relay-offline': 'The agent is offline: nothing was sent.', busy: 'One question at a time: wait for the answer or cancel it.', 'rate-limited': 'Too many messages this hour or today.',
+    'bad-context': "This page's details couldn't be attached.", 'chat-not-set-up': "Chat isn't set up yet.", 'sign-in': 'Sign in first.', other: "Couldn't send it." },
+  contextTooBig: "This page's details are too large to attach: leave some out (tap them).",
+  limits: (h, d) => `Left: ${Math.max(0, h)} this hour, ${Math.max(0, d)} today.`,
+  newConv: 'New conversation', newSaid: 'New conversation started', clear: 'Clear this conversation', clearAsk: 'Delete this conversation from the Site?', clearYes: 'Delete it', clearNo: 'Keep it',
+  cleared: 'Conversation deleted', clearError: "Couldn't delete it right now.",
+  privacy: "Your messages and the details above go to this Site's private chat store and to your VGC agent on your own machine. Kept 14 days, or until you clear them.",
 };

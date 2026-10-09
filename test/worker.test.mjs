@@ -459,7 +459,7 @@ test('build artifact: self-contained ESM, deterministic, Worker manifest with th
   assert.ok(read('dist/.openai/hosting.json').equals(read('.openai/hosting.json')));
   assert.deepEqual(JSON.parse(read('.openai/hosting.json')), { project_id: 'appgprj_6ac16dd56abc8191915b96602b56e117', r2: 'BUCKET' });
   const source = read('worker/app.mjs').toString('utf8');
-  assert.deepEqual(source.match(/^import .+$/gm).map((l) => l.match(/'(.+)'/)[1]), ['../lib/sheet.mjs', '../lib/league.mjs', '../lib/usage.mjs']);
+  assert.deepEqual(source.match(/^import .+$/gm).map((l) => l.match(/'(.+)'/)[1]), ['../lib/sheet.mjs', '../lib/league.mjs', '../lib/usage.mjs', './chat.mjs']);
   // Safe-asset exposure: the embedded files are exactly public/, lib/, data/dex.json and data/cores.json.
   const files = bundle.slice(bundle.indexOf('\nconst FILES = {\n'), bundle.indexOf('\n};\n', bundle.indexOf('\nconst FILES = {\n')));
   const embedded = [...files.matchAll(/^ {2}("(?:[^"\\]|\\.)*"): /gm)].map((m) => JSON.parse(m[1])).sort();

@@ -111,7 +111,7 @@ export function hero(P, { r, pov, opp, ws, legacy }) {
     : `<span class="weekfact">${esc(vs.oppGroup && vs.oppGroup !== vs.group ? C.SCHED.notScheduledIn(opp.name, vs.oppGroup, vs.span) : C.SCHED.notScheduled(vs.span))}</span> · `;
   return `<div class="mhero">${isBrief ? h2(titleText) : `<p class="herotitle">${esc(titleText)}</p>`}
     <p class="facts small muted">${week}${esc(facts.join(' · '))}</p>
-    <div class="heroacts">${chipBtn(C.BRIEF.next, 'brief-next', {}, ws?.isNext)} <details class="more"><summary>${esc(C.BRIEF.more)}</summary>${btn(`⇄ ${C.BRIEF.flip(opp.name)}`, 'flip', {}, { cls: 'linkish' })} ${btn(C.BRIEF.viewAs, 'brief-viewas', {}, { cls: 'linkish' })}</details></div>
+    <div class="heroacts">${chipBtn(C.BRIEF.next, 'brief-next', {}, ws?.isNext)} <details class="more"><summary>${esc(C.BRIEF.more)}</summary>${btn(C.CHATUI.open, 'chat-open', {}, { cls: 'linkish chat-entry' })} ${btn(`⇄ ${C.BRIEF.flip(opp.name)}`, 'flip', {}, { cls: 'linkish' })} ${btn(C.BRIEF.viewAs, 'brief-viewas', {}, { cls: 'linkish' })}</details></div>
     ${ws ? `<p class="small muted owner-line">${esc(C.POV.savedAs(ownerOf(ws)))}${ws.povFrom === 'legacy-confirm' ? ` · ${btn(C.POV.review, 'go-owner', { ws: ws.id }, { cls: 'linkish' })}` : ''}</p>` : ''}
     ${list.length > 1 ? select('brief-ws', list.map((w, i) => [w.id, `${i ? 'Other copy' : 'Most recent'} · changed ${(w.updatedAt ?? '').slice(0, 10)}`]), ws?.id ?? '', { label: C.BRIEF.wsPick, data: { pc: 'brief-ws' } }) : ''}
     ${!ws && legacy.length ? `<p class="banner info">${esc(C.POV.earlierHere(opp.name))} ${legacy.map((w) => btn(C.POV.review, 'go-owner', { ws: w.id })).join(' ')}</p>` : ''}
