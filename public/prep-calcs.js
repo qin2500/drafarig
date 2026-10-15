@@ -792,4 +792,4 @@ export const inputs = {
   'calc-search': (t, P) => { (P.wsUi(P.route.wsId).cf ??= {}).q = t.value.slice(0, 80); P.app.rerender(); },
   'calc-title': (t, P) => P.mutate(`ws:${P.route.wsId}`, (d) => { const c = d.calcs.find((x) => x.id === P.route.id); if (c) c.title = t.value.slice(0, 120); }, { render: false }),
 };
-export { compute as computeScenario, buildScenario, summarize };
+export { compute as computeScenario, buildScenario, summarize, promote };

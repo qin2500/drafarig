@@ -18,7 +18,7 @@ Then open http://localhost:4600. The server binds to 127.0.0.1 only. Change the 
 ## Test
 
 ```sh
-npm test               # node --test, 22 tests: sheet parsing, name matching, budget feasibility, optimizer, scoring
+npm test               # builds the Worker artifact, then node --test: 364 tests (calc engine, searches, Prep UI on a stub DOM, Build, chat, Worker)
 ```
 
 The tests use a saved copy of the real sheet in `test/fixtures/`, so they run offline.
@@ -39,6 +39,24 @@ The tests use a saved copy of the real sheet in `test/fixtures/`, so they run of
 | `tools/build-data.mjs` | Regenerates `data/dex.json` from `docs/research/` plus Showdown's type chart and sprite names (`npm run build-data`) |
 
 `lib/` is shared by the server, the browser and the tests.
+
+## Build (Battle Prep › a matchup › Build)
+
+Your 6 for the match as Showdown-style team cards (our own markup; no Showdown code or assets) and your drafted 10. Tap a mon
+for its dashboard (`#prep/<you>v<them>/build/<n>`):
+
+- **Compare options**: your current set next to up to 3 trials (suggested trade-offs such as "Speed SP → bulk", "+ Life Orb",
+  "+ Nasty Plot, freed SP → bulk", or your own change). Rows: your best move into each pinned target at +0 and, with a setup
+  move, at its stage; the same "after their <self-boosting move>" (e.g. Contrary Close Combat, SpD +1) when they can move first;
+  their hardest hit on you; Speed; costs; and the tools against setup in their pool. A trial is never saved until you press
+  **Save as a new version**.
+- **Speed and creep targets** (no engine): SP needed to pass each target's common max and worst-case Speed; ties are never "faster".
+- **Your hits** at +0/+1/+2, **KO benchmarks** (least SpA/Atk SP per level, one or two uses, with slack and breakpoints),
+  **their hits on you**, and the Brief's facts for that mon.
+
+Their sets: their saved set, else a ladder guess (labelled); unknown Stat Points use the frail / common / max spreads. Logic:
+`lib/prep-build.mjs` over `lib/calc/threshold.mjs` (`koSearch` now also searches two uses). The Rotom-Fan reference case
+(`docs/research/strategy/sp-assist/rotom-fan-case.md` §9) is `test/prep-build.test.mjs`.
 
 ## Check a pick
 

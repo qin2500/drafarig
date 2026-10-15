@@ -350,6 +350,11 @@ export const BACKUP = {
 
 // ---------- glossary additions (def ≤ 2 sentences + why) ----------
 export const GLOSSARY_PREP = {
+  'Speed creep': { def: 'Putting just enough Speed into a Pokémon to move before a common Speed: one point past it, not the maximum.', why: 'Every Stat Point not needed for Speed can go into bulk or damage. A tie is a coin flip, never "faster".' },
+  Benchmark: { def: 'A result a spread is built to reach: outspeed X, KO Y with every roll, survive Z. In Champions each Stat Point adds exactly 1 to the stat, so each benchmark is crossed at one exact value.', why: 'If an investment reaches no benchmark you can name, it may do more somewhere else.' },
+  Slack: { def: 'The Stat Points you have above what a benchmark needs.', why: 'Slack on one benchmark is room for another: bulk, Speed or a different KO.' },
+  'Trial option': { def: 'A changed copy of your set shown next to the current one in Compare options. It is not saved until you press Save as a new version.', why: 'You see what a change costs and gains before your set, and the calcs that use it, change.' },
+  'Setup move (+1/+2)': { def: 'A move that raises your own stats, like Nasty Plot (+2 Sp. Atk) or Calm Mind (+1 Sp. Atk, +1 Sp. Def). +1 and +2 are the stat stages.', why: 'It needs a free turn and a move slot; Encore, redirection, Haze, Clear Smog, Unaware and Imposter work against it.' },
   Premortem: { def: 'Before the match, imagine you lost it 0–2 and write the most likely reason in one line.', why: 'Naming how you could lose points at what to test in a mock before it happens for real.' },
   'Pilot card': { def: "A card for playing someone else's opponent in their mock: the team, how to play it and the setup, kept apart from your own prep.", why: 'Helping a friend practise shouldn\'t mix their opponent into your league prep.' },
   Set:{ def: 'One version of a Pokémon: item, ability, nature, moves and Stat Points. You can keep several per Pokémon.', why: 'Calcs and Speed depend on the set, so a guess here flows into every number.' },
@@ -648,7 +653,7 @@ export const PRACTICE = {
 // ---------- Chat with the VGC agent (public/prep-chat.js) ----------
 // Every state is said as it is; nothing pretends to be an answer. "Not connected" whenever the Site's chat isn't set up or
 // the agent's relay is offline.
-const VIEW_NAME = { overview: 'Overview', brief: 'Brief', plan: 'Plan', sets: 'Sets', calcs: 'Calcs', practice: 'Practice', other: 'This screen' };
+const VIEW_NAME = { overview: 'Overview', brief: 'Brief', plan: 'Plan', sets: 'Sets', calcs: 'Calcs', practice: 'Practice', build: 'Build', other: 'This screen' };
 export const CHATUI = {
   open: 'Ask the VGC agent', openHere: 'Ask the VGC agent about this screen', title: 'Chat with the VGC agent', close: 'Close', retry: 'Try again',
   checking: 'Checking chat…', unreachable: "Can't reach Drafarig right now.",
@@ -691,4 +696,59 @@ export const CHATUI = {
   cleared: 'Conversation deleted', clearError: "Couldn't delete it right now.",
   // where chat text goes and how long it's kept, as the code does it (CHAT-SETUP-PROPOSAL.md §9; CHAT-ACTIVATION-REQUIRED.md)
   privacy: "Your messages and the details above go to this Site's private chat store, then to the VGC agent on the Drafarig cloud VM, which asks Claude (Anthropic) through your personal Claude account. The Site deletes them when you clear the conversation, or about 14 days after its last message (the next time chat is opened). The agent's own session history stays on the VM until it's deleted there.",
+};
+
+// ---------- Build: the builder and the per-mon dashboard (public/prep-build.js; UX builder-dashboard.md v2) ----------
+// Results say what changes and what it costs, never "worth it"; every number keeps its assumptions next to it.
+export const BUILD = {
+  head: (pov, opp) => `Build · ${pov} vs ${opp}`, paste: 'Paste your team', export: 'Export your 6',
+  six: (n) => `Your 6 for this match (${n} of 6)`, ten: 'Your 10 (drafted)', theirPool: 'Their pool',
+  noSix: 'No 6 chosen yet: tick sets in your 10 below.', noSets: 'No sets yet. Paste your team from Showdown, or create a set for each mon.',
+  overSix: 'Showdown teams have 6; keep the extra ones as alternatives.', oneMega: (n) => `${n} of your 6 can Mega Evolve; only one can per battle.`,
+  speciesClause: (names) => `Species clause: ${names} can't be in the same 6.`,
+  dashFor: 'Open a dashboard:', noSetYet: (name) => `No set for ${name} yet.`, createSet: 'Create set', notDrafted: 'Not drafted',
+  back: '‹ Build', checking: 'Checking against',
+  theirSetsLine: (opp, n, saved, ladder) => `${opp}'s pool (${n} rows, each Mega its own row) · their sets: ${saved} saved, ${ladder} ladder guesses (labelled) · unknown Stat Points shown as frail / common / max`,
+  fieldNone: 'No weather', single: 'Single target; a move that hits both foes shows ×0.75 on its result.',
+  sec: { set: 'Set', compare: 'Compare options', speed: 'Speed and creep targets', hits: 'Your hits', bench: 'KO benchmarks', theirs: 'Their hits on you', match: 'In this matchup' },
+  show: 'Show', hide: 'Hide', loading: 'Loading the calculator…', engineFailed: "The calculator didn't load. Speed and Set still work.", retry: 'Retry',
+  fixFirst: 'Fix the set first: no numbers for an invalid set.', spUnknown: 'This set has no Stat Points yet: enter them in the set editor.',
+  current: 'Current', trial: (i) => `Trial ${'ABC'[i] ?? i + 1}`,
+  seeds: 'Suggested trade-offs:', tryChange: 'Try a change…', maxTrials: 'Up to 3 trials: remove one first.',
+  seed: { 'speed-to-bulk': (c) => `Speed SP → bulk (${c.n} SP)`, 'damage-item': (c, n) => `+ ${n(c.item)}`, setup: (c, n) => `+ ${n(c.move)}${c.freed ? `, ${c.freed} SP → bulk` : ''}`, nature: (c, n) => `${n(c.nature)} instead` },
+  saveVersion: 'Save as a new version', saveSet: 'Save as a new set', remove: 'Remove', edit: 'Edit', done: 'Done editing',
+  noSetup: 'no setup move', noMove: (m) => `doesn't have ${m}`,
+  koRow: (move, target) => `${move} → ${target}`, atStage: (b) => (b > 0 ? `+${b}` : '+0'),
+  afterRow: (move, stat, k) => `after their ${move} (${stat} +${k})`, afterWhy: 'They can move first, so a setup turn has to beat this row.',
+  theirRow: (target, move) => `${target}'s ${move} on you (their max)`, speedRow: (target) => `Speed vs ${target}`, costRow: 'Cost', toolsRow: 'In their pool: tools against setup',
+  better: '▲ better than current', worse: '▼ worse than current',
+  speedWord: { faster: '› faster', slower: '‹ slower', tie: '= tie: coin flip', depends: '~ depends on spreads', unknown: '? no Stat Points' },
+  cost: {
+    'speed-lost': (c) => `−${c.n} Speed SP`, 'item-cost:lifeorb': () => 'Life Orb: −10% HP per attack; one per team (item clause)', 'item-dropped': (c, n) => `drops ${n(c.item)}`,
+    'move-slot': (c, n) => (c.dropped ? `a move slot (drops ${n(c.dropped)})` : 'a move slot'), 'setup-turn': () => 'a free turn to set up',
+    nature: (c) => (c.tradeoff?.losesUsed ? 'a nature change that costs a stat this set uses' : 'a nature change'),
+    'item-taken': (c, n) => `item clause: ${n(c.item)} is already on another set in your 6`,
+  },
+  toolsNone: 'none in their likely sets', toolsCould: (n) => `${n} more they could learn`,
+  evidence: { set: 'their saved set', ladder: 'ladder: in its likely set', could: 'could: in its learnset' },
+  whatChanges: 'Rows marked ▲ or ▼ changed against Current. The app says what changes and what it costs, not whether it is worth it.',
+  scope: "Not a matchup verdict: partners, positioning, Protect, Roost and crits aren't counted.",
+  speedVerdict: (opp, c) => `Against ${opp}'s pool (worst case): faster than ${c.faster}, slower than ${c.slower}, ${c.depends} depend on spreads, ${c.tie} tie.`,
+  creepHead: ['Target', 'Their Speed', 'Your SP, this nature', 'With a +Speed nature', 'Now'],
+  mark: { 'common-max': 'common max (32 SP, neutral)', worst: 'worst case (32 SP, +Speed)', set: 'their set' },
+  tw: { mine: 'Your Tailwind', theirs: 'Their Tailwind', tr: 'Trick Room' }, tryIt: 'Try in Compare',
+  spareHint: (n, k) => `${n} Speed SP change none of the ${k} pinned Speed results. Moved to HP or a defence, they buy bulk instead (try "Speed SP → bulk").`,
+  stage: 'Your stage', spread: 'Their spread', pins: 'Pinned targets', pinHelp: 'Compare options and KO benchmarks use the pinned targets (up to 4).',
+  level: { 'every-roll': 'KO every roll', 'fifteen-of-sixteen': 'KO 15 of 16', half: 'KO 8 of 16' },
+  benchRow: (b, st, statName) => `${b > 0 ? `+${b}` : '+0'}${st ? `, their ${statName} +${st}` : ''}`,
+  twoUse: '2HKO', cant: (nat) => `can't with ${nat}, even at 32`, slack: (have, s) => (s >= 0 ? `slack ${s} (you have ${have})` : `${-s} short (you have ${have})`),
+  breakpoints: 'Where the odds change', spreadUsed: (k) => `their spread: ${k}`, spreadFell: 'no ladder spread, so max',
+  hitsHelp: 'Their common spread (ladder) unless their set has Stat Points; open a cell for every assumption.', noAttacks: 'No damaging moves in this set.',
+  theirHelp: 'Their likely attacks (saved set, else ladder) at their max investment: the worst case for you.',
+  matchHelp: 'From the Brief, so the two screens never disagree.', notInBrief: 'Not in the Brief for this matchup.',
+  viewing: (coach) => `Viewing as ${coach}: their sets aren't shown, only species.`,
+  surviveHead: 'What it takes to survive their hardest hit (your current set)',
+  survive: { 'every-roll': 'survive every roll', 'fifteen-of-sixteen': 'survive 15 of 16', half: 'survive 8 of 16' },
+  cantSurvive: "can't, even with every free Stat Point", already: 'already, with your set as it is',
+  surviveBudget: (n) => `Searched HP and the defence it hits, with the ${n} Stat Points your other stats leave free.`,
 };

@@ -395,7 +395,7 @@ function detail(P, ctx, b) {
     <p class="small rowlab">${esc(C.BRIEF.why)}</p><ul class="rsns">${(m?.pros ?? []).map((x) => reasonChip(P, x, 'pro')).join('') || '<li class="small muted">—</li>'}</ul>
     <p class="small rowlab">${esc(C.BRIEF.costs)}</p><ul class="rsns">${(m?.cons ?? []).map((x) => reasonChip(P, x, 'con')).join('') || `<li class="small muted">${esc(C.BRIEF.noCost)}</li>`}</ul>
     <h3>${esc(C.BRIEF.sheetSets)}</h3>${P.identity() === pov.name ? `<ul class="small">${sets.map((x) => `<li>${btn(`${x.name || 'Set'} v${x.currentV}`, 'open-my-set', { set: x.id }, { cls: 'linkish' })}</li>`).join('') || `<li>${esc(C.BRIEF.noSets)}</li>`}</ul>` : `<p class="small muted">${esc(C.POV.viewingAs(pov.name))}</p>`}
-    <p>${chipBtn(six.includes(id) ? C.BRIEF.inSix : C.BRIEF.addSix, 'brief-six', { species: id }, six.includes(id))} ${btn(C.BRIEF.speedBtn, 'brief-speed', { a: b.key[0] ?? '', b: id })} ${btn(sets.length ? C.BRIEF.setBtn : 'Start a set ›', 'brief-set', { side: 'mine', species: id })}</p></section>`;
+    <p>${chipBtn(six.includes(id) ? C.BRIEF.inSix : C.BRIEF.addSix, 'brief-six', { species: id }, six.includes(id))} ${btn(C.BRIEF.speedBtn, 'brief-speed', { a: b.key[0] ?? '', b: id })} ${btn(sets.length ? C.BRIEF.setBtn : 'Start a set ›', 'brief-set', { side: 'mine', species: id })}${ctx.ws && sets.length ? ` ${btn('Build dashboard ›', 'build-open', { n: d.n })}` : ''}</p></section>`;
 }
 
 // ---------- actions ----------

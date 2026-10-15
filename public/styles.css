@@ -753,3 +753,44 @@ button.st-btn:hover, button.st-btn:focus-visible { border-color: var(--line); }
 .primary-link { display: inline-flex; align-items: center; min-height: 44px; padding: 4px 14px; border-radius: 6px; background: var(--accent); color: #fff; text-decoration: none; font-weight: 600; }
 @media (prefers-color-scheme: dark) { .primary-link { color: #1d2330; } } /* contrast on the light dark-mode accent */
 .chat-notes-preview .chat-text { margin: 4px 0; padding: 6px 8px; border: 1px dashed var(--line); border-radius: 6px; }
+
+/* ---------- Build: team cards and the per-mon dashboard (public/prep-build.js); our own structure, no Showdown CSS ---------- */
+.prep .build .bteam { list-style: none; margin: 6px 0; padding: 0; display: grid; gap: 8px; }
+.prep .build .bcard { width: 100%; display: grid; grid-template-columns: minmax(10em, 1.2fr) minmax(9em, 1fr) minmax(8em, 1fr) minmax(12em, 1.4fr); gap: 6px 12px; align-items: start; text-align: left; padding: 8px 10px; border-radius: 8px; }
+.prep .build .bc-who { display: flex; gap: 8px; align-items: center; min-width: 0; }
+.prep .build .bc-det, .prep .build .bc-moves { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.prep .build .bc-stats { display: grid; grid-template-columns: 2.6em 2.6em minmax(2em, 1fr) 2em; gap: 0 6px; align-items: center; }
+.prep .build .bstat { display: contents; }
+.prep .build .bs-v, .prep .build .bs-sp { text-align: right; font-variant-numeric: tabular-nums; }
+.prep .build .bs-bar { height: 6px; border-radius: 3px; background: var(--bg); overflow: hidden; }
+.prep .build .bs-bar span { display: block; height: 100%; background: var(--accent); opacity: .7; }
+.prep .build .bs-tot { grid-column: 1 / -1; color: var(--muted); }
+.prep .dash .bbar { padding: 8px 10px; margin: 6px 0 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
+.prep .dash .bsec { border-left-color: var(--accent); }
+.prep .dash .bsec-t { width: 100%; text-align: left; border-color: transparent; background: none; padding: 2px 0; display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: baseline; }
+.prep .dash .bsec-name { font-weight: 700; font-size: 15px; }
+.prep .dash .bsec-sum { color: var(--muted); font-size: 12px; flex: 1 1 12em; min-width: 0; }
+.prep .dash .hint { margin: 6px 0; }
+.prep .dash table.bcmp th, .prep .dash table.bcmp td { min-width: 11em; }
+.prep .dash table.bcmp th[scope="row"] { min-width: 10em; position: sticky; left: 0; background: var(--panel); }
+.prep .dash .bcell summary { cursor: pointer; list-style: none; }
+.prep .dash .bcell summary::-webkit-details-marker { display: none; }
+.prep .dash .bcell[open] { padding: 4px; border: 1px solid var(--line); border-radius: 6px; }
+.prep .dash .bword { font-weight: 600; }
+.prep .dash .delta { display: inline-block; font-size: 12px; font-weight: 600; }
+.prep .dash .delta.up { color: var(--ok); } .prep .dash .delta.down { color: var(--bad); }
+.prep .dash .bopt-acts { display: flex; flex-wrap: wrap; gap: 2px 6px; margin-top: 4px; }
+.prep .dash .btrial { margin: 8px 0; padding: 8px 10px; border: 1px dashed var(--accent); border-radius: 8px; }
+.prep .dash .bcmp-phone { display: none; }
+.prep .dash .bopt-card dl { margin: 6px 0 0; } .prep .dash .bopt-card dt { font-weight: 600; margin-top: 8px; } .prep .dash .bopt-card dd { margin: 2px 0 0; }
+@media (max-width: 1199px) {
+  .prep .build .bcard { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+@media (max-width: 767px) {
+  .prep .build .bcard { grid-template-columns: minmax(0, 1fr); }
+  .prep .build .bc-moves { flex-direction: row; flex-wrap: wrap; gap: 2px 8px; }
+  .prep .dash .bcmp-wide { display: none; }
+  .prep .dash .bcmp-phone { display: block; }
+  .prep .dash .bbar select { width: 100%; }
+  .prep .dash .bcell summary, .prep .dash .bsec-t { min-height: 44px; }
+}

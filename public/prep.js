@@ -20,10 +20,11 @@ import * as Plan from './prep-plan.js';
 import * as Practice from './prep-practice.js';
 import * as Matchup from './prep-matchup.js';
 import * as Chat from './prep-chat.js';
+import * as Build from './prep-build.js';
 
 const SAVE_DELAY = 400;
-const TAB_LABEL = { brief: 'Brief', plan: 'Plan', sets: 'Sets', calcs: 'Calcs', practice: 'Practice' };
-const MODULES = [Sets, Calcs, Plan, Practice, Matchup, Chat];
+const TAB_LABEL = { brief: 'Brief', plan: 'Plan', sets: 'Sets', calcs: 'Calcs', practice: 'Practice', build: 'Build' };
+const MODULES = [Sets, Calcs, Plan, Practice, Matchup, Chat, Build];
 
 /**
  * app: { dex, league(), sheet(), usage(), coresCx(), viewingCoach(), setViewingCoach(name), goMode(mode), toast(msg),
@@ -704,13 +705,15 @@ export function createPrep(app) {
     const src = ident === m.pov.name ? 'identity' : P.resolvePov(null).name === m.pov.name ? P.resolvePov(null).source : 'url';
     const ws = m.ws;
     const legacy = unassignedVs([...P.ws.values()], m.opp.name);
-    const tab = MATCH_TABS.includes(r.tab) ? r.tab : idRoute ? 'plan' : 'brief';
+    const tab = r.detail?.side === 'build' ? 'build' : MATCH_TABS.includes(r.tab) ? r.tab : idRoute ? 'plan' : 'brief';
     const dots = ws ? draftDots(ws) : {};
     const seatRoute = { view: 'ws', pov: m.pov.order, opp: m.opp.order };
-    const hrefOf = (k) => formatRoute(idRoute && k !== 'brief' ? { view: 'ws', wsId: ws.id, tab: k } : { ...seatRoute, tab: k });
+    // Build has no id form (#prep/w/<id>/…): it always opens as the matchup, pinned to this workspace by P.canonical
+    const hrefOf = (k) => formatRoute(idRoute && k !== 'brief' && k !== 'build' ? { view: 'ws', wsId: ws.id, tab: k } : { ...seatRoute, tab: k });
     const tabs = `<nav class="dtabs" aria-label="${esc(`Sections for vs ${m.opp.name}`)}">${MATCH_TABS.map((k) => `<a href="${esc(hrefOf(k))}" id="ptab-${k}" data-pa="tab" data-tab="${k}"${tab === k && !r.detail ? ' aria-current="page" class="active"' : ''}${dots[k] ? ` aria-label="${esc(`${TAB_LABEL[k]}, ${C.BRIEF.unsavedDot[k]}`)}"` : ''}>${esc(TAB_LABEL[k])}${dots[k] ? '<span class="dot" aria-hidden="true"></span>' : ''}</a>`).join('')}</nav>`;
     let body;
     if (tab === 'brief') body = Matchup.brief(P, { r, pov: m.pov, opp: m.opp, ws, legacy });
+    else if (ws && tab === 'build') body = Build.screen(P, { r, pov: m.pov, opp: m.opp, ws });
     else if (ws) body = tab === 'sets' ? Sets.tab(P, ws) : tab === 'calcs' ? Calcs.tab(P, ws) : tab === 'practice' ? Practice.tab(P, ws) : Plan.tab(P, ws);
     else body = (tab === 'plan' && !legacy.length && Plan.previewTab(P, m)) || startPanel(m, legacy, tab);
     return `<section class="panel prep-match" data-key="match">${povRow(m.pov.name, src)}${oppStrip(m.pov, m.opp.order)}
@@ -819,7 +822,7 @@ export function createPrep(app) {
       <span class="ws-title">${owner ? `${esc(owner)} ` : ''}vs ${esc(ws.coach)}</span>${ws.isNext ? ' <span class="chip ok">next</span>' : ''}</div>
       ${owner ? '' : `<p class="banner warn unassigned">${esc(C.POV.unassignedBanner)} ${btn(C.POV.review, 'go-owner', { ws: ws.id }, { primary: true })}</p>`}`;
     // section buttons (not an ARIA tablist: no arrow-key model to promise); the current one is marked aria-current
-    const tabs = `<nav class="ptabs" aria-label="Prep sections">${Object.entries(TAB_LABEL).filter(([k]) => k !== 'brief' || owner).map(([k, l]) => `<button type="button" id="ptab-${k}" data-pa="tab" data-tab="${k}"${!r.kind && tab === k ? ' aria-current="page" class="active"' : ''}>${l}</button>`).join('')}</nav>`;
+    const tabs = `<nav class="ptabs" aria-label="Prep sections">${Object.entries(TAB_LABEL).filter(([k]) => (k !== 'brief' || owner) && k !== 'build').map(([k, l]) => `<button type="button" id="ptab-${k}" data-pa="tab" data-tab="${k}"${!r.kind && tab === k ? ' aria-current="page" class="active"' : ''}>${l}</button>`).join('')}</nav>`;
     if (r.kind === 'owner') return `<section class="panel prep-ws" data-key="ws">${head}${ownerScreen(ws)}</section>`;
     let body;
     if (!r.kind) {
