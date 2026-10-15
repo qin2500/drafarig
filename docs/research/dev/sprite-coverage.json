@@ -1,0 +1,2465 @@
+{
+ "checkedAt": "2026-10-02T23:31:33.187Z",
+ "total": 339,
+ "summary": {
+  "gen5": 328,
+  "home-centered": 299,
+  "dex": 316,
+  "ani": 334
+ },
+ "noneOk": [],
+ "gen5Missing": [
+  {
+   "id": "barbaraclemega",
+   "sid": "barbaracle-mega",
+   "ok": [
+    "ani"
+   ]
+  },
+  {
+   "id": "dragalgemega",
+   "sid": "dragalge-mega",
+   "ok": [
+    "ani"
+   ]
+  },
+  {
+   "id": "eelektrossmega",
+   "sid": "eelektross-mega",
+   "ok": [
+    "ani"
+   ]
+  },
+  {
+   "id": "falinksmega",
+   "sid": "falinks-mega",
+   "ok": [
+    "ani"
+   ]
+  },
+  {
+   "id": "malamarmega",
+   "sid": "malamar-mega",
+   "ok": [
+    "ani"
+   ]
+  },
+  {
+   "id": "pyroarmega",
+   "sid": "pyroar-mega",
+   "ok": [
+    "ani"
+   ]
+  },
+  {
+   "id": "raichumegax",
+   "sid": "raichu-megax",
+   "ok": [
+    "ani"
+   ]
+  },
+  {
+   "id": "raichumegay",
+   "sid": "raichu-megay",
+   "ok": [
+    "ani"
+   ]
+  },
+  {
+   "id": "scolipedemega",
+   "sid": "scolipede-mega",
+   "ok": [
+    "ani"
+   ]
+  },
+  {
+   "id": "scraftymega",
+   "sid": "scrafty-mega",
+   "ok": [
+    "ani"
+   ]
+  },
+  {
+   "id": "staraptormega",
+   "sid": "staraptor-mega",
+   "ok": [
+    "ani"
+   ]
+  }
+ ],
+ "res": {
+  "abomasnow": {
+   "sid": "abomasnow",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "abomasnowmega": {
+   "sid": "abomasnow-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "absol": {
+   "sid": "absol",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "absolmega": {
+   "sid": "absol-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "absolmegaz": {
+   "sid": "absol-megaz",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 404,
+   "ani": 404
+  },
+  "aegislash": {
+   "sid": "aegislash",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "aerodactyl": {
+   "sid": "aerodactyl",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "aerodactylmega": {
+   "sid": "aerodactyl-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "aggron": {
+   "sid": "aggron",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "aggronmega": {
+   "sid": "aggron-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "alakazam": {
+   "sid": "alakazam",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "alakazammega": {
+   "sid": "alakazam-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "alcremie": {
+   "sid": "alcremie",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "altaria": {
+   "sid": "altaria",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "altariamega": {
+   "sid": "altaria-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "ampharos": {
+   "sid": "ampharos",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "ampharosmega": {
+   "sid": "ampharos-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "annihilape": {
+   "sid": "annihilape",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "appletun": {
+   "sid": "appletun",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "araquanid": {
+   "sid": "araquanid",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "arbok": {
+   "sid": "arbok",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "arboliva": {
+   "sid": "arboliva",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "arcanine": {
+   "sid": "arcanine",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "arcaninehisui": {
+   "sid": "arcanine-hisui",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "archaludon": {
+   "sid": "archaludon",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "ariados": {
+   "sid": "ariados",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "armarouge": {
+   "sid": "armarouge",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "aromatisse": {
+   "sid": "aromatisse",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "audino": {
+   "sid": "audino",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "audinomega": {
+   "sid": "audino-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "aurorus": {
+   "sid": "aurorus",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "avalugg": {
+   "sid": "avalugg",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "avalugghisui": {
+   "sid": "avalugg-hisui",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "azumarill": {
+   "sid": "azumarill",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "banette": {
+   "sid": "banette",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "banettemega": {
+   "sid": "banette-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "barbaracle": {
+   "sid": "barbaracle",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "barbaraclemega": {
+   "sid": "barbaracle-mega",
+   "gen5": 404,
+   "home-centered": 404,
+   "dex": 404,
+   "ani": 200
+  },
+  "basculegion": {
+   "sid": "basculegion",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "basculegionf": {
+   "sid": "basculegion-f",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "bastiodon": {
+   "sid": "bastiodon",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "baxcalibur": {
+   "sid": "baxcalibur",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "baxcaliburmega": {
+   "sid": "baxcalibur-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 404,
+   "ani": 404
+  },
+  "beartic": {
+   "sid": "beartic",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "beedrill": {
+   "sid": "beedrill",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "beedrillmega": {
+   "sid": "beedrill-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "bellibolt": {
+   "sid": "bellibolt",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "blastoise": {
+   "sid": "blastoise",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "blastoisemega": {
+   "sid": "blastoise-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "blaziken": {
+   "sid": "blaziken",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "blazikenmega": {
+   "sid": "blaziken-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "camerupt": {
+   "sid": "camerupt",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "cameruptmega": {
+   "sid": "camerupt-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "castform": {
+   "sid": "castform",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "ceruledge": {
+   "sid": "ceruledge",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "chandelure": {
+   "sid": "chandelure",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "chandeluremega": {
+   "sid": "chandelure-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "charizard": {
+   "sid": "charizard",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "charizardmegax": {
+   "sid": "charizard-megax",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "charizardmegay": {
+   "sid": "charizard-megay",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "chesnaught": {
+   "sid": "chesnaught",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "chesnaughtmega": {
+   "sid": "chesnaught-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "chimecho": {
+   "sid": "chimecho",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "chimechomega": {
+   "sid": "chimecho-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "cinderace": {
+   "sid": "cinderace",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "clawitzer": {
+   "sid": "clawitzer",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "clefable": {
+   "sid": "clefable",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "clefablemega": {
+   "sid": "clefable-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "cofagrigus": {
+   "sid": "cofagrigus",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "conkeldurr": {
+   "sid": "conkeldurr",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "corviknight": {
+   "sid": "corviknight",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "crabominable": {
+   "sid": "crabominable",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "crabominablemega": {
+   "sid": "crabominable-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "decidueye": {
+   "sid": "decidueye",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "decidueyehisui": {
+   "sid": "decidueye-hisui",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "dedenne": {
+   "sid": "dedenne",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "delphox": {
+   "sid": "delphox",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "delphoxmega": {
+   "sid": "delphox-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "diggersby": {
+   "sid": "diggersby",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "ditto": {
+   "sid": "ditto",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "dragalge": {
+   "sid": "dragalge",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "dragalgemega": {
+   "sid": "dragalge-mega",
+   "gen5": 404,
+   "home-centered": 404,
+   "dex": 404,
+   "ani": 200
+  },
+  "dragapult": {
+   "sid": "dragapult",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "dragonite": {
+   "sid": "dragonite",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "dragonitemega": {
+   "sid": "dragonite-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "drampa": {
+   "sid": "drampa",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "drampamega": {
+   "sid": "drampa-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "eelektross": {
+   "sid": "eelektross",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "eelektrossmega": {
+   "sid": "eelektross-mega",
+   "gen5": 404,
+   "home-centered": 404,
+   "dex": 404,
+   "ani": 200
+  },
+  "emboar": {
+   "sid": "emboar",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "emboarmega": {
+   "sid": "emboar-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "emolga": {
+   "sid": "emolga",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "empoleon": {
+   "sid": "empoleon",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "espathra": {
+   "sid": "espathra",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "espeon": {
+   "sid": "espeon",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "excadrill": {
+   "sid": "excadrill",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "excadrillmega": {
+   "sid": "excadrill-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "falinks": {
+   "sid": "falinks",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 404,
+   "ani": 200
+  },
+  "falinksmega": {
+   "sid": "falinks-mega",
+   "gen5": 404,
+   "home-centered": 404,
+   "dex": 404,
+   "ani": 200
+  },
+  "farfetchd": {
+   "sid": "farfetchd",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "farigiraf": {
+   "sid": "farigiraf",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "feraligatr": {
+   "sid": "feraligatr",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "feraligatrmega": {
+   "sid": "feraligatr-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "flapple": {
+   "sid": "flapple",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "flareon": {
+   "sid": "flareon",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "floetteeternal": {
+   "sid": "floette-eternal",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "floettemega": {
+   "sid": "floette-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "florges": {
+   "sid": "florges",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "forretress": {
+   "sid": "forretress",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "froslass": {
+   "sid": "froslass",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "froslassmega": {
+   "sid": "froslass-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "furfrou": {
+   "sid": "furfrou",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "gallade": {
+   "sid": "gallade",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "gallademega": {
+   "sid": "gallade-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "garbodor": {
+   "sid": "garbodor",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "garchomp": {
+   "sid": "garchomp",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "garchompmega": {
+   "sid": "garchomp-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "garchompmegaz": {
+   "sid": "garchomp-megaz",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 404,
+   "ani": 404
+  },
+  "gardevoir": {
+   "sid": "gardevoir",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "gardevoirmega": {
+   "sid": "gardevoir-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "garganacl": {
+   "sid": "garganacl",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "gengar": {
+   "sid": "gengar",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "gengarmega": {
+   "sid": "gengar-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "gholdengo": {
+   "sid": "gholdengo",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "glaceon": {
+   "sid": "glaceon",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "glalie": {
+   "sid": "glalie",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "glaliemega": {
+   "sid": "glalie-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "glimmora": {
+   "sid": "glimmora",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "glimmoramega": {
+   "sid": "glimmora-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "gliscor": {
+   "sid": "gliscor",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "gogoat": {
+   "sid": "gogoat",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "golisopod": {
+   "sid": "golisopod",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "golisopodmega": {
+   "sid": "golisopod-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 404,
+   "ani": 404
+  },
+  "golurk": {
+   "sid": "golurk",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "golurkmega": {
+   "sid": "golurk-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "goodra": {
+   "sid": "goodra",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "goodrahisui": {
+   "sid": "goodra-hisui",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "gourgeist": {
+   "sid": "gourgeist",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "grapploct": {
+   "sid": "grapploct",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 404,
+   "ani": 200
+  },
+  "greninja": {
+   "sid": "greninja",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "greninjamega": {
+   "sid": "greninja-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "grimmsnarl": {
+   "sid": "grimmsnarl",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 404,
+   "ani": 200
+  },
+  "gyarados": {
+   "sid": "gyarados",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "gyaradosmega": {
+   "sid": "gyarados-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "hatterene": {
+   "sid": "hatterene",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "hawlucha": {
+   "sid": "hawlucha",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "hawluchamega": {
+   "sid": "hawlucha-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "heliolisk": {
+   "sid": "heliolisk",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "heracross": {
+   "sid": "heracross",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "heracrossmega": {
+   "sid": "heracross-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "hippowdon": {
+   "sid": "hippowdon",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "houndoom": {
+   "sid": "houndoom",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "houndoommega": {
+   "sid": "houndoom-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "houndstone": {
+   "sid": "houndstone",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "hydrapple": {
+   "sid": "hydrapple",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "hydreigon": {
+   "sid": "hydreigon",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "incineroar": {
+   "sid": "incineroar",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "indeedee": {
+   "sid": "indeedee",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "indeedeef": {
+   "sid": "indeedee-f",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "infernape": {
+   "sid": "infernape",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "inteleon": {
+   "sid": "inteleon",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "jolteon": {
+   "sid": "jolteon",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "kangaskhan": {
+   "sid": "kangaskhan",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "kangaskhanmega": {
+   "sid": "kangaskhan-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "kingambit": {
+   "sid": "kingambit",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "kleavor": {
+   "sid": "kleavor",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "klefki": {
+   "sid": "klefki",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "kommoo": {
+   "sid": "kommoo",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "krookodile": {
+   "sid": "krookodile",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "leafeon": {
+   "sid": "leafeon",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "liepard": {
+   "sid": "liepard",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "lopunny": {
+   "sid": "lopunny",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "lopunnymega": {
+   "sid": "lopunny-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "lucario": {
+   "sid": "lucario",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "lucariomega": {
+   "sid": "lucario-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "lucariomegaz": {
+   "sid": "lucario-megaz",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 404,
+   "ani": 404
+  },
+  "luxray": {
+   "sid": "luxray",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "lycanroc": {
+   "sid": "lycanroc",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "lycanrocdusk": {
+   "sid": "lycanroc-dusk",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "lycanrocmidnight": {
+   "sid": "lycanroc-midnight",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "mabosstiff": {
+   "sid": "mabosstiff",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "machamp": {
+   "sid": "machamp",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "malamar": {
+   "sid": "malamar",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "malamarmega": {
+   "sid": "malamar-mega",
+   "gen5": 404,
+   "home-centered": 404,
+   "dex": 404,
+   "ani": 200
+  },
+  "mamoswine": {
+   "sid": "mamoswine",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "manectric": {
+   "sid": "manectric",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "manectricmega": {
+   "sid": "manectric-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "maushold": {
+   "sid": "maushold",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "mawile": {
+   "sid": "mawile",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "mawilemega": {
+   "sid": "mawile-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "medicham": {
+   "sid": "medicham",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "medichammega": {
+   "sid": "medicham-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "meganium": {
+   "sid": "meganium",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "meganiummega": {
+   "sid": "meganium-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "meowscarada": {
+   "sid": "meowscarada",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "meowstic": {
+   "sid": "meowstic",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "meowsticmmega": {
+   "sid": "meowstic-mmega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "meowsticf": {
+   "sid": "meowstic-f",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "meowsticfmega": {
+   "sid": "meowstic-fmega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "metagross": {
+   "sid": "metagross",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "metagrossmega": {
+   "sid": "metagross-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "milotic": {
+   "sid": "milotic",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "mimikyu": {
+   "sid": "mimikyu",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "morpeko": {
+   "sid": "morpeko",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "mrmime": {
+   "sid": "mrmime",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "mrrime": {
+   "sid": "mrrime",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "mudsdale": {
+   "sid": "mudsdale",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "musharna": {
+   "sid": "musharna",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "ninetales": {
+   "sid": "ninetales",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "ninetalesalola": {
+   "sid": "ninetales-alola",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "noivern": {
+   "sid": "noivern",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "oranguru": {
+   "sid": "oranguru",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "orthworm": {
+   "sid": "orthworm",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "overqwil": {
+   "sid": "overqwil",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 404,
+   "ani": 200
+  },
+  "palafin": {
+   "sid": "palafin",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "pangoro": {
+   "sid": "pangoro",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "passimian": {
+   "sid": "passimian",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "pawmot": {
+   "sid": "pawmot",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "pelipper": {
+   "sid": "pelipper",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "perrserker": {
+   "sid": "perrserker",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 404,
+   "ani": 200
+  },
+  "persian": {
+   "sid": "persian",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "persianalola": {
+   "sid": "persian-alola",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "pidgeot": {
+   "sid": "pidgeot",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "pidgeotmega": {
+   "sid": "pidgeot-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "pikachu": {
+   "sid": "pikachu",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "pincurchin": {
+   "sid": "pincurchin",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 404,
+   "ani": 200
+  },
+  "pinsir": {
+   "sid": "pinsir",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "pinsirmega": {
+   "sid": "pinsir-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "politoed": {
+   "sid": "politoed",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "polteageist": {
+   "sid": "polteageist",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "primarina": {
+   "sid": "primarina",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "pyroar": {
+   "sid": "pyroar",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "pyroarmega": {
+   "sid": "pyroar-mega",
+   "gen5": 404,
+   "home-centered": 404,
+   "dex": 404,
+   "ani": 200
+  },
+  "quaquaval": {
+   "sid": "quaquaval",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "qwilfish": {
+   "sid": "qwilfish",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "raichu": {
+   "sid": "raichu",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "raichumegax": {
+   "sid": "raichu-megax",
+   "gen5": 404,
+   "home-centered": 404,
+   "dex": 404,
+   "ani": 200
+  },
+  "raichumegay": {
+   "sid": "raichu-megay",
+   "gen5": 404,
+   "home-centered": 404,
+   "dex": 404,
+   "ani": 200
+  },
+  "raichualola": {
+   "sid": "raichu-alola",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "rampardos": {
+   "sid": "rampardos",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "reuniclus": {
+   "sid": "reuniclus",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "rhyperior": {
+   "sid": "rhyperior",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "rillaboom": {
+   "sid": "rillaboom",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "roserade": {
+   "sid": "roserade",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "rotom": {
+   "sid": "rotom",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "rotomfan": {
+   "sid": "rotom-fan",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "rotomfrost": {
+   "sid": "rotom-frost",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "rotomheat": {
+   "sid": "rotom-heat",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "rotommow": {
+   "sid": "rotom-mow",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "rotomwash": {
+   "sid": "rotom-wash",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "runerigus": {
+   "sid": "runerigus",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "sableye": {
+   "sid": "sableye",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "sableyemega": {
+   "sid": "sableye-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "salamence": {
+   "sid": "salamence",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "salamencemega": {
+   "sid": "salamence-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "salazzle": {
+   "sid": "salazzle",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "samurott": {
+   "sid": "samurott",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "samurotthisui": {
+   "sid": "samurott-hisui",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "sandaconda": {
+   "sid": "sandaconda",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "sceptile": {
+   "sid": "sceptile",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "sceptilemega": {
+   "sid": "sceptile-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "scizor": {
+   "sid": "scizor",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "scizormega": {
+   "sid": "scizor-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "scolipede": {
+   "sid": "scolipede",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "scolipedemega": {
+   "sid": "scolipede-mega",
+   "gen5": 404,
+   "home-centered": 404,
+   "dex": 404,
+   "ani": 200
+  },
+  "scovillain": {
+   "sid": "scovillain",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "scovillainmega": {
+   "sid": "scovillain-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "scrafty": {
+   "sid": "scrafty",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "scraftymega": {
+   "sid": "scrafty-mega",
+   "gen5": 404,
+   "home-centered": 404,
+   "dex": 404,
+   "ani": 200
+  },
+  "serperior": {
+   "sid": "serperior",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "sharpedo": {
+   "sid": "sharpedo",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "sharpedomega": {
+   "sid": "sharpedo-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "simipour": {
+   "sid": "simipour",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "simisage": {
+   "sid": "simisage",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "simisear": {
+   "sid": "simisear",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "sinistcha": {
+   "sid": "sinistcha",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "sirfetchd": {
+   "sid": "sirfetchd",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 404,
+   "ani": 200
+  },
+  "skarmory": {
+   "sid": "skarmory",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "skarmorymega": {
+   "sid": "skarmory-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "skeledirge": {
+   "sid": "skeledirge",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "slowbro": {
+   "sid": "slowbro",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "slowbromega": {
+   "sid": "slowbro-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "slowbrogalar": {
+   "sid": "slowbro-galar",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "slowking": {
+   "sid": "slowking",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "slowkinggalar": {
+   "sid": "slowking-galar",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "slurpuff": {
+   "sid": "slurpuff",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "sneasler": {
+   "sid": "sneasler",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "snorlax": {
+   "sid": "snorlax",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "spiritomb": {
+   "sid": "spiritomb",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "squawkabilly": {
+   "sid": "squawkabilly",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "staraptor": {
+   "sid": "staraptor",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "staraptormega": {
+   "sid": "staraptor-mega",
+   "gen5": 404,
+   "home-centered": 404,
+   "dex": 404,
+   "ani": 200
+  },
+  "starmie": {
+   "sid": "starmie",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "starmiemega": {
+   "sid": "starmie-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "steelix": {
+   "sid": "steelix",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "steelixmega": {
+   "sid": "steelix-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "stunfisk": {
+   "sid": "stunfisk",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "stunfiskgalar": {
+   "sid": "stunfisk-galar",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "swalot": {
+   "sid": "swalot",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "swampert": {
+   "sid": "swampert",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "swampertmega": {
+   "sid": "swampert-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "sylveon": {
+   "sid": "sylveon",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "talonflame": {
+   "sid": "talonflame",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "tauros": {
+   "sid": "tauros",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "taurospaldeaaqua": {
+   "sid": "tauros-paldeaaqua",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "taurospaldeablaze": {
+   "sid": "tauros-paldeablaze",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "taurospaldeacombat": {
+   "sid": "tauros-paldeacombat",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "thievul": {
+   "sid": "thievul",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "tinkaton": {
+   "sid": "tinkaton",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "torkoal": {
+   "sid": "torkoal",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "torterra": {
+   "sid": "torterra",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "toucannon": {
+   "sid": "toucannon",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "toxapex": {
+   "sid": "toxapex",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "toxicroak": {
+   "sid": "toxicroak",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "toxtricity": {
+   "sid": "toxtricity",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "trevenant": {
+   "sid": "trevenant",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "tsareena": {
+   "sid": "tsareena",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "typhlosion": {
+   "sid": "typhlosion",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "typhlosionhisui": {
+   "sid": "typhlosion-hisui",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "tyranitar": {
+   "sid": "tyranitar",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "tyranitarmega": {
+   "sid": "tyranitar-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "tyrantrum": {
+   "sid": "tyrantrum",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "umbreon": {
+   "sid": "umbreon",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "vanilluxe": {
+   "sid": "vanilluxe",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "vaporeon": {
+   "sid": "vaporeon",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "venusaur": {
+   "sid": "venusaur",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "venusaurmega": {
+   "sid": "venusaur-mega",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "victreebel": {
+   "sid": "victreebel",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "victreebelmega": {
+   "sid": "victreebel-mega",
+   "gen5": 200,
+   "home-centered": 404,
+   "dex": 200,
+   "ani": 200
+  },
+  "vileplume": {
+   "sid": "vileplume",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "vivillon": {
+   "sid": "vivillon",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "volcarona": {
+   "sid": "volcarona",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "watchog": {
+   "sid": "watchog",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "weavile": {
+   "sid": "weavile",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "whimsicott": {
+   "sid": "whimsicott",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "wigglytuff": {
+   "sid": "wigglytuff",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "wyrdeer": {
+   "sid": "wyrdeer",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "zoroark": {
+   "sid": "zoroark",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  },
+  "zoroarkhisui": {
+   "sid": "zoroark-hisui",
+   "gen5": 200,
+   "home-centered": 200,
+   "dex": 200,
+   "ani": 200
+  }
+ }
+}

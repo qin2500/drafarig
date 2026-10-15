@@ -1,0 +1,1376 @@
+{
+ "fetchedAt": "2026-10-03T14:07:18.308Z",
+ "warnings": [
+  "Name differs between tabs: Drafts says \"Politoad\", board says \"Politoed\" (same Pokémon)."
+ ],
+ "unmatched": [],
+ "coaches": [
+  {
+   "order": 1,
+   "name": "Hex(法拉)",
+   "pointsLeft": 13,
+   "slotsLeft": 3,
+   "picks": [
+    {
+     "en": "Garchomp",
+     "id": "garchomp",
+     "points": 19
+    },
+    {
+     "en": "Indeedee-female",
+     "id": "indeedeef",
+     "points": 18
+    },
+    {
+     "en": "Corviknight",
+     "id": "corviknight",
+     "points": 13
+    },
+    {
+     "en": "Rotom-heat",
+     "id": "rotomheat",
+     "points": 12
+    },
+    {
+     "en": "Armarouge",
+     "id": "armarouge",
+     "points": 14
+    },
+    {
+     "en": "Kleavor",
+     "id": "kleavor",
+     "points": 6
+    },
+    {
+     "en": "Banette",
+     "id": "banette",
+     "points": 5
+    }
+   ]
+  },
+  {
+   "order": 2,
+   "name": "Ning",
+   "pointsLeft": 9,
+   "slotsLeft": 4,
+   "picks": [
+    {
+     "en": "Rillaboom",
+     "id": "rillaboom",
+     "points": 19
+    },
+    {
+     "en": "Gholdengo",
+     "id": "gholdengo",
+     "points": 18
+    },
+    {
+     "en": "Milotic",
+     "id": "milotic",
+     "points": 14
+    },
+    {
+     "en": "Lucario",
+     "id": "lucario",
+     "points": 17
+    },
+    {
+     "en": "Alolan Ninetales",
+     "id": "ninetalesalola",
+     "points": 15
+    },
+    {
+     "en": "Ceruledge",
+     "id": "ceruledge",
+     "points": 8
+    }
+   ]
+  },
+  {
+   "order": 3,
+   "name": "ZhuZi",
+   "pointsLeft": 29,
+   "slotsLeft": 4,
+   "picks": [
+    {
+     "en": "Metagross",
+     "id": "metagross",
+     "points": 20
+    },
+    {
+     "en": "Rotom-Wash",
+     "id": "rotomwash",
+     "points": 14
+    },
+    {
+     "en": "Dragapult",
+     "id": "dragapult",
+     "points": 15
+    },
+    {
+     "en": "Krookodile",
+     "id": "krookodile",
+     "points": 9
+    },
+    {
+     "en": "Infernape",
+     "id": "infernape",
+     "points": 7
+    },
+    {
+     "en": "Galarian Slowking",
+     "id": "slowkinggalar",
+     "points": 6
+    }
+   ]
+  },
+  {
+   "order": 4,
+   "name": "Jacky",
+   "pointsLeft": 7,
+   "slotsLeft": 4,
+   "picks": [
+    {
+     "en": "Incineroar",
+     "id": "incineroar",
+     "points": 19
+    },
+    {
+     "en": "Golisopod",
+     "id": "golisopod",
+     "points": 20
+    },
+    {
+     "en": "Farigiraf",
+     "id": "farigiraf",
+     "points": 16
+    },
+    {
+     "en": "Rotom-mow",
+     "id": "rotommow",
+     "points": 11
+    },
+    {
+     "en": "Torkoal",
+     "id": "torkoal",
+     "points": 16
+    },
+    {
+     "en": "Mimikyu",
+     "id": "mimikyu",
+     "points": 11
+    }
+   ]
+  },
+  {
+   "order": 5,
+   "name": "Anthony",
+   "pointsLeft": 11,
+   "slotsLeft": 4,
+   "picks": [
+    {
+     "en": "Charizard",
+     "id": "charizard",
+     "points": 20
+    },
+    {
+     "en": "Sinistcha",
+     "id": "sinistcha",
+     "points": 18
+    },
+    {
+     "en": "Pelipper",
+     "id": "pelipper",
+     "points": 16
+    },
+    {
+     "en": "Kangaskhan",
+     "id": "kangaskhan",
+     "points": 17
+    },
+    {
+     "en": "Aegislash",
+     "id": "aegislash",
+     "points": 16
+    },
+    {
+     "en": "Morpeko",
+     "id": "morpeko",
+     "points": 2
+    }
+   ]
+  },
+  {
+   "order": 6,
+   "name": "Taro",
+   "pointsLeft": 14,
+   "slotsLeft": 4,
+   "picks": [
+    {
+     "en": "Salamence",
+     "id": "salamence",
+     "points": 20
+    },
+    {
+     "en": "Tyranitar",
+     "id": "tyranitar",
+     "points": 17
+    },
+    {
+     "en": "Excadrill",
+     "id": "excadrill",
+     "points": 13
+    },
+    {
+     "en": "Sneasler",
+     "id": "sneasler",
+     "points": 19
+    },
+    {
+     "en": "Serperior",
+     "id": "serperior",
+     "points": 6
+    },
+    {
+     "en": "Tinkaton",
+     "id": "tinkaton",
+     "points": 11
+    }
+   ]
+  },
+  {
+   "order": 7,
+   "name": "17",
+   "pointsLeft": 19,
+   "slotsLeft": 4,
+   "picks": [
+    {
+     "en": "Pawmot",
+     "id": "pawmot",
+     "points": 12
+    },
+    {
+     "en": "Meowscarada",
+     "id": "meowscarada",
+     "points": 12
+    },
+    {
+     "en": "Dragonite",
+     "id": "dragonite",
+     "points": 16
+    },
+    {
+     "en": "Venusaur",
+     "id": "venusaur",
+     "points": 14
+    },
+    {
+     "en": "Meowstic-male",
+     "id": "meowstic",
+     "points": 11
+    },
+    {
+     "en": "Blaziken",
+     "id": "blaziken",
+     "points": 16
+    }
+   ]
+  },
+  {
+   "order": 8,
+   "name": "Calvin",
+   "pointsLeft": 23,
+   "slotsLeft": 4,
+   "picks": [
+    {
+     "en": "Staraptor",
+     "id": "staraptor",
+     "points": 20
+    },
+    {
+     "en": "Grimmsnarl",
+     "id": "grimmsnarl",
+     "points": 17
+    },
+    {
+     "en": "Empoleon",
+     "id": "empoleon",
+     "points": 7
+    },
+    {
+     "en": "Basculegion-female",
+     "id": "basculegionf",
+     "points": 13
+    },
+    {
+     "en": "Jolteon",
+     "id": "jolteon",
+     "points": 5
+    },
+    {
+     "en": "Volcarona",
+     "id": "volcarona",
+     "points": 15
+    }
+   ]
+  },
+  {
+   "order": 9,
+   "name": "DIngDIng",
+   "pointsLeft": 38,
+   "slotsLeft": 4,
+   "picks": [
+    {
+     "en": "Whimsicott",
+     "id": "whimsicott",
+     "points": 19
+    },
+    {
+     "en": "Sableye",
+     "id": "sableye",
+     "points": 13
+    },
+    {
+     "en": "Overqwil",
+     "id": "overqwil",
+     "points": 11
+    },
+    {
+     "en": "Audino",
+     "id": "audino",
+     "points": 3
+    },
+    {
+     "en": "Malamar",
+     "id": "malamar",
+     "points": 7
+    },
+    {
+     "en": "Huisuian Zoroark",
+     "id": "zoroarkhisui",
+     "points": 9
+    }
+   ]
+  },
+  {
+   "order": 10,
+   "name": "Data",
+   "pointsLeft": 32,
+   "slotsLeft": 4,
+   "picks": [
+    {
+     "en": "Archaludon",
+     "id": "archaludon",
+     "points": 19
+    },
+    {
+     "en": "Raichu",
+     "id": "raichu",
+     "points": 18
+    },
+    {
+     "en": "Politoad",
+     "id": "politoed",
+     "points": 13
+    },
+    {
+     "en": "Klefki",
+     "id": "klefki",
+     "points": 11
+    },
+    {
+     "en": "Espathra",
+     "id": "espathra",
+     "points": 6
+    },
+    {
+     "en": "Pikachu",
+     "id": "pikachu",
+     "points": 1
+    }
+   ]
+  }
+ ],
+ "available": [
+  {
+   "id": "delphox",
+   "en": "Delphox",
+   "points": 17
+  },
+  {
+   "id": "arcanine",
+   "en": "Arcanine",
+   "points": 14
+  },
+  {
+   "id": "mamoswine",
+   "en": "Mamoswine",
+   "points": 12
+  },
+  {
+   "id": "araquanid",
+   "en": "Araquanid",
+   "points": 11
+  },
+  {
+   "id": "liepard",
+   "en": "Liepard",
+   "points": 10
+  },
+  {
+   "id": "conkeldurr",
+   "en": "Conkeldurr",
+   "points": 7
+  },
+  {
+   "id": "raichualola",
+   "en": "Alolan Raichu",
+   "points": 5
+  },
+  {
+   "id": "alcremie",
+   "en": "Alcremie",
+   "points": 4
+  },
+  {
+   "id": "arbok",
+   "en": "Arbok",
+   "points": 2
+  },
+  {
+   "id": "appletun",
+   "en": "Appletun",
+   "points": 1
+  },
+  {
+   "id": "floetteeternal",
+   "en": "Floette",
+   "points": 20
+  },
+  {
+   "id": "annihilape",
+   "en": "Annihilape",
+   "points": 18
+  },
+  {
+   "id": "blastoise",
+   "en": "Blastoise",
+   "points": 17
+  },
+  {
+   "id": "arcaninehisui",
+   "en": "Hisuian Arcanine",
+   "points": 15
+  },
+  {
+   "id": "hydreigon",
+   "en": "Hydreigon",
+   "points": 14
+  },
+  {
+   "id": "alakazam",
+   "en": "Alakazam",
+   "points": 12
+  },
+  {
+   "id": "hawlucha",
+   "en": "Hawlucha",
+   "points": 10
+  },
+  {
+   "id": "altaria",
+   "en": "Altaria",
+   "points": 9
+  },
+  {
+   "id": "aggron",
+   "en": "Aggron",
+   "points": 8
+  },
+  {
+   "id": "victreebel",
+   "en": "Victreebel",
+   "points": 6
+  },
+  {
+   "id": "cofagrigus",
+   "en": "Cofagrigus",
+   "points": 5
+  },
+  {
+   "id": "bellibolt",
+   "en": "Bellibolt",
+   "points": 4
+  },
+  {
+   "id": "aurorus",
+   "en": "Aurorus",
+   "points": 3
+  },
+  {
+   "id": "bastiodon",
+   "en": "Bastiodon",
+   "points": 2
+  },
+  {
+   "id": "avalugg",
+   "en": "Avalugg",
+   "points": 1
+  },
+  {
+   "id": "gengar",
+   "en": "Gengar",
+   "points": 20
+  },
+  {
+   "id": "gardevoir",
+   "en": "Gardevoir",
+   "points": 19
+  },
+  {
+   "id": "starmie",
+   "en": "Starmie",
+   "points": 15
+  },
+  {
+   "id": "kommoo",
+   "en": "Kommo-o",
+   "points": 14
+  },
+  {
+   "id": "gallade",
+   "en": "Gallade",
+   "points": 12
+  },
+  {
+   "id": "skarmory",
+   "en": "Skarmory",
+   "points": 11
+  },
+  {
+   "id": "manectric",
+   "en": "Manecri",
+   "points": 10
+  },
+  {
+   "id": "chandelure",
+   "en": "Chandelure",
+   "points": 9
+  },
+  {
+   "id": "chesnaught",
+   "en": "Chesnaught",
+   "points": 8
+  },
+  {
+   "id": "slowbrogalar",
+   "en": "Galarian Slowbro",
+   "points": 7
+  },
+  {
+   "id": "aromatisse",
+   "en": "Aromatisse",
+   "points": 6
+  },
+  {
+   "id": "garganacl",
+   "en": "Garganacl",
+   "points": 5
+  },
+  {
+   "id": "clawitzer",
+   "en": "Clawitzer",
+   "points": 4
+  },
+  {
+   "id": "beartic",
+   "en": "Beartic",
+   "points": 3
+  },
+  {
+   "id": "avalugghisui",
+   "en": "Hisuian Avalugg",
+   "points": 1
+  },
+  {
+   "id": "mawile",
+   "en": "Mawile",
+   "points": 18
+  },
+  {
+   "id": "glimmora",
+   "en": "Glimmora",
+   "points": 16
+  },
+  {
+   "id": "primarina",
+   "en": "Prismarina",
+   "points": 15
+  },
+  {
+   "id": "meganium",
+   "en": "Meganium",
+   "points": 14
+  },
+  {
+   "id": "greninja",
+   "en": "Greninja",
+   "points": 12
+  },
+  {
+   "id": "oranguru",
+   "en": "Oranguru",
+   "points": 10
+  },
+  {
+   "id": "feraligatr",
+   "en": "Feraligatr",
+   "points": 9
+  },
+  {
+   "id": "drampa",
+   "en": "Drampa",
+   "points": 8
+  },
+  {
+   "id": "goodrahisui",
+   "en": "Hisuian Goodra",
+   "points": 7
+  },
+  {
+   "id": "diggersby",
+   "en": "Diggersby",
+   "points": 6
+  },
+  {
+   "id": "glaceon",
+   "en": "Glaceon",
+   "points": 5
+  },
+  {
+   "id": "ditto",
+   "en": "Ditto",
+   "points": 4
+  },
+  {
+   "id": "decidueye",
+   "en": "Decidueye",
+   "points": 3
+  },
+  {
+   "id": "rotom",
+   "en": "Rotom",
+   "points": 2
+  },
+  {
+   "id": "castform",
+   "en": "Castform",
+   "points": 1
+  },
+  {
+   "id": "froslass",
+   "en": "Froslass",
+   "points": 19
+  },
+  {
+   "id": "talonflame",
+   "en": "Talonflame",
+   "points": 15
+  },
+  {
+   "id": "scovillain",
+   "en": "Scovillain",
+   "points": 14
+  },
+  {
+   "id": "eelektross",
+   "en": "Eelektross",
+   "points": 13
+  },
+  {
+   "id": "medicham",
+   "en": "Medicham",
+   "points": 12
+  },
+  {
+   "id": "ninetales",
+   "en": "Ninetales",
+   "points": 11
+  },
+  {
+   "id": "salazzle",
+   "en": "Salazzle",
+   "points": 10
+  },
+  {
+   "id": "noivern",
+   "en": "Noivern",
+   "points": 9
+  },
+  {
+   "id": "emboar",
+   "en": "Emboar",
+   "points": 8
+  },
+  {
+   "id": "florges",
+   "en": "Florges",
+   "points": 7
+  },
+  {
+   "id": "hydrapple",
+   "en": "Hydrapple",
+   "points": 6
+  },
+  {
+   "id": "gourgeist",
+   "en": "Gourgeist",
+   "points": 5
+  },
+  {
+   "id": "heliolisk",
+   "en": "Heliolisk",
+   "points": 4
+  },
+  {
+   "id": "flapple",
+   "en": "Flapple",
+   "points": 3
+  },
+  {
+   "id": "rotomfan",
+   "en": "Rotom-fan",
+   "points": 2
+  },
+  {
+   "id": "emolga",
+   "en": "Emolga",
+   "points": 1
+  },
+  {
+   "id": "kingambit",
+   "en": "Kingambit",
+   "points": 18
+  },
+  {
+   "id": "indeedee",
+   "en": "Indeedee-male",
+   "points": 17
+  },
+  {
+   "id": "scizor",
+   "en": "Scizor",
+   "points": 15
+  },
+  {
+   "id": "taurospaldeaaqua",
+   "en": "Paldean tauros-water",
+   "points": 11
+  },
+  {
+   "id": "vivillon",
+   "en": "Vivillon",
+   "points": 10
+  },
+  {
+   "id": "taurospaldeablaze",
+   "en": "Paldean tauros-fire",
+   "points": 9
+  },
+  {
+   "id": "slowbro",
+   "en": "Slowbro",
+   "points": 8
+  },
+  {
+   "id": "hippowdon",
+   "en": "Hippowdon",
+   "points": 5
+  },
+  {
+   "id": "decidueyehisui",
+   "en": "Hisuian Decidueye",
+   "points": 4
+  },
+  {
+   "id": "flareon",
+   "en": "Flareon",
+   "points": 3
+  },
+  {
+   "id": "sandaconda",
+   "en": "Sandaconda",
+   "points": 2
+  },
+  {
+   "id": "dedenne",
+   "en": "Dedenne",
+   "points": 1
+  },
+  {
+   "id": "basculegion",
+   "en": "Basculegion-male",
+   "points": 18
+  },
+  {
+   "id": "maushold",
+   "en": "Maushold",
+   "points": 16
+  },
+  {
+   "id": "clefable",
+   "en": "Clefable",
+   "points": 15
+  },
+  {
+   "id": "palafin",
+   "en": "Palafin",
+   "points": 12
+  },
+  {
+   "id": "dragalge",
+   "en": "Dragalge",
+   "points": 10
+  },
+  {
+   "id": "weavile",
+   "en": "Weavile",
+   "points": 9
+  },
+  {
+   "id": "reuniclus",
+   "en": "Reuniclus",
+   "points": 8
+  },
+  {
+   "id": "heracross",
+   "en": "Heracross",
+   "points": 7
+  },
+  {
+   "id": "houndoom",
+   "en": "Houndoom",
+   "points": 6
+  },
+  {
+   "id": "leafeon",
+   "en": "Leafeon",
+   "points": 5
+  },
+  {
+   "id": "machamp",
+   "en": "Machamp",
+   "points": 4
+  },
+  {
+   "id": "gliscor",
+   "en": "Gliscor",
+   "points": 3
+  },
+  {
+   "id": "tauros",
+   "en": "Tauros",
+   "points": 2
+  },
+  {
+   "id": "forretress",
+   "en": "Forrestress",
+   "points": 1
+  },
+  {
+   "id": "swampert",
+   "en": "Swampert",
+   "points": 17
+  },
+  {
+   "id": "sylveon",
+   "en": "Sylveon",
+   "points": 16
+  },
+  {
+   "id": "gyarados",
+   "en": "Gyarados",
+   "points": 14
+  },
+  {
+   "id": "meowsticf",
+   "en": "Meowstic-female",
+   "points": 10
+  },
+  {
+   "id": "snorlax",
+   "en": "Snorlax",
+   "points": 8
+  },
+  {
+   "id": "pinsir",
+   "en": "Pinsir",
+   "points": 7
+  },
+  {
+   "id": "steelix",
+   "en": "Steelix",
+   "points": 6
+  },
+  {
+   "id": "lycanroc",
+   "en": "Lycanroc-midday",
+   "points": 5
+  },
+  {
+   "id": "luxray",
+   "en": "Luxray",
+   "points": 4
+  },
+  {
+   "id": "mrrime",
+   "en": "Mr.Rime",
+   "points": 3
+  },
+  {
+   "id": "wigglytuff",
+   "en": "Wigglytuff",
+   "points": 2
+  },
+  {
+   "id": "furfrou",
+   "en": "Furfrou",
+   "points": 1
+  },
+  {
+   "id": "lopunny",
+   "en": "Lopunny",
+   "points": 15
+  },
+  {
+   "id": "azumarill",
+   "en": "Azumarill",
+   "points": 12
+  },
+  {
+   "id": "golurk",
+   "en": "Golurk",
+   "points": 10
+  },
+  {
+   "id": "barbaracle",
+   "en": "Barbaracle",
+   "points": 9
+  },
+  {
+   "id": "vanilluxe",
+   "en": "Vanilluxe",
+   "points": 8
+  },
+  {
+   "id": "sharpedo",
+   "en": "Sharpedo",
+   "points": 7
+  },
+  {
+   "id": "pangoro",
+   "en": "Pangoro",
+   "points": 6
+  },
+  {
+   "id": "ampharos",
+   "en": "Ampharos",
+   "points": 4
+  },
+  {
+   "id": "taurospaldeacombat",
+   "en": "Paldean tauros-fighting",
+   "points": 3
+  },
+  {
+   "id": "gogoat",
+   "en": "Gogoat",
+   "points": 2
+  },
+  {
+   "id": "stunfisk",
+   "en": "Stunfisk",
+   "points": 1
+  },
+  {
+   "id": "baxcalibur",
+   "en": "Baxcalibur",
+   "points": 16
+  },
+  {
+   "id": "absol",
+   "en": "Absol",
+   "points": 14
+  },
+  {
+   "id": "rhyperior",
+   "en": "Rhyperior",
+   "points": 9
+  },
+  {
+   "id": "tsareena",
+   "en": "Tsareena",
+   "points": 8
+  },
+  {
+   "id": "slowking",
+   "en": "Slowking",
+   "points": 7
+  },
+  {
+   "id": "spiritomb",
+   "en": "Spritomb",
+   "points": 6
+  },
+  {
+   "id": "mudsdale",
+   "en": "Mudsdale",
+   "points": 5
+  },
+  {
+   "id": "glalie",
+   "en": "Glalie",
+   "points": 4
+  },
+  {
+   "id": "passimian",
+   "en": "Passimian",
+   "points": 3
+  },
+  {
+   "id": "thievul",
+   "en": "Thievul",
+   "points": 2
+  },
+  {
+   "id": "stunfiskgalar",
+   "en": "Galarian stunfisk",
+   "points": 1
+  },
+  {
+   "id": "aerodactyl",
+   "en": "Aerodactyl",
+   "points": 16
+  },
+  {
+   "id": "hatterene",
+   "en": "Hatterene",
+   "points": 15
+  },
+  {
+   "id": "cinderace",
+   "en": "Cinderace",
+   "points": 11
+  },
+  {
+   "id": "sceptile",
+   "en": "Sceptile",
+   "points": 9
+  },
+  {
+   "id": "persianalola",
+   "en": "Alalan-Persian",
+   "points": 8
+  },
+  {
+   "id": "pidgeot",
+   "en": "Pidgeot",
+   "points": 7
+  },
+  {
+   "id": "zoroark",
+   "en": "Zoroark",
+   "points": 6
+  },
+  {
+   "id": "polteageist",
+   "en": "Polteageist",
+   "points": 5
+  },
+  {
+   "id": "rampardos",
+   "en": "Rampardos",
+   "points": 4
+  },
+  {
+   "id": "trevenant",
+   "en": "Trevenant",
+   "points": 3
+  },
+  {
+   "id": "lycanrocmidnight",
+   "en": "Lycanroc-midnight",
+   "points": 1
+  },
+  {
+   "id": "pyroar",
+   "en": "Pyroar",
+   "points": 15
+  },
+  {
+   "id": "scrafty",
+   "en": "Scrafty",
+   "points": 14
+  },
+  {
+   "id": "camerupt",
+   "en": "Camerupt",
+   "points": 11
+  },
+  {
+   "id": "typhlosionhisui",
+   "en": "Hisuian Typhlosion",
+   "points": 9
+  },
+  {
+   "id": "grapploct",
+   "en": "Grapploct",
+   "points": 8
+  },
+  {
+   "id": "orthworm",
+   "en": "Orthworm",
+   "points": 7
+  },
+  {
+   "id": "runerigus",
+   "en": "Runerigus",
+   "points": 5
+  },
+  {
+   "id": "roserade",
+   "en": "Roserade",
+   "points": 4
+  },
+  {
+   "id": "ariados",
+   "en": "Ariados",
+   "points": 3
+  },
+  {
+   "id": "crabominable",
+   "en": "Crabominable",
+   "points": 9
+  },
+  {
+   "id": "chimecho",
+   "en": "Chimecho",
+   "points": 8
+  },
+  {
+   "id": "falinks",
+   "en": "Falinks",
+   "points": 6
+  },
+  {
+   "id": "beedrill",
+   "en": "Beedrill",
+   "points": 5
+  },
+  {
+   "id": "rotomfrost",
+   "en": "Rotom-frost",
+   "points": 4
+  },
+  {
+   "id": "musharna",
+   "en": "Musharna",
+   "points": 3
+  },
+  {
+   "id": "samurott",
+   "en": "Samorott",
+   "points": 1
+  },
+  {
+   "id": "sirfetchd",
+   "en": "Sirfetch'd",
+   "points": 8
+  },
+  {
+   "id": "inteleon",
+   "en": "Inteleon",
+   "points": 7
+  },
+  {
+   "id": "umbreon",
+   "en": "Umbreon",
+   "points": 5
+  },
+  {
+   "id": "torterra",
+   "en": "Torterra",
+   "points": 4
+  },
+  {
+   "id": "squawkabilly",
+   "en": "Squawkability",
+   "points": 3
+  },
+  {
+   "id": "simipour",
+   "en": "Simipour",
+   "points": 1
+  },
+  {
+   "id": "toxtricity",
+   "en": "Toxtricity",
+   "points": 7
+  },
+  {
+   "id": "scolipede",
+   "en": "Scolipede",
+   "points": 6
+  },
+  {
+   "id": "vaporeon",
+   "en": "Vaporeon",
+   "points": 5
+  },
+  {
+   "id": "toxicroak",
+   "en": "Toxicroak",
+   "points": 4
+  },
+  {
+   "id": "slurpuff",
+   "en": "Slurpuff",
+   "points": 3
+  },
+  {
+   "id": "simisear",
+   "en": "Simisear",
+   "points": 1
+  },
+  {
+   "id": "houndstone",
+   "en": "Houndstone",
+   "points": 7
+  },
+  {
+   "id": "arboliva",
+   "en": "Arboliva",
+   "points": 6
+  },
+  {
+   "id": "quaquaval",
+   "en": "Quaquaval",
+   "points": 5
+  },
+  {
+   "id": "tyrantrum",
+   "en": "Tyrantrum",
+   "points": 4
+  },
+  {
+   "id": "mrmime",
+   "en": "Mr.Mime",
+   "points": 3
+  },
+  {
+   "id": "simisage",
+   "en": "Simisage",
+   "points": 1
+  },
+  {
+   "id": "wyrdeer",
+   "en": "Wyrdeer",
+   "points": 7
+  },
+  {
+   "id": "skeledirge",
+   "en": "Skeledirge",
+   "points": 6
+  },
+  {
+   "id": "qwilfish",
+   "en": "Qwilfish",
+   "points": 5
+  },
+  {
+   "id": "toxapex",
+   "en": "Toxapex",
+   "points": 4
+  },
+  {
+   "id": "garbodor",
+   "en": "Garbodor",
+   "points": 1
+  },
+  {
+   "id": "typhlosion",
+   "en": "Typhilosion",
+   "points": 6
+  },
+  {
+   "id": "vileplume",
+   "en": "Vileplume",
+   "points": 5
+  },
+  {
+   "id": "persian",
+   "en": "Persian",
+   "points": 4
+  },
+  {
+   "id": "watchog",
+   "en": "Watchdog",
+   "points": 1
+  },
+  {
+   "id": "espeon",
+   "en": "Espeon",
+   "points": 6
+  },
+  {
+   "id": "mabosstiff",
+   "en": "Mabosstiff",
+   "points": 4
+  },
+  {
+   "id": "toucannon",
+   "en": "Toucannon",
+   "points": 1
+  },
+  {
+   "id": "lycanrocdusk",
+   "en": "Lycanroc-dusk",
+   "points": 6
+  },
+  {
+   "id": "goodra",
+   "en": "Goodra",
+   "points": 5
+  },
+  {
+   "id": "perrserker",
+   "en": "Perrserker",
+   "points": 4
+  },
+  {
+   "id": "farfetchd",
+   "en": "Farfetch'd",
+   "points": 1
+  },
+  {
+   "id": "abomasnow",
+   "en": "Abomasnow",
+   "points": 6
+  },
+  {
+   "id": "samurotthisui",
+   "en": "Hisuian Samorott",
+   "points": 5
+  },
+  {
+   "id": "pincurchin",
+   "en": "Pincurchin",
+   "points": 4
+  },
+  {
+   "id": "swalot",
+   "en": "Swalot",
+   "points": 1
+  }
+ ]
+}
