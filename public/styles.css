@@ -787,6 +787,9 @@ button.st-btn:hover, button.st-btn:focus-visible { border-color: var(--line); }
   .prep .build .bcard { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 }
 @media (max-width: 767px) {
+  /* the six matchup sections wrap instead of scrolling sideways, so Build is never off-screen on a phone */
+  .dtabs { flex-wrap: wrap; overflow-x: visible; }
+  .dtabs a { flex: 1 0 auto; justify-content: center; padding: 6px 8px; }
   .prep .build .bcard { grid-template-columns: minmax(0, 1fr); }
   .prep .build .bc-moves { flex-direction: row; flex-wrap: wrap; gap: 2px 8px; }
   .prep .dash .bcmp-wide { display: none; }

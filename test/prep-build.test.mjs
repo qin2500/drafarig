@@ -169,6 +169,21 @@ test('speed: Rotom-Fan 138 (Modest 32) and 151 (Timid 32) never pass Mega Starap
   assert.equal(B.speedVerdict(138, { min: 138, max: 138, exact: true }), 'tie');
 });
 
+test('speed: an unknown-SP target with a ladder spread uses it as the common Speed (Mega Staraptor Jolly 32 → 178), labelled', () => {
+  const row = megaRow(); // SP unknown, ladder common spread Jolly 29/1/0/0/4/32
+  const rg = B.targetSpeed(mech, row);
+  assert.equal(rg.exact, false);
+  assert.deepEqual([rg.min, rg.neutralMax, rg.max, rg.ladder, rg.ladderLabel], [117, 162, 178, 178, 'Jolly 32']);
+  const c = B.creepTargets(mech, rotom('modest', { spa: 32, spe: 32 }), 'rotomfan', [row]);
+  assert.deepEqual(c.map((x) => [x.mark, x.label, x.speed, x.verdict]), [['ladder', 'Jolly 32', 178, 'slower']], 'no 162 "common max"; the worst case equals the ladder Speed, so one row');
+  assert.ok(c[0].keep.impossible);
+  assert.equal(B.speedVerdict(138, { min: rg.ladder, max: rg.ladder, exact: true }), 'slower');
+  assert.equal(B.speedVerdict(138, rg), 'depends', 'against any spread it would only be "depends"');
+  // without a ladder spread: the neutral common max and the worst case, as before
+  const bare = B.creepTargets(mech, rotom('modest', { spa: 32, spe: 32 }), 'rotomfan', [{ ...row, common: null }]);
+  assert.deepEqual(bare.map((x) => [x.mark, x.speed]).sort(), [['common-max', 162], ['worst', 178]]);
+});
+
 test('targets: every Mega is its own row; ladder rows are labelled, the Mega keeps its stone and the forme usage', () => {
   const r = rows();
   assert.deepEqual(r.map((x) => [x.key, x.mega, x.source]), [['staraptor', false, 'none'], ['staraptormega', true, 'ladder']]);

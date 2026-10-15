@@ -258,7 +258,13 @@ function compareSection(P, ws, l, set, pinned, rows, bd) {
       q.push({ label: C.BUILD.theirRow(rowName(P, row), P.name('moves', hardest)), sub: rowSource(row), cells: opts.map((o, i) => { const x = i ? theirHitOn(P, o.set, row, hardest, bd) : cur; return cell(P, x, names(row, false), i ? deltaOf(cur.result, x.result, false) : ''); }) });
     }
     const rg = B.targetSpeed(P.mech, row, { tailwind: bd.tw.theirs });
-    q.push({ label: C.BUILD.speedRow(rowName(P, row)), sub: rg.exact ? `${rg.max}` : `${rg.min}–${rg.max}`, cells: opts.map((o) => { const s = B.mySpeed(P.mech, o.set, B.myForme(P.mech, o.set), { tailwind: bd.tw.mine }); return `${s ?? '?'}: ${esc(C.BUILD.speedWord[B.speedVerdict(s, rg, { trickRoom: bd.tw.tr })])}`; }) });
+    // a ladder spread gives their common Speed: the verdict against it first, the full range verdict after
+    const ladderRg = rg.ladder !== undefined ? { min: rg.ladder, max: rg.ladder, exact: true } : null;
+    q.push({ label: C.BUILD.speedRow(rowName(P, row)), sub: rg.exact ? `${rg.max}` : `${ladderRg ? `${rg.ladder} ${C.BUILD.ladderSpeed(rg.ladderLabel)} · ` : ''}${C.BUILD.range} ${rg.min}–${rg.max}`, cells: opts.map((o) => {
+      const s = B.mySpeed(P.mech, o.set, B.myForme(P.mech, o.set), { tailwind: bd.tw.mine });
+      const all = esc(C.BUILD.speedWord[B.speedVerdict(s, rg, { trickRoom: bd.tw.tr })]);
+      return ladderRg ? `${s ?? '?'} vs ${rg.ladder} ${esc(C.BUILD.ladderSpeed(rg.ladderLabel))}: ${esc(C.BUILD.speedWord[B.speedVerdict(s, ladderRg, { trickRoom: bd.tw.tr })])}<div class="small muted">${esc(C.BUILD.range)} ${rg.min}–${rg.max}: ${all}</div>` : `${s ?? '?'}: ${all}`;
+    }) });
   }
   q.push({ label: C.BUILD.costRow, sub: '', cells: opts.map((o) => (o.costs.length ? o.costs.map((x) => esc((C.BUILD.cost[x.code] ?? (() => x.code))(x, nm(P)))).join('; ') : '—')) });
   if (opts.some((o) => B.setupIn(o.set, stat))) {
@@ -308,7 +314,7 @@ function speedSummary(P, set, rows, bd, oppName) {
   const forme = B.myForme(P.mech, set);
   const me = B.mySpeed(P.mech, set, forme, { tailwind: bd.tw.mine });
   const c = { faster: 0, slower: 0, depends: 0, tie: 0 };
-  for (const r of rows) { const v = B.speedVerdict(me, B.targetSpeed(P.mech, r, { tailwind: bd.tw.theirs }), { trickRoom: bd.tw.tr }); if (c[v] !== undefined) c[v]++; }
+  for (const r of rows) { const rg = B.targetSpeed(P.mech, r, { tailwind: bd.tw.theirs }); const v = B.speedVerdict(me, rg.ladder !== undefined ? { min: rg.ladder, max: rg.ladder, exact: true } : rg, { trickRoom: bd.tw.tr }); if (c[v] !== undefined) c[v]++; }
   return `${me}: ${C.BUILD.speedVerdict(oppName, c)}`;
 }
 function speedSection(P, set, rows, bd, l) {
@@ -316,13 +322,13 @@ function speedSection(P, set, rows, bd, l) {
   const ct = B.creepTargets(P.mech, set, forme, rows, { mine: { tailwind: bd.tw.mine }, theirs: { tailwind: bd.tw.theirs }, trickRoom: bd.tw.tr });
   const need = (o) => (!o ? '—' : o.impossible ? `can't (${o.best.speed} at ${o.best.sp})` : bd.tw.tr ? `≤ ${o.sp} SP → ${o.speed}` : `${o.sp} SP → ${o.speed}${o.tieAt !== null && o.tieAt !== undefined ? ` (ties at ${o.tieAt})` : ''}`);
   const natTxt = (o) => (o ? `${P.name('natures', o.nature)}${o.tradeoff?.losesUsed ? ' · costs a stat this set uses' : o.tradeoff?.givesUp ? ` · gives up +${C.STAT_SHORT[o.tradeoff.givesUp]}` : ''}` : '');
-  const tr = ct.map((x) => `<tr><th scope="row">${esc(P.spName(x.forme))}${x.mega ? ' <span class="megad inline">M</span>' : ''}<div class="small muted">${esc(C.BUILD.mark[x.mark])}</div></th><td>${x.speed}</td>
+  const tr = ct.map((x) => `<tr><th scope="row">${esc(P.spName(x.forme))}${x.mega ? ' <span class="megad inline">M</span>' : ''}<div class="small muted">${esc(x.mark === 'ladder' ? C.BUILD.ladderSpeed(x.label) : C.BUILD.mark[x.mark])}</div></th><td>${x.speed}</td>
     <td>${esc(need(x.keep))}</td><td>${x.alt ? `${esc(need(x.alt))}<div class="small muted">${esc(natTxt(x.alt))}</div>` : '—'}</td><td>${esc(C.BUILD.speedWord[x.verdict])}</td>
     <td>${!x.keep.impossible && x.keep.sp !== (set.sp.spe ?? 0) ? btn(C.BUILD.tryIt, 'bd-th-try', { set: l.id, stat: 'spe', sp: x.keep.sp, nature: x.keep.nature, label: `${x.keep.sp} Spe` }, { cls: 'linkish' }) : ''}</td></tr>`).join('');
   return `<div class="choices" role="group" aria-label="Speed conditions">${['mine', 'theirs', 'tr'].map((k) => chipBtn(C.BUILD.tw[k], 'bd-tw', { key: k }, bd.tw[k])).join('')}</div>
     <p class="small">${term('Speed creep')} · ${esc(C.BUILD.speedWord.tie)}: never counted as faster.</p>
     <div class="scroll"><table class="bcreep"><thead><tr>${C.BUILD.creepHead.map((h) => `<th scope="col">${esc(h)}</th>`).join('')}<th></th></tr></thead><tbody>${tr}</tbody></table></div>
-    <p class="small muted">Their Speed: their set when it has Stat Points, else 32 SP neutral (common max) and 32 SP +Speed (worst case). Mega Speed applies from the turn it Mega Evolves; Choice Scarf only when their set holds it.</p>`;
+    <p class="small muted">Their Speed: their set when it has Stat Points; else the ladder's top spread for that form (labelled), or 32 SP neutral (common max) without one; plus 32 SP +Speed (worst case) when it differs. Mega Speed applies from the turn it Mega Evolves; Choice Scarf only when their set holds it.</p>`;
 }
 
 // ---------- ④ Your hits ----------

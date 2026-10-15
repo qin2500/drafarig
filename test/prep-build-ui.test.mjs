@@ -2,7 +2,8 @@
 // dashboard sections, trial options that never write until "Save as a new version", and the chat page view.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { bootApp, parseHtml, findAll, hasClass, text, RAW } from './ui-harness.mjs';
+import { readFileSync } from 'node:fs';
+import { bootApp, parseHtml, parseCss, findAll, hasClass, text, RAW } from './ui-harness.mjs';
 import { device, WS, SET_MINE, NOW, T, btns, flushSaves } from './prep-helpers.mjs';
 import { newLineage } from '../lib/prep-model.mjs';
 import { parseRoute, formatRoute, parentRoute, navKind } from '../lib/prep-route.mjs';
@@ -26,6 +27,18 @@ test('routes: #prep/<p>v<o>/build and /build/<n> round-trip; the dashboard is a 
   assert.equal(parseRoute('#prep/5v8/build/11').detail, undefined, 'past the 10th pick: no detail');
   assert.equal(formatRoute(parseRoute('#prep/5v8/your/2')), '#prep/5v8/your/2', 'existing detail routes unchanged');
   assert.ok(PAGE_VIEWS.includes('build'));
+});
+
+test('phone: the matchup section tabs wrap (Build stays on screen); the desktop strip is unchanged', () => {
+  const css = parseCss(readFileSync(new URL('../public/styles.css', import.meta.url), 'utf8'));
+  const last = (sel, media) => css.filter((r) => r.media === media && r.selectors.includes(sel)).reduce((o, r) => ({ ...o, ...r.decls }), {});
+  const phone = last('.dtabs', '(max-width: 767px)');
+  assert.equal(phone['flex-wrap'], 'wrap');
+  assert.equal(phone['overflow-x'], 'visible');
+  assert.equal(last('.dtabs a', '(max-width: 767px)').flex, '1 0 auto');
+  const desk = last('.dtabs', null);
+  assert.equal(desk['flex-wrap'], undefined, 'desktop: one row as before');
+  assert.equal(desk['overflow-x'], 'auto');
 });
 
 test('Build tab: your 6 as team cards (item, ability, nature, moves, stats with SP), your 10, their pool', async (t) => {
