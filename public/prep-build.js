@@ -15,11 +15,15 @@ import { modelFor } from './prep-matchup.js';
 
 const MAX_TRIALS = 3, MAX_PINS = 4;
 const pct = (n, d) => (d ? Math.floor((1000 * n) / d) / 10 : 0);
-const WEATHERS = ['', 'Sun', 'Rain', 'Sand', 'Snow'];
+const WEATHERS = ['auto', '', 'Sun', 'Rain', 'Sand', 'Snow'];
 
 // ---------- state and context ----------
 /** Screen draft for the dashboards of one workspace (session only). */
-const bui = (P, wsId) => (P.wsUi(wsId).bd ??= { open: {}, pins: {}, trials: {}, editing: null, field: '', hitStage: 0, spread: 'common', tw: { mine: false, theirs: false, tr: false }, phoneOpt: 0 });
+const bui = (P, wsId) => {
+  const bd = (P.wsUi(wsId).bd ??= { v: 2, open: {}, pins: {}, trials: {}, editing: null, field: 'auto', hitStage: 0, spread: 'common', tw: { mine: false, theirs: false, tr: false }, phoneOpt: 0 });
+  if (bd.v !== 2) { bd.v = 2; bd.field = 'auto'; } // a draft from before Auto weather: '' there meant the default, not a choice
+  return bd;
+};
 /** A small per-session cache of engine results, keyed by the full question (never saved). */
 function memo(P, key, fn) {
   P.buildCache ??= new Map();
@@ -54,7 +58,32 @@ function targets(P, ws) {
 }
 const rowName = (P, row) => P.spName(row.forme);
 const rowSource = (row) => (row.source === 'set' ? C.BUILD.evidence.set : row.source === 'ladder' ? `ladder guess${row.usageFrom === 'base' ? ' (base-species usage)' : row.usageFrom === 'keymoves' ? ' (key moves only)' : ''}` : 'no set: range');
-const fieldOf = (bd) => (bd.field ? { weather: bd.field } : {});
+/**
+ * The field for one of your options against one target: the weather you chose, or on Auto (the default) the weather an
+ * ability on the field sets (your Mega's Drought, their Drizzle…; lib/prep-build autoWeather), never silently none.
+ */
+const fieldOf = (P, bd, set, row) => {
+  if (bd.field !== 'auto' && bd.field !== undefined) return bd.field ? { weather: bd.field } : {};
+  const w = P.mech ? B.autoWeather(P.mech, set, row) : null;
+  return w?.weather ? { weather: w.weather } : {};
+};
+
+// ---------- weather words ----------
+const abName = (P, id) => P.mech?.abilities[id]?.name ?? id;
+/** "Sun (your Drought)" / "none": the Auto weather of your set alone (row null) or against one target. */
+function weatherWords(P, set, row) {
+  if (!P.mech) return '';
+  const w = B.autoWeather(P.mech, set, row);
+  if (!w.weather) return C.BUILD.fieldNone;
+  const src = w.by === 'mine' ? C.BUILD.yourAbility(abName(P, w.mine.ability)) : C.BUILD.theirAbility(rowName(P, row), abName(P, w.theirs.ability));
+  return `${w.weather} (${src})${w.contested ? `; ${C.BUILD.contested(rowName(P, row), abName(P, w.theirs.ability), w.theirs.weather)}` : ''}`;
+}
+/** Under the field bar on Auto: your weather, and every target in their pool whose ability sets (or replaces) it. */
+function weatherNote(P, set, rows) {
+  if (!P.mech) return '';
+  const lines = rows.map((row) => ({ row, w: B.autoWeather(P.mech, set, row) })).filter((x) => x.w.theirs);
+  return `<p class="small">${esc(C.BUILD.autoNote(weatherWords(P, set, null)))}${lines.length ? ` ${esc(C.BUILD.theirSetters(lines.map((x) => `${rowName(P, x.row)}: ${weatherWords(P, set, x.row)}`).join(' · ')))}` : ''}</p>`;
+}
 
 // ---------- result words ----------
 /** Short KO words for one exact result: "KO every roll 105–125%" / "KO 13 of 16 98–115%" / "no KO 80–96%". */
@@ -153,7 +182,8 @@ function dashboard(P, { pov, opp, ws }) {
   const saved = rows.filter((r) => r.source === 'set').length, ladder = rows.filter((r) => r.source === 'ladder').length;
   const engine = P.calc ? '' : P.engineState === 'failed' ? `<p class="banner warn">${esc(C.BUILD.engineFailed)} ${btn(C.BUILD.retry, 'calc-retry-engine')}</p>` : '';
   const bar = `<div class="bbar" role="group" aria-label="${esc(C.BUILD.checking)}"><p class="small"><b>${esc(C.BUILD.checking)}</b> ${esc(C.BUILD.theirSetsLine(opp.name, rows.length, saved, ladder))}</p>
-    <div class="choices">${select('bd-field', WEATHERS.map((w) => [w, w || C.BUILD.fieldNone]), bd.field, { data: { pc: 'bd-field' }, aria: 'Weather' })}<span class="small muted">${esc(C.BUILD.single)}</span></div>
+    <div class="choices">${select('bd-field', WEATHERS.map((w) => [w, w === 'auto' ? C.BUILD.autoWeather(weatherWords(P, set, null)) : w || C.BUILD.fieldNone]), bd.field, { data: { pc: 'bd-field' }, aria: 'Weather' })}<span class="small muted">${esc(C.BUILD.single)}</span></div>
+    ${bd.field === 'auto' ? weatherNote(P, set, rows) : `<p class="small">${esc(C.BUILD.weatherChosen(bd.field || C.BUILD.fieldNone))}</p>`}
     <div class="choices" role="group" aria-label="${esc(C.BUILD.pins)}"><span class="small">${esc(C.BUILD.pins)}:</span> ${rows.map((r) => chipBtn(rowName(P, r), 'bd-pin', { key: r.key }, pins.includes(r.key), { disabled: !pins.includes(r.key) && pins.length >= MAX_PINS })).join('')}</div>
     <p class="small muted">${esc(C.BUILD.pinHelp)} ${esc(C.SCOPE)}</p></div>`;
   const parts = [];
@@ -196,13 +226,13 @@ function bestMove(P, set, row, bd) {
   const atk = B.myAttacks(P.mech, set);
   let best = null, top = -1;
   for (const mv of atk) {
-    const r = hit(P, set, row, mv, { field: fieldOf(bd) }).result;
+    const r = hit(P, set, row, mv, { field: fieldOf(P, bd, set, row) }).result;
     if (r.class === 'exact' && r.range.max / r.maxHP > top) { top = r.range.max / r.maxHP; best = mv; }
   }
   return best ?? atk[0] ?? null;
 }
 const hit = (P, set, row, move, opts = {}) => memo(P, JSON.stringify(['h', set, row.key, row.set, row.common, move, opts]), () => B.hitResult(P.calc, P.mech, set, row, move, opts));
-const theirHitOn = (P, set, row, move, bd) => memo(P, JSON.stringify(['th', set, row.key, row.set, row.common, move, bd.field]), () => B.theirHit(P.calc, P.mech, set, row, move, { field: fieldOf(bd) }));
+const theirHitOn = (P, set, row, move, bd) => memo(P, JSON.stringify(['th', set, row.key, row.set, row.common, move, fieldOf(P, bd, set, row)]), () => B.theirHit(P.calc, P.mech, set, row, move, { field: fieldOf(P, bd, set, row) }));
 
 function compareSection(P, ws, l, set, pinned, rows, bd) {
   const opts = optionsOf(P, l, set, bd);
@@ -219,7 +249,7 @@ function compareSection(P, ws, l, set, pinned, rows, bd) {
     const firstOf = (row) => B.speedVerdict(B.mySpeed(P.mech, set, B.myForme(P.mech, set), { tailwind: bd.tw.mine }), B.targetSpeed(P.mech, row, { tailwind: bd.tw.theirs }), { trickRoom: bd.tw.tr }) !== 'faster';
     const after = (row) => (firstOf(row) ? Math.max(0, ...B.afterTheirMoves(P.mech, row.set, row.forme, def).map((a) => a.stage)) : 0);
     const target = pinned.find((row) => after(row) > 0) ?? pinned[0];
-    const b = bench(P, swapped, target, myMain, { boost: setup.stage, stage: after(target), field: fieldOf(bd) });
+    const b = bench(P, swapped, target, myMain, { boost: setup.stage, stage: after(target), field: fieldOf(P, bd, swapped, target) });
     const lv = b.levels?.find((x) => x.key === 'every-roll')?.keep ?? b.levels?.find((x) => x.key === 'fifteen-of-sixteen')?.keep;
     if (lv && lv.nature === set.nature) setupNeed = lv.a;
   }
@@ -233,20 +263,21 @@ function compareSection(P, ws, l, set, pinned, rows, bd) {
     const mv = bestMove(P, set, row, bd);
     if (!mv) continue;
     const st = B.moveStats(P.mech, mv);
-    const base = opts.map((o) => (o.set.moves.includes(mv) ? hit(P, o.set, row, mv, { field: fieldOf(bd) }) : null));
+    const base = opts.map((o) => (o.set.moves.includes(mv) ? hit(P, o.set, row, mv, { field: fieldOf(P, bd, o.set, row) }) : null));
     const stageCells = (stage) => opts.map((o, i) => {
       if (!o.set.moves.includes(mv)) return `<span class="small muted">${esc(C.BUILD.noMove(P.name('moves', mv)))}</span>`;
-      const at0 = stage ? hit(P, o.set, row, mv, { stage, field: fieldOf(bd) }) : base[i];
+      const at0 = stage ? hit(P, o.set, row, mv, { stage, field: fieldOf(P, bd, o.set, row) }) : base[i];
       const su = B.setupIn(o.set, st.atk);
-      const lines = [`<div><span class="small muted">${esc(C.BUILD.atStage(0))}</span> ${cell(P, at0, names(row, true), i ? deltaOf(stage ? hit(P, opts[0].set, row, mv, { stage, field: fieldOf(bd) }).result : base[0]?.result, at0.result) : '')}</div>`];
+      const lines = [`<div><span class="small muted">${esc(C.BUILD.atStage(0))}</span> ${cell(P, at0, names(row, true), i ? deltaOf(stage ? hit(P, opts[0].set, row, mv, { stage, field: fieldOf(P, bd, opts[0].set, row) }).result : base[0]?.result, at0.result) : '')}</div>`];
       if (su) {
-        const up = hit(P, o.set, row, mv, { boost: su.stage, stage, field: fieldOf(bd) });
-        const ref = opts[0].set.moves.includes(mv) ? hit(P, opts[0].set, row, mv, { stage, field: fieldOf(bd) }).result : null;
+        const up = hit(P, o.set, row, mv, { boost: su.stage, stage, field: fieldOf(P, bd, o.set, row) });
+        const ref = opts[0].set.moves.includes(mv) ? hit(P, opts[0].set, row, mv, { stage, field: fieldOf(P, bd, opts[0].set, row) }).result : null;
         lines.push(`<div><span class="small muted">${esc(`${C.BUILD.atStage(su.stage)} (${P.name('moves', su.move)})`)}</span> ${cell(P, up, names(row, true), i ? deltaOf(ref, up.result) : '')}</div>`);
       } else if (i && opts.some((x) => B.setupIn(x.set, st.atk))) lines.push(`<div class="small muted">${esc(C.BUILD.noSetup)}</div>`);
       return lines.join('');
     });
-    q.push({ label: C.BUILD.koRow(P.name('moves', mv), rowName(P, row)), sub: rowSource(row), cells: stageCells(0) });
+    const wx = fieldOf(P, bd, set, row).weather;
+    q.push({ label: C.BUILD.koRow(P.name('moves', mv), rowName(P, row)), sub: `${rowSource(row)}${wx ? ` · ${bd.field === 'auto' ? weatherWords(P, set, row) : wx}` : ''}`, cells: stageCells(0) });
     for (const a of B.afterTheirMoves(P.mech, row.set, row.forme, st.def)) {
       const first = B.speedVerdict(B.mySpeed(P.mech, set, B.myForme(P.mech, set), { tailwind: bd.tw.mine }), B.targetSpeed(P.mech, row, { tailwind: bd.tw.theirs }), { trickRoom: bd.tw.tr }) !== 'faster';
       if (first) q.push({ label: C.BUILD.afterRow(P.name('moves', a.move), C.STAT_SHORT[st.def], a.stage), sub: C.BUILD.afterWhy, cells: stageCells(a.stage) });
@@ -266,6 +297,7 @@ function compareSection(P, ws, l, set, pinned, rows, bd) {
       return ladderRg ? `${s ?? '?'} vs ${rg.ladder} ${esc(C.BUILD.ladderSpeed(rg.ladderLabel))}: ${esc(C.BUILD.speedWord[B.speedVerdict(s, ladderRg, { trickRoom: bd.tw.tr })])}<div class="small muted">${esc(C.BUILD.range)} ${rg.min}–${rg.max}: ${all}</div>` : `${s ?? '?'}: ${all}`;
     }) });
   }
+  q.push(bulkRow(P, ws, opts));
   q.push({ label: C.BUILD.costRow, sub: '', cells: opts.map((o) => (o.costs.length ? o.costs.map((x) => esc((C.BUILD.cost[x.code] ?? (() => x.code))(x, nm(P)))).join('; ') : '—')) });
   if (opts.some((o) => B.setupIn(o.set, stat))) {
     const tools = B.setupTools(P.mech, rows);
@@ -290,6 +322,26 @@ function compareSection(P, ws, l, set, pinned, rows, bd) {
   return `<p class="small">${esc(C.BUILD.seeds)} ${seedBtns} ${btn(C.BUILD.tryChange, 'bd-try', { set: l.id }, { cls: 'pchip', disabled: full })}${full ? ` <span class="small muted">${esc(C.BUILD.maxTrials)}</span>` : ''}</p>
     ${trialEd}${pinned.length ? '' : `<p class="small">${esc(C.BUILD.pinHelp)}</p>`}${table}${phone}
     <p class="small">${esc(C.BUILD.whatChanges)}</p>`;
+}
+/**
+ * The bulk row: expected OHKOs from the common hits of this opponent's pool (lib/prep-build bulkScore, ladder usage), per
+ * option; lower is bulkier. Each cell lists its hits with nonzero odds; forms without usage data are said, not guessed.
+ */
+function bulkRow(P, ws, opts) {
+  const usage = P.app.usage?.() ?? null;
+  const label = C.BUILD.bulkRow(ws.coach);
+  if (!usage?.species) return { label, sub: C.BUILD.bulkNoUsage, cells: opts.map(() => '—') };
+  const pool = P.rosterSpecies(ws);
+  const of = (o) => memo(P, JSON.stringify(['bulk', o.set, pool, usage.month ?? null]), () => B.bulkScore(P.calc, P.mech, o.set, pool, usage));
+  const cur = of(opts[0]);
+  const cells = opts.map((o, i) => {
+    const b = i ? of(o) : cur;
+    const d = i && Math.abs(b.score - cur.score) >= 0.005 ? ` <span class="delta ${b.score < cur.score ? 'up' : 'down'}">${esc(b.score < cur.score ? C.BUILD.better : C.BUILD.worse)}</span>` : '';
+    const list = b.hits.filter((h) => h.p > 0).sort((x, y) => y.p - x.p).map((h) => `<li>${esc(`${P.spName(h.forme)} ${P.name('moves', h.move)}: ${Math.round(1000 * h.p) / 10}%`)}</li>`).join('');
+    return `<details class="bcell"><summary><span class="bword">${esc(C.BUILD.bulkScore(b.score, b.strong))}</span>${d}</summary><ul class="small">${list || `<li>${esc(C.BUILD.bulkNone)}</li>`}</ul>
+      <p class="small muted">${esc(C.BUILD.bulkCounted(b.hits.length, b.skipped.map((f) => P.spName(f)), b.notCounted.length))}</p></details>`;
+  });
+  return { label, sub: C.BUILD.bulkSub(usage.month), cells };
 }
 /** The mini editor for a trial: it writes only to the trial (screen draft), never to the set. */
 function trialEditor(P, l, set, i, bd) {
@@ -336,7 +388,7 @@ function hitsSection(P, ws, l, set, pinned, rows, bd) {
   const atk = B.myAttacks(P.mech, set);
   if (!atk.length) return `<p>${esc(C.BUILD.noAttacks)}</p>`;
   const stg = bd.hitStage ?? 0;
-  const body = rows.map((row) => `<tr><th scope="row">${esc(rowName(P, row))}<div class="small muted">${esc(rowSource(row))}</div></th>${atk.map((mv) => `<td>${cell(P, hit(P, set, row, mv, { boost: stg, field: fieldOf(bd), spread: bd.spread }), { attacker: P.spName(set.species), defender: rowName(P, row) })}</td>`).join('')}</tr>`).join('');
+  const body = rows.map((row) => `<tr><th scope="row">${esc(rowName(P, row))}<div class="small muted">${esc(rowSource(row))}</div></th>${atk.map((mv) => `<td>${cell(P, hit(P, set, row, mv, { boost: stg, field: fieldOf(P, bd, set, row), spread: bd.spread }), { attacker: P.spName(set.species), defender: rowName(P, row) })}</td>`).join('')}</tr>`).join('');
   return `<div class="choices" role="group" aria-label="${esc(C.BUILD.stage)}"><span class="small">${esc(C.BUILD.stage)}:</span> ${[0, 1, 2].map((b) => chipBtn(C.BUILD.atStage(b), 'bd-stage', { b }, stg === b)).join('')}
     <span class="small">${esc(C.BUILD.spread)}:</span> ${['frail', 'common', 'max'].map((k) => chipBtn(C.ENVELOPE_ROW[k], 'bd-spread', { k }, bd.spread === k)).join('')}</div>
     <p class="small muted">${esc(C.BUILD.hitsHelp)}</p>
@@ -354,10 +406,10 @@ function benchSection(P, ws, l, set, pinned, rows, bd) {
     const st = B.moveStats(P.mech, mv);
     const stages = [0, ...B.afterTheirMoves(P.mech, row.set, row.forme, st.def).map((a) => a.stage)];
     const lines = [];
-    for (const stage of [...new Set(stages)]) for (const boost of [0, 1, 2]) lines.push({ boost, stage, uses: 1 });
-    lines.push({ boost: 0, stage: 0, uses: 2 });
+    // OHKO and 2HKO at the same stages: yours +0/+1/+2, theirs +0 and after their self-boosting move
+    for (const stage of [...new Set(stages)]) for (const boost of [0, 1, 2]) for (const uses of [1, 2]) lines.push({ boost, stage, uses });
     const tr = lines.map((ln) => {
-      const b = bench(P, set, row, mv, { ...ln, spread: bd.spread, field: fieldOf(bd) });
+      const b = bench(P, set, row, mv, { ...ln, spread: bd.spread, field: fieldOf(P, bd, set, row) });
       const head = `${ln.uses === 2 ? `${C.BUILD.twoUse}, ` : ''}${C.BUILD.benchRow(ln.boost, ln.stage, C.STAT_SHORT[st.def])}`;
       if (b.refused) return `<tr><th scope="row">${esc(head)}</th><td colspan="3" class="noresult">${esc(C.CLASS.refused)}: ${esc(C.REPEAT_REFUSED[b.refused] ?? b.refused)}</td></tr>`;
       const lv = b.levels.map((x) => {
@@ -387,7 +439,7 @@ function theirSection(P, ws, l, set, pinned, rows, bd) {
   const surv = pinned.map((row) => {
     const mv = B.theirAttacks(P.mech, row).map((m) => ({ m, r: theirHitOn(P, set, row, m, bd).result })).sort((a, b) => (b.r.class === 'exact' ? b.r.range.max / b.r.maxHP : -1) - (a.r.class === 'exact' ? a.r.range.max / a.r.maxHP : -1))[0]?.m;
     if (!mv) return '';
-    const s = memo(P, JSON.stringify(['sv', set, row.key, row.set, row.common, mv, bd.field]), () => B.surviveBenchmark(P.calc, P.mech, set, row, mv, { field: fieldOf(bd) }));
+    const s = memo(P, JSON.stringify(['sv', set, row.key, row.set, row.common, mv, fieldOf(P, bd, set, row)]), () => B.surviveBenchmark(P.calc, P.mech, set, row, mv, { field: fieldOf(P, bd, set, row) }));
     const head = `${rowName(P, row)}: ${P.name('moves', mv)} (${C.BUILD.spreadUsed(s.spread)})`;
     if (s.refused) return `<li>${esc(head)}: <span class="noresult">${esc(C.CLASS.refused)}</span></li>`;
     const lv = s.levels.map((x) => {
@@ -506,7 +558,7 @@ export const actions = {
   'bd-phone-opt': (t, P) => { const ws = wsNow(P); if (!ws) return; bui(P, ws.id).phoneOpt = Number(t.dataset.i) || 0; P.app.rerender(); },
 };
 export const changes = {
-  'bd-field': (t, P) => { const ws = wsNow(P); if (!ws) return; bui(P, ws.id).field = WEATHERS.includes(t.value) ? t.value : ''; P.saveUi(); P.app.rerender(); },
+  'bd-field': (t, P) => { const ws = wsNow(P); if (!ws) return; bui(P, ws.id).field = WEATHERS.includes(t.value) ? t.value : 'auto'; P.saveUi(); P.app.rerender(); },
   'bd-trial-field': (t, P) => editTrial(P, t, (s) => { s[t.dataset.field] = t.value; }),
   'bd-trial-move': (t, P) => editTrial(P, t, (s) => { const m = [0, 1, 2, 3].map((k) => s.moves[k] ?? ''); m[Number(t.dataset.k)] = t.value; s.moves = m.filter(Boolean); }),
   'bd-trial-sp': (t, P) => editTrial(P, t, (s) => { if (s.sp === 'unknown') return; s.sp = { ...s.sp, [t.dataset.stat]: Math.max(0, Math.min(SP_PER_STAT, Math.trunc(Number(t.value) || 0))) }; }),

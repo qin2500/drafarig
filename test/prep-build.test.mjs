@@ -2,10 +2,12 @@
 // The six reference vectors come from VGC Strategy's Rotom-Fan case (docs/research/strategy/sp-assist/rotom-fan-case.md §9),
 // computed there by an independent calculator; here they must come out of the app's own engine and searches.
 import { test } from 'node:test';
+import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import { mech, newCalc, set, sc } from './calc-helpers.mjs';
 import { koSearch, surviveSearch } from '../lib/calc/threshold.mjs';
 import { statValue, speedOf, natureSign } from '../lib/calc/stats.mjs';
+import { setStats } from '../lib/calc/mech.mjs';
 import * as B from '../lib/prep-build.mjs';
 
 const frac = (k) => Number(k.num) / Number(k.den);
@@ -91,12 +93,98 @@ test('survive benchmark from a target row: Final Gambit has no answer; Mega Star
   assert.ok(every && every.h <= 32 && every.d <= 0, `Brave Bird (resisted) needs no Def: ${JSON.stringify(every)}`);
 });
 
+// VGC Strategy goldens G1–G5 (docs/research/strategy/sp-assist/dashboard-goldens.md §1): Mega Charizard Y Modest 2/0/0/32/0/32
+const ZARD = { ...set('charizard', 'blaze', 'modest', { hp: 2, spa: 32, spe: 32 }, ['heatwave', 'solarbeam', 'protect', 'weatherball'], 'charizarditey'), species: 'charizard' };
+const sp6 = (s) => { const [hp, atk, def, spa, spd, spe] = s.split('/').map(Number); return { hp, atk, def, spa, spd, spe }; };
+const row = (species, ability, nature, spread, item, moves = []) => ({ key: species, species, forme: species, mega: false, source: 'set', common: null, set: { ...set(species, ability, nature, sp6(spread), moves, item), species } });
+const G = {
+  grimmsnarl: row('grimmsnarl', 'prankster', 'careful', '32/0/19/0/15/0', 'lightclay', ['spiritbreak']),
+  staraptormega: { ...row('staraptor', 'intimidate', 'jolly', '29/1/0/0/4/32', 'staraptite', ['closecombat']), key: 'staraptormega', forme: 'staraptormega', mega: true },
+  tsareena: row('tsareena', 'queenlymajesty', 'jolly', '2/32/0/0/0/32', 'widelens', ['tropkick']),
+  basculegionf: row('basculegionf', 'swiftswim', 'modest', '0/0/1/32/1/32', 'lifeorb', ['wavecrash']),
+  volcarona: row('volcarona', 'flamebody', 'bold', '32/0/32/0/2/0', '', ['quiverdance']),
+};
+const rng = (r) => [r.range.min, r.range.max];
+
+test('Mega Charizard Y uses the Mega (SpA 232, Spe 152) and Auto weather is its Drought sun: goldens G1–G5', () => {
+  const calc = newCalc();
+  assert.equal(B.myForme(mech, ZARD), 'charizardmegay');
+  assert.equal(setStats(mech, ZARD, { megaEvolved: true }).spa, 232);
+  assert.equal(B.mySpeed(mech, ZARD, 'charizardmegay'), 152);
+  for (const t of Object.values(G)) assert.deepEqual([B.autoWeather(mech, ZARD, t).weather, B.autoWeather(mech, ZARD, t).by], ['Sun', 'mine'], t.key);
+  const at = (t, move, auto = true) => B.hitResult(calc, mech, ZARD, t, move, { field: auto ? { weather: B.autoWeather(mech, ZARD, t).weather } : {} }).result;
+  const g1 = at(G.grimmsnarl, 'heatwave');
+  assert.deepEqual([rng(g1), g1.maxHP], [[115, 136], 202], 'G1 sun');
+  assert.deepEqual(g1.hitRows[0], [115, 117, 118, 120, 120, 121, 123, 124, 126, 127, 129, 130, 132, 133, 135, 136]);
+  assert.deepEqual(at(G.grimmsnarl, 'heatwave', false).hitRows[0], [76, 78, 79, 79, 81, 81, 82, 84, 84, 85, 85, 87, 88, 88, 90, 91], 'G1 no sun');
+  assert.ok(g1.chips.some((c) => c.code === 'weather' && c.value === 'Sun') && g1.chips.some((c) => c.code === 'spread'), 'sun and ×0.75 are chips');
+  assert.deepEqual(rng(at(G.staraptormega, 'heatwave')), [123, 145], 'G2 sun');
+  assert.deepEqual(rng(at(G.staraptormega, 'heatwave', false)), [82, 97], 'G2 no sun');
+  const g3 = at(G.tsareena, 'weatherball');
+  assert.deepEqual(g3.hitRows[0], [336, 338, 342, 348, 350, 354, 360, 362, 366, 372, 374, 378, 384, 386, 390, 396], 'G3 sun: Fire 100 BP');
+  assert.deepEqual([g3.ko.one.num, g3.ko.one.den], ['1', '1']);
+  assert.deepEqual(rng(at(G.tsareena, 'weatherball', false)), [38, 45], 'G3 no sun: Normal 50 BP');
+  const g4 = at(G.basculegionf, 'solarbeam');
+  assert.deepEqual([rng(g4), g4.maxHP, g4.ko.one.num], [[218, 258], 195, '1'], 'G4: sun removes the charge turn, not a boost');
+  assert.deepEqual(rng(at(G.basculegionf, 'solarbeam', false)), [218, 258]);
+  const g5 = at(G.volcarona, 'heatwave');
+  assert.deepEqual([rng(g5), g5.maxHP], [[109, 130], 192], 'G5 sun');
+  assert.deepEqual(rng(at(G.volcarona, 'heatwave', false)), [73, 87], 'G5 no sun (the bug the dashboard showed)');
+  // the Mega's 159 SpA, not base Charizard's 109; and no stone = no Drought
+  assert.ok(calc.run(sc(ZARD, G.volcarona.set, 'heatwave', { a: { mega: false }, field: { weather: 'Sun' } })).range.max < g5.range.max);
+  assert.equal(B.autoWeather(mech, { ...ZARD, item: 'lifeorb' }, G.volcarona).weather, '');
+});
+
+test('bulk score vs Calvin\'s pool (dashboard-goldens.md §2): 42 hits; matches the goldens except the engine\'s exact Triple Axel', () => {
+  const D = new URL('../docs/research/strategy/sp-assist/', import.meta.url);
+  const raw = JSON.parse(readFileSync(new URL('usage-regmc-2026-09-league.json', D), 'utf8')).species;
+  const arr = (o) => Object.entries(o ?? {}).sort((a, b) => b[1] - a[1]); // the slimmed table's [name, %] shape (lib/usage.mjs)
+  const usage = { species: Object.fromEntries(Object.entries(raw).map(([k, v]) => [k, { usage: v.usage, abilities: arr(v.abilities), items: arr(v.items), moves: arr(v.moves), spreads: arr(v.spreads) }])) };
+  const pool = JSON.parse(readFileSync(new URL('league-2026-10-15.json', D), 'utf8')).coaches.find((c) => c.name === 'Calvin').picks.map((p) => p.id);
+  const calc = newCalc();
+  const fan = (sp) => ({ ...set('rotomfan', 'levitate', 'modest', sp, ['thunderbolt']), species: 'rotomfan' });
+  const cases = [[{ hp: 2, spa: 32, spe: 32 }, 2.5235, 3], [{ hp: 32, spa: 32, spd: 2 }, 1.5031, 2], [{ hp: 32, def: 14, spa: 16, spd: 4 }, 1.1266, 1]];
+  for (const [sp, golden] of cases) {
+    const b = B.bulkScore(calc, mech, fan(sp), pool, usage);
+    assert.equal(b.hits.length, 42, '42 common hits');
+    assert.deepEqual(b.skipped, ['tauros'], 'forms without usage data are skipped and reported');
+    assert.equal(b.notCounted.length, 0);
+    assert.ok(Math.abs(b.hits.find((h) => h.move === 'finalgambit').p - 1) < 1e-9, 'Final Gambit: 192 fixed damage, more than any Rotom-Fan HP');
+    assert.ok(b.hits.some((h) => h.forme === 'mamoswine' && h.move === 'earthquake' && h.p === 0), 'a Levitate immunity is a hit with 0 odds');
+    // The research calculator takes Triple Axel at its listed 20 BP per hit; the engine escalates it (20/40/60, Showdown
+    // data/moves.ts basePowerCallback), so that one hit differs. Everything else equals the golden.
+    const ta = b.hits.find((h) => h.forme === 'tsareena' && h.move === 'tripleaxel').p;
+    assert.ok(Math.abs(b.score - ta - golden) < 5e-4, `${b.score} − Triple Axel ${ta} vs golden ${golden}`);
+  }
+  const o1 = B.bulkScore(calc, mech, fan(cases[0][0]), pool, usage), o2 = B.bulkScore(calc, mech, fan(cases[1][0]), pool, usage);
+  assert.ok(o2.score < o1.score, 'Speed SP → HP is bulkier');
+  assert.equal(o1.strong, 4);
+  assert.ok(B.bulkScore(calc, mech, fan(cases[0][0]), pool, null).skipped.length >= 10, 'no usage table: every form skipped, score 0');
+});
+
+test('Auto weather from their setters: their Drizzle is used against a non-setter; a Mega setter overrides a switch-in one', () => {
+  const peli = { key: 'pelipper', species: 'pelipper', forme: 'pelipper', mega: false, source: 'ladder', common: null, set: { species: 'pelipper', item: '', ability: 'drizzle', nature: '', moves: ['hurricane'], sp: 'unknown' } };
+  const me = rotom('modest', { spa: 32, spe: 32 });
+  const w = B.autoWeather(mech, me, peli);
+  assert.deepEqual([w.weather, w.by, w.theirs.ability], ['Rain', 'theirs', 'drizzle']);
+  const zard = { ...set('charizard', 'blaze', 'modest', { spa: 32, spe: 32 }, ['heatwave'], 'charizarditey'), species: 'charizard' };
+  assert.equal(B.autoWeather(mech, zard, peli).weather, 'Sun', 'Drought on Mega Evolution comes after Drizzle on switch-in');
+  // two switch-in setters: the slower one's weather stays; unknown order is flagged
+  const tyra = { key: 'tyranitar', species: 'tyranitar', forme: 'tyranitar', mega: false, source: 'ladder', common: null, set: { species: 'tyranitar', item: '', ability: 'sandstream', nature: '', moves: [], sp: 'unknown' } };
+  const pelMine = { ...set('pelipper', 'drizzle', 'modest', { spa: 32, spe: 32 }, ['hurricane']), species: 'pelipper' };
+  const x = B.autoWeather(mech, pelMine, tyra);
+  assert.ok(['Rain', 'Sand'].includes(x.weather));
+  assert.equal(x.contested, x.by === 'mine' && B.speedVerdict(B.mySpeed(mech, pelMine, 'pelipper'), B.targetSpeed(mech, tyra)) !== 'slower');
+});
+
 test('two-use KO search equals brute force over full runs (ko.two), and never needs more than one use', () => {
   const calc = newCalc();
   for (const [me, target, move, opts] of [
     [rotom('modest', { spe: 32, hp: 2 }), rap(), 'thunderbolt', {}],
     [rotom('timid', { spe: 32, hp: 2 }), rap(), 'airslash', { d: { boosts: { spd: 1 } } }],
     [rotom('modest', { spe: 32, hp: 2 }), rap({ hp: 32, spd: 32, spe: 2 }, 'careful'), 'thunderbolt', { d: { boosts: { spd: 2 } } }],
+    [rotom('modest', { spe: 32, hp: 2 }), rap({ hp: 32, spd: 32, spe: 2 }, 'careful'), 'thunderbolt', { a: { boosts: { spa: 1 } }, d: { boosts: { spd: 2 } } }],
+    [rotom('timid', { spe: 32, hp: 2 }), rap(), 'voltswitch', { a: { boosts: { spa: 2 } }, d: { boosts: { spd: 1 } } }],
   ]) {
     const scen = sc(me, target, move, opts);
     const two = koSearch(calc, mech, scen, { uses: 2 });
@@ -116,6 +204,25 @@ test('two-use KO search equals brute force over full runs (ko.two), and never ne
     }
   }
   assert.equal(koSearch(calc, mech, sc(rotom('modest', { spa: 32 }), rap(), 'thunderbolt', { d: { hpPct: 50 } }), { uses: 2 }).refused, 'hp-band-two');
+});
+
+test('2HKO benchmark at +0 / +1 / +2 and their SpD +1 equals brute force over full runs (ko.two)', () => {
+  const calc = newCalc();
+  const me = rotom('modest', { spe: 32, hp: 2 });
+  const tough = { ...megaRow(), set: { ...megaRow().set, nature: 'careful', sp: { hp: 32, atk: 0, def: 0, spa: 0, spd: 32, spe: 2 } } };
+  for (const stage of [0, 1]) for (const boost of [0, 1, 2]) {
+    const b = B.koBenchmark(calc, mech, me, tough, 'airslash', { boost, stage, uses: 2 });
+    assert.equal(b.uses, 2);
+    for (const l of b.levels) {
+      const ok = { 'every-roll': (k) => k.num === k.den, 'fifteen-of-sixteen': (k) => frac(k) >= 15 / 16, half: (k) => frac(k) >= 0.5 }[l.key];
+      let brute = null;
+      for (let a = 0; a <= 32 && brute === null; a++) {
+        const r = calc.run(sc({ ...me, sp: { ...me.sp, spa: a } }, { ...tough.set, species: 'staraptor' }, 'airslash', { a: { boosts: { spa: boost } }, d: { boosts: { spd: stage } } }));
+        if (ok(r.ko.two)) brute = a;
+      }
+      assert.equal(l.keep?.a ?? null, brute, `2HKO +${boost} SpD +${stage} ${l.key}`);
+    }
+  }
 });
 
 test('KO benchmark at +0 / +1 / +2 equals brute force, and a higher stage never needs more SP', () => {

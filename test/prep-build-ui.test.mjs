@@ -109,6 +109,17 @@ test('dashboard: sections, Compare options with trials that never write until Sa
   const html = T(app);
   for (const s of ['① Set', '② Compare options', '③ Speed and creep targets', '④ Your hits', '⑤ KO benchmarks', '⑥ Their hits on you', '⑦ In this matchup', 'Checking against']) assert.ok(html.includes(s), s);
   assert.ok(/Calvin's pool/.test(html));
+  // Mega Charizard Y (Charizardite Y): Auto weather is its Drought sun, labelled, and every hit row says so
+  assert.ok(/Auto: Sun \(your Drought\)/.test(html), 'the field bar names the sun and where it comes from');
+  assert.ok(/Weather on Auto: Sun \(your Drought\)/.test(html));
+  assert.ok(/(Weather Ball|Heat Wave) → Staraptor[^→]*Sun \(your Drought\)/.test(html), 'the KO row carries the weather (in sun Weather Ball is a 100 BP Fire move)');
+  assert.ok(/Bulk: expected OHKOs from Calvin's common hits/.test(html) && /Needs the ladder usage data/.test(html), 'the bulk row says why it has no number offline');
+  // overriding the weather: every number follows
+  const before0 = app.html();
+  await app.changeData({ pc: 'bd-field' }, { value: '' });
+  await app.waitFor(() => app.html() !== before0 && /Weather: No weather \(your choice/.test(T(app)), 'override to no weather');
+  await app.changeData({ pc: 'bd-field' }, { value: 'auto' });
+  await app.waitFor(() => /Weather on Auto: Sun/.test(T(app)), 'back to Auto');
   assert.ok(/ladder guess|no set: range/.test(html), 'their sets are labelled');
   // seeds: suggested trade-offs become trial columns, nothing is saved
   const seeds = btns(app, 'bd-seed');
