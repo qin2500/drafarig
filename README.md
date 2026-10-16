@@ -18,7 +18,7 @@ Then open http://localhost:4600. The server binds to 127.0.0.1 only. Change the 
 ## Test
 
 ```sh
-npm test               # builds the Worker artifact, then node --test: 408 tests (calc engine, searches, Prep UI on a stub DOM, Build, chat, Worker)
+npm test               # builds the Worker artifact, then node --test: 409 tests (calc engine, searches, Prep UI on a stub DOM, Build, chat, Worker)
 ```
 
 The tests use a saved copy of the real sheet in `test/fixtures/`, so they run offline.

@@ -438,3 +438,22 @@ test('marks: Mega Charizard Y in its own sun (G5 Volcarona): KO marks follow the
   assert.equal(sun.marks.find((m) => m.uses === 2 && !m.need)?.sp ?? null, brute, 'the 2HKO mark in sun equals brute force');
   assert.notDeepEqual(sun.marks, none.marks, 'sun changes the marks');
 });
+
+test('regression (v10 live): a KO mark and a "no sure OHKO" chip never come from the same run; a chip never says best N/N', () => {
+  const calc = newCalc();
+  const zard = { ...set('charizard', 'blaze', 'modest', { hp: 2, spa: 32, spe: 32 }, ['heatwave', 'hurricane', 'solarbeam', 'protect'], 'charizarditey'), species: 'charizard' };
+  const field = { weather: B.autoWeather(mech, zard, G.staraptormega).weather };
+  const k = B.koMarks(calc, mech, zard, G.staraptormega, 'hurricane', { field });
+  assert.ok(k.marks.some((m) => m.uses === 1 && m.boost === 0 && !m.need), 'Hurricane: OHKO Mega Staraptor every roll (a mark at your nature)');
+  assert.deepEqual(k.cant, [], 'so no "no sure OHKO" chip for it');
+  // the invariant everywhere: a chip only where no nature reaches every-roll, and its best odds are below 1
+  for (const row of Object.values(G)) for (const mv of ['heatwave', 'hurricane', 'solarbeam', 'weatherball']) {
+    const s = mv === 'weatherball' ? { ...zard, moves: ['weatherball'] } : zard;
+    const r = B.koMarks(calc, mech, s, row, mv, { field: { weather: B.autoWeather(mech, s, row).weather } });
+    const sure = r.marks.some((m) => m.uses === 1 && m.boost === 0 && !m.need?.item);
+    for (const c of r.cant) {
+      assert.ok(!sure, `${mv} vs ${row.key}: a chip beside an every-roll mark`);
+      assert.ok(!c.best || String(c.best.num) !== String(c.best.den), `${mv} vs ${row.key}: chip says best ${c.best?.num}/${c.best?.den}`);
+    }
+  }
+});
