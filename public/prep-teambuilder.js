@@ -16,7 +16,7 @@ import { workspacesFor } from '../lib/prep-matchup.mjs';
 import { parseTeamQuick, exportSet } from '../lib/paste.mjs';
 import * as B from '../lib/prep-build.mjs';
 import * as C from './prep-copy.js';
-import { esc, btn, chipBtn, h2, select, koWords } from './prep-ui.js';
+import { esc, btn, chipBtn, h2, select, koWords, itemIcon } from './prep-ui.js';
 import { updateDraft, createMySet, theirSetFor, spForUnknown, revisionPrompt } from './prep-sets.js';
 import * as WB from './prep-workbench.js';
 
@@ -236,7 +236,7 @@ function teamOwnStrip(P, team, l) {
     if (!s) return '';
     const d = currentVersion(s).data;
     const f = B.myForme(P.mech, { species: s.speciesId, item: d.item });
-    return `<li><button type="button" class="tb-mon${id === l.id ? ' sel' : ''}" data-pa="team-slot" data-team="${esc(team.id)}" data-slot="${i + 1}" aria-pressed="${id === l.id}">${P.pt(s.speciesId, { size: 'sm' })}<span class="tb-mon-t"><span class="tb-mon-n">${esc(P.spName(f))}</span><span class="tb-mon-i">${esc(P.name('items', d.item) || T.noItem)}</span></span></button></li>`;
+    return `<li><button type="button" class="tb-mon${id === l.id ? ' sel' : ''}" data-pa="team-slot" data-team="${esc(team.id)}" data-slot="${i + 1}" aria-pressed="${id === l.id}">${P.pt(s.speciesId, { size: 'sm' })}<span class="tb-mon-t"><span class="tb-mon-n">${esc(P.spName(f))}</span><span class="tb-mon-i">${itemIcon(d.item)}${esc(P.name('items', d.item) || T.noItem)}</span></span></button></li>`;
   };
   const planned = (team.planned ?? []).map((sp) => `<li><span class="tb-mon ghost">${P.pt(sp, { size: 'sm' })}<span class="tb-mon-t"><span class="tb-mon-n">${esc(P.spName(sp))}</span><span class="tb-mon-i">${esc(T.noSet)}</span></span></span></li>`).join('');
   const add = team.kind !== 'holding' && team.slots.length < 6 ? `<li>${btn('+', 'team-open', { team: team.id }, { cls: 'tb-add', aria: C.TEAMS.addMon })}</li>` : '';
@@ -252,7 +252,7 @@ function teamStrip(P, ws, sc, l) {
     const s = lin ?? P.mineSets().find((x) => x.speciesId === sp);
     const d = s ? currentVersion(s).data : null;
     const f = s ? B.myForme(P.mech, { species: sp, item: d.item }) : sp;
-    return `<li><button type="button" class="tb-mon${sp === l.speciesId ? ' sel' : ''}" data-pa="tb-open" data-species="${esc(sp)}" aria-pressed="${sp === l.speciesId}" aria-label="${esc(`${P.spName(f)}${s ? '' : `: ${T.noSet}`}`)}">${P.pt(sp, { size: 'sm' })}<span class="tb-mon-t"><span class="tb-mon-n">${esc(P.spName(f))}</span><span class="tb-mon-i">${esc(d ? P.name('items', d.item) || T.noItem : T.noSet)}</span></span></button></li>`;
+    return `<li><button type="button" class="tb-mon${sp === l.speciesId ? ' sel' : ''}" data-pa="tb-open" data-species="${esc(sp)}" aria-pressed="${sp === l.speciesId}" aria-label="${esc(`${P.spName(f)}${s ? '' : `: ${T.noSet}`}`)}">${P.pt(sp, { size: 'sm' })}<span class="tb-mon-t"><span class="tb-mon-n">${esc(P.spName(f))}</span><span class="tb-mon-i">${d ? itemIcon(d.item) : ''}${esc(d ? P.name('items', d.item) || T.noItem : T.noSet)}</span></span></button></li>`;
   };
   const rest = roster.filter((sp) => !sixSp.has(sp));
   return `<p class="tb-lbl">${esc(sixWs ? T.yourSix(sixWs.coach) : T.noSixHere)}</p>
@@ -276,13 +276,65 @@ function setRow(P, l, set, fm, forme) {
       ${mega ? `<div class="small"><b>${esc(P.spName(forme))}</b> · ${esc(P.name('abilities', abil[0]))}</div>` : ''}</div></div>
     <div class="tb-fields">
       <label class="field" for="tb-nick"><span>${esc(T.nick)}</span><input id="tb-nick" type="text" maxlength="18" value="${esc(set.cosmetic?.nickname ?? '')}" placeholder="${esc(P.spName(sp))}" data-pi="tb-nick" data-set="${esc(l.id)}"></label>
-      <label class="field" for="tb-item"><span>${esc(T.item)}</span><input id="tb-item" type="text" list="tb-items" autocomplete="off" value="${esc(P.name('items', set.item))}" data-pc="tb-item" data-set="${esc(l.id)}" aria-label="${esc(T.itemAria)}"></label>
+      ${itemCombo(P, l, set, items)}
       ${select('tb-ability', abil.map((a) => [a, P.name('abilities', a)]), mega ? abil[0] : set.ability, { label: T.ability, data: { pc: 'set-field', set: l.id, field: 'ability' } }).replace('<select', mega ? `<select disabled title="${esc(T.megaAbility(P.spName(forme)))}"` : '<select')}
     </div>
     <div class="tb-moves">${[0, 1, 2, 3].map(moveSlot).join('')}</div>
     <div class="tb-mini">${stats ? `<table>${STAT_IDS.map((k) => `<tr><td>${C.STAT_SHORT[k]}</td><td><span class="tb-mbar" style="width:${Math.min(60, Math.round((60 * stats[k]) / 260))}px"></span></td><td>${stats[k]}</td></tr>`).join('')}</table>` : ''}<div class="small muted">Lv 50 · ${esc(P.name('natures', set.nature) || '—')}</div></div>
-    <datalist id="tb-learn">${learn.map((m) => `<option value="${esc(P.name('moves', m))}"></option>`).join('')}</datalist>
-    <datalist id="tb-items">${items.map((i) => `<option value="${esc(P.name('items', i))}"></option>`).join('')}</datalist></div>`;
+    <datalist id="tb-learn">${learn.map((m) => `<option value="${esc(P.name('moves', m))}"></option>`).join('')}</datalist></div>`;
+}
+
+// ---------- the item combobox: icon + name per option, type to filter, Up / Down / Enter / Escape ----------
+// The list is drawn once with the editor; typing and the arrow keys only show / hide / mark its options in place (no
+// re-render, so the field keeps focus). Picking writes the draft; typing a name and leaving the field still works (tb-item).
+function itemCombo(P, l, set, items) {
+  const opts = ['', ...items].map((i) => `<li role="option" id="tb-io-${esc(i || 'none')}" tabindex="-1" data-pa="tb-item-pick" data-set="${esc(l.id)}" data-item="${esc(i)}" data-name="${esc(itemKey(i ? P.name('items', i) : T.noItem))}" aria-selected="false">${i ? itemIcon(i) : '<span class="ii none" aria-hidden="true"></span>'}<span>${esc(i ? P.name('items', i) : T.noItem)}</span></li>`).join('');
+  return `<div class="field tb-combo"><label for="tb-item">${esc(T.item)}</label><span class="tb-combo-in">${itemIcon(set.item)}<input id="tb-item" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="tb-itemlist" autocomplete="off" spellcheck="false" value="${esc(P.name('items', set.item))}" data-pc="tb-item" data-pi="tb-item-filter" data-pa="tb-item-open" data-combo="tb-itemlist" data-set="${esc(l.id)}" aria-label="${esc(T.itemAria)}"></span>
+    <ul id="tb-itemlist" class="tb-itemlist" role="listbox" aria-label="${esc(T.item)}" hidden>${opts}<li class="tb-nomatch muted" hidden>${esc(T.noItemMatch)}</li></ul></div>`;
+}
+/** An item name for matching: lower case, no spaces or hyphens ("King's Rock" → "king'srock"). */
+export const itemKey = (name) => String(name ?? '').toLowerCase().replace(/[\s-]+/g, '');
+/** The options a typed text keeps: the key contains the text's key (case, spaces and hyphens ignored); empty keeps all. */
+export const filterItems = (options, text) => { const q = itemKey(text); return q ? options.filter((o) => o.name.includes(q)) : options; };
+/** Up / Down / Enter / Escape over `count` visible options: { active (index or -1), pick (index) | null, close } or null. */
+export function comboStep(count, active, key) {
+  if (key === 'ArrowDown') return { active: count ? (active + 1) % count : -1, pick: null, close: false };
+  if (key === 'ArrowUp') return { active: count ? (active <= 0 ? count - 1 : active - 1) : -1, pick: null, close: false };
+  if (key === 'Enter') return { active, pick: active >= 0 ? active : count === 1 ? 0 : null, close: true };
+  if (key === 'Escape') return { active: -1, pick: null, close: true };
+  return null;
+}
+// DOM glue (browser only; the stub DOM has no live elements)
+const comboEls = (input) => { const list = globalThis.document?.getElementById?.(input?.dataset?.combo); return list ? { list, all: [...list.querySelectorAll('[role=option]')] } : null; };
+const showList = (input, list, open) => { list.hidden = !open; input.setAttribute?.('aria-expanded', String(open)); if (!open) input.removeAttribute?.('aria-activedescendant'); };
+function pickItem(P, setId, id) {
+  const l = lineage(P, setId);
+  if (!l || !P.mech) return;
+  if (id && !(P.mech.items[id] && (!P.mech.items[id].megaStone || P.mech.items[id].megaStone[l.speciesId]))) { P.toast(T.unknownItem(id)); return; }
+  updateDraft(P, l.id, (c) => { c.data.item = id; });
+}
+/** Keyboard on the item field (from prep's keydown): true when it handled the key. */
+export function comboKey(P, e) {
+  const input = e.target;
+  const d = comboEls(input);
+  if (!d) return false;
+  const visible = d.all.filter((o) => !o.hidden);
+  const active = visible.findIndex((o) => o.classList.contains('on'));
+  const step = comboStep(visible.length, active, e.key);
+  if (!step) return false;
+  if (d.list.hidden && (e.key === 'Escape' || e.key === 'Enter')) return false; // closed: these keys mean what they mean elsewhere
+  if (!(e.key === 'Enter' && step.pick === null)) e.preventDefault?.();
+  if (step.pick !== null) {
+    // the field shows the pick before the redraw: the redraw blurs it, and its change then finds nothing to do
+    showList(input, d.list, false); input.value = visible[step.pick].textContent.trim() === T.noItem ? '' : visible[step.pick].textContent.trim();
+    pickItem(P, input.dataset.set, visible[step.pick].dataset.item); return true;
+  }
+  if (step.close) { showList(input, d.list, false); if (e.key === 'Enter') return false; return true; }
+  if (d.list.hidden) input.select?.(); // opening by keyboard selects the text too: typing replaces it
+  showList(input, d.list, true);
+  visible.forEach((o, i) => { o.classList.toggle('on', i === step.active); o.setAttribute('aria-selected', String(i === step.active)); });
+  if (visible[step.active]) { input.setAttribute('aria-activedescendant', visible[step.active].id); visible[step.active].scrollIntoView?.({ block: 'nearest' }); }
+  return true;
 }
 
 // ---------- calc strip: the focused move against the scope's mons ----------
@@ -508,6 +560,8 @@ export const actions = {
   'tb-open': (t, P) => openSpecies(P, t.dataset.species),
   'tb-focus': (t, P) => { const u = (tbUi(P).focus ??= {}); const i = Number(t.dataset.i); if (u[t.dataset.set] !== i) { u[t.dataset.set] = i; P.app.rerender(); } },
   'tb-wb': openWorkbench,
+  'tb-item-open': (t) => { const d = comboEls(t); if (d) showList(t, d.list, true); t.select?.(); },
+  'tb-item-pick': (t, P) => { const input = globalThis.document?.getElementById?.('tb-item'); const d = input && comboEls(input); if (d) showList(input, d.list, false); pickItem(P, t.dataset.set, t.dataset.item ?? ''); },
   'tb-tip': (t, P) => {
     const u = (tbUi(P).tip ??= {});
     const cur = u[t.dataset.set];
@@ -549,11 +603,16 @@ export const actions = {
 export const changes = {
   'tb-scope': (t, P) => { tbUi(P); P.ui.tbScope = t.value; P.saveUi(); P.app.rerender(); },
   'tb-item': (t, P) => {
+    // leaving the field for one of its options (mousedown on it blurs the field first): let the pick win; a commit of the
+    // typed text runs only if no option was picked meanwhile (the pick closes the list)
+    const d = comboEls(t);
+    if (d && !d.list.hidden) { setTimeout(() => { const n = comboEls(t); if (n && !n.list.hidden) { showList(t, n.list, false); changes['tb-item'](t, P); } }, 200); return; }
     const l = lineage(P, t.dataset.set);
     if (!l || !P.mech) return;
     const want = t.value.trim().toLowerCase();
     const id = !want ? '' : Object.keys(P.mech.items).find((i) => (P.name('items', i).toLowerCase() === want || i === toID(want)) && (!P.mech.items[i].megaStone || P.mech.items[i].megaStone[l.speciesId]));
     if (id === undefined) { P.toast(T.unknownItem(t.value)); P.app.rerender(); return; }
+    if (id === (draftSet(P, l).item ?? '')) return; // already this item (e.g. just picked from the list): no redraw
     updateDraft(P, l.id, (c) => { c.data.item = id; });
   },
   'tb-move': (t, P) => {
@@ -568,6 +627,15 @@ export const changes = {
   },
 };
 export const inputs = {
+  // typing in the item field: show the options whose name contains the text (in place)
+  'tb-item-filter': (t) => {
+    const d = comboEls(t);
+    if (!d) return;
+    const keep = new Set(filterItems(d.all.map((o) => ({ name: o.dataset.name, el: o })), t.value).map((o) => o.el));
+    for (const o of d.all) { o.hidden = !keep.has(o); o.classList.remove('on'); }
+    const none = d.list.querySelector('.tb-nomatch'); if (none) none.hidden = keep.size > 0;
+    showList(t, d.list, true);
+  },
   'tb-nick': (t, P) => updateDraft(P, t.dataset.set, (c) => { c.data.cosmetic = { ...(c.data.cosmetic ?? {}), nickname: t.value.slice(0, 18) }; }, { render: false }),
   'tb-iotext': (t, P) => { (tbUi(P).ioText ??= {})[t.dataset.set] = t.value.slice(0, 4000); },
   // while dragging: this row and the counter update in place (no re-render, no engine); the change event (release) saves

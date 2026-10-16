@@ -9,7 +9,7 @@ import { currentVersion, asSet, newLineage, cleanSetData } from '../lib/prep-mod
 import { parseTeamQuick, exportSet, exportTeam } from '../lib/paste.mjs';
 import * as TM from '../lib/prep-teams.mjs';
 import * as C from './prep-copy.js';
-import { esc, btn, h2, select } from './prep-ui.js';
+import { esc, btn, h2, select, itemIcon } from './prep-ui.js';
 import { createMySet, spForUnknown } from './prep-sets.js';
 import * as TB from './prep-teambuilder.js';
 
@@ -87,7 +87,7 @@ function slotRow(P, team, l, i) {
   return `<li class="tm-slot">
     <button type="button" class="tm-slot-open" data-pa="team-slot" data-team="${esc(team.id)}" data-slot="${i + 1}" aria-label="${esc(`${P.spName(l.speciesId)}: ${T.editSet}`)}">
       <span class="tm-s-who">${pt(P, l.speciesId, 'md')}<span><b>${esc(d.cosmetic?.nickname || P.spName(l.speciesId))}</b><br><span class="small">${esc(`${l.name || 'Set'} v${l.currentV}`)}</span>${offRoster ? `<br><span class="small warnline">${esc(T.offRoster)}</span>` : ''}</span></span>
-      <span class="tm-s-det small"><span>${esc(P.name('items', d.item) || T.noItem)}</span><span>${esc(P.name('abilities', d.ability) || '—')}</span><span>${esc(P.name('natures', d.nature) || '—')}</span></span>
+      <span class="tm-s-det small"><span>${itemIcon(d.item)}${esc(P.name('items', d.item) || T.noItem)}</span><span>${esc(P.name('abilities', d.ability) || '—')}</span><span>${esc(P.name('natures', d.nature) || '—')}</span></span>
       <span class="tm-s-moves small">${(d.moves ?? []).map((m) => `<span>${esc(P.name('moves', m))}</span>`).join('')}</span>
       <span class="tm-s-stats small">${st ? STAT_IDS.map((k) => `<span>${C.STAT_SHORT[k]} ${st[k]}</span>`).join('') : esc(T.noSp)}</span></button>
     <details class="tm-more"><summary aria-label="${esc(T.moreFor(P.spName(l.speciesId)))}">⋯</summary><div class="tm-acts">

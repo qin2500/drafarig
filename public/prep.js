@@ -1353,6 +1353,8 @@ export function createPrep(app) {
     applyHash: (h) => P.applyHash(h),
     hash: () => formatRoute(P.route),
     saveUi: () => P.saveUi(),
+    /** A key on a Battle Prep control that handles its own keys (the item combobox). Returns whether it did. */
+    keydown: (e) => (e.target?.dataset?.combo ? TB.comboKey(P, e) : false),
     /** Escape: close an open detail sheet (Back) or a pending question. Returns whether it did something. */
     escape: () => {
       if (WB.close(P)) return true;

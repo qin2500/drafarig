@@ -670,7 +670,8 @@ function renderPrep(main) {
   const same = shownMode === 'prep' && !nav;
   const scroll = same ? window.scrollY : 0;
   const focused = same && !target ? prepFocusKey(document.activeElement, main) : null;
-  const caret = focused ? document.activeElement?.selectionStart ?? null : null; // typing in a field that re-renders keeps its place
+  // typing in a field that re-renders keeps its place, and a selection (a combobox's select-all) stays selected
+  const caret = focused ? document.activeElement?.selectionStart ?? null : null, caretEnd = focused ? document.activeElement?.selectionEnd ?? caret : null;
   const strip0 = document.querySelector('.oppstrip ol');
   const stripLeft = strip0 ? strip0.scrollLeft : null;
   main.innerHTML = prep.render();
@@ -681,7 +682,7 @@ function renderPrep(main) {
   if (el) { if (!nav) el.scrollIntoView?.({ block: 'start' }); el.focus?.({ preventScroll: true }); }
   else for (const c of prepFocusCandidates(main, focused)) {
     c.focus?.({ preventScroll: true });
-    if (document.activeElement === c) { if (caret !== null) try { c.setSelectionRange?.(caret, caret); } catch { /* not a text field */ } break; }
+    if (document.activeElement === c) { if (caret !== null) try { c.setSelectionRange?.(caret, caretEnd ?? caret); } catch { /* not a text field */ } break; }
   }
 }
 // The opponent row is rebuilt on every Prep render: the same row keeps where the user scrolled it; a new opponent (or
@@ -856,8 +857,12 @@ function showPop(el) {
 }
 const hidePop = () => { $('#pop').hidden = true; };
 document.addEventListener('mouseover', (e) => { const t = e.target.closest('.term'); t ? showPop(t) : hidePop(); });
-document.addEventListener('focusin', (e) => { const t = e.target.closest('.term'); t ? showPop(t) : hidePop(); });
+document.addEventListener('focusin', (e) => {
+  if (e.target?.dataset?.combo) e.target.select?.(); // a combobox: typing replaces its current value
+  const t = e.target.closest('.term'); t ? showPop(t) : hidePop();
+});
 document.addEventListener('keydown', (e) => {
+  if (S.mode === 'prep' && prep?.keydown?.(e)) return;
   if (e.key === 'Escape') {
     // Battle Prep first: Escape closes an open detail sheet or a pending question (focus goes back with it)
     if (S.mode === 'prep' && prep?.escape?.()) return;

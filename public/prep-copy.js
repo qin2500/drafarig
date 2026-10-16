@@ -747,7 +747,7 @@ export const TB = {
   started: 'New set started from ladder data: check every field', importNothing: 'Paste a set first.', importFailed: "That text couldn't be read as a set; use Paste your team for the full import.",
   importOther: (name) => `That text is for ${name}; open ${name} first.`, imported: 'Imported into the editor: not saved yet',
   importedConverted: (text) => `Imported into the editor (EVs converted: ${text}): not saved yet`, importHeld: (why) => `Not imported: ${why}`,
-  unknownItem: (x) => `"${x}" isn't an item this Pokémon can hold in Champions.`, unknownMove: (x, mon) => `${mon} can't learn "${x}" in Champions.`,
+  noItemMatch: 'No item matches', unknownItem: (x) => `"${x}" isn't an item this Pokémon can hold in Champions.`, unknownMove: (x, mon) => `${mon} can't learn "${x}" in Champions.`,
 };
 
 // ---------- Teams setup (public/prep.js, lib/prep-teams.mjs) ----------

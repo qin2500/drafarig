@@ -10,7 +10,7 @@ import { normalizeScenario } from '../lib/calc/scenario.mjs';
 import { pinsOf, entityHashes } from '../lib/calc/keys.mjs';
 import * as B from '../lib/prep-build.mjs';
 import * as C from './prep-copy.js';
-import { esc, btn, chipBtn, h2, select, resultBlock, rollsDetail } from './prep-ui.js';
+import { esc, btn, chipBtn, h2, select, resultBlock, rollsDetail, itemIcon } from './prep-ui.js';
 import { updateDraft } from './prep-sets.js';
 import { summarize } from './prep-calcs.js';
 
@@ -132,7 +132,7 @@ function sidePanel(P, wb, side) {
   const boost = select(`wb-${side}-boost`, [-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6].map((n) => [String(n), n > 0 ? `+${n}` : String(n)]), String(mine ? wb.boosts.mine : wb.boosts.theirs), { label: W.boost(C.STAT_SHORT[key]), data: { pc: 'wb-boost', ...d } });
   return `<p class="small">${P.pt(set.species, { size: 'sm' })} <b>${esc(P.spName(forme))}</b>${fm?.mega ? ` <span class="chip">${esc(W.asMega)}</span>` : ''}</p>
     <div class="frow">${select(`wb-${side}-nature`, natureOpts, shown.nature, { label: W.nature, data: { pc: 'wb-field-set', key: 'nature', ...d } })}
-      ${select(`wb-${side}-item`, [['', W.noItem], ...items.map((i) => [i, P.name('items', i)])], set.item, { label: W.item, data: { pc: 'wb-field-set', key: 'item', ...d } })}
+      <span class="wb-item">${itemIcon(set.item)}${select(`wb-${side}-item`, [['', W.noItem], ...items.map((i) => [i, P.name('items', i)])], set.item, { label: W.item, data: { pc: 'wb-field-set', key: 'item', ...d } })}</span>
       ${select(`wb-${side}-ability`, abil.map((a) => [a, P.name('abilities', a)]), fm?.mega ? abil[0] : set.ability, { label: W.ability, data: { pc: 'wb-field-set', key: 'ability', ...d } })}</div>
     ${spreadSeg}
     <div class="wb-stats">${main.map(row).join('')}<details class="wb-more"><summary>${esc(W.moreStats)}</summary>${rest.map(row).join('')}</details></div>

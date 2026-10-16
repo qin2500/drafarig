@@ -2,9 +2,12 @@
 // class badge, if-crit line, assumption chips, not-counted line, footer). Pure string renderers: test/prep-ui.test.mjs
 // reads their HTML without a DOM. A refused or "no number yet" result never renders a digit or % in its result area.
 import * as C from './prep-copy.js';
+import { ITEM_SPRITES, iconOffset } from '../lib/item-sprites.mjs';
 
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 export const attrs = (o) => Object.entries(o).filter(([, v]) => v !== undefined && v !== null && v !== false).map(([k, v]) => (v === true ? ` ${k}` : ` ${k}="${esc(v)}"`)).join('');
+/** An item's 24×24 icon from Showdown's sprite sheet (decorative: the name is always written beside it); '' without one. */
+export const itemIcon = (id) => { const n = ITEM_SPRITES[id]; if (n === undefined) return ''; const [x, y] = iconOffset(n); return `<span class="ii" style="background-position:-${x}px -${y}px" aria-hidden="true"></span>`; };
 /** A button wired to a prep action: data-pa="<action>" plus data-* arguments. */
 export const btn = (label, action, data = {}, { cls = '', primary = false, disabled = false, aria = null, pressed = null } = {}) =>
   `<button type="button"${attrs({ class: [primary ? 'primary' : '', cls].filter(Boolean).join(' ') || undefined, 'data-pa': action, ...Object.fromEntries(Object.entries(data).map(([k, v]) => [`data-${k}`, v])), disabled, 'aria-label': aria, 'aria-pressed': pressed === null ? undefined : String(pressed) })}>${esc(label)}</button>`;

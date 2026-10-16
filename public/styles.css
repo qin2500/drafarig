@@ -938,3 +938,18 @@ button.st-btn:hover, button.st-btn:focus-visible { border-color: var(--line); }
 .prep .tb-assumed { margin: 4px 0 0; }
 .prep .tm-onebyone > summary, .prep .tm-rename > summary { cursor: pointer; padding: 6px 0; }
 @media (max-width: 767px) { .prep .tb-spdopts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); } .prep .tb-spdopts > span { grid-column: 1 / -1; } .prep .tb-spdopts button { min-height: 44px; } }
+
+/* item icons (Showdown's sheet, 24×24) and the teambuilder's item combobox */
+.ii { display: inline-block; width: 24px; height: 24px; flex: none; vertical-align: middle; background: url(https://play.pokemonshowdown.com/sprites/itemicons-sheet.png) no-repeat; }
+.ii.none { background: none; }
+.prep .tb-mon-i .ii { width: 24px; height: 24px; margin: -4px 2px -4px -2px; }
+.prep .tb-combo { position: relative; }
+.prep .tb-combo-in { display: flex; align-items: center; gap: 4px; }
+.prep .tb-combo-in input { flex: 1; min-width: 0; }
+.prep .tb-itemlist { position: absolute; z-index: 30; left: 0; right: 0; top: 100%; max-height: 280px; overflow: auto; margin: 2px 0 0; padding: 4px; list-style: none; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 8px 24px rgba(0, 0, 0, .2); }
+.prep .tb-itemlist[hidden] { display: none; }
+.prep .tb-itemlist li { display: flex; align-items: center; gap: 6px; min-height: 32px; padding: 2px 6px; border-radius: 6px; cursor: pointer; }
+.prep .tb-itemlist li:hover, .prep .tb-itemlist li.on { background: var(--bg); outline: 1px solid var(--accent); }
+.wb-item { display: inline-flex; align-items: flex-end; gap: 4px; }
+@media (max-width: 767px) { .prep .tb-itemlist li { min-height: 44px; } }
+.prep .tb-combo:not(:focus-within) .tb-itemlist { display: none; }
