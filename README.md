@@ -18,7 +18,7 @@ Then open http://localhost:4600. The server binds to 127.0.0.1 only. Change the 
 ## Test
 
 ```sh
-npm test               # builds the Worker artifact, then node --test: 370 tests (calc engine, searches, Prep UI on a stub DOM, Build, chat, Worker)
+npm test               # builds the Worker artifact, then node --test: 375 tests (calc engine, searches, Prep UI on a stub DOM, Build, chat, Worker)
 ```
 
 The tests use a saved copy of the real sheet in `test/fixtures/`, so they run offline.
@@ -40,23 +40,25 @@ The tests use a saved copy of the real sheet in `test/fixtures/`, so they run of
 
 `lib/` is shared by the server, the browser and the tests.
 
-## Build (Battle Prep › a matchup › Build)
+## Teambuilder (your set editor: My sets, or a matchup's Sets)
 
-Your 6 for the match as Showdown-style team cards (our own markup; no Showdown code or assets) and your drafted 10. Tap a mon
-for its dashboard (`#prep/<you>v<them>/build/<n>`):
+Opening one of your sets opens the teambuilder (`#prep/my-sets/<id>`, `#prep/w/<ws>/sets/<id>`), laid out like Showdown's
+(our own markup and CSS; sprites are the app's portraits):
 
-- **Compare options**: your current set next to up to 3 trials (suggested trade-offs such as "Speed SP → bulk", "+ Life Orb",
-  "+ Nasty Plot, freed SP → bulk", or your own change). Rows: your best move into each pinned target at +0 and, with a setup
-  move, at its stage; the same "after their <self-boosting move>" (e.g. Contrary Close Combat, SpD +1) when they can move first;
-  their hardest hit on you; Speed; costs; and the tools against setup in their pool. A trial is never saved until you press
-  **Save as a new version**.
-- **Speed and creep targets** (no engine): SP needed to pass each target's common max and worst-case Speed; ties are never "faster".
-- **Your hits** at +0/+1/+2, **KO benchmarks** (least SpA/Atk SP per level, one or two uses, with slack and breakpoints),
-  **their hits on you**, and the Brief's facts for that mon.
+- **Checking against** a scope: your marked or first scheduled opponent by default, any other opponent, or the whole league.
+- **Team strip**: your 6 for that opponent, then the rest of your 10; tap one to edit its set.
+- **Set card**: nickname, item and the 4 moves as type-to-search fields (legal lists only), ability, mini stats.
+- **Stats panel**: a 0–32 Stat Point slider per stat (66 in total) with nature colours, base, bar, final stat and the remaining
+  count. The sliders carry **marks**: Speed points that outspeed or tie their mons (ladder spread where known), the least
+  SpA/Atk for an OHKO / 2HKO / +2 OHKO with a setup move / OHKO with Life Orb (dashed when it needs another nature or item),
+  and HP + Def/SpD pairs that survive their strongest common hit. Tap a mark for its one-line calc.
+- **Calc strip**: tap a move to see it against their mons (+0, the setup stage, and no-sun for a Drought set).
+- **Pin as A**, then drag or tap a **try:** idea: a diff bar shows Speed rank, marks gained or lost and the bulk score.
+- **Save version / Save as a new set / Discard**, history, and Showdown **Import / Export**. Nothing saves until you press Save.
 
-Their sets: their saved set, else a ladder guess (labelled); unknown Stat Points use the frail / common / max spreads. Logic:
-`lib/prep-build.mjs` over `lib/calc/threshold.mjs` (`koSearch` now also searches two uses). The Rotom-Fan reference case
-(`docs/research/strategy/sp-assist/rotom-fan-case.md` §9) is `test/prep-build.test.mjs`.
+Marks come from `lib/prep-build.mjs` (`speedMarks`, `koMarks`, `surviveMarks`) over `lib/calc/threshold.mjs`. They depend on
+the set's item, nature and moves, not its Stat Points, so dragging never runs the damage engine. Old `#…/build` links open Sets,
+and `#…/build/<n>` opens that pick's set here. The Rotom-Fan and Mega Charizard Y reference cases are in `test/prep-build.test.mjs`.
 
 ## Check a pick
 

@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drafarig Teambuilder (mockup)</title>
+<style>
+/* App dark tokens (public/styles.css, prefers-color-scheme: dark) */
+:root {
+  --bg:#14171d; --panel:#1d222b; --panel2:#232a35; --ink:#e7eaf0; --muted:#9aa3b3; --line:#2e3542; --accent:#7d9bff;
+  --ok:#5fd0b5; --okbg:#163a33; --warn:#ffb35c; --warnbg:#3d2b12; --bad:#ff8a80; --badbg:#431c1a;
+  --plus:#ff9e7a; --minus:#7fb2ff; --thumb:16px;
+}
+* { box-sizing:border-box; }
+body { margin:0; font:14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif; background:var(--bg); color:var(--ink); }
+button,input,select,textarea { font:inherit; color:inherit; }
+button { cursor:pointer; background:var(--panel2); border:1px solid var(--line); border-radius:6px; padding:4px 10px; min-height:30px; }
+button:hover { border-color:var(--accent); }
+button.primary { background:var(--accent); border-color:var(--accent); color:#0d1220; font-weight:600; }
+button.ghost { background:none; border-color:transparent; color:var(--accent); padding-left:4px; padding-right:4px; }
+:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+input[type=text], select { background:var(--bg); border:1px solid var(--line); border-radius:5px; padding:4px 7px; min-height:30px; }
+.muted { color:var(--muted); } .small { font-size:12px; } .tiny { font-size:11px; }
+
+.topbar { display:flex; align-items:center; gap:14px; padding:8px 16px; background:var(--panel); border-bottom:1px solid var(--line); flex-wrap:wrap; }
+.brand { font-weight:800; letter-spacing:.08em; }
+.seg { display:inline-flex; border:1px solid var(--line); border-radius:999px; overflow:hidden; }
+.seg span { padding:4px 14px; } .seg .on { background:var(--accent); color:#0d1220; font-weight:600; }
+.mocknote { margin-left:auto; font-size:11px; color:var(--warn); }
+
+.wrap { max-width:1180px; margin:0 auto; padding:12px 16px 80px; }
+
+/* context line: who we check against + assumptions, tiny */
+.ctx { display:flex; flex-wrap:wrap; align-items:center; gap:6px 10px; font-size:12px; color:var(--muted); margin-bottom:10px; }
+.ctx select { font-size:12px; min-height:26px; padding:2px 6px; }
+.ctx .asm { flex:1 1 300px; }
+
+/* team list (Showdown-style: 6 across, rest of roster below) */
+.team { display:grid; grid-template-columns:repeat(6, minmax(0,1fr)); gap:6px; }
+.bench { display:flex; flex-wrap:wrap; gap:6px; margin:6px 0 14px; align-items:center; }
+.mon { display:flex; align-items:center; gap:8px; padding:6px 8px; background:var(--panel); border:1px solid var(--line); border-radius:8px; text-align:left; min-width:0; }
+.mon.sel { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset; }
+.mon .nm { font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.mon .it { font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.bench .mon { padding:4px 8px; }
+.sprite { flex:none; width:40px; height:40px; border-radius:50%; display:grid; place-items:center; font-weight:800; font-size:13px; color:#0d1220; }
+.sprite.lg { width:96px; height:96px; font-size:28px; border-radius:16px; }
+.lbl { font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:2px 0 4px; }
+
+/* the set card */
+.card { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:12px; }
+.setrow { display:grid; grid-template-columns:116px minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr); gap:14px; align-items:start; }
+.field { display:flex; flex-direction:column; gap:2px; margin-bottom:6px; min-width:0; }
+.field > span { font-size:11px; color:var(--muted); }
+.field input, .field select { width:100%; }
+.types { display:flex; gap:4px; margin-top:6px; justify-content:center; }
+.type { font-size:10px; font-weight:700; padding:1px 6px; border-radius:4px; color:#0d1220; }
+.megatog { margin-top:6px; font-size:12px; text-align:center; }
+.mini td { padding:1px 4px; font-size:12px; white-space:nowrap; } .mini td:first-child { color:var(--muted); }
+.mini .bar { height:6px; border-radius:3px; display:inline-block; vertical-align:middle; }
+.mvin { position:relative; }
+.mvin input { padding-left:26px; }
+.mvin .mt { position:absolute; left:6px; top:8px; width:14px; height:14px; border-radius:3px; }
+
+/* calc strip (shown while a move slot has focus) */
+.strip { margin-top:10px; padding:8px 10px; background:var(--panel2); border:1px solid var(--line); border-radius:8px; display:none; }
+.strip.on { display:block; }
+.strip .head { display:flex; gap:8px; align-items:baseline; flex-wrap:wrap; margin-bottom:6px; }
+.strip .rows { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; }
+.hit { flex:none; min-width:132px; background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:6px 8px; }
+.hit .who { display:flex; gap:6px; align-items:center; font-size:12px; font-weight:600; }
+.hit .who .sprite { width:26px; height:26px; font-size:10px; }
+.hit .v { display:flex; justify-content:space-between; gap:8px; font-size:12px; margin-top:3px; }
+.hit .v b.ko { color:var(--ok); } .hit .v b.no { color:var(--ink); }
+.hit .v .k { color:var(--muted); }
+.stale { color:var(--warn); }
+
+/* compare bar */
+.cmp { display:flex; flex-wrap:wrap; gap:6px 8px; align-items:center; margin:12px 0 6px; }
+.diff { display:none; flex-wrap:wrap; gap:6px; align-items:center; padding:6px 10px; border-radius:8px; background:var(--panel2); border:1px dashed var(--accent); font-size:12px; margin-bottom:8px; }
+.diff.on { display:flex; }
+.dchip { padding:1px 8px; border-radius:999px; border:1px solid var(--line); white-space:nowrap; }
+.dchip.up { background:var(--okbg); color:var(--ok); border-color:transparent; }
+.dchip.down { background:var(--badbg); color:var(--bad); border-color:transparent; }
+.idea { font-size:12px; padding:2px 8px; min-height:26px; border-radius:999px; }
+
+/* stats panel: Showdown's EV table, with SP sliders and benchmark ticks */
+.stats { margin-top:4px; }
+.srow { display:grid; grid-template-columns:52px 34px minmax(60px,110px) minmax(0,1fr) 44px 44px; gap:10px; align-items:center; padding:6px 0; border-top:1px solid var(--line); }
+.srow:first-child { border-top:0; }
+.sname { font-weight:700; } .sname.plus { color:var(--plus); } .sname.minus { color:var(--minus); }
+.sname sup { font-size:11px; margin-left:1px; }
+.sbase { color:var(--muted); font-size:12px; text-align:right; }
+.sbarw { height:10px; background:var(--bg); border-radius:5px; overflow:hidden; }
+.sbar { height:100%; border-radius:5px; transition:width .1s; }
+.sfinal { font-weight:700; text-align:right; font-variant-numeric:tabular-nums; }
+.sp input { width:44px; text-align:right; padding:3px 5px; }
+.slidew { position:relative; padding-bottom:16px; min-width:0; }
+.slidew input[type=range] { width:100%; margin:0; -webkit-appearance:none; appearance:none; background:transparent; height:22px; }
+.slidew input[type=range]::-webkit-slider-runnable-track { height:6px; background:var(--line); border-radius:3px; }
+.slidew input[type=range]::-moz-range-track { height:6px; background:var(--line); border-radius:3px; }
+.slidew input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:var(--thumb); height:var(--thumb); border-radius:50%; background:var(--accent); margin-top:-5px; border:2px solid var(--panel); }
+.slidew input[type=range]::-moz-range-thumb { width:var(--thumb); height:var(--thumb); border-radius:50%; background:var(--accent); border:2px solid var(--panel); }
+.ticks { position:absolute; left:0; right:0; top:20px; height:14px; }
+.tick { position:absolute; top:0; transform:translateX(-50%); width:12px; height:14px; padding:0; min-height:0; border:0; background:none; }
+.tick::before { content:""; position:absolute; left:3px; top:0; width:6px; height:10px; border-radius:2px; border:2px solid var(--muted); background:var(--bg); }
+.tick.met::before { background:var(--ok); border-color:var(--ok); }
+.tick.tie::before { transform:rotate(45deg); width:7px; height:7px; top:2px; border-color:var(--warn); }
+.tick.tie.met::before { background:var(--warn); }
+.tick.off::before { opacity:.35; border-style:dashed; }
+.tick.ko::before { border-radius:50%; width:8px; height:8px; left:2px; }
+.cant { display:flex; flex-wrap:wrap; gap:4px; margin-top:2px; }
+.cant span { font-size:11px; color:var(--muted); border:1px dashed var(--line); border-radius:999px; padding:0 7px; }
+.cant span.bad { color:var(--bad); border-color:var(--bad); }
+.foot { display:flex; flex-wrap:wrap; gap:8px 16px; align-items:center; margin-top:8px; }
+.left { font-weight:700; font-variant-numeric:tabular-nums; } .left.over { color:var(--bad); } .left.zero { color:var(--ok); }
+.legend { display:flex; flex-wrap:wrap; gap:10px; font-size:11px; color:var(--muted); }
+.legend i { display:inline-block; width:8px; height:10px; border:2px solid var(--muted); border-radius:2px; vertical-align:-1px; margin-right:3px; }
+.legend i.met { background:var(--ok); border-color:var(--ok); } .legend i.tie { transform:rotate(45deg); width:7px; height:7px; border-color:var(--warn); }
+.legend i.ko { border-radius:50%; }
+
+.actions { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:12px; }
+.dirty { font-size:12px; color:var(--warn); }
+
+#pop { position:fixed; z-index:50; max-width:320px; background:var(--ink); color:var(--bg); padding:7px 10px; border-radius:6px; font-size:12px; box-shadow:0 6px 20px rgba(0,0,0,.4); pointer-events:none; }
+#pop b { display:block; } #pop .c { opacity:.8; margin-top:2px; }
+#toast { position:fixed; bottom:16px; left:50%; transform:translateX(-50%); background:var(--ink); color:var(--bg); padding:8px 14px; border-radius:6px; z-index:60; }
+dialog { background:var(--panel); color:var(--ink); border:1px solid var(--line); border-radius:10px; width:min(520px, calc(100vw - 32px)); }
+dialog textarea { width:100%; height:220px; background:var(--bg); border:1px solid var(--line); border-radius:6px; font:12px/1.4 ui-monospace,Menlo,monospace; padding:8px; }
+dialog::backdrop { background:rgba(0,0,0,.5); }
+.placeholder { padding:20px; text-align:center; }
+
+@media (max-width: 900px) {
+  .team { grid-template-columns:repeat(3, minmax(0,1fr)); }
+  .setrow { grid-template-columns:96px minmax(0,1fr); }
+  .setrow .colmini { display:none; }
+  .sprite.lg { width:80px; height:80px; }
+}
+@media (max-width: 600px) {
+  .team { grid-template-columns:repeat(2, minmax(0,1fr)); }
+  .setrow { grid-template-columns:minmax(0,1fr); }
+  .setrow > div:first-child { display:flex; gap:10px; align-items:center; }
+  .srow { grid-template-columns:44px minmax(0,1fr) 44px 40px; }
+  .srow .sbase, .srow .sbarw { display:none; }
+  button, .tick { min-height:44px; } .tick { height:20px; min-height:0; }
+  .slidew input[type=range] { height:32px; } .ticks { top:28px; }
+}
+@media (prefers-reduced-motion: reduce) { .sbar { transition:none; } }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <span class="brand">DRAFARIG</span>
+  <span class="seg"><span>Draft</span><span class="on">Battle Prep</span></span>
+  <span class="small muted">Teambuilder</span>
+  <span class="mocknote">Clickable mockup · numbers from VGC Strategy's reference files · nothing is saved</span>
+</header>
+
+<div class="wrap">
+  <div class="ctx">
+    <label>Checking against <select id="scope" aria-label="Checking against">
+      <option value="calvin">Calvin (W1)</option><option value="league">Whole league</option></select></label>
+    <span class="asm" id="asm"></span>
+  </div>
+
+  <div class="lbl">Your 6</div>
+  <div class="team" id="team"></div>
+  <div class="bench" id="bench"></div>
+
+  <div class="card" id="card"></div>
+</div>
+
+<div id="pop" role="tooltip" hidden></div>
+<div id="toast" hidden></div>
+<dialog id="io"><form method="dialog">
+  <p style="margin-top:0"><b>Import / Export</b> <span class="small muted">Showdown text. Paste to replace this set.</span></p>
+  <textarea id="iotext" spellcheck="false" aria-label="Showdown text"></textarea>
+  <p class="actions" style="justify-content:flex-end"><button value="cancel">Close</button><button id="doimport" value="import" class="primary">Import</button></p>
+</form></dialog>
+
+<script>
+"use strict";
+// ---------------------------------------------------------------------------------------------------------------------
+// Data. Stats and Speed are computed with the Champions formula (lib/calc/stats.mjs statValue): HP = base+SP+75,
+// others = base+SP+20, nature x1.1 / x0.9 truncated. Every damage number and non-Speed benchmark below is copied from
+// docs/research/strategy/sp-assist/{rotom-fan-case.md, dashboard-goldens.md, benchmarks-league.md} or from the app's
+// engine output for the same set (qa-dash screenshot); none are invented. In the app, the engine recomputes them live.
+// ---------------------------------------------------------------------------------------------------------------------
+const STATS = ['hp','atk','def','spa','spd','spe'];
+const SHORT = { hp:'HP', atk:'Atk', def:'Def', spa:'SpA', spd:'SpD', spe:'Spe' };
+const NATURES = { Hardy:[], Lonely:['atk','def'], Brave:['atk','spe'], Adamant:['atk','spa'], Naughty:['atk','spd'],
+  Bold:['def','atk'], Docile:[], Relaxed:['def','spe'], Impish:['def','spa'], Lax:['def','spd'],
+  Timid:['spe','atk'], Hasty:['spe','def'], Serious:[], Jolly:['spe','spa'], Naive:['spe','spd'],
+  Modest:['spa','atk'], Mild:['spa','def'], Quiet:['spa','spe'], Bashful:[], Rash:['spa','spd'],
+  Calm:['spd','atk'], Gentle:['spd','def'], Sassy:['spd','spe'], Careful:['spd','spa'], Quirky:[] };
+const TYPE_COLOR = { Electric:'#f4d23c', Flying:'#8fa8dd', Fire:'#ff9d55', Water:'#4d90d5', Grass:'#63bb5b', Ghost:'#6a6dc0',
+  Fighting:'#ce4069', Normal:'#9099a1', Dark:'#5a5366', Fairy:'#ec8fe6', Steel:'#5a8ea1', Ground:'#d97746', Ice:'#73cec0',
+  Bug:'#90c12c', Rock:'#c7b78b', Poison:'#ab6ac8', Psychic:'#f97176', Dragon:'#0b6dc3' };
+const MOVE_TYPE = { Thunderbolt:'Electric', Thunder:'Electric', Discharge:'Electric', 'Volt Switch':'Electric', 'Rising Voltage':'Electric',
+  Electroweb:'Electric', 'Thunder Wave':'Electric', 'Air Slash':'Flying', Hurricane:'Flying', 'Shadow Ball':'Ghost', Hex:'Ghost',
+  'Dark Pulse':'Dark', 'Foul Play':'Dark', 'Nasty Plot':'Dark', Protect:'Normal', 'Helping Hand':'Normal', 'Hyper Voice':'Normal',
+  'Will-O-Wisp':'Fire', 'Light Screen':'Psychic', Reflect:'Psychic', Trick:'Psychic', 'Heat Wave':'Fire', Flamethrower:'Fire',
+  'Fire Blast':'Fire', Overheat:'Fire', 'Weather Ball':'Normal', 'Solar Beam':'Grass', 'Focus Blast':'Fighting',
+  'Scorching Sands':'Ground', 'Dragon Pulse':'Dragon', Roost:'Flying' };
+
+// Opponent Speeds (exact numbers to beat). Calvin's from rotom-fan-case.md §1/§5 and benchmarks-league.md; the league list is
+// benchmarks-league.md §1 (every common league Speed 119–168) plus Mega Staraptor.
+const SPEEDS = {
+  calvin: [
+    { v: 80, who: "Calvin's Grimmsnarl", note: 'common max' },
+    { v: 100, who: "Calvin's Mamoswine", note: 'a common spread' },
+    { v: 120, who: "Calvin's Volcarona", note: 'ladder: Bold 0 Spe' },
+    { v: 132, who: "Calvin's Mamoswine", note: '32% of its spreads' },
+    { v: 145, who: "Calvin's Mamoswine / Basculegion-F", note: '31% / common' },
+    { v: 178, who: "Calvin's Mega Staraptor", note: 'Jolly 32: every common spread' },
+  ],
+  league: [
+    { v: 132, who: "Calvin's Mamoswine, 17's Venusaur and Blaziken", note: '32% / 58% / 36%' },
+    { v: 137, who: "Hex's Kleavor, Taro's Samurott-H, DingDing's Malamar", note: '22% / 20%' },
+    { v: 140, who: "Taro's Excadrill", note: '58%' },
+    { v: 145, who: "Basculegion (DingDing), Basculegion-F (Calvin), ZhuZi's Krookodile, Calvin's Mamoswine", note: '143–145 group' },
+    { v: 151, who: "Ning's Gholdengo, Hex's Kleavor, Taro's Samurott-H, Data's Archaludon, Rotom-Heat/Wash", note: '149–151 group' },
+    { v: 152, who: "17's Mega Dragonite and Mega Blaziken, Taro's Salamence", note: '41% / 48%' },
+    { v: 154, who: "Hex's Garchomp, Taro's Excadrill", note: '19% / 17%' },
+    { v: 157, who: "ZhuZi's Mega Metagross, Ning's Lucario, Taro's Salamence, 17's Pawmot, Data's Espathra / Mega Starmie", note: '156–157 group' },
+    { v: 162, who: "Jacky's Mimikyu, DingDing's Zoroark-H, Data's Mega Raichu-X, ZhuZi's Krookodile, Taro's Tinkaton", note: '158–162 group' },
+    { v: 166, who: "Ning's Mega Lucario, Taro's Serperior, ZhuZi's Infernape", note: '164–166 group' },
+    { v: 167, who: "Taro's Salamence, 17's Mega Dragonite / Mega Blaziken, Data's Starmie", note: '19% / 5% / 8%' },
+    { v: 178, who: "Calvin's Mega Staraptor", note: 'Jolly 32' },
+  ],
+};
+
+// Fixed benchmarks (not Speed). when(set) = the set condition the reference number assumes; scopes = where it applies.
+// pair = a second stat that must also reach its value (survive marks need HP and a defence together).
+const hasMove = (s, m) => s.moves.includes(m);
+const ROTOM_MARKS = [
+  { stat:'spa', sp:20, kind:'ko', scopes:['calvin','league'], when:(s)=>s.item==='Life Orb'&&s.nature==='Modest', need:'Modest + Life Orb',
+    text:'OHKO Mega Staraptor (+0) on 94% of ladder spreads', calc:'Thunderbolt, Life Orb, +0, before its Close Combat. Life Orb Modest 32: 198–237 vs the common spread (16/16).' },
+  { stat:'spa', sp:23, kind:'ko', scopes:['calvin','league'], when:(s)=>s.item==='Life Orb'&&s.nature==='Modest', need:'Modest + Life Orb',
+    text:'OHKO Mega Staraptor every roll (common spread)', calc:'Common spread Jolly 29/1/0/0/4/32 (HP 189, SpD 114).' },
+  { stat:'spa', sp:0, kind:'ko', scopes:['calvin','league'], when:(s)=>hasMove(s,'Nasty Plot')&&s.nature==='Modest'&&s.item!=='Life Orb', need:'Nasty Plot, Modest',
+    text:'+2: OHKO Mega Staraptor 15/16', calc:'After one Nasty Plot, no item. Already at 0 SpA SP.' },
+  { stat:'spa', sp:8, kind:'ko', scopes:['calvin','league'], when:(s)=>hasMove(s,'Nasty Plot')&&s.nature==='Modest'&&s.item!=='Life Orb', need:'Nasty Plot, Modest',
+    text:'+2: OHKO Mega Staraptor every roll (whole ladder)', calc:'After one Nasty Plot, no item, against all 159 ladder spreads.' },
+  { stat:'spa', sp:0, kind:'ko', scopes:['calvin','league'], when:(s)=>hasMove(s,'Nasty Plot')&&s.nature==='Modest'&&s.item==='Life Orb', need:'Nasty Plot, Modest, Life Orb',
+    text:'+2, Life Orb: OHKO 94% even after their Close Combat', calc:'Life Orb Modest +2 into SpD +1: at least 94% of ladder spreads from 0 SpA SP.' },
+  { stat:'spa', sp:16, kind:'ko', scopes:['calvin','league'], when:(s)=>hasMove(s,'Nasty Plot')&&s.nature==='Modest'&&s.item!=='Life Orb', need:'Nasty Plot, Modest, no item',
+    text:'+2 after their Close Combat: OHKO 94%', calc:'Contrary Close Combat gives Staraptor +1 SpD. Modest 16 SpA +2: 186–218 (98–115%), 13/16 vs the common spread.' },
+  { stat:'spa', sp:21, kind:'ko', scopes:['calvin','league'], when:(s)=>hasMove(s,'Nasty Plot')&&!['Modest','Mild','Quiet','Rash'].includes(s.nature)&&s.item!=='Life Orb', need:'Nasty Plot, neutral SpA nature',
+    text:'+2: OHKO Mega Staraptor every roll', calc:'Timid / Calm (neutral SpA) needs 21 SpA SP; 0 SP still gets 15/16.' },
+  { stat:'spa', sp:16, kind:'ko', scopes:['calvin','league'], when:(s)=>s.nature==='Modest', need:'Modest',
+    text:"OHKO Calvin's Scarf Staraptor (Final Gambit set)", calc:'Thunderbolt +0, no item: 100% of that set from 16 SpA SP.' },
+  { stat:'hp', sp:28, pair:{ stat:'def', sp:7 }, kind:'survive', scopes:['calvin','league'], when:(s)=>s.nature==='Bold', need:'Bold',
+    text:"Survive Calvin's Mamoswine Icicle Crash", calc:'Needs HP 28 + Def 7, Bold. O2 (32 HP, Modest) is still 50% to be OHKO\'d; N16 (32 HP / 14 Def) 13%.' },
+  { stat:'def', sp:7, pair:{ stat:'hp', sp:28 }, kind:'survive', scopes:['calvin','league'], when:(s)=>s.nature==='Bold', need:'Bold',
+    text:"Survive Calvin's Mamoswine Icicle Crash", calc:'Needs Def 7 + HP 28, Bold.' },
+  { stat:'hp', sp:26, pair:{ stat:'def', sp:3 }, kind:'survive', scopes:['league'], when:(s)=>s.nature==='Bold', need:'Bold',
+    text:"Survive Data's Mega Starmie Ice Spinner", calc:'Needs HP 26 + Def 3, Bold. 46% OHKO on the O2 build.' },
+  { stat:'def', sp:3, pair:{ stat:'hp', sp:26 }, kind:'survive', scopes:['league'], when:(s)=>s.nature==='Bold', need:'Bold',
+    text:"Survive Data's Mega Starmie Ice Spinner", calc:'Needs Def 3 + HP 26, Bold.' },
+];
+const ROTOM_CANT = [
+  { stat:'spa', scopes:['calvin','league'], when:(s)=>s.item!=='Life Orb'&&!hasMove(s,'Nasty Plot'), text:'+0, no item: no OHKO on Mega Staraptor even at 32 (27% of spreads)', bad:true },
+  { stat:'spa', scopes:['calvin','league'], text:'after its Close Combat at +0: no build OHKOs (Life Orb 32: 3%)' },
+  { stat:'hp', scopes:['calvin','league'], text:'Scarf Staraptor Final Gambit: 192 > your max HP 157', bad:true },
+  { stat:'def', scopes:['league'], text:"Hex's Kleavor Stone Axe: needs Bold 28 HP / 27 Def (55 SP)" },
+];
+const ZARD_MARKS = [
+  { stat:'spa', sp:16, kind:'ko', scopes:['league'], when:(s)=>s.nature==='Modest', need:'Modest', text:"Heat Wave OHKOs Hex's Kleavor ≥94% (sun)", calc:'76% at 0 SpA SP.' },
+  { stat:'spa', sp:18, kind:'ko', scopes:['league'], when:(s)=>s.nature==='Modest', need:'Modest', text:"Weather Ball OHKOs Data's Espathra ≥94% (sun)", calc:'92% at 0 SpA SP.' },
+  { stat:'spa', sp:26, kind:'ko', scopes:['league'], when:(s)=>s.nature==='Modest', need:'Modest', text:"OHKO Data's Mega Raichu-X ≥94% (sun)", calc:'74% at 0 SpA SP.' },
+  { stat:'spa', sp:31, kind:'ko', scopes:['league'], when:(s)=>s.nature==='Modest', need:'Modest', text:"OHKO DingDing's Sableye (sun)", calc:'58% at 0 SpA SP.' },
+  { stat:'spa', sp:11, kind:'ko', scopes:['league'], when:(s)=>s.nature==='Timid', need:'Timid', text:'OHKOs Sneasler, Kingambit, Mega Metagross, Pawmot by here', calc:'Each needs only 3–11 SpA SP with Timid.' },
+  { stat:'def', sp:21, kind:'survive', scopes:['league'], when:(s)=>s.nature==='Timid', need:'Timid', text:"Survive DingDing's Basculegion Wave Crash (sun up)", calc:'91% OHKO at 0 Def SP. Bold needs only 11.' },
+  { stat:'def', sp:11, kind:'survive', scopes:['league'], when:(s)=>s.nature==='Bold', need:'Bold', text:"Survive DingDing's Basculegion Wave Crash (sun up)", calc:'Timid needs 21.' },
+];
+const ZARD_CANT = [
+  { stat:'def', scopes:['league'], text:'Spread Rock Slide (Sneasler, Mamoswine, Excadrill): 27–30 Def SP; position around it' },
+  { stat:'spa', scopes:['calvin'], text:'No SpA breakpoints vs Calvin in the reference data: focus a move to see its hits' },
+];
+
+// Hits shown while a move slot is focused. Rotom rows use Modest 32 SpA; Charizard rows use Modest 2/0/0/32/0/32 Mega Y.
+const pct = (lo, hi, hp) => `${(100*lo/hp).toFixed(0)}–${(100*hi/hp).toFixed(0)}%`;
+const ROTOM_HITS = {
+  Thunderbolt: [
+    { who:'Mega Staraptor', t:['Fighting','Flying'], cols:(s)=> s.item==='Life Orb'
+        ? { '+0':['105–125%', true], '+2':['KO', true] } : { '+0':['80–96%', false], '+2':['162–192%', true] } },
+    { who:'… after its Close Combat', t:['Fighting','Flying'], cols:(s)=> s.item==='Life Orb'
+        ? { '+0':['70–84%', false], '+2':['KO', true] } : { '+0':['54–65%', false], '+2':['108–128%', true] } },
+    { who:'Staraptor (Scarf, Final Gambit)', t:['Normal','Flying'], cols:()=>({ '+0':['KO', true], '+2':['KO', true] }) },
+  ],
+  'Air Slash': [
+    { who:'Volcarona', t:['Bug','Fire'], cols:()=>({ '+0':['60–72%', false], '+2':['120–142%', true] }) },
+    { who:'Mega Staraptor', t:['Fighting','Flying'], cols:()=>({ '+0':['68–80%', false] }) },
+  ],
+};
+const ZARD_HITS = {
+  'Heat Wave': [
+    { who:'Grimmsnarl', t:['Dark','Fairy'], cols:()=>({ sun:[pct(115,136,202), false], 'no sun':[pct(76,91,202), false] }) },
+    { who:'Mega Staraptor', t:['Fighting','Flying'], cols:()=>({ sun:[pct(123,145,189), false], 'no sun':[pct(82,97,189), false] }) },
+    { who:'Volcarona', t:['Bug','Fire'], cols:()=>({ sun:[pct(109,130,192), false], 'no sun':[pct(73,87,192), false] }) },
+  ],
+  'Weather Ball': [
+    { who:'Tsareena', t:['Grass'], cols:()=>({ sun:[pct(336,396,149), true], 'no sun':[pct(38,45,149), false] }) },
+  ],
+  'Solar Beam': [
+    { who:'Basculegion-F', t:['Water','Ghost'], cols:()=>({ sun:[pct(218,258,195), true], 'no sun':['same, 1 turn later', true] }) },
+  ],
+};
+
+const MONS = {
+  rotom: { name:'Rotom-Fan', types:['Electric','Flying'], base:{ hp:50, atk:65, def:107, spa:105, spd:107, spe:86 },
+    abilities:['Levitate'], items:['Sitrus Berry','Life Orb','Mental Herb','Magnet','Expert Belt','Leftovers','Focus Sash','Choice Scarf'],
+    learn:['Thunderbolt','Thunder','Discharge','Volt Switch','Rising Voltage','Electroweb','Thunder Wave','Air Slash','Shadow Ball','Hex','Dark Pulse','Foul Play','Hyper Voice','Will-O-Wisp','Light Screen','Reflect','Trick','Protect','Helping Hand','Nasty Plot'],
+    set:{ nick:'', item:'Sitrus Berry', ability:'Levitate', nature:'Modest', moves:['Thunderbolt','Air Slash','Protect','Nasty Plot'], sp:{ hp:2, atk:0, def:0, spa:32, spd:0, spe:32 } },
+    marks:ROTOM_MARKS, cant:ROTOM_CANT, hits:ROTOM_HITS, boostCols:(s)=> hasMove(s,'Nasty Plot') ? ['+0','+2'] : ['+0'],
+    ideas:[
+      { label:'Speed SP → HP + Life Orb (O2)', apply:(s)=>{ s.sp={ hp:32, atk:0, def:0, spa:32, spd:2, spe:0 }; s.item='Life Orb'; s.moves=['Thunderbolt','Air Slash','Volt Switch','Protect']; } },
+      { label:'Nasty Plot, SpA → bulk (N16)', apply:(s)=>{ s.sp={ hp:32, atk:0, def:14, spa:16, spd:4, spe:0 }; s.item='Mental Herb'; s.moves=['Thunderbolt','Nasty Plot','Volt Switch','Protect']; } },
+    ],
+    // bulk score: expected OHKOs from common hits (dashboard-goldens.md §2); known only for these exact spreads (any Rotom item)
+    bulk:{ 'Modest 2/0/0/32/0/32':{ calvin:2.52, league:16.02 }, 'Modest 32/0/0/32/2/0':{ calvin:1.50, league:3.95 }, 'Modest 32/0/14/16/4/0':{ calvin:1.13, league:2.53 } },
+  },
+  zard: { name:'Charizard', mega:'Mega Charizard Y', types:['Fire','Flying'], base:{ hp:78, atk:84, def:78, spa:109, spd:85, spe:100 },
+    megaBase:{ hp:78, atk:104, def:78, spa:159, spd:115, spe:100 }, abilities:['Blaze','Solar Power'], megaAbility:'Drought', stone:'Charizardite Y',
+    items:['Charizardite Y','Charizardite X','Life Orb','Focus Sash','Sitrus Berry','Choice Scarf','Leftovers'],
+    learn:['Heat Wave','Flamethrower','Fire Blast','Overheat','Weather Ball','Solar Beam','Air Slash','Hurricane','Focus Blast','Scorching Sands','Dragon Pulse','Roost','Protect'],
+    set:{ nick:'', item:'Charizardite Y', ability:'Solar Power', nature:'Modest', moves:['Heat Wave','Weather Ball','Solar Beam','Protect'], sp:{ hp:2, atk:0, def:0, spa:32, spd:0, spe:32 } },
+    marks:ZARD_MARKS, cant:ZARD_CANT, hits:ZARD_HITS, boostCols:()=>['sun','no sun'],
+    ideas:[
+      { label:'Timid 24 Spe, 8 into HP', apply:(s)=>{ s.nature='Timid'; s.sp={ hp:10, atk:0, def:0, spa:32, spd:0, spe:24 }; } },
+      { label:'Modest 31 (skip the 152 tie)', apply:(s)=>{ s.nature='Modest'; s.sp={ hp:3, atk:0, def:0, spa:32, spd:0, spe:31 }; } },
+    ],
+    bulk:{},
+  },
+};
+const ROSTER = [
+  { id:'zard', six:true }, { id:'rotom', six:true },
+  { name:'Pelipper', item:'Focus Sash', t:['Water','Flying'], six:true }, { name:'Sinistcha', item:'Sitrus Berry', t:['Grass','Ghost'], six:true },
+  { name:'Kangaskhan', item:'Kangaskhanite', t:['Normal'], six:true }, { name:'Aegislash', item:'Life Orb', t:['Steel','Ghost'], six:true },
+  { name:'Morpeko', item:'Focus Sash', t:['Electric','Dark'] }, { name:'Conkeldurr', item:'Life Orb', t:['Fighting'] },
+  { name:'Stunfisk-Galar', item:'Sitrus Berry', t:['Ground','Steel'] }, { name:'Simipour', item:'Mystic Water', t:['Water'] },
+];
+
+// ---------------------------------------------------------------------------------------------------------------------
+// State
+// ---------------------------------------------------------------------------------------------------------------------
+const clone = (x) => JSON.parse(JSON.stringify(x));
+const S = { cur:'rotom', scope:'calvin', sets:{}, saved:{}, pinned:{}, focusMove:null, version:{ rotom:1, zard:1 } };
+for (const k of Object.keys(MONS)) { S.sets[k] = clone(MONS[k].set); S.saved[k] = clone(MONS[k].set); }
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+
+const sign = (nature, st) => { const n = NATURES[nature] || []; return n[0] === st && n[1] !== st ? '+' : n[1] === st && n[0] !== st ? '-' : ''; };
+function statValue(st, base, sp, sg) {
+  if (st === 'hp') return base + sp + 75;
+  const s = base + sp + 20;
+  return sg === '+' ? Math.floor(s * 110 / 100) : sg === '-' ? Math.floor(s * 90 / 100) : s;
+}
+const isMega = (m, s) => !!m.megaBase && s.item === m.stone;
+const baseOf = (m, s) => (isMega(m, s) ? m.megaBase : m.base);
+const statsOf = (m, s) => Object.fromEntries(STATS.map((st) => [st, statValue(st, baseOf(m, s)[st], s.sp[st], sign(s.nature, st))]));
+const spTotal = (sp) => STATS.reduce((t, k) => t + (sp[k] || 0), 0);
+const spKey = (s) => `${s.nature} ${STATS.map((k) => s.sp[k]).join('/')}`;
+
+// Speed ticks for the current nature: the least SP that is strictly faster than each target, and exact ties.
+function speedTicks(m, s) {
+  const base = baseOf(m, s).spe, sg = sign(s.nature, 'spe');
+  const at = (sp) => statValue('spe', base, sp, sg);
+  const out = [], cant = [];
+  for (const t of SPEEDS[S.scope]) {
+    let tie = null, beat = null;
+    for (let sp = 0; sp <= 32; sp++) { if (tie === null && at(sp) === t.v) tie = sp; if (at(sp) > t.v) { beat = sp; break; } }
+    // a tie gets its own mark only where it matters: you sit on it now, or a tie is the best you can reach
+    if (tie !== null && (beat === null || s.sp.spe === tie)) out.push({ sp:tie, tie:true, text:`ties ${t.who} at ${t.v} (coin flip)`, calc:`${s.nature} ${tie} SP = ${t.v}: a coin flip each turn${beat === null ? '' : `; ${beat} SP outspeeds`}. ${t.note}.` });
+    if (beat !== null) out.push({ sp:beat, text:`outspeeds ${t.who} (${t.v})`, calc:`${s.nature} ${beat} SP = ${at(beat)} > ${t.v}${tie !== null ? ` (${tie} SP ties)` : ''}. ${t.note}.` });
+    else if (tie === null) cant.push({ v:t.v, max:at(32), who:t.who });
+  }
+  return { out, cant };
+}
+
+// A mark is "met" when the slider is at or past it and the set has the condition it assumes.
+function marksFor(m, s, st) {
+  return m.marks.filter((k) => k.stat === st && k.scopes.includes(S.scope)).map((k) => {
+    const cond = k.when(s);
+    const met = cond && s.sp[k.stat] >= k.sp && (!k.pair || s.sp[k.pair.stat] >= k.pair.sp);
+    return { ...k, off:!cond, met };
+  });
+}
+function speedRank(m, s) {
+  const me = statsOf(m, s).spe, list = SPEEDS[S.scope];
+  return { faster:list.filter((t) => me > t.v).length, ties:list.filter((t) => me === t.v).length, of:list.length };
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Render
+// ---------------------------------------------------------------------------------------------------------------------
+const spriteOf = (name, types, cls = '') => {
+  const [a, b] = types.map((t) => TYPE_COLOR[t] || '#888');
+  return `<span class="sprite ${cls}" aria-hidden="true" style="background:linear-gradient(135deg, ${a} 0 50%, ${b || a} 50% 100%)">${esc(name.replace(/^Mega /, '').slice(0, 2))}</span>`;
+};
+function renderTeam() {
+  const tile = (r) => {
+    const m = r.id ? MONS[r.id] : null, s = r.id ? S.sets[r.id] : null;
+    const name = m ? (isMega(m, s) ? m.mega : m.name) : r.name;
+    const types = m ? m.types : r.t;
+    return `<button class="mon${r.id === S.cur ? ' sel' : ''}" data-pick="${r.id || r.name}" aria-pressed="${r.id === S.cur}">${spriteOf(name, types)}<span style="min-width:0"><span class="nm" style="display:block">${esc(name)}</span><span class="it" style="display:block">${esc(m ? s.item : r.item)}</span></span></button>`;
+  };
+  $('#team').innerHTML = ROSTER.filter((r) => r.six).map(tile).join('');
+  $('#bench').innerHTML = `<span class="lbl" style="margin:0 4px 0 0">Rest of your 10</span>${ROSTER.filter((r) => !r.six).map(tile).join('')}`;
+}
+
+function renderCard() {
+  if (!MONS[S.cur]) {
+    const r = ROSTER.find((x) => x.name === S.cur);
+    $('#card').innerHTML = `<div class="placeholder">${spriteOf(r.name, r.t, 'lg')}<p><b>${esc(r.name)}</b></p><p class="muted small">The mockup has full data for Rotom-Fan and Mega Charizard Y. In the app every mon opens this same editor, with its own ticks from its benchmarks (benchmarks-league.md).</p></div>`;
+    return;
+  }
+  const m = MONS[S.cur], s = S.sets[S.cur], st = statsOf(m, s);
+  const mega = isMega(m, s);
+  const name = mega ? m.mega : m.name;
+  const types = m.types;
+  const total = spTotal(s.sp), left = 66 - total;
+  const dirty = JSON.stringify(s) !== JSON.stringify(S.saved[S.cur]);
+  const max = 260;
+  const barColor = (v) => (v < 90 ? '#ff8a80' : v < 120 ? '#ffb35c' : v < 160 ? '#e6d266' : '#5fd0b5');
+
+  const moveSlot = (i) => {
+    const mv = s.moves[i] || '';
+    return `<div class="field mvin"><span>Move ${i + 1}</span><span class="mt" style="background:${TYPE_COLOR[MOVE_TYPE[mv]] || 'transparent'}"></span>
+      <input type="text" list="learn" value="${esc(mv)}" data-move="${i}" autocomplete="off" aria-label="Move ${i + 1}, type to search"></div>`;
+  };
+  const mini = STATS.map((k) => `<tr><td>${SHORT[k]}</td><td><span class="bar" style="width:${Math.round(60 * st[k] / max)}px;background:${barColor(st[k])}"></span></td><td>${st[k]}</td></tr>`).join('');
+
+  const srow = (k) => {
+    const sg = sign(s.nature, k);
+    let ticks = [], cant = [];
+    if (k === 'spe') { const r = speedTicks(m, s); ticks = r.out.map((t) => ({ ...t, met:s.sp.spe >= t.sp, kind:'spe' }));
+      cant = r.cant.length <= 2 ? r.cant.map((c) => ({ text:`can't beat ${c.v} (${c.max} max): ${c.who}`, bad:c.v === 178 }))
+        : [{ text:`can't beat ${r.cant.length} Speeds, ${r.cant[0].v}–${r.cant.at(-1).v} (${r.cant[0].max} max)`, title:r.cant.map((c) => `${c.v}: ${c.who}`).join('\n') }]; }
+    ticks = ticks.concat(marksFor(m, s, k));
+    cant = cant.concat(m.cant.filter((c) => c.stat === k && c.scopes.includes(S.scope) && (!c.when || c.when(s))));
+    // group ticks that land on the same SP into one mark
+    const groups = new Map();
+    for (const t of ticks) { const g = groups.get(t.sp) ?? []; g.push(t); groups.set(t.sp, g); }
+    const tickHtml = [...groups.entries()].map(([sp, g]) => {
+      const met = g.some((t) => t.met), off = g.every((t) => t.off), tie = g.every((t) => t.tie), ko = g.some((t) => t.kind === 'ko' || t.kind === 'survive');
+      const lines = g.map((t) => `${t.off ? `[needs ${t.need}] ` : ''}${t.text}`).join(' · ');
+      const calc = g.map((t) => t.calc).join(' ');
+      const left = `calc(var(--thumb) / 2 + (100% - var(--thumb)) * ${sp / 32})`;
+      return `<button type="button" class="tick${met ? ' met' : ''}${off ? ' off' : ''}${tie ? ' tie' : ''}${ko ? ' ko' : ''}" style="left:${left}" data-tip="${esc(`${SHORT[k]} ${sp}: ${lines}`)}" data-calc="${esc(calc)}" data-sp="${sp}" data-stat="${k}" aria-label="${esc(`${SHORT[k]} ${sp}: ${lines}. ${met ? 'reached' : 'not reached'}`)}"></button>`;
+    }).join('');
+    return `<div class="srow">
+      <span class="sname ${sg === '+' ? 'plus' : sg === '-' ? 'minus' : ''}">${SHORT[k]}${sg ? `<sup>${sg === '+' ? '+' : '−'}</sup>` : ''}</span>
+      <span class="sbase" title="Base stat">${baseOf(m, s)[k]}</span>
+      <span class="sbarw"><span class="sbar" style="display:block;width:${Math.min(100, 100 * st[k] / max)}%;background:${barColor(st[k])}"></span></span>
+      <div class="slidew"><input type="range" min="0" max="32" step="1" value="${s.sp[k]}" data-sp="${k}" aria-label="${SHORT[k]} Stat Points">
+        <div class="ticks">${tickHtml}</div>
+        ${cant.length ? `<div class="cant" style="margin-top:16px">${cant.map((c) => `<span class="${c.bad ? 'bad' : ''}"${c.title ? ` title="${esc(c.title)}" tabindex="0"` : ''}>${esc(c.text)}</span>`).join('')}</div>` : ''}</div>
+      <span class="sp"><input type="text" inputmode="numeric" value="${s.sp[k]}" data-spn="${k}" aria-label="${SHORT[k]} Stat Points (number)"></span>
+      <span class="sfinal">${st[k]}</span></div>`;
+  };
+
+  // compare bar
+  const A = S.pinned[S.cur];
+  let diff = '';
+  if (A) {
+    const sa = statsOf(m, A), ch = [];
+    if (A.item !== s.item) ch.push(`${A.item} → ${s.item}`);
+    if (A.nature !== s.nature) ch.push(`${A.nature} → ${s.nature}`);
+    STATS.forEach((k) => { if (A.sp[k] !== s.sp[k]) ch.push(`${SHORT[k]} ${A.sp[k]}→${s.sp[k]}`); });
+    const addM = s.moves.filter((x) => x && !A.moves.includes(x)), rmM = A.moves.filter((x) => x && !s.moves.includes(x));
+    if (addM.length || rmM.length) ch.push(`${rmM.join(', ') || '—'} → ${addM.join(', ') || '—'}`);
+    const all = (x) => STATS.flatMap((k) => marksFor(m, x, k)).filter((k) => k.kind);
+    const seen = new Set(), gained = [], lost = [];
+    const ma = all(A), mb = all(s);
+    mb.forEach((k, i) => { const key = k.text; if (seen.has(key)) return; seen.add(key); const was = ma.filter((x) => x.text === key).some((x) => x.met), now = mb.filter((x) => x.text === key).some((x) => x.met); if (now && !was) gained.push(key); if (was && !now) lost.push(key); });
+    const ra = speedRank(m, A), rb = speedRank(m, s);
+    const ba = m.bulk[spKey(A)]?.[S.scope], bb = m.bulk[spKey(s)]?.[S.scope];
+    diff = `<b>vs A</b>
+      ${ch.length ? `<span class="dchip">${esc(ch.join(' · '))}</span>` : '<span class="muted">no changes yet</span>'}
+      ${sa.spe !== st.spe ? `<span class="dchip ${st.spe > sa.spe ? 'up' : 'down'}">Spe ${sa.spe} → ${st.spe}</span>` : ''}
+      ${ra.faster !== rb.faster || ra.ties !== rb.ties ? `<span class="dchip ${rb.faster > ra.faster ? 'up' : 'down'}">faster than ${ra.faster} → ${rb.faster} of ${rb.of}${rb.ties ? ` (+${rb.ties} tie)` : ''}</span>` : ''}
+      ${gained.map((g) => `<span class="dchip up">✓ ${esc(g)}</span>`).join('')}
+      ${lost.map((g) => `<span class="dchip down">✗ ${esc(g)}</span>`).join('')}
+      ${ba !== undefined || bb !== undefined ? `<span class="dchip ${bb !== undefined && ba !== undefined ? (bb < ba ? 'up' : bb > ba ? 'down' : '') : ''}" title="Expected OHKOs from common hits (lower is bulkier)">bulk ${ba ?? '?'} → ${bb ?? '?'} expected OHKOs</span>` : ''}
+      <button class="ghost small" data-act="revert">Back to A</button> <button class="ghost small" data-act="unpin">Unpin</button>`;
+  }
+
+  const r = speedRank(m, s);
+  const cols = m.boostCols(s);
+  const mv = S.focusMove !== null ? s.moves[S.focusMove] : null;
+  const rows = mv ? (m.hits[mv] || []) : [];
+  const refNote = S.cur === 'rotom' ? (s.sp.spa !== 32 || s.nature !== 'Modest' ? '<span class="stale tiny">numbers at Modest 32 SpA (reference); in the app they follow your sliders</span>' : '')
+    : (s.nature !== 'Modest' || s.sp.spa !== 32 || !mega ? `<span class="stale tiny">numbers at Modest 32 SpA, Mega Y (reference)${mega ? '' : '; not holding Charizardite Y: no Drought'}</span>` : '<span class="tiny muted">Drought: sun from the Mega turn, before any move</span>');
+  const strip = `<div class="strip${mv ? ' on' : ''}" id="strip" aria-live="polite">
+    <div class="head"><b>${esc(mv || '')}</b><span class="tiny muted">vs ${S.scope === 'calvin' ? "Calvin's" : "the league's"} mons · common ladder spread · single target unless spread (×0.75)</span>${refNote}</div>
+    <div class="rows">${rows.length ? rows.map((h) => { const c = h.cols(s); return `<div class="hit"><div class="who">${spriteOf(h.who.replace(/^… /, ''), h.t)}${esc(h.who)}</div>${cols.filter((k) => c[k]).map((k) => `<div class="v"><span class="k">${esc(k)}</span><b class="${c[k][1] ? 'ko' : 'no'}">${esc(c[k][0])}${c[k][1] ? ' KO' : ''}</b></div>`).join('')}</div>`; }).join('')
+      : `<span class="small muted">${mv && MOVE_TYPE[mv] && !['Protect','Nasty Plot','Helping Hand','Will-O-Wisp','Light Screen','Reflect','Trick','Thunder Wave','Roost'].includes(mv) ? 'No reference numbers for this move in the mockup; the app computes it against every mon in scope.' : 'Status move: no damage. '}${mv === 'Nasty Plot' ? 'Adds the +2 column to every hit and the +2 ticks on SpA.' : ''}</span>`}</div></div>`;
+
+  $('#card').innerHTML = `
+    <div class="setrow">
+      <div style="text-align:center">${spriteOf(name, types, 'lg')}<div class="types">${types.map((t) => `<span class="type" style="background:${TYPE_COLOR[t]}">${t}</span>`).join('')}</div>
+        ${m.megaBase ? `<div class="megatog">${mega ? `<b>Mega Y</b> · Drought` : '<span class="muted">base form</span>'}</div>` : ''}</div>
+      <div>
+        <div class="field"><span>Nickname</span><input type="text" value="${esc(s.nick)}" placeholder="${esc(m.name)}" data-f="nick" aria-label="Nickname"></div>
+        <div class="field"><span>Item</span><input type="text" list="items" value="${esc(s.item)}" data-f="item" aria-label="Item, type to search"></div>
+        <div class="field"><span>Ability</span><select data-f="ability" aria-label="Ability" ${mega ? 'disabled title="Mega Charizard Y always has Drought"' : ''}>${(mega ? [m.megaAbility] : m.abilities).map((a) => `<option ${a === s.ability || mega ? 'selected' : ''}>${a}</option>`).join('')}</select></div>
+      </div>
+      <div>${[0, 1, 2, 3].map(moveSlot).join('')}</div>
+      <div class="colmini"><div class="lbl">Stats</div><table class="mini">${mini}</table>
+        <div class="tiny muted" style="margin-top:4px">Lv 50 · ${esc(s.nature)}</div></div>
+    </div>
+    ${strip}
+    <div class="cmp">
+      ${A ? '' : '<button data-act="pin" title="Keep this set as A, then edit freely">Pin as A to compare</button>'}
+      <span class="tiny muted">try:</span>${m.ideas.map((x, i) => `<button class="idea" data-idea="${i}">${esc(x.label)}</button>`).join('')}
+      <span style="margin-left:auto" class="tiny muted">${esc(name)} Spe ${st.spe}: faster than ${r.faster} of ${r.of}${r.ties ? `, ties ${r.ties}` : ''} ${S.scope === 'calvin' ? "of Calvin's Speeds" : 'common league Speeds'}</span>
+    </div>
+    <div class="diff${A ? ' on' : ''}" aria-live="polite">${diff}</div>
+    <div class="stats">${STATS.map(srow).join('')}</div>
+    <div class="foot">
+      <label class="small">Nature <select data-f="nature" aria-label="Nature">${Object.keys(NATURES).map((n) => { const x = NATURES[n]; return `<option value="${n}" ${n === s.nature ? 'selected' : ''}>${n}${x.length ? ` (+${SHORT[x[0]]} −${SHORT[x[1]]})` : ''}</option>`; }).join('')}</select></label>
+      <span class="left ${left < 0 ? 'over' : left === 0 ? 'zero' : ''}">${left < 0 ? `${-left} over` : `${left} left`}</span><span class="tiny muted">of 66 · max 32 per stat</span>
+      <span class="legend"><span><i class="met"></i>reached</span><span><i></i>not yet</span><span><i class="tie"></i>tie</span><span><i class="ko met"></i>KO / survive</span><span style="opacity:.6"><i style="border-style:dashed"></i>needs another nature / item / move</span></span>
+    </div>
+    <div class="actions">
+      <button class="primary" data-act="save" ${left < 0 ? 'disabled' : ''}>Save version</button>
+      <button data-act="discard" ${dirty ? '' : 'disabled'}>Discard</button>
+      ${dirty ? '<span class="dirty">● unsaved changes</span>' : `<span class="tiny muted">v${S.version[S.cur]} saved</span>`}
+      <button class="ghost" data-act="io" style="margin-left:auto">Import / Export</button>
+    </div>`;
+  $('#asm').textContent = (S.scope === 'calvin' ? "vs Calvin's 10" : 'vs all 9 opponents')
+    + ' · their sets: ladder defaults (Smogon ≥1760, Sept) · common spread unless stated · Lv 50 · single target · no crits · weather only your own'
+    + (S.cur === 'zard' && mega ? ' (Drought)' : '') + ' · tap a tick for its calc';
+  const dl = $('#learn') || document.body.appendChild(Object.assign(document.createElement('datalist'), { id:'learn' }));
+  dl.innerHTML = m.learn.map((x) => `<option value="${esc(x)}">`).join('');
+  const di = $('#items') || document.body.appendChild(Object.assign(document.createElement('datalist'), { id:'items' }));
+  di.innerHTML = m.items.map((x) => `<option value="${esc(x)}">`).join('');
+}
+function render(keepFocus) {
+  const a = document.activeElement, sel = a && (a.dataset.move !== undefined ? `[data-move="${a.dataset.move}"]` : a.type === 'range' ? `input[type=range][data-sp="${a.dataset.sp}"]` : a.dataset.spn ? `[data-spn="${a.dataset.spn}"]` : a.dataset.f ? `[data-f="${a.dataset.f}"]` : null);
+  renderTeam(); renderCard();
+  if (keepFocus && sel) { const el = document.querySelector(sel); if (el) { el.focus({ preventScroll:true }); if (el.setSelectionRange && el.type === 'text') { const n = el.value.length; el.setSelectionRange(n, n); } } }
+}
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 2600); }
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Showdown text (same shape as the app's lib/paste.mjs exportSet: SP go on the EVs line)
+// ---------------------------------------------------------------------------------------------------------------------
+function exportText(m, s) {
+  const evs = STATS.filter((k) => s.sp[k]).map((k) => `${s.sp[k]} ${SHORT[k]}`).join(' / ');
+  return `${s.nick ? `${s.nick} (${m.name})` : m.name} @ ${s.item}\nAbility: ${s.ability}\nLevel: 50\n${evs ? `EVs: ${evs}\n` : ''}${s.nature} Nature\n${s.moves.filter(Boolean).map((x) => `- ${x}`).join('\n')}\n`;
+}
+function importText(m, s, text) {
+  const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+  if (!lines.length) return 'Nothing to import.';
+  const head = /^(?:(.+?) \((.+?)\)|(.+?))(?: @ (.+))?$/.exec(lines[0]);
+  const species = (head[2] || head[3] || '').trim();
+  if (species !== m.name) return `That text is for ${species}; open ${species} first.`;
+  const n = clone(s); n.nick = head[2] ? head[1] : ''; if (head[4]) n.item = head[4].trim();
+  n.moves = [];
+  n.sp = { hp:0, atk:0, def:0, spa:0, spd:0, spe:0 };
+  for (const l of lines.slice(1)) {
+    if (l.startsWith('Ability:')) n.ability = l.slice(8).trim();
+    else if (/^(EVs|SPs?):/.test(l)) l.split(':')[1].split('/').forEach((p) => { const [v, k] = p.trim().split(' '); const key = STATS.find((x) => SHORT[x] === k); if (key) n.sp[key] = Math.min(32, +v || 0); });
+    else if (/ Nature$/.test(l)) n.nature = l.replace(/ Nature$/, '');
+    else if (l.startsWith('- ')) n.moves.push(l.slice(2));
+  }
+  while (n.moves.length < 4) n.moves.push('');
+  S.sets[S.cur] = n; return null;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Events
+// ---------------------------------------------------------------------------------------------------------------------
+document.addEventListener('click', (e) => {
+  const t = e.target.closest('button'); if (!t) return;
+  const s = S.sets[S.cur], m = MONS[S.cur];
+  if (t.dataset.pick) { S.cur = t.dataset.pick; S.focusMove = null; render(); }
+  else if (t.classList.contains('tick')) { showPop(t, true); }
+  else if (t.dataset.idea !== undefined) { if (!S.pinned[S.cur]) S.pinned[S.cur] = clone(s); m.ideas[+t.dataset.idea].apply(s); render(); toast('Trying it: compare with A above. Nothing is saved.'); }
+  else if (t.dataset.act === 'pin') { S.pinned[S.cur] = clone(s); render(); toast('Pinned as A. Edit freely; the bar shows what changes.'); }
+  else if (t.dataset.act === 'unpin') { delete S.pinned[S.cur]; render(); }
+  else if (t.dataset.act === 'revert') { S.sets[S.cur] = clone(S.pinned[S.cur]); render(); }
+  else if (t.dataset.act === 'save') { S.saved[S.cur] = clone(s); S.version[S.cur]++; render(); toast(`Saved as v${S.version[S.cur]} (mockup: nothing is stored)`); }
+  else if (t.dataset.act === 'discard') { S.sets[S.cur] = clone(S.saved[S.cur]); render(); }
+  else if (t.dataset.act === 'io') { $('#iotext').value = exportText(m, s); $('#io').showModal(); }
+});
+$('#doimport').addEventListener('click', (e) => { const err = importText(MONS[S.cur], S.sets[S.cur], $('#iotext').value); if (err) { e.preventDefault(); toast(err); } else { render(); toast('Imported into the editor (not saved yet)'); } });
+document.addEventListener('input', (e) => {
+  const t = e.target, s = S.sets[S.cur];
+  if (t.type === 'range' && t.dataset.sp) {
+    // live while dragging: update this row in place (a full re-render would drop the slider mid-drag); full render on release
+    const k = t.dataset.sp, v = +t.value, m = MONS[S.cur]; s.sp[k] = v;
+    const row = t.closest('.srow'), st = statsOf(m, s);
+    row.querySelector('[data-spn]').value = v; row.querySelector('.sfinal').textContent = st[k];
+    row.querySelector('.sbar').style.width = Math.min(100, 100 * st[k] / 260) + '%';
+    row.querySelectorAll('.tick').forEach((tk) => tk.classList.toggle('met', !tk.classList.contains('off') && v >= +tk.dataset.sp));
+    const left = 66 - spTotal(s.sp), el = document.querySelector('.left');
+    el.textContent = left < 0 ? `${-left} over` : `${left} left`; el.className = `left ${left < 0 ? 'over' : left === 0 ? 'zero' : ''}`;
+  }
+  else if (t.dataset.spn) { const v = Math.max(0, Math.min(32, parseInt(t.value, 10) || 0)); s.sp[t.dataset.spn] = v; render(true); }
+  else if (t.dataset.f === 'nick') s.nick = t.value;
+});
+document.addEventListener('change', (e) => {
+  const t = e.target, s = S.sets[S.cur];
+  if (t.id === 'scope') { S.scope = t.value; render(); }
+  else if (t.type === 'range' && t.dataset.sp) render(true);
+  else if (t.dataset.f === 'item' || t.dataset.f === 'ability' || t.dataset.f === 'nature') { s[t.dataset.f] = t.value; render(true); }
+  else if (t.dataset.move !== undefined) { s.moves[+t.dataset.move] = t.value; render(true); }
+});
+document.addEventListener('focusin', (e) => {
+  const t = e.target;
+  if (t.dataset && t.dataset.move !== undefined) { if (S.focusMove !== +t.dataset.move) { S.focusMove = +t.dataset.move; render(true); } }
+  else if (t.classList && t.classList.contains('tick')) showPop(t);
+});
+// the strip stays while you work in the card; it closes when you leave the moves for the stats or the team
+document.addEventListener('pointerdown', (e) => {
+  if (S.focusMove !== null && !e.target.closest('.mvin, .strip')) { S.focusMove = null; $('#strip')?.classList.remove('on'); }
+});
+function showPop(el) {
+  const p = $('#pop');
+  p.innerHTML = `<b>${esc(el.dataset.tip)}</b><div class="c">${esc(el.dataset.calc)}</div>`;
+  p.hidden = false;
+  const r = el.getBoundingClientRect();
+  p.style.left = Math.max(8, Math.min(r.left - 20, innerWidth - p.offsetWidth - 8)) + 'px';
+  p.style.top = (r.bottom + 6 + p.offsetHeight > innerHeight ? r.top - p.offsetHeight - 6 : r.bottom + 6) + 'px';
+}
+document.addEventListener('mouseover', (e) => { const t = e.target.closest('.tick'); if (t) showPop(t); else if (!e.target.closest('#pop')) $('#pop').hidden = true; });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { $('#pop').hidden = true; if (S.focusMove !== null) { S.focusMove = null; render(); } } });
+render();
+</script>
+</body>
+</html>

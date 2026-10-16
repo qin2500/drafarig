@@ -113,7 +113,7 @@ export function tab(P, ws) {
     <p>${btn('Paste your team', 'go-import', { side: 'mine' }, { cls: 'linkish' })}</p>
     <div class="bottombar">${btn('Paste a team', 'go-import')}${btn('Export…', 'go-export')}</div>`;
 }
-export function myTeamRows(P, ws) {
+function myTeamRows(P, ws) {
   const me = P.myCoach();
   const myRoster = P.coachRoster(me).filter((id) => !P.mech || (P.mech.species[id] && !P.mech.species[id].mega));
   const lib = P.mineSets();
@@ -142,8 +142,7 @@ function draftOf(P, ws, l) {
   const cur = currentVersion(l);
   return d ? { ...d, restored: true } : { name: l.name, data: structuredClone(cur.data), provenance: structuredClone(cur.provenance ?? null), restored: false };
 }
-/** The set editor. embedded: inside another screen (the Build dashboard): no Back button and an h3 instead of the page heading. */
-export function editor(P, ws, l, { embedded = false } = {}) {
+function editor(P, ws, l) {
   const mine = l.side === 'mine';
   const d = draftOf(P, ws, l);
   (P.ui.editorOpenedAt ??= {})[l.id] ??= P.now(); // a draft older than this is "restored", a newer one is just unsaved
@@ -167,7 +166,7 @@ export function editor(P, ws, l, { embedded = false } = {}) {
   const history = l.versions.slice().reverse().map((v) => `<li>v${v.v} · ${esc(v.at.slice(0, 10))} · ${esc(v.reason ?? '')}${v.v === l.currentV ? ' <b>current</b>' : ` ${btn('Use this version', 'set-revert', { set: l.id, v: v.v }, { cls: 'linkish' })}`}</li>`).join('');
   const dirty = d.restored;
   const seen = mine ? (l.revealedTo ?? []) : [];
-  return `${embedded ? `<h3>${esc(`${P.spName(sp)} · your set`)}</h3>` : `${btn(mine && !ws ? '‹ My sets' : '‹ Sets', 'back', {}, { cls: 'back', aria: 'Back' })}${h2(`${P.spName(sp)} · ${mine ? 'your set' : 'their set'}`)}`}
+  return `${btn(mine && !ws ? '‹ My sets' : '‹ Sets', 'back', {}, { cls: 'back', aria: 'Back' })}${h2(`${P.spName(sp)} · ${mine ? 'your set' : 'their set'}`)}
     ${mine ? revisionPrompt(P, l) : ''}
     ${dirty ? `<p class="banner info">${d.at && d.at < (P.ui.editorOpenedAt?.[l.id] ?? '') ? 'Restored unsaved changes from earlier.' : 'Unsaved changes.'} ${btn('Save version', 'set-save', { set: l.id }, { primary: true })} ${btn('Discard', 'set-discard', { set: l.id })}</p>` : ''}
     <label class="field" for="set-name"><span>Name</span><input id="set-name" data-pi="set-name" data-set="${esc(l.id)}" value="${esc(d.name ?? '')}" maxlength="60"></label>
@@ -325,7 +324,7 @@ function findLineage(P, id) {
   const m = P.docs.mysets.sets.find((s) => s.id === id);
   return m ? { l: m, which: 'mysets', ws: null } : null;
 }
-function updateDraft(P, id, fn, opts) {
+export function updateDraft(P, id, fn, opts) {
   const f = findLineage(P, id);
   if (!f) return;
   P.mutate(f.which, (d) => {
@@ -579,7 +578,7 @@ function saveSet(P, id, asCopy) {
   if (!asCopy && f.l.side === 'mine' && toV !== fromV && open) { P.ui.revPrompt = { setId: id, fromV, toV }; P.app.rerender(); }
 }
 /** "Why did you change it?" after saving one of your sets: tie the new version to an open finding (a revision to retest). */
-function revisionPrompt(P, l) {
+export function revisionPrompt(P, l) {
   const rp = P.ui.revPrompt;
   if (!rp || rp.setId !== l.id) return '';
   const here = P.route.view === 'ws' ? [P.ws.get(P.route.wsId)].filter(Boolean) : [...P.ws.values()];

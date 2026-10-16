@@ -336,3 +336,80 @@ test('setup moves and tools against setup come from the learnset and likely sets
   assert.ok(tools.every((t) => t.evidence === 'ladder' ? enc.set.moves.includes(t.id) : true));
   assert.deepEqual(B.afterTheirMoves(mech, { ability: 'intimidate', moves: ['closecombat'] }, 'staraptor', 'spd'), [], 'without Contrary, Close Combat lowers SpD');
 });
+
+// ---------- teambuilder slider marks (lib/prep-build.mjs speedMarks / koMarks / surviveMarks / markMet) ----------
+test('marks: Speed marks equal a brute-force sweep; ties are their own mark only where they matter; Mega Staraptor 178 is out of reach', () => {
+  const twin = { key: 'twin', forme: 'rotomfan', mega: false, set: rotom('hardy', { spe: 32 }) }; // exactly 138
+  const slow = { key: 'slow', forme: 'mamoswine', mega: false, set: { ...set('mamoswine', 'oblivious', 'adamant', { spe: 0 }, ['iciclecrash']), species: 'mamoswine' } };
+  const targets = [megaRow(), twin, slow];
+  const slowSpe = B.targetSpeed(mech, slow).max;
+  for (const nature of ['modest', 'timid']) for (const spe of [0, 20, 32]) {
+    const me = rotom(nature, { spa: 32, spe });
+    const s = B.speedMarks(mech, me, 'rotomfan', targets);
+    const at = (sp) => statValue('spe', 86, sp, natureSign(mech.natures[nature], 'spe'));
+    for (const speed of [178, 138, slowSpe]) {
+      const brute = [...Array(33).keys()].find((sp) => at(sp) > speed) ?? null;
+      const mk = s.marks.find((m) => m.kind === 'outspeed' && m.speed === speed);
+      assert.equal(mk?.sp ?? null, brute, `${nature} outspeed ${speed}`);
+      const tie = [...Array(33).keys()].find((sp) => at(sp) === speed) ?? null;
+      const tm = s.marks.find((m) => m.kind === 'tie' && m.speed === speed);
+      assert.equal(!!tm, tie !== null && (brute === null || spe === tie), `${nature} ${spe}: tie mark at ${speed} only where it matters`);
+    }
+    assert.ok(s.cant.some((c) => c.speed === 178), '178 is never reachable for Rotom-Fan');
+    assert.equal(s.faster, [178, 138, slowSpe].filter((v) => at(spe) > v).length);
+  }
+  const m = B.speedMarks(mech, rotom('modest', { spa: 32, spe: 32 }), 'rotomfan', [twin]);
+  assert.deepEqual(m.marks.map((x) => [x.kind, x.sp]), [['tie', 32]], 'Modest 32 = 138 ties; nothing beats it');
+  assert.ok(B.markMet(m.marks[0], rotom('modest', { spa: 32, spe: 32 })) && !B.markMet(m.marks[0], rotom('modest', { spa: 32, spe: 31 })));
+});
+
+test('marks: KO marks are the koSearch levels for the set shape (Rotom-Fan goldens: Life Orb every roll at 23, +2 Nasty Plot at 0)', () => {
+  const calc = newCalc();
+  const row = megaRow();
+  const plain = rotom('modest', { hp: 2, spa: 32, spe: 32 });
+  const k = B.koMarks(calc, mech, plain, row, 'thunderbolt');
+  const lo = k.marks.find((m) => m.need?.item === 'lifeorb');
+  assert.deepEqual([lo.sp, lo.uses, lo.nature], [23, 1, 'modest'], 'reference 5: Life Orb +0 every roll at 23 (dashed: needs Life Orb)');
+  assert.ok(!B.markMet(lo, plain) && B.markMet(lo, { ...plain, item: 'lifeorb' }) && !B.markMet(lo, { ...plain, item: 'lifeorb', sp: { ...plain.sp, spa: 22 } }));
+  assert.ok(!k.marks.some((m) => m.uses === 1 && !m.need), 'no +0 OHKO without an item');
+  assert.equal(k.cant.length, 1, 'said as a chip instead');
+  const two = k.marks.find((m) => m.uses === 2 && !m.need);
+  let brute = null;
+  for (let a = 0; a <= 32 && brute === null; a++) { const r = calc.run(sc({ ...plain, sp: { ...B.ZERO_SP, spa: a } }, { ...rap(), species: 'staraptor' }, 'thunderbolt')); if (r.ko.two.num === r.ko.two.den) brute = a; }
+  assert.equal(two.sp, brute, 'the 2HKO mark equals brute force over full runs');
+  const np = B.koMarks(calc, mech, rotom('modest', { hp: 2, spa: 32, spe: 32 }, '', ['thunderbolt', 'nastyplot', 'voltswitch', 'protect']), row, 'thunderbolt');
+  assert.deepEqual(np.marks.filter((m) => m.boost === 2).map((m) => [m.sp, m.need]), [[0, null]], 'reference 5: +2 every roll from 0 SpA');
+  assert.deepEqual(B.koMarks(calc, mech, rotom('modest', { hp: 32, spa: 2, def: 32 }), row, 'thunderbolt').marks, k.marks, 'marks depend on the shape, not on the Stat Points');
+});
+
+test('marks: survive marks equal brute force — the frontier calls a split safe exactly when it survives every roll', () => {
+  const calc = newCalc();
+  const mam = { key: 'mam', species: 'mamoswine', forme: 'mamoswine', mega: false, source: 'set', common: null,
+    set: { ...set('mamoswine', 'oblivious', 'adamant', { hp: 2, atk: 8, spe: 32 }, ['iciclecrash']), species: 'mamoswine' } };
+  const me = rotom('modest', { spa: 32 });
+  const s = B.surviveMarks(calc, mech, me, mam, 'iciclecrash');
+  const mk = s.marks.find((m) => m.stat === 'hp');
+  assert.ok(mk, 'a pair exists (with your nature, or dashed with the one that needs it)');
+  const seen = new Set();
+  for (let h = 0; h <= 32; h += 2) for (let d = 0; d <= 32; d += 2) {
+    if (h + d + 32 > 66) continue;
+    const at = { ...me, nature: mk.nature, sp: { ...B.ZERO_SP, spa: 32, hp: h, def: d } };
+    const r = calc.run(sc(mam.set, at, 'iciclecrash'));
+    assert.equal(B.markMet(mk, at), r.ko.one.num === '0', `HP ${h} / Def ${d}`);
+    seen.add(r.ko.one.num === '0');
+  }
+  assert.equal(seen.size, 2, 'the sweep crosses the line');
+  const fg = { key: 'fg', species: 'staraptor', forme: 'staraptor', mega: false, source: 'set', common: null, set: { ...set('staraptor', 'intimidate', 'jolly', { hp: 32, atk: 2, spe: 32 }, ['finalgambit'], 'choicescarf'), species: 'staraptor' } };
+  const g = B.surviveMarks(calc, mech, me, fg, 'finalgambit');
+  assert.deepEqual([g.marks.length, g.cant.length], [0, 1], 'Final Gambit: no spread survives, a chip and no mark');
+});
+
+test('marks: Mega Charizard Y in its own sun (G5 Volcarona): KO marks follow the Auto weather', () => {
+  const calc = newCalc();
+  const sun = B.koMarks(calc, mech, ZARD, G.volcarona, 'heatwave', { field: { weather: 'Sun' } });
+  const none = B.koMarks(calc, mech, ZARD, G.volcarona, 'heatwave');
+  let brute = null;
+  for (let a = 0; a <= 32 && brute === null; a++) { const r = calc.run(sc({ ...ZARD, sp: { ...B.ZERO_SP, spa: a } }, G.volcarona.set, 'heatwave', { field: { weather: 'Sun' } })); if (r.ko.two.num === r.ko.two.den) brute = a; }
+  assert.equal(sun.marks.find((m) => m.uses === 2 && !m.need)?.sp ?? null, brute, 'the 2HKO mark in sun equals brute force');
+  assert.notDeepEqual(sun.marks, none.marks, 'sun changes the marks');
+});

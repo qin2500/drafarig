@@ -20,11 +20,11 @@ import * as Plan from './prep-plan.js';
 import * as Practice from './prep-practice.js';
 import * as Matchup from './prep-matchup.js';
 import * as Chat from './prep-chat.js';
-import * as Build from './prep-build.js';
+import * as TB from './prep-teambuilder.js';
 
 const SAVE_DELAY = 400;
-const TAB_LABEL = { brief: 'Brief', plan: 'Plan', sets: 'Sets', calcs: 'Calcs', practice: 'Practice', build: 'Build' };
-const MODULES = [Sets, Calcs, Plan, Practice, Matchup, Chat, Build];
+const TAB_LABEL = { brief: 'Brief', plan: 'Plan', sets: 'Sets', calcs: 'Calcs', practice: 'Practice' };
+const MODULES = [Sets, Calcs, Plan, Practice, Matchup, Chat, TB];
 
 /**
  * app: { dex, league(), sheet(), usage(), coresCx(), viewingCoach(), setViewingCoach(name), goMode(mode), toast(msg),
@@ -308,6 +308,18 @@ export function createPrep(app) {
    */
   P.canonical = (r) => {
     if (!r) return { view: 'home' };
+    // the retired Build dashboard (#prep/<p>v<o>/build/<n>): the teambuilder for that pick's set, in this matchup's prep
+    if (isMatch(r) && r.detail?.side === 'build' && P.coaches()) {
+      const pov = r.names?.pov ? P.coaches().find((c) => c.name === r.names.pov) : P.coachBySeat(r.pov);
+      const opp = r.names?.opp ? P.coaches().find((c) => c.name === r.names.opp) : P.coachBySeat(r.opp);
+      const sp = pov?.picks[r.detail.n - 1]?.id;
+      const ws = pov && opp ? workspacesFor([...P.ws.values()], pov.name, opp.name)[0] : null;
+      const inSix = new Set((ws?.my6 ?? []).map((x) => x.setId));
+      const sets = sp && P.ownSide() === pov?.name ? P.docs.mysets.sets.filter((s) => s.speciesId === sp) : [];
+      const l = sets.find((s) => inSix.has(s.id)) ?? sets[0];
+      if (l) return ws ? { view: 'ws', wsId: ws.id, kind: 'sets', id: l.id } : { view: 'my-sets', id: l.id };
+      return { view: 'ws', pov: r.pov, opp: r.opp, tab: 'sets' };
+    }
     if (r.view === 'home') { const pv = P.resolvePov(null); return pv.name ? { view: 'overview', pov: pv.seat } : r; }
     const cur = P.route;
     if (r.view === 'ws' && !r.kind && !isMatch(r) && r.wsId && isMatch(cur) && cur.wsId === r.wsId) {
@@ -459,7 +471,7 @@ export function createPrep(app) {
       else if (r.view === 'rules') body = rulesScreen();
       else if (r.view === 'backup') body = backupScreen();
       else if (r.view === 'pilot') body = Practice.pilot(P);
-      else if (r.view === 'my-sets') body = Sets.mySets(P, r);
+      else if (r.view === 'my-sets') { const l = r.id ? P.docs.mysets.sets.find((s) => s.id === r.id) : null; body = l ? `<section class="panel prep-set">${TB.editor(P, null, l)}</section>` : Sets.mySets(P, r); }
       else if (isMatch(r)) body = matchScreen(r);
       else if (r.view === 'ws') {
         const ws = P.ws.get(r.wsId);
@@ -705,15 +717,14 @@ export function createPrep(app) {
     const src = ident === m.pov.name ? 'identity' : P.resolvePov(null).name === m.pov.name ? P.resolvePov(null).source : 'url';
     const ws = m.ws;
     const legacy = unassignedVs([...P.ws.values()], m.opp.name);
-    const tab = r.detail?.side === 'build' ? 'build' : MATCH_TABS.includes(r.tab) ? r.tab : idRoute ? 'plan' : 'brief';
+    // an old Build link (#…/build/<n>) that couldn't be redirected yet (sheet loading, no set): the Sets section
+    const tab = r.detail?.side === 'build' ? 'sets' : MATCH_TABS.includes(r.tab) ? r.tab : idRoute ? 'plan' : 'brief';
     const dots = ws ? draftDots(ws) : {};
     const seatRoute = { view: 'ws', pov: m.pov.order, opp: m.opp.order };
-    // Build has no id form (#prep/w/<id>/…): it always opens as the matchup, pinned to this workspace by P.canonical
-    const hrefOf = (k) => formatRoute(idRoute && k !== 'brief' && k !== 'build' ? { view: 'ws', wsId: ws.id, tab: k } : { ...seatRoute, tab: k });
+    const hrefOf = (k) => formatRoute(idRoute && k !== 'brief' ? { view: 'ws', wsId: ws.id, tab: k } : { ...seatRoute, tab: k });
     const tabs = `<nav class="dtabs" aria-label="${esc(`Sections for vs ${m.opp.name}`)}">${MATCH_TABS.map((k) => `<a href="${esc(hrefOf(k))}" id="ptab-${k}" data-pa="tab" data-tab="${k}"${tab === k && !r.detail ? ' aria-current="page" class="active"' : ''}${dots[k] ? ` aria-label="${esc(`${TAB_LABEL[k]}, ${C.BRIEF.unsavedDot[k]}`)}"` : ''}>${esc(TAB_LABEL[k])}${dots[k] ? '<span class="dot" aria-hidden="true"></span>' : ''}</a>`).join('')}</nav>`;
     let body;
     if (tab === 'brief') body = Matchup.brief(P, { r, pov: m.pov, opp: m.opp, ws, legacy });
-    else if (ws && tab === 'build') body = Build.screen(P, { r, pov: m.pov, opp: m.opp, ws });
     else if (ws) body = tab === 'sets' ? Sets.tab(P, ws) : tab === 'calcs' ? Calcs.tab(P, ws) : tab === 'practice' ? Practice.tab(P, ws) : Plan.tab(P, ws);
     else body = (tab === 'plan' && !legacy.length && Plan.previewTab(P, m)) || startPanel(m, legacy, tab);
     return `<section class="panel prep-match" data-key="match">${povRow(m.pov.name, src)}${oppStrip(m.pov, m.opp.order)}
@@ -822,13 +833,15 @@ export function createPrep(app) {
       <span class="ws-title">${owner ? `${esc(owner)} ` : ''}vs ${esc(ws.coach)}</span>${ws.isNext ? ' <span class="chip ok">next</span>' : ''}</div>
       ${owner ? '' : `<p class="banner warn unassigned">${esc(C.POV.unassignedBanner)} ${btn(C.POV.review, 'go-owner', { ws: ws.id }, { primary: true })}</p>`}`;
     // section buttons (not an ARIA tablist: no arrow-key model to promise); the current one is marked aria-current
-    const tabs = `<nav class="ptabs" aria-label="Prep sections">${Object.entries(TAB_LABEL).filter(([k]) => (k !== 'brief' || owner) && k !== 'build').map(([k, l]) => `<button type="button" id="ptab-${k}" data-pa="tab" data-tab="${k}"${!r.kind && tab === k ? ' aria-current="page" class="active"' : ''}>${l}</button>`).join('')}</nav>`;
+    const tabs = `<nav class="ptabs" aria-label="Prep sections">${Object.entries(TAB_LABEL).filter(([k]) => k !== 'brief' || owner).map(([k, l]) => `<button type="button" id="ptab-${k}" data-pa="tab" data-tab="${k}"${!r.kind && tab === k ? ' aria-current="page" class="active"' : ''}>${l}</button>`).join('')}</nav>`;
     if (r.kind === 'owner') return `<section class="panel prep-ws" data-key="ws">${head}${ownerScreen(ws)}</section>`;
     let body;
     if (!r.kind) {
       body = tab === 'sets' ? Sets.tab(P, ws) : tab === 'calcs' ? Calcs.tab(P, ws) : tab === 'practice' ? Practice.tab(P, ws) : Plan.tab(P, ws);
     } else {
-      const view = MODULES.map((m) => m.views?.[r.kind]).find(Boolean);
+      // your own set opens in the teambuilder; their sets keep the source-labelled editor
+      const mine = r.kind === 'sets' ? P.docs.mysets.sets.find((s) => s.id === r.id) : null;
+      const view = mine ? (P2, w) => TB.editor(P2, w, mine) : MODULES.map((m) => m.views?.[r.kind]).find(Boolean);
       body = view ? view(P, ws, r) : Plan.tab(P, ws);
     }
     return `<section class="panel prep-ws" data-key="ws">${head}${tabs}<div id="ptab-panel">${body}</div>
