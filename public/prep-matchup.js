@@ -84,6 +84,8 @@ const mini = (P, id, extra = '') => `<span class="mini">${P.pt(id, { size: 'xs' 
 const multBadge = (m) => `<span class="mult ${m >= 4 ? 'x4' : 'x2'}">×${m}</span>`;
 const modeBadge = (coreId) => (MODE_ICON[coreId] ? `<span class="mode mode-${esc(coreId)}"><svg class="ic" aria-hidden="true" focusable="false"><use href="#${MODE_ICON[coreId]}"></use></svg></span>` : '');
 /** A briefing section: heading, a short honesty tag that always shows, and a longer explanation "Explain everything" can hide. */
+/** A Brief list capped at 3 cards; the rest behind "Show all". */
+const capped = (items, tag, cls, n = 3) => `<${tag} class="${cls}">${items.slice(0, n).join('')}</${tag}>${items.length > n ? `<details class="capped"><summary>${esc(C.BRIEF.showAll(items.length))}</summary><${tag} class="${cls}">${items.slice(n).join('')}</${tag}></details>` : ''}`;
 function section(id, title, sub, body, cls = '', explain = '') {
   return `<section class="bsec ${cls}" id="bs-${id}" aria-labelledby="bs-${id}-h"><h3 id="bs-${id}-h">${esc(title)}</h3>${sub ? `<p class="bsub small muted">${esc(sub)}</p>` : ''}${explain ? `<p class="explainer">${esc(explain)}</p>` : ''}${body}</section>`;
 }
@@ -178,13 +180,13 @@ function threatsSection(P, ctx, b) {
     return `<li class="tcard" aria-labelledby="tc-${esc(t.id)}">
       <div class="tc-top"><span class="rank" aria-hidden="true">${t.rank}</span>${P.pt(t.id, { size: 'lg' })}<div><p class="tc-name" id="tc-${esc(t.id)}"><b>${esc(P.spName(t.id))}</b> <span class="vh">${esc(C.BRIEF.ringLabel(t.rank))}</span></p>${typeBars(dexSp(P, t.id)?.forms[0].types ?? [])}
         ${head ? `<p class="tc-head">${esc((C.REASON[head.code] ?? (() => head.code))(head, nm(P)))}</p>` : ''}</div></div>
-      <ul class="rsns">${t.reasons.slice(1, 4).map((x) => reasonChip(P, x, 'them')).join('')}</ul>
+      <details class="tc-more"><summary>${esc(C.BRIEF.cardMore)}</summary><ul class="rsns">${t.reasons.slice(1, 4).map((x) => reasonChip(P, x, 'them')).join('')}</ul>
       <p class="small rowlab">${esc(C.BRIEF.hitsHard)}${t.pressure?.mega ? ` (${esc(C.BRIEF.asMega(t.pressure.form))})` : ''}:</p><div class="minis">${victims.length ? victims.map((v) => mini(P, v.id, multBadge(v.mult))).join('') : `<span class="small muted">${esc(C.BRIEF.none)}</span>`}</div>
-      <p class="small rowlab">${esc(C.BRIEF.takesIt)}:</p><div class="minis">${walls.length ? walls.map((w) => mini(P, w, '<span class="shield" aria-hidden="true">◈</span>')).join('') : `<span class="small muted">${esc(C.BRIEF.none)}</span>`}</div>
+      <p class="small rowlab">${esc(C.BRIEF.takesIt)}:</p><div class="minis">${walls.length ? walls.map((w) => mini(P, w, '<span class="shield" aria-hidden="true">◈</span>')).join('') : `<span class="small muted">${esc(C.BRIEF.none)}</span>`}</div></details>
       <p class="small">Speed ${band[0]}–${band[2]}${t.speed.megaMax ? ` · ${esc(C.BRIEF.ifMega)} up to ${t.speed.megaMax}` : ''}</p>
       <p class="acts">${calc ? btn(C.BRIEF.calcBtn, 'brief-calc', checkData(calc), { aria: `${C.BRIEF.calcBtn}: ${checkQuestion(P, calc)}` }) : ''} ${btn(C.BRIEF.speedBtn, 'brief-speed', { a: t.id, b: (t.checks ?? []).find((k) => k.kind === 'speed')?.select?.[1] ?? '' })} ${btn(C.BRIEF.whyBtn, 'brief-open', { side: 'their', n: slotOf(ctx.opp, t.id) }, { cls: 'linkish', aria: `Why ${P.spName(t.id)}` })}</p></li>`;
   };
-  return section('threats', C.BRIEF.lookFirst, C.BRIEF.lookFirstSub, `<ol class="tcards">${looks.map(card).join('')}</ol>`, 'them', C.BRIEF.lookFirstExplain);
+  return section('threats', C.BRIEF.lookFirst, C.BRIEF.lookFirstSub, capped(looks.map(card), 'ol', 'tcards'), 'them', C.BRIEF.lookFirstExplain);
 }
 
 function plansSection(P, ctx, b) {
@@ -273,8 +275,8 @@ function usefulSection(P, { pov, opp, ws }, b, six) {
     const inSix = six.includes(m.id);
     const set = P.mineSets().find((s) => s.speciesId === m.id);
     return `<li class="ucard">${P.pt(m.id, { size: 'md' })}<div class="ubody"><p><b>${esc(P.spName(m.id))}</b> ${typeBars(dexSp(P, m.id)?.forms[0].types ?? [])}</p>
-      <p class="small rowlab">${esc(C.BRIEF.why)}</p><ul class="rsns">${m.pros.slice(0, 3).map((x) => reasonChip(P, x, 'pro')).join('') || `<li class="small muted">—</li>`}</ul>
-      <p class="small rowlab">${esc(C.BRIEF.costs)}</p><ul class="rsns">${m.cons.slice(0, 2).map((x) => reasonChip(P, x, 'con')).join('') || `<li class="small muted">${esc(C.BRIEF.noCost)}</li>`}</ul>
+      <details class="tc-more"><summary>${esc(C.BRIEF.cardMore)}</summary><p class="small rowlab">${esc(C.BRIEF.why)}</p><ul class="rsns">${m.pros.slice(0, 3).map((x) => reasonChip(P, x, 'pro')).join('') || `<li class="small muted">—</li>`}</ul>
+      <p class="small rowlab">${esc(C.BRIEF.costs)}</p><ul class="rsns">${m.cons.slice(0, 2).map((x) => reasonChip(P, x, 'con')).join('') || `<li class="small muted">${esc(C.BRIEF.noCost)}</li>`}</ul></details>
       <p class="acts">${chipBtn(inSix ? C.BRIEF.inSix : C.BRIEF.addSix, 'brief-six', { species: m.id }, inSix)} ${btn(C.BRIEF.speedBtn, 'brief-speed', { a: b.key[0] ?? '', b: m.id }, { cls: 'linkish' })} ${btn(set ? C.BRIEF.setBtn : 'Start a set ›', 'brief-set', { side: 'mine', species: m.id }, { cls: 'linkish' })}</p></div></li>`;
   };
   return section('useful', C.BRIEF.useful, C.BRIEF.usefulTag, `<ul class="ucards">${list.map(card).join('')}</ul>${b.myMons.length > list.length ? `<details><summary>All of yours (${b.myMons.length})</summary><ul class="ucards">${b.myMons.filter((x) => !list.includes(x)).map(card).join('')}</ul></details>` : ''}`, 'you', C.BRIEF.usefulSub(opp.name));
@@ -305,7 +307,7 @@ function myPlansSection(P, ctx, b) {
       ${c.couldPrep.length ? `<p class="small rowlab">${esc(C.BRIEF.couldPrep)}</p><ul class="cps">${c.couldPrep.map((e) => cpEntry(P, e)).join('')}</ul>` : ''}
       ${c.reassure.length ? `<p class="small rowlab">${esc(C.BRIEF.reassure)}</p><ul class="cps">${[...new Set(c.reassure.map((e) => e.answer))].map((a) => `<li class="reassure">${c.reassure.filter((e) => e.answer === a).map((e) => mini(P, e.mon)).join('')} ${esc(C.BRIEF.reassureText[a] ?? '')}</li>`).join('')}</ul>` : ''}</details>` : ''}</li>`;
   };
-  return section('myplans', C.BRIEF.yourPlans, C.BRIEF.yourPlansSub, `<ul class="mycores">${b.myCores.map(card).join('')}</ul>`, 'you');
+  return section('myplans', C.BRIEF.yourPlans, C.BRIEF.yourPlansSub, capped(b.myCores.map(card), 'ul', 'mycores'), 'you');
 }
 
 function leadsSection(P, ctx, b) {
@@ -313,7 +315,7 @@ function leadsSection(P, ctx, b) {
   const card = (p) => `<li class="lcard"><div class="minis pair">${p.pair.map((id) => mini(P, id)).join('<span aria-hidden="true">+</span>')}</div>
     <ul class="rsns">${p.pros.map((x) => reasonChip(P, x, 'pro')).join('')}${p.cons.map((x) => reasonChip(P, x, 'con')).join('')}</ul>
     <p class="acts">${btn(C.BRIEF.testIt, 'brief-practice', { purpose: `Test ${p.pair.map((id) => P.spName(id)).join(' + ')} as a pair vs ${ctx.opp.name}'s pool` }, { cls: 'linkish' })}</p></li>`;
-  return section('leads', C.BRIEF.leads, C.BRIEF.leadsSub, `<ul class="lcards">${b.leadIdeas.map(card).join('')}</ul>`, 'you');
+  return section('leads', C.BRIEF.leads, C.BRIEF.leadsSub, capped(b.leadIdeas.map(card), 'ul', 'lcards'), 'you');
 }
 
 const checkData = (k) => ({ as: k.attacker.side, aspecies: k.attacker.species, ds: k.defender.side, dspecies: k.defender.species, move: k.move, mega: k.attacker.ifMega ? '1' : '' });

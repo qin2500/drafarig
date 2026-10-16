@@ -145,7 +145,7 @@ function spdCond(P) {
   const s = spdUi(P);
   return { scarf: !!s.scarf, ladder: !!s.ladder, theirs: s.twTheirs ? { tailwind: true } : {}, mine: s.twMine ? { tailwind: true } : {} };
 }
-const spdToggles = (P) => `<div class="choices tb-spdopts" role="group" aria-label="${esc(T.spdOpts)}"><span class="small muted">${esc(T.spdOpts)}:</span> ${SPD_KEYS.map((k) => chipBtn(T.spdOpt[k], 'tb-spd', { key: k }, !!spdUi(P)[k])).join('')}</div>`;
+const spdToggles = (P) => `<div class="choices tb-spdopts" role="group" aria-label="${esc(T.spdOpts)}"><span class="small muted">${esc(T.spdCount)}</span> ${SPD_KEYS.map((k) => chipBtn(T.spdOpt[k], 'tb-spd', { key: k }, !!spdUi(P)[k])).join('')}</div>`;
 
 // ---------- words ----------
 const nm = (P) => ({ move: (id) => P.name('moves', id), item: (id) => P.name('items', id), nature: (id) => P.name('natures', id), mon: (id) => P.spName(id) });
@@ -207,7 +207,7 @@ export function editor(P, ws, l, { team = null } = {}) {
   const focus = ui.focus?.[l.id] ?? null;
   const pin = ui.pin?.[l.id] ?? null;
   const seen = l.revealedTo ?? [];
-  return `<div class="tb">${back}${h2(`${P.spName(forme)} · ${l.name || 'Set'} v${l.currentV}`)}
+  return `<div class="tb">${back}${h2(`${P.spName(forme)} · ${l.name || 'Set'}`)}
     ${revisionPrompt(P, l)}
     ${ctxLine(P, set, sc)}
     ${team ? teamOwnStrip(P, team, l) : teamStrip(P, ws, sc, l)}
@@ -226,7 +226,8 @@ function ctxLine(P, set, sc) {
   const w = P.mech ? B.autoWeather(P.mech, set, null) : null;
   const month = P.app.usage?.()?.month;
   return `<div class="tb-ctx small"><label>${esc(T.checking)} ${select('tb-scope', [...opts, [LEAGUE, T.league]], sc.value, { data: { pc: 'tb-scope' }, aria: T.checking })}</label>
-    <span class="tb-asm muted">${esc(T.assumptions(sc.league ? T.allOpp(sc.others.length) : T.oneOpp(sc.value), month, w?.weather ? `${w.weather} (your ${P.name('abilities', w.mine.ability)})` : null))}</span></div>`;
+    <span class="tb-asm">${T.asmChips(month, w?.weather).map((c) => `<span class="chip">${esc(c)}</span>`).join(' ')}</span>
+    <details class="tb-asmd"><summary>${esc(T.asmMore)}</summary><p class="muted">${esc(T.assumptions(sc.league ? T.allOpp(sc.others.length) : T.oneOpp(sc.value), month, w?.weather ? `${w.weather} (your ${P.name('abilities', w.mine.ability)})` : null))}</p></details></div>`;
 }
 /** Inside a team: that team's sets (tap to edit one), its planned species, and "+" to add a mon. */
 function teamOwnStrip(P, team, l) {
@@ -297,10 +298,11 @@ function strip(P, set, move, rows, sc) {
   if (su) cols.push({ k: `+${su.stage}`, boost: su.stage });
   if (w.weather) cols.push({ k: T.noWeather(w.weather), boost: 0, noWeather: true });
   const shown = sc.league ? topRows(rows, STRIP_MAX) : rows.slice(0, STRIP_MAX * 2);
-  const cards = shown.map((row) => {
+  const hitOf = (row, c) => { const field = c.noWeather ? {} : fieldFor(P, set, row); return memo(P, ['strip', set, row.key, row.set, row.common, move, c.boost, field], () => B.hitResult(P.calc, P.mech, set, row, move, { boost: c.boost, field })); };
+  const top = (row) => { const r = hitOf(row, cols[0]).result; return r.class === 'exact' ? r.range.max / r.maxHP : -1; };
+  const cards = [...shown].sort((a, b) => top(b) - top(a)).map((row) => {
     const vals = cols.map((c) => {
-      const field = c.noWeather ? {} : fieldFor(P, set, row);
-      const r = memo(P, ['strip', set, row.key, row.set, row.common, move, c.boost, field], () => B.hitResult(P.calc, P.mech, set, row, move, { boost: c.boost, field }).result);
+      const r = hitOf(row, c).result;
       // each value opens the workbench at exactly this calc
       const open = (inner, text) => `<button type="button" class="tb-v" data-pa="tb-wb" ${wbAttrs({ set: P.tbLast?.setId, key: row.key, move, role: 'attacker', boost: c.boost || undefined, noweather: c.noWeather ? 1 : undefined })} aria-label="${esc(T.wbOpen(`${rowName(P, row, sc)} ${c.k}: ${text}`))}">${inner}</button>`;
       if (r.class !== 'exact') return open(`<span class="k">${esc(c.k)}</span><b class="no">${esc(C.CLASS[r.class] || '—')}</b>`, C.CLASS[r.class] || '—');
@@ -308,7 +310,10 @@ function strip(P, set, move, rows, sc) {
       const text = `${pct(r.range.min, r.maxHP)}–${pct(r.range.max, r.maxHP)}%${ko ? ' KO' : r.ko.one.num !== '0' ? ` ${T.someKo(r.ko.one)}` : ''}`;
       return open(`<span class="k">${esc(c.k)}</span><b class="${ko ? 'ko' : 'no'}">${esc(text)}</b>`, text);
     }).join('');
-    return `<div class="tb-hit"><div class="tb-hw">${P.pt(row.forme, { size: 'xs' })}<span>${esc(rowName(P, row, sc))}</span></div>${vals}</div>`;
+    const h = hitOf(row, cols[0]);
+    const d = h.sc?.defender?.set;
+    const assumed = [d && d.sp !== 'unknown' ? `${P.name('natures', d.nature)} ${STAT_IDS.map((s) => d.sp[s] ?? 0).join('/')}` : '', row.set.item ? P.name('items', row.set.item) : '', row.source === 'set' ? T.srcSet : row.source === 'ladder' ? T.srcLadder : ''].filter(Boolean).join(' · ');
+    return `<div class="tb-hit"><div class="tb-hw">${P.pt(row.forme, { size: 'xs' })}<span>${esc(rowName(P, row, sc))}</span></div>${vals}<p class="tb-assumed small muted">${esc(assumed)}</p></div>`;
   }).join('');
   const wl = fieldFor(P, set, null);
   return `<div class="tb-strip"><div class="tb-sh"><b>${esc(P.name('moves', move))}</b> <span class="small muted">${esc(T.stripHead(sc.league ? T.league : sc.value, wl.weather))}</span></div><div class="tb-hits">${cards}</div></div>`;
@@ -389,26 +394,30 @@ function statsPanel(P, l, set, fm, all, speed, em, sc, rows) {
       const left = `calc(var(--tbthumb) / 2 + (100% - var(--tbthumb)) * ${sp / SP_PER_STAT})`;
       return `<button type="button" class="tb-tick${met ? ' met' : ''}${off ? ' off' : ''}${tie ? ' tie' : ''}${ko ? ' ko' : ''}${tip && tip.stat === k && tip.sp === sp ? ' on' : ''}" style="left:${left}" data-pa="tb-tip" data-set="${esc(l.id)}" data-stat="${k}" data-sp="${sp}" data-need="${off ? 1 : 0}" aria-label="${esc(`${C.STAT_SHORT[k]} ${sp}: ${lines}. ${met ? T.reached : T.notReached}`)}"></button>`;
     }).join('');
-    const cants = cantChips(P, k, speed, em, sc, rows);
+    const cants = cantChips(P, k, speed, em, sc, rows, set);
+    const own = all.filter((m) => m.stat === k && !m.need && m.kind !== 'tie').sort((a, b) => a.sp - b.sp);
+    const next = own.find((m) => m.sp > v), passed = own.filter((m) => m.sp <= v).at(-1);
+    const nextLine = next || passed ? `<p class="tb-next small">${[next ? T.nextMark(markText(P, next, sc, rows), next.sp) : '', passed ? T.passedMark(markText(P, passed, sc, rows)) : ''].filter(Boolean).map(esc).join(' · ')}</p>` : '';
     const tipHtml = tip && tip.stat === k ? tipLine(P, l, set, all.filter((m) => m.stat === k && m.sp === tip.sp), sc, rows) : '';
-    const busy = !em && k !== 'spe' ? `<span class="small muted tb-busy">${esc(P.engineState === 'failed' ? T.engineFailed : T.calculating)}</span>` : '';
     return `<div class="tb-srow" data-stat="${k}" data-base="${fm.baseStats[k]}" data-sign="${sign}">
       <span class="tb-sname${sign === '+' ? ' plus' : sign === '-' ? ' minus' : ''}">${C.STAT_SHORT[k]}${sign ? `<sup>${sign === '+' ? '+' : '−'}</sup>` : ''}</span>
       <span class="tb-sbase" title="${esc(T.base)}">${fm.baseStats[k]}</span>
       <span class="tb-sbarw" aria-hidden="true"><span class="tb-sbar" style="width:${Math.min(100, (100 * fin) / 260)}%"></span></span>
       <div class="tb-slidew"><input id="tb-sp-${k}" type="range" min="0" max="${SP_PER_STAT}" step="1" value="${v}" data-pc="sp-value" data-pi="tb-sp-live" data-set="${esc(l.id)}" data-stat="${k}" aria-label="${esc(T.spAria(C.STAT_LONG[k]))}">
-        <div class="tb-ticks">${ticks}</div>${busy}${cants}</div>
+        <div class="tb-ticks">${ticks}</div>${cants}</div>
       <span class="tb-spn"><input id="tb-spn-${k}" type="number" inputmode="numeric" min="0" max="${SP_PER_STAT}" step="1" value="${v}" data-pc="sp-value" data-set="${esc(l.id)}" data-stat="${k}" aria-label="${esc(T.spNumAria(C.STAT_LONG[k]))}"></span>
-      <span class="tb-final">${fin}</span>${tipHtml}${k === 'spe' ? spdToggles(P) : ''}</div>`;
+      <span class="tb-final">${fin}</span>${nextLine}${tipHtml}${k === 'spe' ? spdToggles(P) : ''}</div>`;
   }).join('');
   const left = SP_TOTAL - spTotal(set.sp);
   const natures = Object.keys(P.mech.natures).sort().map((n) => { const x = P.mech.natures[n]; return [n, `${x.name}${x.plus && x.plus !== x.minus ? ` (+${C.STAT_SHORT[x.plus]} −${C.STAT_SHORT[x.minus]})` : ''}`]; });
-  return `<div class="tb-stats">${rowsHtml}</div>
+  // one line for the whole panel while the damage marks are worked out (Speed marks need no engine)
+  const busy = !em ? `<p class="small muted tb-busy">${esc(P.engineState === 'failed' ? T.engineFailed : T.benchmarks)}</p>` : '';
+  return `${busy}<div class="tb-stats">${rowsHtml}</div>
     <div class="tb-foot">${select('tb-nature', natures, set.nature, { label: T.nature, data: { pc: 'set-field', set: l.id, field: 'nature' } })}
       <span class="tb-left${left < 0 ? ' over' : left === 0 ? ' zero' : ''}">${esc(left < 0 ? T.over(-left) : T.left(left))}</span><span class="small muted">${esc(T.ofTotal)}</span>
       <span class="tb-legend small muted"><span><i class="met"></i>${esc(T.reached)}</span><span><i></i>${esc(T.notYet)}</span><span><i class="tie"></i>${esc(T.tie)}</span><span><i class="ko met"></i>${esc(T.koSurvive)}</span><span><i class="off"></i>${esc(T.needsOther)}</span></span></div>`;
 }
-function cantChips(P, k, speed, em, sc, rows) {
+function cantChips(P, k, speed, em, sc, rows, set) {
   const out = [];
   if (k === 'spe' && speed?.cant.length) {
     const c = speed.cant;
@@ -425,7 +434,7 @@ function cantChips(P, k, speed, em, sc, rows) {
   }
   // "no OHKO even at 32": each target name opens the workbench with that stat at 32
   for (const [mv, who] of noKo) {
-    const names = who.map(({ c, name }) => `<button type="button" class="linkish" data-pa="tb-wb" ${wbAttrs({ set: P.tbLast?.setId, key: c.key, move: mv, role: 'attacker', stat: c.stat, sp: SP_PER_STAT })} aria-label="${esc(T.wbOpen(`${P.name('moves', mv)} on ${name}`))}">${esc(name)}</button>`).join(', ');
+    const names = who.map(({ c, name }) => { const label = c.best && c.best.num !== '0' && c.best.num !== 0 ? `${name} (${T.bestOdds(c.best)})` : name; return `<button type="button" class="linkish" data-pa="tb-wb" ${wbAttrs({ set: P.tbLast?.setId, key: c.key, move: mv, role: 'attacker', stat: c.stat, sp: SP_PER_STAT })} aria-label="${esc(T.wbOpen(`${P.name('moves', mv)} on ${label}`))}">${esc(label)}</button>`; }).join(', ');
     out.push(`<span class="tb-cant">${esc(T.cantKoHead(P.name('moves', mv)))} ${names}</span>`);
   }
   return out.length ? `<div class="tb-cants">${out.join('')}</div>` : '';
@@ -475,8 +484,8 @@ function saveRow(P, l, set) {
       ${btn(T.io, 'tb-io', { set: l.id }, { cls: 'linkish tb-io-btn', pressed: !!io })}</div>
     ${io ? `<div class="tb-iobox"><label class="field" for="tb-iotext"><span>${esc(T.ioHelp)}</span><textarea id="tb-iotext" rows="8" spellcheck="false" data-pi="tb-iotext" data-set="${esc(l.id)}">${esc(P.ui.tb.ioText?.[l.id] ?? text)}</textarea></label>
       <p>${btn(T.importIt, 'tb-import', { set: l.id }, { primary: true })} ${btn(T.copy, 'set-copy', { set: l.id })} ${btn(T.close, 'tb-io', { set: l.id })}</p></div>` : ''}
-    <details class="small"><summary>${esc(T.history(l.versions.length))}</summary><ul>${history}</ul></details>
-    <p class="small">${btn(T.delete, 'set-delete', { set: l.id }, { cls: 'linkish' })}</p>`;
+    <details class="small tb-more"><summary>${esc(T.more)}</summary><p>${esc(T.history(l.versions.length))}</p><ul>${history}</ul>
+      <p>${btn(T.delete, 'set-delete', { set: l.id }, { cls: 'linkish' })}</p></details>`;
 }
 
 // ---------- actions ----------

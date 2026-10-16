@@ -31,6 +31,8 @@ const pt = (P, sp, size = 'sm') => P.pt(sp, { size });
 
 // ---------- screens ----------
 export function screen(P, r) {
+  // the import note lives on the screen it landed on: opening anything else (a slot, the list) ends it
+  if (P.importReport?.at && P.importReport.at !== P.app.location.hash) P.importReport = null;
   // Teams not stored yet: undone (offer to set up again), being set up right now, or simply nothing to move (a fresh device):
   // then the list shows the empty teams document, and the first New team / Import team writes it (an explicit tap).
   // Your existing sets move in first (after their backup), so a team made here can't skip that.
@@ -111,7 +113,7 @@ function builder(P, team) {
   const coaches = (P.coaches() ?? []).filter((c) => c.name !== me);
   const exportText = ui.exportFor === team.id ? teamText(P, team) : null;
   return `${btn(`‹ ${T.head}`, 'back', {}, { cls: 'back', aria: 'Back to Teams' })}
-    ${box ? h2(team.name) : `<label class="field tm-namefield" for="tm-name"><span>${esc(T.name)}</span><input id="tm-name" data-pc="team-rename" data-team="${esc(team.id)}" value="${esc(team.name)}" maxlength="60"></label>`}
+    ${h2(team.name)}${box ? '' : `<details class="tm-rename"><summary>${esc(T.rename)}</summary><label class="field" for="tm-name"><span>${esc(T.name)}</span><input id="tm-name" data-pc="team-rename" data-team="${esc(team.id)}" value="${esc(team.name)}" maxlength="60"></label></details>`}
     <p class="small">${esc(box ? T.boxHelp : `${sets.filter(Boolean).length} of 6${used ? ` · ${T.usedVs(used)}. ${T.sharedNote}` : ''}`)}</p>
     ${report(P)}${warns.map((w) => `<p class="banner warn">${esc(w)}</p>`).join('')}
     <ul class="tm-slots">${rows}${planned}</ul>
@@ -157,8 +159,11 @@ export function bringTeam(P, ws, teamId) {
 }
 /** After an import: what came in, each EV line converted to Stat Points (with a Review link), and each set held back, by name. */
 function report(P) {
-  const r = ui(P).report;
+  const r = P.importReport;
   if (!r) return '';
+  const here = P.app.location.hash;
+  r.at ??= here;
+  if (r.at !== here) { P.importReport = null; return ''; }
   const conv = r.converted.map((c) => `<li>${esc(T.evsConverted(c.name, c.text))} ${c.team ? btn(T.review, 'team-slot', { team: c.team, slot: c.slot }, { cls: 'linkish' }) : ''}</li>`).join('');
   const held = r.held.map((h) => `<li>${esc(T.heldBack(h.name, h.why))}</li>`).join('');
   return `<div class="banner ${r.held.length ? 'warn' : 'info'} tm-report" role="status"><p>${esc(r.summary)} ${btn('✕', 'team-import-dismiss', {}, { cls: 'linkish', aria: T.dismiss })}</p>
@@ -173,12 +178,12 @@ function whyHeld(s) {
 function importText(P, text, team) {
   const r = parseTeamQuick(text ?? '', { mech: P.mech, side: 'mine' });
   const u = ui(P);
-  if (r.rejected) { u.report = { summary: T.importRejected, converted: [], held: [] }; P.app.rerender(); return; }
+  if (r.rejected) { P.importReport = { summary: T.importRejected, converted: [], held: [] }; P.app.rerender(); return; }
   const roster = new Set(myRoster(P));
   const ready = r.sets.filter((s) => s.set);
   const held = r.sets.filter((s) => !s.set).map((s) => ({ name: s.draft?.species ? P.spName(s.draft.species) : s.header.split(' @ ')[0], why: whyHeld(s) }));
   const made = ready.map((s) => newLineage({ id: P.id('set'), side: 'mine', speciesId: s.set.species, name: s.set.cosmetic?.nickname || 'Set', data: cleanSetData(s.set), now: P.now(), reason: 'imported' }));
-  if (!made.length) { u.report = { summary: T.importNone(held.length), converted: [], held }; P.app.rerender(); return; }
+  if (!made.length) { P.importReport = { summary: T.importNone(held.length), converted: [], held }; P.app.rerender(); return; }
   if (!P.mutate('mysets', (d) => { d.sets.push(...made); }, { render: false })) return;
   let t = teamsDoc(P);
   const onRoster = made.filter((l) => roster.has(l.speciesId)), off = made.length - onRoster.length;
@@ -201,7 +206,8 @@ function importText(P, text, team) {
   writeTeams(P, t);
   const where = (id) => { const tm = teamsDoc(P).teams.find((x) => x.slots.includes(id)); return tm ? { team: tm.id, slot: tm.slots.indexOf(id) + 1 } : {}; };
   const converted = ready.map((s, i) => (s.converted ? { name: P.spName(s.set.species), text: C.evsConverted(s.converted.from, s.converted.to), ...where(made[i].id) } : null)).filter(Boolean);
-  Object.assign(u, { importText: '', importOpen: false, importInto: null, report: { summary: T.imported(placed, boxed, held.length), converted, held } });
+  Object.assign(u, { importText: '', importOpen: false, importInto: null });
+  P.importReport = { summary: T.imported(placed, boxed, held.length), converted, held };
   // one new team: open it (Back returns to the list)
   if (created.length === 1 && !team) { P.go({ view: 'teams', teamId: created[0] }, { push: true }); return; }
   P.app.rerender();
@@ -243,9 +249,9 @@ export const actions = {
     const l = P.lineage(t.dataset.set); const s = asSet(l, currentVersion(l));
     try { await P.app.copyText(exportSet(s, P.mech, { sp: s.sp === 'unknown' ? spForUnknown(P, s, 'common') : null }).text); P.toast(T.copied); } catch { P.toast(T.copyFailed); }
   },
-  'team-import-toggle': (t, P) => { const u = ui(P); u.importOpen = !u.importOpen; u.report = null; P.app.rerender(); },
-  'team-import-into-toggle': (t, P) => { const u = ui(P); u.importInto = u.importInto === t.dataset.team ? null : t.dataset.team; u.report = null; P.app.rerender(); },
-  'team-import-dismiss': (t, P) => { ui(P).report = null; P.app.rerender(); },
+  'team-import-toggle': (t, P) => { const u = ui(P); u.importOpen = !u.importOpen; P.importReport = null; P.app.rerender(); },
+  'team-import-into-toggle': (t, P) => { const u = ui(P); u.importInto = u.importInto === t.dataset.team ? null : t.dataset.team; P.importReport = null; P.app.rerender(); },
+  'team-import-dismiss': (t, P) => { P.importReport = null; P.app.rerender(); },
   'team-import': (t, P) => importText(P, ui(P).importText, t.dataset.team || null),
   // "+ New team from this matchup": a copy of the team it brings (independent sets), named for the opponent, else an empty one
   'ws-new-team': (t, P) => {

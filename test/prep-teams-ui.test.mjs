@@ -142,6 +142,8 @@ test('Bring on a matchup: the Sets tab picks the team, my6 follows; a new matchu
   await b.changeData({ pc: 'ws-bring', ws: WS }, { value: t2 }); await flushSaves(b);
   assert.deepEqual([get(storage, wsKey(WS)).teamId, get(storage, wsKey(WS)).my6.map((m) => m.setId)], [t2, [SET_PELI]]);
   assert.equal(get(storage, KEYS.meta).lastTeamId, t2);
+  // with a team brought, Bring is the primary control; your 10 one by one folds away below it
+  assert.match(b.html(), /class="tm-bring"[^]*<details class="tm-onebyone">/);
   // a new matchup (vs Taro) brings that team by default
   const c = await bootApp({ mode: 'prep/5v6/sets', storage });
   t.after(() => c.restore());
@@ -155,7 +157,7 @@ test('old My sets links open the set in its team; export has the Showdown header
   const app = await ready(`prep/my-sets/${SET_MINE}`, storage);
   t.after(() => app.restore());
   await app.waitFor(() => app.location.hash === `#prep/teams/${tN}/1`, 'the redirect');
-  assert.match(T(app), /Charizard-Mega-Y · Sun Zard v1/);
+  assert.match(T(app), /Charizard-Mega-Y · Sun Zard/);
   const l = await bootApp({ mode: 'prep/my-sets', storage });
   t.after(() => l.restore());
   await l.waitFor(() => l.location.hash === '#prep/teams', 'the list redirect');
@@ -229,6 +231,7 @@ test('Import team with Showdown EVs: one tap makes "Calvin plan" with 3 sets, EV
   assert.deepEqual(plan.slots.map((id) => of(id).speciesId), ['charizard', 'rotomfan', 'pelipper']);
   assert.deepEqual(of(plan.slots[2]).versions.at(-1).data.sp, { hp: 32, atk: 0, def: 0, spa: 32, spd: 0, spe: 0 });
   assert.equal(app.location.hash, `#prep/teams/${plan.id}`, 'the new team opens');
+  assert.match(app.html(), /<h2[^>]*>Calvin plan<\/h2>/, 'the team name is the title');
   const h = T(app);
   assert.match(h, /Imported 3 sets into the team\./);
   assert.match(h, /Pelipper: EVs converted to Stat Points, 252 HP \/ 252 SpA → 32 HP \/ 32 SpA\. Review/);
@@ -251,4 +254,18 @@ test('Import team: only truly invalid sets are held back, by name; the rest impo
   assert.match(h, /Imported 1 set into the team; 2 held back\./);
   assert.match(h, /Rotom-Fan held back: Rotom-Fan can't learn Spore\./);
   assert.match(h, /Pelipperr held back/);
+  // the note goes once you go elsewhere (and it is never stored: a reload starts without it)
+  await app.click({ pa: 'team-slot', team: plan.id, slot: '1' });
+  await app.click({ pa: 'back' });
+  assert.ok(!/held back/.test(T(app)), 'gone after opening a slot');
+});
+
+test('Battle Prep: the unmatched-name line is quiet and dismissible for the session', async (t) => {
+  const raw = { ...RAW, draftsCsv: RAW.draftsCsv.replace(',Kangaskhan,', ',Kangaskhann,') };
+  const app = await bootApp({ mode: 'prep/teams', raw });
+  t.after(() => app.restore());
+  await app.waitFor(() => /not matched/.test(app.banners.innerHTML), 'the quiet line');
+  assert.ok(!/banner warn/.test(app.banners.innerHTML), 'not an orange banner in Prep');
+  await app.click({ dismissUnmatched: '1' });
+  assert.ok(!/not matched/.test(app.banners.innerHTML), 'dismissed');
 });

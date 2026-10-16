@@ -40,7 +40,7 @@ test('the editor: team strip, set card, six SP sliders with engine marks, final 
   t.after(() => app.restore());
   await ready(app);
   const h = T(app);
-  assert.ok(/Charizard-Mega-Y · Sun Zard v1/.test(h));
+  assert.ok(/Charizard-Mega-Y · Sun Zard/.test(h));
   assert.ok(/Checking against/.test(h) && /Whole league/.test(h), 'the scope picker');
   assert.ok(/weather: Auto, Sun \(your Drought\)/.test(h), 'the one-line assumptions say the sun');
   assert.equal(nodes(app, (n) => n.tag === 'input' && n.attrs.type === 'range').length, 6, 'one slider per stat');
@@ -117,11 +117,11 @@ test('the Rotom-Fan case in the editor: Life Orb mark at 23 (dashed), the strip\
   const tip = T(app).match(/OHKO Staraptor-Mega with Thunderbolt[^]*?their spread: [a-z]+/)?.[0] ?? '';
   assert.match(tip, /at 23 SpA \(Modest\): \d+–\d+ of 189 HP \([\d.]+–[\d.]+%\), every roll KOs/, `the tap-through runs the calc at the mark: ${tip}`);
   assert.match(T(app), /can't beat 4 Speeds, 143–178 \(138 max\)/, "Calvin's tiers above 138 (Mega Staraptor 178 from their saved set): out of reach, one chip");
-  assert.match(T(app), /Spe 138: outspeeds 3 of their 5 max-neutral tiers, 2 of their max-\+Spe tiers/, 'the Speed summary in tiers');
+  assert.match(T(app), /Spe 138: faster than 3 of their 5 if they run neutral max Speed, 2 if they run \+Speed/, 'the Speed summary in tiers');
   // the toggles are off by default and add Scarf users / ladder spreads / Tailwind only when ticked
   assert.equal(btns(app, 'tb-spd').length, 4);
   await app.click({ pa: 'tb-spd', key: 'twMine' });
-  assert.match(T(app), /Spe 276: outspeeds 5 of their 5 max-neutral tiers, 5 of their max-\+Spe tiers/, 'your Tailwind doubles 138');
+  assert.match(T(app), /Spe 276: faster than 5 of their 5 if they run neutral max Speed, 5 if they run \+Speed/, 'your Tailwind doubles 138');
   await app.click({ pa: 'tb-focus', set: 'set_ffffffffffff', i: '0' });
   assert.ok(/80\.4–96\.2%/.test(T(app)), 'reference: Modest 32, no item, +0 → 152–182 of 189');
   // swap Air Slash for Nasty Plot: the strip gains +2 and the SpA slider a +2 mark at 0 (reference 5)

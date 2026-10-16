@@ -219,7 +219,9 @@ function renderTop() {
   const banners = [];
   if (viewingAs) banners.push(`<div class="banner info" role="status">Viewing as ${esc(S.coach)} (from your prep). Your prep hasn't changed. <button class="primary" data-viewas-back="">Back to my prep</button></div>`);
   if (sheet.stale) banners.push(`<div class="banner warn">Couldn't reach the league sheet (${esc(sheet.error)}). Showing data from ${t} (${ago(sheet.fetchedAt)}). Picks made since then are missing. <button id="retry">Retry</button></div>`);
-  if (L.unmatched.length) banners.push(`<div class="banner warn">${L.unmatched.length} name(s) couldn't be matched to a Pokémon. They still count toward points but are left out of the analysis. <button data-goto="setup">Fix names</button></div>`);
+  // in Battle Prep a sheet typo is one quiet line you can dismiss for this tab's session; Draft and Setup keep the full banner
+  if (L.unmatched.length && S.mode === 'prep') { if (tabStorage?.getItem('drafarig.unmatchedDismissed') !== String(L.unmatched.length)) banners.push(`<div class="banner info small">⚠ ${L.unmatched.length} sheet name(s) not matched to a Pokémon (left out of the analysis). <button data-goto="setup">Fix names</button> <button data-dismiss-unmatched="${L.unmatched.length}" aria-label="Dismiss for this session">✕</button></div>`); }
+  else if (L.unmatched.length) banners.push(`<div class="banner warn">${L.unmatched.length} name(s) couldn't be matched to a Pokémon. They still count toward points but are left out of the analysis. <button data-goto="setup">Fix names</button></div>`);
   // sheet notes are about the draft board: Battle Prep leaves them out (stale and unmatched-name banners still show: they change the briefing)
   if (L.warnings.length && S.mode !== 'prep') banners.push(`<div class="banner info"><details><summary>${L.warnings.length} sheet note(s): Drafts tab is the source of truth; board red text is a cross-check.</summary><ul>${L.warnings.map((w) => `<li>${esc(w)}</li>`).join('')}</ul></details></div>`);
   $('#banners').innerHTML = banners.join('');
@@ -229,11 +231,11 @@ function renderTop() {
 function budgetPanel(c) {
   const b = budgetSummary(c.pointsLeft, c.slotsLeft, available().map((a) => a.cost));
   const segs = c.picks.map((p) => `<span class="spent" style="width:${p.points}%" title="${esc(p.en)} ${p.points}"></span>`).join('');
-  const state = !b.feasible ? '<span class="chip breaks">Impossible</span>' : b.avgPerSlot < 2.5 ? '<span class="chip tight">Tight</span>' : '<span class="chip ok">Healthy</span>';
+  const state = c.slotsLeft === 0 ? '<span class="chip ok">Complete</span>' : !b.feasible ? '<span class="chip breaks">Impossible</span>' : b.avgPerSlot < 2.5 ? '<span class="chip tight">Tight</span>' : '<span class="chip ok">Healthy</span>';
   return `<div class="panel"><h2>Budget ${state}</h2>
     <div class="meter" role="img" aria-label="${BUDGET - c.pointsLeft} of ${BUDGET} points spent">${segs}</div>
     <p class="budget-line">${c.pointsLeft} pts left · ${c.slotsLeft} slots to fill · ${term('Average per slot', 'Points per remaining slot')}: ${b.avgPerSlot} · ${term('Max you can spend on this pick', 'Max this pick')}: ${b.maxThisPick}</p>
-    <p class="explainer">League rule: exactly ${ROSTER_SIZE} mons on ${BUDGET} points. "Max this pick" is points left minus the ${c.slotsLeft - 1} cheapest mons still on the board (${b.reserve ?? '—'} pts), so you can always fill every slot.</p>
+    <p class="explainer">League rule: exactly ${ROSTER_SIZE} mons on ${BUDGET} points. ${c.slotsLeft > 0 ? `"Max this pick" is points left minus the ${c.slotsLeft - 1} cheapest mons still on the board (${b.reserve ?? '—'} pts), so you can always fill every slot.` : 'Your roster is complete.'}</p>
     ${!b.feasible ? `<p class="banner bad">No combination of available mons fills your ${c.slotsLeft} slots with ${c.pointsLeft} pts.</p>` : ''}</div>`;
 }
 function reasonList(why) { return why.map((w) => `<span class="reason ${w.startsWith('−') ? 'neg' : ''}">${esc(w)}</span>`).join(''); }
@@ -789,6 +791,7 @@ document.addEventListener('click', async (e) => {
   if (t.dataset.mode) goTo(t.dataset.mode);
   else if (t.dataset.prepVs) prepVs(Number(t.dataset.prepVs));
   else if (t.dataset.viewasBack !== undefined) { if (viewingAs) endViewAs(); }
+  else if (t.dataset.dismissUnmatched) { try { tabStorage?.setItem('drafarig.unmatchedDismissed', t.dataset.dismissUnmatched); } catch { /* storage blocked: it just comes back */ } render(); }
   else if (t.dataset.prepRetry !== undefined) { prepFailed = false; render(); }
   else if (t.dataset.goto) {
     goTo(t.dataset.goto);

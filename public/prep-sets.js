@@ -97,7 +97,9 @@ export function tab(P, ws) {
   }).join('');
   const removedSets = ws.theirSets.filter((s) => !roster.includes(s.speciesId));
   const vchips = ws.variants.map((x) => chipBtn(`${C.SETGRID.roleIcon[x.role] ?? ''} ${C.VARIANT_ROLE[x.role]}${x.name ? `: ${x.name}` : ''}`.trim(), 'pick-variant', { variant: x.id }, x.id === v?.id)).join('');
-  const my6 = `${Teams.bring(P, ws) ?? ''}${myTeamRows(P, ws)}`; // which team it brings, then your 10 (ticking one puts it in that team)
+  // with teams: which team it brings is the primary control; your 10 one by one (ticking one puts it in that team) folds away
+  const bringHtml = Teams.bring(P, ws);
+  const my6 = bringHtml ? `${bringHtml}<details class="tm-onebyone"><summary>${esc(C.TEAMS.oneByOne)}</summary>${myTeamRows(P, ws)}</details>` : myTeamRows(P, ws);
   const mega = roster.filter((sp) => P.mech && Object.values(P.mech.items).some((i) => i.megaStone?.[sp]));
   return `${h2('Sets')}
     <h3>Their team</h3><p class="small">One ${term('set', 'Set')} per Pokémon in each version of their team.</p>
@@ -245,11 +247,11 @@ function importScreen(P, ws) {
       const q = l.question;
       const qhtml = q ? `<div class="choices" role="group" aria-label="${esc(msg || 'Choose')}">${q.options.map((o) => chipBtn(`${C.PASTE_OPTION_FOR[q.key]?.[o] ?? C.PASTE_OPTION[o] ??(P.mech?.species[o] ? P.spName(o) : P.mech?.abilities[o] ? P.name('abilities', o) : o)}${o === q.suggested ? ' (suggested)' : ''}`, 'paste-answer', { set: s.index, key: q.key, value: o }, q.answer === o)).join('')}</div>` : '';
       return `<li class="tier${l.tier}"><code>${esc(l.text)}</code>${l.tier ? ` <span class="tierword">${esc(l.code === 'skipped' ? 'skipped (your choice)' : C.PASTE_TIER[l.tier])}</span>` : ''}${msg ? ` <span class="small">${esc(msg)}</span>` : ''}${qhtml}</li>`;
-    }).join('');
+    });
     const existing = s.draft?.species ? (imp.side === 'mine' ? P.docs.mysets.sets : ws?.theirSets ?? []).filter((x) => x.speciesId === s.draft.species) : [];
     const dup = existing.length ? `<p class="small">Same Pokémon already has a set: ${chipBtn('New set', 'paste-dup', { set: s.index, value: 'new' }, (imp.dup[s.index] ?? 'new') === 'new')}${existing.map((x) => chipBtn(`New version of ${x.name || 'Set'}`, 'paste-dup', { set: s.index, value: x.id }, imp.dup[s.index] === x.id)).join('')}</p>` : '';
     const skipped = s.lines.some((l) => l.code === 'skipped');
-    return `<div class="pset ${s.status}"><p class="pset-head"><b>${esc(s.header)}</b> <span class="small">${esc(skipped ? 'skipped' : { ready: 'ready', 'needs-answer': 'needs a choice', rejected: "can't import" }[s.status])}</span></p><ul class="plines">${lines}</ul>${s.status !== 'rejected' ? dup : ''}</div>`;
+    return `<div class="pset ${s.status}"><p class="pset-head"><b>${esc(s.header)}</b> <span class="small">${esc(skipped ? 'skipped' : { ready: 'ready', 'needs-answer': 'needs a choice', rejected: "can't import" }[s.status])}</span></p>${s.status === 'ready' ? `<ul class="plines">${lines.filter((x, k) => s.lines[k].tier).join('')}</ul><details class="small"><summary>Show lines</summary><ul class="plines">${lines.join('')}</ul></details>` : `<ul class="plines">${lines.join('')}</ul>`}${s.status !== 'rejected' ? dup : ''}</div>`;
   }).join('');
   const tw = res.teamWarnings.map((w) => `<p class="small warnline">${esc((C.TEAM_WARNING[w.code] ?? (() => w.code))({ ...w, name: P.name('items', w.value) || w.value }))}</p>`).join('');
   const srcs = imp.side === 'theirs' ? `<p><span class="small">Where are these from?</span> ${['seen-vs-me', 'seen-vs-others', 'sheet-open', 'my-guess'].map((s) => chipBtn(C.SOURCE[s], 'paste-source', { source: s }, imp.source === s)).join('')}</p>

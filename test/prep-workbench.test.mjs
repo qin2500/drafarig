@@ -38,6 +38,14 @@ test('Rotom-Fan: a strip value opens the workbench at that calc (reference 152�
   await app.waitFor(() => /role="dialog"/.test(app.html()) && /of 189 HP/.test(sheet(app)), 'the workbench with its result');
   assert.match(sheet(app), /Thunderbolt: Rotom-Fan → Calvin's Staraptor-Mega/);
   assert.match(sheet(app), /152–182 of 189 HP/, 'reference: Modest 32, no item, +0');
+  // (behind the sheet) the editor's audit fixes: assumption chips + ⓘ, each strip card names its set, next/passed labels,
+  // "no sure OHKO" with the best odds, the plain Speed line
+  const ed = T(app);
+  assert.match(ed, /Lv 50 doubles/); assert.match(ed, /ⓘ All assumptions/);
+  assert.match(ed, /Jolly 29\/1\/0\/0\/4\/32 · Staraptite · their saved set/);
+  assert.match(app.html(), /class="tb-next small">(next|passed): /);
+  assert.match(ed, /no sure OHKO at \+0 even at 32 on/);
+  assert.ok(!/tap the move field again/.test(ed));
   // edits recalculate and write nothing
   await app.changeData({ pc: 'wb-field-set', side: 'mine', key: 'item' }, { value: 'lifeorb' });
   assert.ok(!/152–182 of 189 HP/.test(sheet(app)), 'Life Orb changes the numbers');
@@ -152,4 +160,9 @@ test('phone: the workbench is a full-screen sheet with You / Them / Field tabs a
   assert.equal(at('.wb-tabs button', P)['min-height'], '44px');
   assert.equal(at('.wb select', P)['font-size'], '16px');
   assert.equal(at('.wb-result', null).position ?? at('.wb-result', undefined).position, 'sticky');
+  // the editor on a phone (audit #5/#6/#8): slider full width under its stat line, Speed options 2×2, strip cards 2 across
+  assert.equal(at('.prep .tb-slidew', P)['grid-column'], '1 / -1');
+  assert.equal(at('.prep .tb-spdopts', P)['grid-template-columns'], 'repeat(2, minmax(0, 1fr))');
+  assert.equal(at('.prep .tb-hits', P)['grid-template-columns'], 'repeat(2, minmax(0, 1fr))');
+  assert.equal(at('.prep .tb-tick', P).height, '44px');
 });

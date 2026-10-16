@@ -780,8 +780,8 @@ button.st-btn:hover, button.st-btn:focus-visible { border-color: var(--line); }
 .prep .tb-mbar { display: inline-block; height: 6px; border-radius: 3px; background: var(--accent); opacity: .7; vertical-align: middle; }
 .prep .tb-strip { margin: 10px 0; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
 .prep .tb-sh { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: baseline; margin-bottom: 6px; }
-.prep .tb-hits { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
-.prep .tb-hit { flex: none; min-width: 140px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+.prep .tb-hits { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.prep .tb-hit { min-width: 0; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
 .prep .tb-hw { display: flex; gap: 6px; align-items: center; font-size: 12px; font-weight: 600; }
 .prep .tb-v { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; margin-top: 3px; }
 .prep .tb-v .k { color: var(--muted); } .prep .tb-v b.ko { color: var(--ok); }
@@ -808,13 +808,13 @@ button.st-btn:hover, button.st-btn:focus-visible { border-color: var(--line); }
 .prep .tb-tick.met::before { background: var(--ok); border-color: var(--ok); }
 .prep .tb-tick.tie::before { transform: rotate(45deg); width: 7px; height: 7px; top: 3px; border-color: var(--warn); }
 .prep .tb-tick.tie.met::before { background: var(--warn); }
-.prep .tb-tick.off::before { opacity: .45; border-style: dashed; background: none; }
+.prep .tb-tick.off::before, .prep .tb-tick.ko.off::before { opacity: .6; border-width: 1px; border-radius: 1px; background: repeating-linear-gradient(45deg, var(--muted) 0 1px, transparent 1px 3px); }
 .prep .tb-tick.ko::before { border-radius: 50%; width: 8px; height: 8px; left: 3px; top: 2px; }
 .prep .tb-tick.on::before { box-shadow: 0 0 0 2px var(--accent); }
 .prep .tb-cants { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 18px; }
 .prep .tb-cant { font-size: 11px; color: var(--muted); border: 1px dashed var(--line); border-radius: 999px; padding: 0 7px; }
 .prep .tb-cant.bad { color: var(--bad); border-color: var(--bad); }
-.prep .tb-busy { display: block; margin-top: 16px; }
+.prep .tb-busy { margin: 4px 0; }
 .prep .tb-tip { grid-column: 1 / -1; padding: 6px 10px; border-radius: 6px; background: var(--ink); color: var(--bg); font-size: 13px; }
 .prep .tb-tip p { margin: 2px 0; } .prep .tb-tip button { color: var(--bg); }
 .prep .tb-foot { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin-top: 8px; }
@@ -823,7 +823,7 @@ button.st-btn:hover, button.st-btn:focus-visible { border-color: var(--line); }
 .prep .tb-legend { display: flex; flex-wrap: wrap; gap: 10px; }
 .prep .tb-legend i { display: inline-block; width: 8px; height: 10px; border: 2px solid var(--muted); border-radius: 2px; vertical-align: -1px; margin-right: 3px; }
 .prep .tb-legend i.met { background: var(--ok); border-color: var(--ok); } .prep .tb-legend i.tie { transform: rotate(45deg); width: 7px; height: 7px; border-color: var(--warn); }
-.prep .tb-legend i.ko { border-radius: 50%; } .prep .tb-legend i.off { border-style: dashed; opacity: .6; }
+.prep .tb-legend i.ko { border-radius: 50%; } .prep .tb-legend i.off { border-width: 1px; border-radius: 1px; opacity: .6; background: repeating-linear-gradient(45deg, var(--muted) 0 1px, transparent 1px 3px); }
 .prep .tb-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
 .prep .tb-io-btn { margin-left: auto; }
 .prep .tb-dirty { font-size: 12px; color: var(--warn); }
@@ -842,13 +842,16 @@ button.st-btn:hover, button.st-btn:focus-visible { border-color: var(--line); }
   .prep .tb-team li, .prep .tb-bench li { flex: 0 0 auto; scroll-snap-align: start; max-width: 70vw; }
   .prep .tb-setrow { grid-template-columns: minmax(0, 1fr); }
   .prep .tb-who { flex-direction: row; justify-content: flex-start; }
-  .prep .tb-srow { grid-template-columns: 44px minmax(0, 1fr) 54px 40px; gap: 8px; }
+  /* the stat name, number and final stat on one line, the slider full width beneath */
+  .prep .tb-srow { grid-template-columns: minmax(0, 1fr) 64px 44px; gap: 4px 8px; }
+  .prep .tb-slidew { grid-column: 1 / -1; grid-row: 2; }
+  .prep .tb-hits { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .prep .tb-sbase, .prep .tb-sbarw { display: none; }
   .prep .tb-slidew input[type=range] { height: 44px; }
   .prep .tb-ticks { top: 38px; }
-  .prep .tb-tick { width: 24px; height: 24px; }
+  .prep .tb-tick { width: 28px; height: 44px; }
   .prep .tb-tick::before { left: 8px; }
-  .prep .tb-cants { margin-top: 26px; }
+  .prep .tb-cants { margin-top: 46px; }
   .prep .tb-rank { margin-left: 0; flex: 1 1 100%; }
   .prep .tb-fields input, .prep .tb-moves input, .prep .tb-spn input { min-height: 44px; font-size: 16px; }
   .prep .tb-io-btn { margin-left: 0; }
@@ -924,3 +927,14 @@ button.st-btn:hover, button.st-btn:focus-visible { border-color: var(--line); }
   .wb button.pchip, .wb-bar button { min-height: 44px; }
   .prep .tb-cant button.linkish { min-height: 32px; }
 }
+
+/* Phase C: the editor's labels, Speed options and assumptions; the Sets tab's one-by-one list folds away */
+.prep .tb-srow > .tb-spdopts, .prep .tb-srow > .tb-next { grid-column: 1 / -1; }
+.prep .tb-spdopts { display: flex; flex-direction: row; flex-wrap: wrap; gap: 6px; align-items: center; margin: 2px 0 0; }
+.prep .tb-spdopts button { white-space: nowrap; }
+.prep .tb-next { margin: 0; color: var(--muted); }
+.prep .tb-asm { display: flex; flex-wrap: wrap; gap: 4px; }
+.prep .tb-asmd { flex: 1 1 100%; } .prep .tb-asmd summary { cursor: pointer; }
+.prep .tb-assumed { margin: 4px 0 0; }
+.prep .tm-onebyone > summary, .prep .tm-rename > summary { cursor: pointer; padding: 6px 0; }
+@media (max-width: 767px) { .prep .tb-spdopts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); } .prep .tb-spdopts > span { grid-column: 1 / -1; } .prep .tb-spdopts button { min-height: 44px; } }
