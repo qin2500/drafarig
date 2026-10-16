@@ -31,7 +31,7 @@ export function open(P, seed) {
     their: null, spread: seed.row.set.sp === 'unknown' ? (seed.row.common ? 'common' : 'max') : 'set', move: seed.move, mineRole: seed.mineRole ?? 'attacker',
     boosts: { mine: seed.boost ?? 0, theirs: seed.stage ?? 0 }, field, crit: false, intimidated: 0, defHp: 100, tab: 'you', saved: null,
   };
-  try { P.app.history.pushState({ prep: true, wb: true, names: P.app.history.state?.names ?? null, wsId: P.app.history.state?.wsId ?? null }, '', P.app.location.hash); } catch { /* no history */ }
+  try { P.app.history.pushState({ prep: true, wb: true, names: P.app.history.state?.names ?? null, wsId: P.app.history.state?.wsId ?? null, from: P.app.location.hash }, '', P.app.location.hash); } catch { /* no history */ }
   P.ensureEngine();
   P.pendingFocus = true; P.pendingFocusId = 'wb-h';
   P.app.rerender();
@@ -223,7 +223,9 @@ export const actions = {
     P.app.rerender();
   },
   'wb-save-calc': (t, P) => { const wb = live(P); if (wb) { saveCalc(P, wb); P.app.rerender(); } },
-  'wb-open-calcs': (t, P) => { const wb = live(P); if (!wb?.saved) return; const s = wb.saved; close(P); P.go({ view: 'ws', wsId: s.wsId, kind: 'calcs', id: s.calcId }, { push: true }); },
+  // the calc replaces the workbench's own history entry (closing with history.back() and then pushing would race: the
+  // async back would land after the push and undo it)
+  'wb-open-calcs': (t, P) => { const wb = live(P); if (!wb?.saved) return; const s = wb.saved; P.ui.wb = null; P.go({ view: 'ws', wsId: s.wsId, kind: 'calcs', id: s.calcId }, { push: P.app.history.state?.wb ? false : true }); },
 };
 export const changes = {
   'wb-sp': (t, P) => {

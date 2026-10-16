@@ -307,7 +307,9 @@ export function createPrep(app) {
     P.saveUi();
     const hash = formatRoute(to);
     const names = isMatch(to) ? to.names ?? null : null, wsId = isMatch(to) ? to.wsId ?? null : null;
-    try { if (kind === 'push') app.history.pushState({ prep: true, names, wsId }, '', hash); else app.history.replaceState({ prep: !!app.history.state?.prep, names, wsId }, '', hash); } catch { /* history unavailable */ }
+    // from: the address under a pushed entry (what browser Back shows next); a replaced entry keeps the one it had
+    const here = app.location?.hash ?? formatRoute(P.route), st0 = app.history.state;
+    try { if (kind === 'push') app.history.pushState({ prep: true, names, wsId, from: here }, '', hash); else app.history.replaceState({ prep: !!st0?.prep, names, wsId, from: st0?.from ?? null }, '', hash); } catch { /* history unavailable */ }
     P.route = P.resolve({ ...(parseRoute(hash) ?? { view: 'home' }), ...(names ? { names, wsId } : {}) });
     if (P.route.view === 'ws' && P.ws.has(P.route.wsId)) P.store.hint('lastRoute', hash); // for "Continue"; not a document
     if (!quiet) P.pendingFocus = true;
@@ -381,13 +383,24 @@ export function createPrep(app) {
     if (r.seatsMoved && !P.seatsNoted) { P.seatsNoted = true; P.toast(C.POV.seatsMoved(r.names.pov, r.names.opp)); }
     const st = app.history.state;
     if (after !== before || (isMatch(r) && r.names && (!st?.names || (st.wsId ?? null) !== (r.wsId ?? null)))) {
-      try { app.history.replaceState({ prep: !!st?.prep, names: isMatch(r) ? r.names ?? null : null, wsId: isMatch(r) ? r.wsId ?? null : null }, '', after); } catch { /* history unavailable */ }
+      try { app.history.replaceState({ prep: !!st?.prep, names: isMatch(r) ? r.names ?? null : null, wsId: isMatch(r) ? r.wsId ?? null : null, from: st?.from ?? null }, '', after); } catch { /* history unavailable */ }
     }
   }
-  /** Back to the parent: history.back() when the previous entry is ours, else replace with the parent. */
+  /**
+   * In-app Back (‹) always goes to the screen's fixed parent (slot → its team → Teams → Prep). It uses history.back() only
+   * when the entry under this one IS that parent (so browser Back stays in step); otherwise it replaces this entry with the
+   * parent. History alone isn't enough: a parent pushed on top of its child (team opened from the set editor) made
+   * Back bounce team ↔ editor forever.
+   */
   P.back = () => {
-    const st = app.history.state;
-    if (st && st.prep) app.history.back(); else P.go(parentRoute(P.route), { push: false });
+    const st = app.history.state, parent = P.resolve(P.canonical(parentRoute(P.route)));
+    const under = st?.prep && st.from ? parseRoute(st.from) : null;
+    if (under && sameScreen(P.resolve(P.canonical(under)), parent)) app.history.back(); else P.go(parent, { push: false });
+  };
+  /** Two routes show the same screen (a matchup by seats and the same workspace by id count as one). */
+  const sameScreen = (a, b) => {
+    const key = (r) => JSON.stringify([r.view, r.view === 'ws' ? r.wsId ?? `${r.pov}v${r.opp}` : null, r.view === 'overview' ? r.pov : null, r.tab ?? null, r.kind ?? null, r.id ?? null, r.teamId ?? null, r.slot ?? null, r.detail ?? null]);
+    return key(a) === key(b);
   };
   P.applyHash = (hash) => {
     const r = parseRoute(hash);
