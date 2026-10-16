@@ -269,6 +269,8 @@ export const TENDENCY = 'After a win, opponents often change their lead; after a
 export const ETIQUETTE = ['Play the brief, not to win; say so when you break from it.', "Keep their prep private, especially from anyone in their league.", 'Give feedback only if asked: why something happened, not just what.'];
 
 // ---------- paste review ----------
+/** "252 SpA / 252 Spe → 32 SpA / 32 Spe" for an EV line converted to Stat Points. */
+export const evsConverted = (before, after) => `${Object.keys(STAT_SHORT).filter((k) => before[k]).map((k) => `${before[k]} ${STAT_SHORT[k]}`).join(' / ')} → ${Object.keys(STAT_SHORT).filter((k) => after[k]).map((k) => `${after[k]} ${STAT_SHORT[k]}`).join(' / ')}`;
 export const PASTE_TIER = { 0: '✓', 1: '✗ can\'t import as written', 2: '⇄ convert?', 3: '? check this', 4: '~ changed' };
 export const PASTE = {
   ok: () => '', 'kept-cosmetic': () => 'Kept for Showdown',
@@ -291,7 +293,7 @@ export const PASTE = {
   'stat-repeated': () => 'A stat appears twice; the last value is used.', 'value-not-integer': (p) => `"${p.token}" isn't a whole number (Showdown would accept it silently as nothing). Remove it?`,
   'spd-token': () => "Showdown reads 'Spd' as Speed and 'SpD' as Sp. Def. Which did you mean?",
   'sp-negative': () => 'Stat Points below zero.',
-  'sp-over-stat': (p) => p.ps, 'sp-over-total': (p) => p.ps, 'zero-sp-note': () => '0 Stat Points with a non-Serious nature: Showdown accepts this. Check it is intended.', 'legacy-evs': () => 'These look like regular-game EVs, not Stat Points. Convert with the standard rule?',
+  'sp-over-stat': (p) => p.ps, 'sp-over-total': (p) => p.ps, 'zero-sp-note': () => '0 Stat Points with a non-Serious nature: Showdown accepts this. Check it is intended.', 'evs-converted': (p) => `EVs converted to Stat Points: ${evsConverted(p.before, p.after)} (${p.spare} left).`,
   'legacy-evs-kept': () => 'Kept as typed: over the Stat Point limits, so it can\'t import.', 'evs-over-limit': () => 'Even converted, these are over 66 Stat Points.',
   'nature-unknown': () => 'Unknown nature.', 'nature-defaulted': () => 'No nature line: saved as Hardy (neutral, like Showdown).',
   'zero-sp': (p) => `This set has 0 Stat Points. Showdown accepts that only with a non-Serious nature${p?.note ? '; exported as Hardy' : ''}. Intended?`,
@@ -733,12 +735,14 @@ export const TB = {
   base: 'Base stat', spAria: (s) => `${s} Stat Points`, spNumAria: (s) => `${s} Stat Points (number)`, nature: 'Nature',
   over: (n) => `${n} over`, left: (n) => `${n} left`, ofTotal: 'of 66 · max 32 per stat',
   cantBeat: (s, best, who) => `can't beat ${s} (${best} max): ${who}`, cantBeatN: (n, a, b, best) => `can't beat ${n} Speeds, ${a}–${b} (${best} max)`,
-  cantKo: (move, who) => `${move}: no OHKO on ${who} at +0 even at 32`, cantSurvive: (who, move) => `${who}'s ${move}: no HP / defence spread survives`,
+  cantKoHead: (move) => `${move}: no OHKO at +0 even at 32 on`,
+  wbOpen: (what) => `${what}: open in the workbench`, wbOpenShort: 'Open in the workbench', cantSurvive: (who, move) => `${who}'s ${move}: no HP / defence spread survives`,
   seenBy: 'Seen by:', close: 'Close', save: 'Save version', saveCopy: 'Save as a new set', discard: 'Discard', unsaved: 'unsaved changes', saved: (v) => `v${v} saved`,
   io: 'Import / Export', ioHelp: 'Showdown text (Stat Points on the EVs line). Paste a set for this Pokémon and press Import to put it in the editor (not saved yet).',
   importIt: 'Import', copy: 'Copy', current: 'current', useVersion: 'Use this version', history: (n) => `History (${n})`, delete: 'Delete this set',
   started: 'New set started from ladder data: check every field', importNothing: 'Paste a set first.', importFailed: "That text couldn't be read as a set; use Paste your team for the full import.",
   importOther: (name) => `That text is for ${name}; open ${name} first.`, imported: 'Imported into the editor: not saved yet',
+  importedConverted: (text) => `Imported into the editor (EVs converted: ${text}): not saved yet`, importHeld: (why) => `Not imported: ${why}`,
   unknownItem: (x) => `"${x}" isn't an item this Pokémon can hold in Champions.`, unknownMove: (x, mon) => `${mon} can't learn "${x}" in Champions.`,
 };
 
@@ -754,4 +758,50 @@ export const TEAMS = {
   undoAsk: (copies, lost) => `Your matchups go back to pointing at your original sets, and the ${copies} ${plural(copies, 'copy', 'copies')} made for them ${plural(copies, 'is', 'are')} removed.${lost.copyVersionsAdded ? ` ${lost.copyVersionsAdded} ${plural(lost.copyVersionsAdded, 'version', 'versions')} saved on copies since would go too.` : ''}${lost.teamsCreatedLater ? ` ${lost.teamsCreatedLater} ${plural(lost.teamsCreatedLater, 'team', 'teams')} made since would go.` : ''} Nothing else changes.`,
   undone: 'Teams setup undone', undoFailed: "Couldn't undo it right now; nothing changed. Try again after a reload.",
   offNow: 'Teams are off on this device (you undid the setup).', redo: 'Set up teams again', redone: 'Teams set up',
+  // screens (public/prep-teams.js)
+  settingUp: 'Setting up your teams…', notFound: 'Team not found', list: 'All teams', emptySlot: 'Nothing in this slot',
+  intro: 'Teams of up to 6 from your 10 drafted Pokémon, like Showdown. A set lives in one team; copying it to another team makes an independent copy. A matchup brings one team.',
+  newTeam: 'New team', importTeam: 'Import team', importIt: 'Import', cancel: 'Cancel', fullImport: 'Open the full import',
+  importHelp: 'Paste a team from Showdown (export text). Each block of up to 6 becomes a team; Pokémon you didn\'t draft go to Imported sets.',
+  importIntoHelp: 'Paste sets from Showdown: each fills an empty slot. A Pokémon already in the team goes to Imported sets.',
+  importRejected: "That text couldn't be read as a Showdown team.",
+  importNone: (n) => `Nothing imported.${n ? ` ${n} set${n === 1 ? ' was' : 's were'} held back:` : ''}`,
+  imported: (placed, boxed, held) => `Imported ${placed} set${placed === 1 ? '' : 's'} into the team${boxed ? `; ${boxed} went to Imported sets` : ''}${held ? `; ${held} held back` : ''}.`,
+  evsConverted: (name, text) => `${name}: EVs converted to Stat Points, ${text}.`, review: 'Review',
+  heldBack: (name, why) => `${name} held back${why ? `: ${why}` : ''}`, dismiss: 'Dismiss',
+  importedTeam: 'Imported team', box: 'Imported sets', newTeamOpt: '+ New team', boxCount: (n) => `${n} set${n === 1 ? '' : 's'} not in a team`,
+  boxHelp: 'Sets not in any team. Move one into a team, or delete it here.',
+  usedVs: (list) => `brought vs ${list}`, sharedNote: 'A change to a set here changes it for every matchup that brings this team.',
+  editSet: 'edit set', offRoster: 'not on your roster', noItem: 'no item', noSp: 'no Stat Points yet', moreFor: (n) => `More for ${n}`,
+  up: 'Move up', down: 'Move down', copyTo: 'Copy to…', moveTo: 'Move to…', exportSet: 'Copy as Showdown text', deleteSet: 'Delete set', remove: 'Remove from team',
+  noSetYet: 'no set yet', createSet: 'Create set', dropPlanned: 'Not bringing it', addMon: '+ Add Pokémon', inTeam: 'in this team', name: 'Team name',
+  bringVs: 'Bring vs…', exportTeam: 'Export team', importInto: 'Import into this team', duplicate: 'Duplicate', del: 'Delete team',
+  deleteAsk: (name, n, used) => `Delete ${name}? Its ${n} ${n === 1 ? 'set moves' : 'sets move'} to Imported sets (nothing is destroyed).${used ? ` Matchups bringing it (vs ${used}) will bring no team.` : ''}`,
+  deleteYes: 'Delete team', exportHelp: 'Showdown text for this team (paste it into Showdown\'s teambuilder)', copy: 'Copy',
+  noTeam: 'No team', bring: 'Bring', editTeam: 'Edit team', newFromMatch: '+ New team from this matchup', pickTeam: 'Choose the team you bring to this match.',
+  refused: "That can't be done here.", duplicated: 'Team duplicated: its sets are independent copies', removed: 'Moved to Imported sets',
+  copied: 'Copied', copyFailed: "Couldn't copy", full: 'That team already has 6', copiedTo: (n) => `Copied to ${n}`, movedTo: (n) => `Moved to ${n}`,
+  bringing: (team, coach) => `Bringing ${team} vs ${coach}`,
+  warn: {
+    'species-clause': (w, n) => `Species clause: ${w.species.map(n).join(' + ')}: only one can be brought.`,
+    megas: (w, n) => `${w.species.length} Mega Stones (${w.species.map(n).join(', ')}): only one can Mega Evolve per battle; choose it per game.`,
+    'item-clause': (w, n, it) => `Item clause: ${it(w.item)} is on two sets.`,
+  },
+};
+
+// ---------- Calc workbench (public/prep-workbench.js) ----------
+export const WB = {
+  close: 'Close the workbench', sections: 'Sections', tab: { you: 'You', them: 'Them', field: 'Field' },
+  you: 'You', them: 'Them', field: 'Field', yourDraft: 'your draft', edited: 'edited here',
+  src: { set: 'their saved set', ladder: (c) => `ladder guess${c ? `, most used spread: ${c.nature[0].toUpperCase()}${c.nature.slice(1)} ${['hp', 'atk', 'def', 'spa', 'spd', 'spe'].map((k) => c.sp[k] ?? 0).join('/')}` : ''}`, base: "ladder guess (the Mega uses base species' usage)", keymoves: 'no usage data: moves from key moves', none: 'no set: range' },
+  spread: 'Their spread', boost: (stat) => `Stage (${stat})`, asMega: 'as Mega', nature: 'Nature', item: 'Item', ability: 'Ability', noItem: 'No item',
+  moreStats: 'More stats', spLeft: (n) => (n < 0 ? `${-n} Stat Points over` : `${n} Stat Points left`), backToAssumed: '↺ back to assumed', backToDraft: '↺ back to your draft',
+  weather: 'Weather', terrain: 'Terrain', sides: 'Screens and support', noWeather: 'No weather', noTerrain: 'No terrain',
+  lightScreen: 'Light Screen', reflect: 'Reflect', veil: 'Aurora Veil', helpingHand: 'Helping Hand', lone: 'Lone target (no ×0.75)', crit: 'Crit', noIntimidate: 'No Intimidate',
+  defHp: 'Target HP %', fieldName: { nature: 'Nature', item: 'Item', ability: 'Ability' },
+  apply: (fields) => `Apply to my set (${fields.join(', ')})`, applyNone: 'Apply to my set', applied: 'Applied to your draft: Save version to keep it',
+  saveCalc: 'Save as calc', savedTo: (coach) => `Saved under Calcs vs ${coach}`, openCalcs: 'Open in Calcs', notSaved: "Changes here aren't saved.",
+  noMatchup: 'Save as calc needs an opponent: open this from a matchup or pick one under "Checking against".',
+  calcNote: (src, edited) => `From the workbench. Their side: ${src}.${edited ? ' Your side edited in the workbench (not your saved set).' : ''}`,
+  open: 'Open in the workbench',
 };

@@ -18,7 +18,7 @@ Then open http://localhost:4600. The server binds to 127.0.0.1 only. Change the 
 ## Test
 
 ```sh
-npm test               # builds the Worker artifact, then node --test: 393 tests (calc engine, searches, Prep UI on a stub DOM, Build, chat, Worker)
+npm test               # builds the Worker artifact, then node --test: 407 tests (calc engine, searches, Prep UI on a stub DOM, Build, chat, Worker)
 ```
 
 The tests use a saved copy of the real sheet in `test/fixtures/`, so they run offline.
@@ -40,7 +40,17 @@ The tests use a saved copy of the real sheet in `test/fixtures/`, so they run of
 
 `lib/` is shared by the server, the browser and the tests.
 
-## Teambuilder (your set editor: My sets, or a matchup's Sets)
+## Teams (Battle Prep › Teams, `#prep/teams`)
+
+Your sets live in teams of up to 6 from your 10 drafted Pokémon, like Showdown's teambuilder; "Imported sets" is the one box
+for sets in no team. A set belongs to one team: copying it to another team makes an independent copy (same history), moving
+it keeps it. Teams can be created, renamed, duplicated, deleted (sets go to the box; Undo), exported and imported as
+Showdown text (a Showdown export's EVs convert to Stat Points on import, with a note per set; only sets that can't be legal
+are held back, by name). A matchup brings one team ("Bring" on its Sets tab); a new matchup brings the last team used. Species clause,
+two Mega Stones and a repeated item are warnings, never blocks. Existing prep moves into teams once, on load, after a backup
+is kept on the device (Backup › Teams has Undo). Logic: `lib/prep-teams.mjs`; screens: `public/prep-teams.js`.
+
+## Teambuilder (the set editor: a team's slot, or a matchup's Sets)
 
 Opening one of your sets opens the teambuilder (`#prep/my-sets/<id>`, `#prep/w/<ws>/sets/<id>`), laid out like Showdown's
 (our own markup and CSS; sprites are the app's portraits):
@@ -55,6 +65,10 @@ Opening one of your sets opens the teambuilder (`#prep/my-sets/<id>`, `#prep/w/<
 - **Calc strip**: tap a move to see it against their mons (+0, the setup stage, and no-sun for a Drought set).
 - **Pin as A**, then drag or tap a **try:** idea: a diff bar shows Speed rank, marks gained or lost and the bulk score.
 - **Save version / Save as a new set / Discard**, history, and Showdown **Import / Export**. Nothing saves until you press Save.
+- **Workbench** (`public/prep-workbench.js`): a strip value, a mark's "Open in the workbench", a "no OHKO" target or a diff
+  item opens that calc with both sides editable (SP, nature, item, ability, stages, their spread) and the field (weather,
+  terrain, screens, Helping Hand, crit, Intimidate, target HP). **Apply to my set** writes your side into the draft; **Save as
+  calc** files it under that opponent's Calcs. On a phone it is a full-screen sheet with You / Them / Field tabs.
 
 Marks come from `lib/prep-build.mjs` (`speedMarks`, `koMarks`, `surviveMarks`) over `lib/calc/threshold.mjs`. They depend on
 the set's item, nature and moves, not its Stat Points, so dragging never runs the damage engine. Old `#…/build` links open Sets,

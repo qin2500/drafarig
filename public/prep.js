@@ -22,10 +22,12 @@ import * as Practice from './prep-practice.js';
 import * as Matchup from './prep-matchup.js';
 import * as Chat from './prep-chat.js';
 import * as TB from './prep-teambuilder.js';
+import * as Teams from './prep-teams.js';
+import * as WB from './prep-workbench.js';
 
 const SAVE_DELAY = 400;
 const TAB_LABEL = { brief: 'Brief', plan: 'Plan', sets: 'Sets', calcs: 'Calcs', practice: 'Practice' };
-const MODULES = [Sets, Calcs, Plan, Practice, Matchup, Chat, TB];
+const MODULES = [Sets, Calcs, Plan, Practice, Matchup, Chat, TB, Teams, WB];
 
 /**
  * app: { dex, league(), sheet(), usage(), coresCx(), viewingCoach(), setViewingCoach(name), goMode(mode), toast(msg),
@@ -96,7 +98,7 @@ export function createPrep(app) {
   P.mutate = (which, fn, { substantive = true, render = true, allowUnassigned = false } = {}) => {
     if (P.readOnly()) { P.toast(C.SAVE.newer); return false; }
     // My sets is your own library: viewing as another coach never writes into it (their ideas stay in their prep)
-    if (which === 'mysets' && !P.canWriteMine()) { P.toast(P.myCoach() ? C.POV.mineBlocked(P.myCoach()) : C.POV.assignFirst); return false; }
+    if ((which === 'mysets' || which === 'teams') && !P.canWriteMine()) { P.toast(P.myCoach() ? C.POV.mineBlocked(P.myCoach()) : C.POV.assignFirst); return false; }
     // A workspace saved before perspectives is read-only until you say whose it is (its own review screen does that)
     if (which.startsWith('ws:') && !allowUnassigned && P.ws.has(which.slice(3)) && !ownerOf(P.ws.get(which.slice(3)))) { P.toast(C.POV.assignFirst); return false; }
     const key = keyOf(which);
@@ -112,7 +114,9 @@ export function createPrep(app) {
     if (key.startsWith(wsKey(''))) out.updatedAt = P.now();
     setDoc(key, out);
     P.dirty.add(key);
-    // a matchup's 6 is its team: an edit of my6 goes into the team (a set held by another team becomes a copy)
+    // a matchup's 6 is its team: an edit of my6 goes into the team (a set held by another team becomes a copy); an edit
+    // of a team goes into the my6 of every matchup that brings it
+    if (key === KEYS.teams) mirrorAll();
     if (key.startsWith(wsKey('')) && JSON.stringify(cur.my6 ?? []) !== JSON.stringify(out.my6 ?? [])) syncTeamOf(out.id);
     if (substantive && key !== KEYS.meta) {
       P.docs.meta = { ...P.docs.meta, changesSinceBackup: (P.docs.meta.changesSinceBackup ?? 0) + 1 };
@@ -316,6 +320,11 @@ export function createPrep(app) {
    */
   P.canonical = (r) => {
     if (!r) return { view: 'home' };
+    // My sets became Teams: its old addresses open the Teams list, or the set in its team's slot
+    if (r.view === 'my-sets' && r.kind !== 'import' && teamsStored()) {
+      const team = r.id ? TM.teamOf(P.docs.teams, r.id) : null;
+      return team ? { view: 'teams', teamId: team.id, slot: team.slots.indexOf(r.id) + 1 } : { view: 'teams' };
+    }
     // the retired Build dashboard (#prep/<p>v<o>/build/<n>): the teambuilder for that pick's set, in this matchup's prep
     if (isMatch(r) && r.detail?.side === 'build' && P.coaches()) {
       const pov = r.names?.pov ? P.coaches().find((c) => c.name === r.names.pov) : P.coachBySeat(r.pov);
@@ -383,6 +392,8 @@ export function createPrep(app) {
   P.applyHash = (hash) => {
     const r = parseRoute(hash);
     if (!r) return false;
+    // Back while the workbench is open closes it (it was a history entry on the same address)
+    if (P.ui.wb?.open) { WB.close(P, { fromHistory: true }); if (hash === formatRoute(P.route)) return true; }
     if (P.docs.meta && P.dirty.size) flush();
     if (P.docs.meta) P.saveUi();
     // Back / Forward: the entry remembers which two coaches it showed
@@ -430,6 +441,9 @@ export function createPrep(app) {
     const id = P.id('ws');
     const roster = { fetchedAt: app.sheet()?.fetchedAt ?? null, speciesIds: P.coachRoster(opp), points: Object.fromEntries((P.league()?.coaches.find((c) => c.name === opp)?.picks ?? []).filter((p) => p.id).map((p) => [p.id, p.points])) };
     const ws = newWorkspace({ id, coach: opp, roster, now: P.now(), pov });
+    // a new matchup brings the team used last (one tap to change, on its Sets tab)
+    const last = teamsStored() && pov === P.ownSide() ? P.docs.teams.teams.find((t) => t.id === P.docs.meta.lastTeamId && t.kind !== 'holding') : null;
+    if (last) { ws.teamId = last.id; ws.my6 = last.slots.map((setId) => ({ setId })); }
     P.ws.set(id, ws); P.revs.set(wsKey(id), null);
     P.dirty.add(wsKey(id));
     P.docs.meta = { ...P.docs.meta, workspaces: [...P.docs.meta.workspaces, { id, coach: opp, pov, updatedAt: ws.updatedAt, archived: false }] };
@@ -480,6 +494,7 @@ export function createPrep(app) {
       else if (r.view === 'rules') body = rulesScreen();
       else if (r.view === 'backup') body = backupScreen();
       else if (r.view === 'pilot') body = Practice.pilot(P);
+      else if (r.view === 'teams') body = Teams.screen(P, r);
       else if (r.view === 'my-sets') { const l = r.id ? P.docs.mysets.sets.find((s) => s.id === r.id) : null; body = l ? `<section class="panel prep-set">${TB.editor(P, null, l)}</section>` : Sets.mySets(P, r); }
       else if (isMatch(r)) body = matchScreen(r);
       else if (r.view === 'ws') {
@@ -496,7 +511,10 @@ export function createPrep(app) {
     // drill-downs (a set, a calc, a variant…) get the same "ask about this screen" line as the matchup screens
     const drill = ((r.view === 'ws' && r.kind && P.ws.has(r.wsId)) || (r.view === 'my-sets' && r.id)) && !Chat.chatUi(P).open;
     if (drill) chat = `<p class="chat-foot">${Chat.entry(C.CHATUI.openHere)}</p>`;
-    return `<div class="prep" data-prep-view="${esc(r.view)}">${banners()}${body}${chat}</div>`;
+    // the calc workbench sits over the screen it was opened from (a sheet; the screen stays as it was)
+    let wb = '';
+    try { wb = WB.render(P); } catch (e) { console.error('Workbench failed:', e && e.message); }
+    return `<div class="prep" data-prep-view="${esc(r.view)}">${banners()}${body}${chat}${wb}</div>`;
   };
 
   /**
@@ -662,7 +680,7 @@ export function createPrep(app) {
       <h3>${esc(C.BRIEF.toolsHead)}</h3>
       <ul class="toolrows">
         <li>${btn('Rules you know', 'go-rules', {}, { cls: 'linkish' })} <span class="small muted">${known} known · ${Object.keys(rules).length - known} don't know</span></li>
-        <li>${btn('My sets', 'go-mysets', {}, { cls: 'linkish' })} <span class="small muted">${mineCount} set${mineCount === 1 ? '' : 's'} in your library</span> ${btn('Paste your team', 'go-mysets-import', {}, { cls: 'linkish' })}</li>
+        <li>${btn(teamsStored() ? 'Teams' : 'My sets', 'go-mysets', {}, { cls: 'linkish' })} <span class="small muted">${mineCount} set${mineCount === 1 ? '' : 's'}${teamsStored() ? ` in ${P.docs.teams.teams.filter((t) => t.kind !== 'holding').length} teams` : ' in your library'}</span> ${btn('Paste your team', 'go-mysets-import', {}, { cls: 'linkish' })}</li>
         <li>${btn('Help a friend practise (pilot card)', 'go-pilot', {}, { cls: 'linkish' })}</li>
         <li>${btn('Backup & restore', 'go-backup', {}, { cls: 'linkish' })} <span class="small muted backup-line">${esc(C.HOME.savedLocal)} Last backup: ${meta.lastBackupAt ? `${backupAge} days ago` : 'never'} (${meta.changesSinceBackup ?? 0} changes since).</span></li>
         <li>${Chat.chatUi(P).open ? btn(C.CHATUI.open, 'chat-open', {}, { cls: 'linkish' }) : Chat.entry(C.CHATUI.open)} <span class="small muted">${esc(C.CHATUI.title)}: it sees the screen you have open</span></li>
@@ -726,10 +744,13 @@ export function createPrep(app) {
     P.lastPov = m.pov.name;
     const ident = P.identity();
     const src = ident === m.pov.name ? 'identity' : P.resolvePov(null).name === m.pov.name ? P.resolvePov(null).source : 'url';
-    const ws = m.ws;
+    let ws = m.ws;
     const legacy = unassignedVs([...P.ws.values()], m.opp.name);
     // an old Build link (#…/build/<n>) that couldn't be redirected yet (sheet loading, no set): the Sets section
     const tab = r.detail?.side === 'build' ? 'sets' : MATCH_TABS.includes(r.tab) ? r.tab : idRoute ? 'plan' : 'brief';
+    // Your own Sets, Calcs and Practice are working sections: opening one starts this matchup's prep (the footer says it's saved on
+    // this device). Another coach's view, or earlier unassigned prep vs this coach (offered for review), keeps the start panel.
+    if (!ws && !legacy.length && m.pov.name === P.ownSide() && ['sets', 'calcs', 'practice'].includes(tab) && !P.readOnly()) ws = P.ensureWorkspace(m.pov.name, m.opp.name) ?? null;
     const dots = ws ? draftDots(ws) : {};
     const seatRoute = { view: 'ws', pov: m.pov.order, opp: m.opp.order };
     const hrefOf = (k) => formatRoute(idRoute && k !== 'brief' ? { view: 'ws', wsId: ws.id, tab: k } : { ...seatRoute, tab: k });
@@ -793,6 +814,16 @@ export function createPrep(app) {
       const how = TM.reconcileSix(w, main, alt);
       if (how === 'adopt') syncTeamOf(w.id); // an older tab changed this 6 after the team: the team takes it
       else if (how === 'mirror') { const m = TM.mirrorSix(w, main, alt); if (m) mark(wsKey(w.id), m); }
+    }
+  }
+  /** After an edit of a team: every matchup that brings it (or its alternatives) gets the team's sets as its my6. */
+  function mirrorAll() {
+    if (!teamsStored() && !P.dirty.has(KEYS.teams)) return;
+    for (const w of P.ws.values()) {
+      if (!w.teamId || !TM.isOwnedWs(w)) continue;
+      const { main, alt } = TM.teamsOfWs(P.docs.teams, w);
+      const m = main && TM.mirrorSix(w, main, alt);
+      if (m) mark(wsKey(w.id), m);
     }
   }
   /** After an edit of a matchup's my6: the team follows (copies for sets another team holds; Imported sets move). */
@@ -1263,7 +1294,7 @@ export function createPrep(app) {
   // A document written by a newer app is read-only here: only downloading a backup is offered, nothing removes it.
   const NOT_WHEN_NEWER = new Set(['ws-archive', 'ws-archive-confirm', 'restore-replace', 'restore-replace-confirm', 'restore-import', 'restore-undo', 'delete-all', 'delete-all-confirm']);
   // Deletes take one tap and can be undone until the next action: the documents they change are kept and put back.
-  const UNDOABLE = { 'set-delete': 'Set deleted', 'variant-delete': 'Version deleted', 'calc-delete': 'Calc deleted', 'plan-delete': 'Plan deleted', 'card-delete': 'Card deleted',
+  const UNDOABLE = { 'team-delete-confirm': 'Team deleted (its sets are in Imported sets)', 'team-remove': 'Moved to Imported sets', 'team-set-delete': 'Set deleted', 'set-delete': 'Set deleted', 'variant-delete': 'Version deleted', 'calc-delete': 'Calc deleted', 'plan-delete': 'Plan deleted', 'card-delete': 'Card deleted',
     'fd-delete': 'Finding deleted', 'pilot-delete': 'Pilot team deleted', 'rv-del': 'Reveal removed', 'ifthen-remove': 'If-then line removed',
     'owner-assign': 'Earlier prep assigned', 'owner-unassign': 'Earlier prep unassigned' };
   const docKeys = () => [KEYS.meta, KEYS.rules, KEYS.mysets, KEYS.pilot, KEYS.teams, ...[...P.ws.keys()].map(wsKey)];
@@ -1310,6 +1341,7 @@ export function createPrep(app) {
     saveUi: () => P.saveUi(),
     /** Escape: close an open detail sheet (Back) or a pending question. Returns whether it did something. */
     escape: () => {
+      if (WB.close(P)) return true;
       if (P.pendingReplace) { P.pendingReplace = null; app.rerender(); return true; }
       if (isMatch(P.route) && P.route.detail) { P.back(); return true; }
       return false;

@@ -59,13 +59,13 @@ test('Speed: their Mega forms get a row unless their item is known and isn\'t th
   assert.ok(!/Lucario-Mega/.test(T(b)), 'seen holding Life Orb: no Mega row');
 });
 
-test('paste import keeps the sets that still need a choice, and EV questions say what they do', async (t) => {
+test('paste import keeps the sets that still need a choice; EVs convert on their own, with a note', async (t) => {
   const app = await bootApp({ mode: 'prep/my-sets/import', storage: device() });
   t.after(() => app.restore());
-  await app.input('paste-text', 'Charizard @ Charizardite Y\nAbility: Blaze\nEVs: 2 HP / 32 SpA / 32 Spe\nTimid Nature\n- Heat Wave\n\nPelipper @ Focus Sash\nAbility: Drizzle\nEVs: 4 HP / 252 SpA / 252 Spe\nModest Nature\n- Hurricane\n');
+  await app.input('paste-text', 'Charizard @ Charizardite Y\nAbility: Blaze\nEVs: 2 HP / 32 SpA / 32 Spe\nTimid Nature\n- Heat Wave\n\nPelipper @ Focus Sash\nEVs: 4 HP / 252 SpA / 252 Spe\nModest Nature\n- Hurricane\n');
   await app.click({ pa: 'paste-check' });
   assert.ok(!/brackets/.test(T(app)));
-  assert.match(T(app), /Convert to Stat Points/);
+  assert.match(T(app), /EVs converted to Stat Points: 4 HP \/ 252 SpA \/ 252 Spe → 1 HP \/ 32 SpA \/ 32 Spe \(1 left\)/);
   await app.click({ pa: 'paste-import' });
   assert.equal(app.location.hash, '#prep/my-sets/import', 'stays on the import screen');
   assert.match(T(app), /Pelipper/);

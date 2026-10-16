@@ -7,6 +7,7 @@ import { parseTeam, exportSet, setKey } from '../lib/paste.mjs';
 import { newLineage, addVersion, setCurrent, currentVersion, versionOf, asSet, provenanceAll, weakestSource, guessSet, commonSpread, cleanSetData, emptyCosmetic, seenByWho, pruneVersions, referencedVersions, SOURCE_RANK } from '../lib/prep-model.mjs';
 import { SOURCES } from '../lib/prep-schema.mjs';
 import * as C from './prep-copy.js';
+import * as Teams from './prep-teams.js';
 import { esc, attrs, btn, chipBtn, h2, select, sourceChip, term } from './prep-ui.js';
 
 const THEIR_SOURCES = ['sheet-open', 'seen-vs-me', 'seen-vs-others', 'ladder', 'my-guess', 'counterprep-guess'];
@@ -96,7 +97,7 @@ export function tab(P, ws) {
   }).join('');
   const removedSets = ws.theirSets.filter((s) => !roster.includes(s.speciesId));
   const vchips = ws.variants.map((x) => chipBtn(`${C.SETGRID.roleIcon[x.role] ?? ''} ${C.VARIANT_ROLE[x.role]}${x.name ? `: ${x.name}` : ''}`.trim(), 'pick-variant', { variant: x.id }, x.id === v?.id)).join('');
-  const my6 = myTeamRows(P, ws);
+  const my6 = `${Teams.bring(P, ws) ?? ''}${myTeamRows(P, ws)}`; // which team it brings, then your 10 (ticking one puts it in that team)
   const mega = roster.filter((sp) => P.mech && Object.values(P.mech.items).some((i) => i.megaStone?.[sp]));
   return `${h2('Sets')}
     <h3>Their team</h3><p class="small">One ${term('set', 'Set')} per Pokémon in each version of their team.</p>
@@ -243,8 +244,7 @@ function importScreen(P, ws) {
       const msg = typeof C.PASTE[l.code] === 'function' ? C.PASTE[l.code](l) : '';
       const q = l.question;
       const qhtml = q ? `<div class="choices" role="group" aria-label="${esc(msg || 'Choose')}">${q.options.map((o) => chipBtn(`${C.PASTE_OPTION_FOR[q.key]?.[o] ?? C.PASTE_OPTION[o] ??(P.mech?.species[o] ? P.spName(o) : P.mech?.abilities[o] ? P.name('abilities', o) : o)}${o === q.suggested ? ' (suggested)' : ''}`, 'paste-answer', { set: s.index, key: q.key, value: o }, q.answer === o)).join('')}</div>` : '';
-      const conv = l.code === 'legacy-evs' ? `<p class="small">${STAT_IDS.filter((k) => l.before[k]).map((k) => `${l.before[k]} ${C.STAT_SHORT[k]}`).join(' / ')} → ${STAT_IDS.filter((k) => l.after[k]).map((k) => `${l.after[k]} ${C.STAT_SHORT[k]}`).join(' / ')} (${l.spare} left)</p>` : '';
-      return `<li class="tier${l.tier}"><code>${esc(l.text)}</code>${l.tier ? ` <span class="tierword">${esc(l.code === 'skipped' ? 'skipped (your choice)' : C.PASTE_TIER[l.tier])}</span>` : ''}${msg ? ` <span class="small">${esc(msg)}</span>` : ''}${conv}${qhtml}</li>`;
+      return `<li class="tier${l.tier}"><code>${esc(l.text)}</code>${l.tier ? ` <span class="tierword">${esc(l.code === 'skipped' ? 'skipped (your choice)' : C.PASTE_TIER[l.tier])}</span>` : ''}${msg ? ` <span class="small">${esc(msg)}</span>` : ''}${qhtml}</li>`;
     }).join('');
     const existing = s.draft?.species ? (imp.side === 'mine' ? P.docs.mysets.sets : ws?.theirSets ?? []).filter((x) => x.speciesId === s.draft.species) : [];
     const dup = existing.length ? `<p class="small">Same Pokémon already has a set: ${chipBtn('New set', 'paste-dup', { set: s.index, value: 'new' }, (imp.dup[s.index] ?? 'new') === 'new')}${existing.map((x) => chipBtn(`New version of ${x.name || 'Set'}`, 'paste-dup', { set: s.index, value: x.id }, imp.dup[s.index] === x.id)).join('')}</p>` : '';

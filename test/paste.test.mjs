@@ -25,10 +25,11 @@ test('T-PASTE-01…09: each fixture lands in the expected tier, with Showdown\'s
   assert.equal(v.status, 'ready');
   assert.deepEqual(v.set.sp, { hp: 2, atk: 32, def: 0, spa: 0, spd: 0, spe: 32 });
   const legacy = one(blocks['02-legacy-252ev']);
-  assert.equal(legacy.status, 'needs-answer');
-  const conv = legacy.lines.find((l) => l.code === 'legacy-evs');
-  assert.deepEqual([conv.tier, conv.question.suggested], [2, 'convert']);
+  assert.equal(legacy.status, 'ready', 'Showdown EVs convert on their own');
+  const conv = legacy.lines.find((l) => l.code === 'evs-converted');
+  assert.deepEqual([conv.tier, conv.question], [4, undefined]);
   assert.deepEqual(conv.after, { hp: 1, atk: 32, def: 0, spa: 0, spd: 0, spe: 32 }, '4/252/252 → 1/32/32');
+  assert.deepEqual(legacy.set.sp, conv.after);
   assert.equal(one(blocks['02-legacy-252ev'], { evs: 'convert' }).status, 'ready');
   assert.equal(one(blocks['02-legacy-252ev'], { evs: 'keep' }).status, 'rejected', 'kept as typed: over the limits');
   const tera = one(blocks['03-tera-and-ivs']);

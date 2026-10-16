@@ -42,7 +42,7 @@ function matchOfRoute(P) {
 function viewOf(r) {
   if (r.view === 'home' || r.view === 'overview') return 'overview';
   if (r.kind === 'calcs') return 'calcs';
-  if (r.kind === 'sets' || (r.view === 'my-sets' && r.id)) return 'sets';
+  if (r.kind === 'sets' || (r.view === 'my-sets' && r.id) || r.view === 'teams') return 'sets';
   if (r.detail?.side === 'build') return 'sets';
   if (r.kind || r.detail) return 'other';
   const t = r.tab ?? (isMatch(r) ? 'brief' : 'plan');

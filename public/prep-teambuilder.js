@@ -13,11 +13,12 @@ import { checkSet, legalAbilities, learnset, battleForme, toID } from '../lib/ca
 import { STAT_IDS, SP_PER_STAT, SP_TOTAL, spTotal, statValue, natureSign } from '../lib/calc/stats.mjs';
 import { currentVersion, asSet, defaultVariant, cleanSetData } from '../lib/prep-model.mjs';
 import { workspacesFor } from '../lib/prep-matchup.mjs';
-import { parseTeam, exportSet } from '../lib/paste.mjs';
+import { parseTeamQuick, exportSet } from '../lib/paste.mjs';
 import * as B from '../lib/prep-build.mjs';
 import * as C from './prep-copy.js';
 import { esc, btn, chipBtn, h2, select, koWords } from './prep-ui.js';
 import { updateDraft, createMySet, theirSetFor, spForUnknown, revisionPrompt } from './prep-sets.js';
+import * as WB from './prep-workbench.js';
 
 const LEAGUE = '__league';
 const NEAR = 8; // whole-league scope: only marks within this many SP of the current value
@@ -185,12 +186,15 @@ function markCalc(P, m, set, sc, rows) {
 }
 
 // ---------- the screen ----------
-export function editor(P, ws, l) {
+/** opts.team: the set opened inside a team (#prep/teams/<id>/<slot>): the strip is that team, scope its matchup. */
+export function editor(P, ws, l, { team = null } = {}) {
   P.ensureEngine();
   const set = draftSet(P, l);
-  const sc = scopeOf(P, ws);
+  // inside a team, the default opponent is a matchup that brings it
+  const sc = scopeOf(P, ws ?? (team ? [...P.ws.values()].find((w) => w.teamId === team.id && w.pov === P.ownSide()) ?? null : null));
   const rows = rowsOf(P, sc);
-  const back = btn(ws ? '‹ Sets' : '‹ My sets', 'back', {}, { cls: 'back', aria: 'Back' });
+  P.tbLast = { setId: l.id, rows }; // what a tap into the workbench (tb-wb) looks its target row up in
+  const back = btn(team ? `‹ ${team.name}` : ws ? '‹ Sets' : '‹ Teams', 'back', {}, { cls: 'back', aria: 'Back' });
   if (!P.mech) return `${back}${h2(P.spName(l.speciesId))}<p class="small">${esc(T.loadingData)}</p>`;
   const forme = B.myForme(P.mech, set);
   const fm = P.mech.species[forme] ?? P.mech.species[l.speciesId];
@@ -206,7 +210,7 @@ export function editor(P, ws, l) {
   return `<div class="tb">${back}${h2(`${P.spName(forme)} · ${l.name || 'Set'} v${l.currentV}`)}
     ${revisionPrompt(P, l)}
     ${ctxLine(P, set, sc)}
-    ${teamStrip(P, ws, sc, l)}
+    ${team ? teamOwnStrip(P, team, l) : teamStrip(P, ws, sc, l)}
     <div class="tb-card">
       ${setRow(P, l, set, fm, forme)}
       ${focus !== null && set.moves[focus] ? strip(P, set, set.moves[focus], rows, sc) : ''}
@@ -223,6 +227,19 @@ function ctxLine(P, set, sc) {
   const month = P.app.usage?.()?.month;
   return `<div class="tb-ctx small"><label>${esc(T.checking)} ${select('tb-scope', [...opts, [LEAGUE, T.league]], sc.value, { data: { pc: 'tb-scope' }, aria: T.checking })}</label>
     <span class="tb-asm muted">${esc(T.assumptions(sc.league ? T.allOpp(sc.others.length) : T.oneOpp(sc.value), month, w?.weather ? `${w.weather} (your ${P.name('abilities', w.mine.ability)})` : null))}</span></div>`;
+}
+/** Inside a team: that team's sets (tap to edit one), its planned species, and "+" to add a mon. */
+function teamOwnStrip(P, team, l) {
+  const tile = (id, i) => {
+    const s = P.lineage(id);
+    if (!s) return '';
+    const d = currentVersion(s).data;
+    const f = B.myForme(P.mech, { species: s.speciesId, item: d.item });
+    return `<li><button type="button" class="tb-mon${id === l.id ? ' sel' : ''}" data-pa="team-slot" data-team="${esc(team.id)}" data-slot="${i + 1}" aria-pressed="${id === l.id}">${P.pt(s.speciesId, { size: 'sm' })}<span class="tb-mon-t"><span class="tb-mon-n">${esc(P.spName(f))}</span><span class="tb-mon-i">${esc(P.name('items', d.item) || T.noItem)}</span></span></button></li>`;
+  };
+  const planned = (team.planned ?? []).map((sp) => `<li><span class="tb-mon ghost">${P.pt(sp, { size: 'sm' })}<span class="tb-mon-t"><span class="tb-mon-n">${esc(P.spName(sp))}</span><span class="tb-mon-i">${esc(T.noSet)}</span></span></span></li>`).join('');
+  const add = team.kind !== 'holding' && team.slots.length < 6 ? `<li>${btn('+', 'team-open', { team: team.id }, { cls: 'tb-add', aria: C.TEAMS.addMon })}</li>` : '';
+  return `<p class="tb-lbl">${esc(team.name)}</p><ul class="${team.kind === 'holding' ? 'tb-bench' : 'tb-team'}">${team.slots.map(tile).join('')}${planned}${add}</ul>`;
 }
 function teamStrip(P, ws, sc, l) {
   const me = sc.me;
@@ -284,9 +301,12 @@ function strip(P, set, move, rows, sc) {
     const vals = cols.map((c) => {
       const field = c.noWeather ? {} : fieldFor(P, set, row);
       const r = memo(P, ['strip', set, row.key, row.set, row.common, move, c.boost, field], () => B.hitResult(P.calc, P.mech, set, row, move, { boost: c.boost, field }).result);
-      if (r.class !== 'exact') return `<div class="tb-v"><span class="k">${esc(c.k)}</span><b class="no">${esc(C.CLASS[r.class] || '—')}</b></div>`;
+      // each value opens the workbench at exactly this calc
+      const open = (inner, text) => `<button type="button" class="tb-v" data-pa="tb-wb" ${wbAttrs({ set: P.tbLast?.setId, key: row.key, move, role: 'attacker', boost: c.boost || undefined, noweather: c.noWeather ? 1 : undefined })} aria-label="${esc(T.wbOpen(`${rowName(P, row, sc)} ${c.k}: ${text}`))}">${inner}</button>`;
+      if (r.class !== 'exact') return open(`<span class="k">${esc(c.k)}</span><b class="no">${esc(C.CLASS[r.class] || '—')}</b>`, C.CLASS[r.class] || '—');
       const ko = r.ko.one.num === r.ko.one.den;
-      return `<div class="tb-v"><span class="k">${esc(c.k)}</span><b class="${ko ? 'ko' : 'no'}">${pct(r.range.min, r.maxHP)}–${pct(r.range.max, r.maxHP)}%${ko ? ' KO' : r.ko.one.num !== '0' ? ` ${esc(T.someKo(r.ko.one))}` : ''}</b></div>`;
+      const text = `${pct(r.range.min, r.maxHP)}–${pct(r.range.max, r.maxHP)}%${ko ? ' KO' : r.ko.one.num !== '0' ? ` ${T.someKo(r.ko.one)}` : ''}`;
+      return open(`<span class="k">${esc(c.k)}</span><b class="${ko ? 'ko' : 'no'}">${esc(text)}</b>`, text);
     }).join('');
     return `<div class="tb-hit"><div class="tb-hw">${P.pt(row.forme, { size: 'xs' })}<span>${esc(rowName(P, row, sc))}</span></div>${vals}</div>`;
   }).join('');
@@ -331,10 +351,14 @@ function diffBar(P, l, set, A, speed, em, sc, rows) {
   const emA = engineMarks(P, a, sc, rows);
   if (em && emA) {
     const label = (m) => markText(P, m, sc, rows).replace(/ \[.*\]$/, '');
-    const metOf = (marks, s) => { const out = new Map(); for (const m of marks) { if (m.kind === 'tie') continue; const k = label(m); out.set(k, (out.get(k) ?? false) || B.markMet(m, s)); } return out; };
+    const metOf = (marks, s) => { const out = new Map(); for (const m of marks) { if (m.kind === 'tie') continue; const k = label(m); out.set(k, { met: (out.get(k)?.met ?? false) || B.markMet(m, s), m: out.get(k)?.m ?? m }); } return out; };
     const was = metOf([...(sa?.marks ?? []), ...emA.marks], a), now = metOf([...(speed?.marks ?? []), ...em.marks], set);
-    for (const [k, v] of now) if (v && !was.get(k)) chips.push(`<span class="tb-d up">✓ ${esc(k)}</span>`);
-    for (const [k, v] of was) if (v && !now.get(k)) chips.push(`<span class="tb-d down">✗ ${esc(k)}</span>`);
+    // a KO / survive item opens the workbench on that target with your current draft (a Speed item has no calc to open)
+    const item = (k, m, cls, sign) => (m.kind === 'ko' || m.kind === 'survive'
+      ? `<button type="button" class="tb-d ${cls}" data-pa="tb-wb" ${wbAttrs(markSeed(l.id, m, false))} aria-label="${esc(T.wbOpen(k))}">${sign} ${esc(k)}</button>`
+      : `<span class="tb-d ${cls}">${sign} ${esc(k)}</span>`);
+    for (const [k, v] of now) if (v.met && !was.get(k)?.met) chips.push(item(k, v.m, 'up', '✓'));
+    for (const [k, v] of was) if (v.met && !now.get(k)?.met) chips.push(item(k, v.m, 'down', '✗'));
   } else chips.push(`<span class="small muted">${esc(T.calculating)}</span>`);
   // bulk: expected OHKOs from the scope's common hits (lower is bulkier); only with ladder usage loaded
   const usage = P.app.usage?.() ?? null;
@@ -396,15 +420,47 @@ function cantChips(P, k, speed, em, sc, rows) {
   for (const c of em?.cant ?? []) {
     const r = rows.find((x) => x.key === c.key);
     if (!r) continue;
-    if (c.kind === 'ko' && k === c.stat) noKo.set(c.move, [...(noKo.get(c.move) ?? []), rowName(P, r, sc)]);
-    if (c.kind === 'survive' && k === 'hp') out.push(`<span class="tb-cant bad">${esc(T.cantSurvive(rowName(P, r, sc), P.name('moves', c.move)))}</span>`);
+    if (c.kind === 'ko' && k === c.stat) noKo.set(c.move, [...(noKo.get(c.move) ?? []), { c, name: rowName(P, r, sc) }]);
+    if (c.kind === 'survive' && k === 'hp') out.push(`<button type="button" class="tb-cant bad" data-pa="tb-wb" ${wbAttrs({ set: P.tbLast?.setId, key: c.key, move: c.move, role: 'defender' })} aria-label="${esc(T.wbOpen(T.cantSurvive(rowName(P, r, sc), P.name('moves', c.move))))}">${esc(T.cantSurvive(rowName(P, r, sc), P.name('moves', c.move)))}</button>`);
   }
-  for (const [mv, who] of noKo) out.push(`<span class="tb-cant">${esc(T.cantKo(P.name('moves', mv), who.join(', ')))}</span>`);
+  // "no OHKO even at 32": each target name opens the workbench with that stat at 32
+  for (const [mv, who] of noKo) {
+    const names = who.map(({ c, name }) => `<button type="button" class="linkish" data-pa="tb-wb" ${wbAttrs({ set: P.tbLast?.setId, key: c.key, move: mv, role: 'attacker', stat: c.stat, sp: SP_PER_STAT })} aria-label="${esc(T.wbOpen(`${P.name('moves', mv)} on ${name}`))}">${esc(name)}</button>`).join(', ');
+    out.push(`<span class="tb-cant">${esc(T.cantKoHead(P.name('moves', mv)))} ${names}</span>`);
+  }
   return out.length ? `<div class="tb-cants">${out.join('')}</div>` : '';
 }
 function tipLine(P, l, set, marks, sc, rows) {
   if (!marks.length) return '';
-  return `<div class="tb-tip">${marks.map((m) => `<p><b>${esc(markText(P, m, sc, rows))}</b> <span class="small">${esc(markCalc(P, m, set, sc, rows))}</span></p>`).join('')}${btn(T.close, 'tb-tip', { set: l.id, stat: '', sp: '' }, { cls: 'linkish' })}</div>`;
+  const wbBtn = (m) => (m.kind === 'ko' || m.kind === 'survive' ? ` <button type="button" class="linkish" data-pa="tb-wb" ${wbAttrs(markSeed(l.id, m, true))}>${esc(T.wbOpenShort)}</button>` : '');
+  return `<div class="tb-tip">${marks.map((m) => `<p><b>${esc(markText(P, m, sc, rows))}</b> <span class="small">${esc(markCalc(P, m, set, sc, rows))}</span>${wbBtn(m)}</p>`).join('')}${btn(T.close, 'tb-tip', { set: l.id, stat: '', sp: '' }, { cls: 'linkish' })}</div>`;
+}
+
+// ---------- into the workbench ----------
+const wbAttrs = (d) => Object.entries(d).filter(([, v]) => v !== undefined && v !== null && v !== '').map(([k, v]) => `data-${k}="${esc(v)}"`).join(' ');
+/** A mark as workbench data: atMark puts your stat(s), nature and item at the mark's values (else your draft as it is). */
+function markSeed(setId, m, atMark) {
+  const d = { set: setId, key: m.key, move: m.move, role: m.kind === 'survive' ? 'defender' : 'attacker', boost: m.kind === 'ko' && m.boost ? m.boost : undefined };
+  if (!atMark) return d;
+  if (m.kind === 'ko') return { ...d, stat: m.stat, sp: m.sp, nature: m.nature, item: m.need?.item };
+  const hp = m.stat === 'hp' ? m.sp : m.pair.sp, df = m.stat === 'hp' ? m.pair.sp : m.sp;
+  return { ...d, stat: 'hp', sp: hp, stat2: m.defStat, sp2: df, nature: m.nature, item: m.need?.item };
+}
+/** tb-wb: open the workbench for one target row (from P.tbLast, the rows this editor just showed). */
+function openWorkbench(t, P) {
+  const d = t.dataset, last = P.tbLast;
+  const l = lineage(P, d.set);
+  if (!l || !last || last.setId !== l.id || !P.mech) return;
+  const row = last.rows.find((r) => r.key === d.key);
+  if (!row) return;
+  const base = draftSet(P, l);
+  if (base.sp === 'unknown') return;
+  const mine = structuredClone(base);
+  if (d.nature) mine.nature = d.nature;
+  if (d.item) mine.item = d.item;
+  if (d.stat) mine.sp[d.stat] = Number(d.sp);
+  if (d.stat2) mine.sp[d.stat2] = Number(d.sp2);
+  WB.open(P, { setId: l.id, mine, base, row, move: d.move, mineRole: d.role === 'defender' ? 'defender' : 'attacker', boost: Number(d.boost) || 0, field: d.noweather ? {} : fieldFor(P, mine, row) });
 }
 
 // ---------- save, import / export, history ----------
@@ -442,6 +498,7 @@ function openSpecies(P, sp) {
 export const actions = {
   'tb-open': (t, P) => openSpecies(P, t.dataset.species),
   'tb-focus': (t, P) => { const u = (tbUi(P).focus ??= {}); const i = Number(t.dataset.i); if (u[t.dataset.set] !== i) { u[t.dataset.set] = i; P.app.rerender(); } },
+  'tb-wb': openWorkbench,
   'tb-tip': (t, P) => {
     const u = (tbUi(P).tip ??= {});
     const cur = u[t.dataset.set];
@@ -471,13 +528,13 @@ export const actions = {
     const l = lineage(P, t.dataset.set);
     const text = tbUi(P).ioText?.[t.dataset.set];
     if (!l || !P.mech || text === undefined) { P.toast(T.importNothing); return; }
-    const r = parseTeam(text, { mech: P.mech, side: 'mine' });
+    const r = parseTeamQuick(text, { mech: P.mech, side: 'mine' });
     const s = r.sets?.find((x) => x.set);
-    if (!s) { P.toast(T.importFailed); return; }
+    if (!s) { const bad = r.sets?.[0]?.lines.find((x) => x.tier === 1); P.toast(bad && typeof C.PASTE[bad.code] === 'function' ? T.importHeld(C.PASTE[bad.code](bad)) : T.importFailed); return; }
     if (s.set.species !== l.speciesId) { P.toast(T.importOther(P.spName(s.set.species))); return; }
     intoDraft(P, l.id, s.set);
     tbUi(P).io[l.id] = false;
-    P.toast(T.imported);
+    P.toast(s.converted ? T.importedConverted(C.evsConverted(s.converted.from, s.converted.to)) : T.imported);
   },
 };
 export const changes = {
