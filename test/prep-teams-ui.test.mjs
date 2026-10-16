@@ -5,6 +5,8 @@ import assert from 'node:assert/strict';
 import { bootApp, parseHtml, findAll, memoryStorage, RAW } from './ui-harness.mjs';
 import { device, WS, SET_MINE, NOW, T, btns, flushSaves } from './prep-helpers.mjs';
 import { KEYS, wsKey } from '../lib/prep-schema.mjs';
+import { parseTeam, setKey } from '../lib/paste.mjs';
+import { mech } from './calc-helpers.mjs';
 import { newLineage } from '../lib/prep-model.mjs';
 import * as TM from '../lib/prep-teams.mjs';
 
@@ -163,7 +165,7 @@ test('old My sets links open the set in its team; export has the Showdown header
   await l.waitFor(() => l.location.hash === '#prep/teams', 'the list redirect');
   await l.click({ pa: 'team-open', team: tN });
   await l.click({ pa: 'team-export', team: tN });
-  assert.match(l.html(), /=== \[gen9championsvgc2026regmc\] vs Ning ===/);
+  assert.ok(!/===/.test(l.html()), 'no backup header in an ordinary team export');
   assert.match(l.html(), /Charizard @ Charizardite Y/);
   await l.click({ pa: 'back' });
   await l.click({ pa: 'team-import-toggle' });
@@ -268,4 +270,72 @@ test('Battle Prep: the unmatched-name line is quiet and dismissible for the sess
   assert.ok(!/banner warn/.test(app.banners.innerHTML), 'not an orange banner in Prep');
   await app.click({ dismissUnmatched: '1' });
   assert.ok(!/not matched/.test(app.banners.innerHTML), 'dismissed');
+});
+
+// ---------- export: plain Showdown set text (live v12 P0: "a weird prefix/suffix that imports badly") ----------
+// The expected text is what Showdown's own teambuilder writes for one team (play.pokemonshowdown.com
+// js/oldclient/storage.js, Storage.exportTeam): every line ends "  \n", each set ends with a blank line, Champions Stat
+// Points sit on the EVs line (the client keeps them in set.evs, max 32, column "Points"), Level only when not 100.
+const CALVIN_EXPORT = [
+  'Charizard @ Charizardite Y  ', 'Ability: Solar Power  ', 'Level: 50  ', 'EVs: 32 SpA / 32 Spe  ', 'Modest Nature  ', '- Heat Wave  ', '- Solar Beam  ', '- Protect  ', '- Weather Ball  ', '',
+  'Rotom-Fan @ Sitrus Berry  ', 'Ability: Levitate  ', 'Level: 50  ', 'EVs: 32 SpA / 32 Spe  ', 'Modest Nature  ', '- Thunderbolt  ', '- Air Slash  ', '- Protect  ', '- Nasty Plot  ', '',
+  'Pelipper @ Focus Sash  ', 'Ability: Drizzle  ', 'Level: 50  ', 'EVs: 32 HP / 32 SpA  ', 'Modest Nature  ', '- Hurricane  ', '- Weather Ball  ', '- Tailwind  ', '- Protect  ', '', '',
+].join('\n');
+/**
+ * A minimal port of Showdown's single-team import (Storage.importTeam(buffer) with no `teams` argument, storage.js
+ * L1199–1330): blank line ends a set; any other line with no set open STARTS one ("=== …" included: only the backup import
+ * skips it); "Nick (Species) (F) @ Item"; Ability / Level / EVs / Nature / "- Move".
+ */
+function showdownImport(text) {
+  const team = [];
+  let cur = null;
+  for (const raw of text.split('\n')) {
+    let line = raw.trim();
+    if (line === '' || line === '---') { cur = null; continue; }
+    if (!cur) {
+      cur = { name: '', species: '', gender: '', item: '', ability: '', level: 100, evs: {}, nature: '', moves: [] };
+      team.push(cur);
+      const at = line.lastIndexOf(' @ ');
+      if (at !== -1) { cur.item = line.slice(at + 3); line = line.slice(0, at); }
+      if (line.endsWith(' (M)')) { cur.gender = 'M'; line = line.slice(0, -4); }
+      if (line.endsWith(' (F)')) { cur.gender = 'F'; line = line.slice(0, -4); }
+      const p = line.lastIndexOf(' (');
+      if (line.endsWith(')') && p !== -1) { cur.species = line.slice(p + 2, -1); cur.name = line.slice(0, p); } else cur.species = line;
+    } else if (line.startsWith('Ability: ')) cur.ability = line.slice(9);
+    else if (line.startsWith('Level: ')) cur.level = +line.slice(7);
+    else if (line.startsWith('EVs: ')) for (const e of line.slice(5).split('/')) { const [v, k] = e.trim().split(' '); cur.evs[k] = parseInt(v, 10); }
+    else if (/^[A-Za-z]+ (N|n)ature/.test(line)) cur.nature = line.slice(0, line.indexOf(' Nature'));
+    else if (line.startsWith('- ')) cur.moves.push(line.slice(2));
+  }
+  return team;
+}
+
+test('Export team is plain Showdown text: no header, Showdown\'s own line endings; Showdown\'s single-team import reads exactly the 3 sets', async (t) => {
+  const storage = memoryStorage();
+  const app = await bootApp({ mode: 'prep/teams', storage, raw: withRotom() });
+  t.after(() => app.restore());
+  await app.waitFor(() => /New team/.test(T(app)), 'the Teams list', 20000);
+  await app.click({ pa: 'team-import-toggle' });
+  await app.input('team-import-text', CALVIN);
+  await app.click({ pa: 'team-import' }); await flushSaves(app);
+  const plan = get(storage, KEYS.teams).teams.find((x) => x.name === 'Calvin plan');
+  await app.click({ pa: 'team-export', team: plan.id });
+  const area = findAll(parseHtml(app.html()), (n) => n.attrs.id === 'tm-export')[0];
+  const text = area.children.map((c) => c.text ?? '').join('');
+  assert.equal(text, CALVIN_EXPORT, 'exact text');
+  await app.click({ pa: 'team-export-copy', team: plan.id });
+  assert.equal(app.clipboard.at(-1), CALVIN_EXPORT, 'Copy gives the same text');
+  // Showdown's single-team import: 3 sets, the right fields (the old "=== [format] Name ===" line made a 4th, junk set)
+  const sd = showdownImport(text);
+  assert.deepEqual(sd.map((s) => [s.species, s.item, s.ability, s.level, s.nature, s.moves.length]), [
+    ['Charizard', 'Charizardite Y', 'Solar Power', 50, 'Modest', 4], ['Rotom-Fan', 'Sitrus Berry', 'Levitate', 50, 'Modest', 4], ['Pelipper', 'Focus Sash', 'Drizzle', 50, 'Modest', 4]]);
+  assert.deepEqual(sd[2].evs, { HP: 32, SpA: 32 });
+  assert.equal(showdownImport(`=== [gen9championsvgc2026regmc] Calvin plan ===\n\n${text}`)[0].species, '=== [gen9championsvgc2026regmc] Calvin plan ===', 'the cause: the header became a Pokémon');
+  // Pokepaste (felixphew/pokepaste syntax.go): sets split on blank lines; a first line must match its species/item pattern
+  for (const block of text.trim().split('\n\n')) assert.match(block.split('\n')[0], /^[A-Z][A-Za-z0-9:'. -]+( @ [A-Z][A-Za-z0-9:' -]+)? *$/);
+  // round trip through our own import: identical sets
+  const again = parseTeam(text, { mech, side: 'mine' });
+  const lib = get(storage, KEYS.mysets).sets;
+  assert.deepEqual(again.sets.map((s) => s.status), ['ready', 'ready', 'ready']);
+  assert.deepEqual(again.sets.map((s) => setKey(s.set)), plan.slots.map((id) => { const l = lib.find((x) => x.id === id); return setKey({ ...l.versions.at(-1).data, species: l.speciesId }); }));
 });

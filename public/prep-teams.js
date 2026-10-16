@@ -126,10 +126,14 @@ function builder(P, team) {
     ${ui.importInto === team.id ? `<label class="field" for="tm-into-text"><span>${esc(T.importIntoHelp)}</span><textarea id="tm-into-text" rows="8" spellcheck="false" data-pi="team-import-text">${esc(ui.importText ?? '')}</textarea></label><p>${btn(T.importIt, 'team-import', { team: team.id }, { primary: true })}</p>` : ''}`;
 }
 
-/** Showdown text for a team, with the team header so it pastes back into Showdown's teambuilder. */
+/**
+ * Showdown text for a team: the sets only, exactly as Showdown's own teambuilder exports one team (Storage.exportTeam).
+ * No "=== [format] Name ===" line: that is Showdown's BACKUP format (all teams). Its single-team Import box reads such a
+ * line as a Pokémon (a junk first set), and Pokepaste shows it as an unparsed block.
+ */
 function teamText(P, team) {
   const sets = team.slots.map((id) => P.lineage(id)).filter(Boolean).map((l) => asSet(l, currentVersion(l)));
-  try { return `=== [gen9championsvgc2026regmc] ${team.name} ===\n\n${exportTeam(sets, P.mech, { spFor: (s) => (s.sp === 'unknown' ? spForUnknown(P, s, 'common') : null) }).text}`; } catch { return ''; }
+  try { return exportTeam(sets, P.mech, { spFor: (s) => (s.sp === 'unknown' ? spForUnknown(P, s, 'common') : null) }).text; } catch { return ''; }
 }
 
 /** Matchup Sets tab: which team this matchup brings (replaces "Your sets for this match" once teams are set up). */
