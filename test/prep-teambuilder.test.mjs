@@ -58,6 +58,7 @@ test('the editor: team strip, set card, six SP sliders with engine marks, final 
   const sp = ticks.find((n) => n.attrs['data-stat'] === 'spe');
   await app.click({ pa: 'tb-tip', set: SET_MINE, stat: 'spe', sp: sp.attrs['data-sp'] });
   assert.ok(/SP = \d+ [>=] \d+/.test(T(app)), 'the Speed mark explains itself');
+  assert.match(T(app), /: base \d+ → max \+Spe \d+ · neutral \d+ · uninvested \d+ · min \d+/, 'the tap shows the target\'s Lv 50 tiers');
 });
 
 test('nothing saves without Save version: slider, try:, Pin as A and Import change the draft only; Save makes v2; Discard reverts', async (t) => {
@@ -115,7 +116,12 @@ test('the Rotom-Fan case in the editor: Life Orb mark at 23 (dashed), the strip\
   await app.click({ pa: 'tb-tip', set: 'set_ffffffffffff', stat: 'spa', sp: '23' });
   const tip = T(app).match(/OHKO Staraptor-Mega with Thunderbolt[^]*?their spread: [a-z]+/)?.[0] ?? '';
   assert.match(tip, /at 23 SpA \(Modest\): \d+–\d+ of 189 HP \([\d.]+–[\d.]+%\), every roll KOs/, `the tap-through runs the calc at the mark: ${tip}`);
-  assert.ok(/Speed[^]*can't beat 178/.test(T(app)) || /can't beat 178/.test(T(app)), 'Mega Staraptor 178: out of reach, said as a chip');
+  assert.match(T(app), /can't beat 4 Speeds, 143–178 \(138 max\)/, "Calvin's tiers above 138 (Mega Staraptor 178 from their saved set): out of reach, one chip");
+  assert.match(T(app), /Spe 138: outspeeds 3 of their 5 max-neutral tiers, 2 of their max-\+Spe tiers/, 'the Speed summary in tiers');
+  // the toggles are off by default and add Scarf users / ladder spreads / Tailwind only when ticked
+  assert.equal(btns(app, 'tb-spd').length, 4);
+  await app.click({ pa: 'tb-spd', key: 'twMine' });
+  assert.match(T(app), /Spe 276: outspeeds 5 of their 5 max-neutral tiers, 5 of their max-\+Spe tiers/, 'your Tailwind doubles 138');
   await app.click({ pa: 'tb-focus', set: 'set_ffffffffffff', i: '0' });
   assert.ok(/80\.4–96\.2%/.test(T(app)), 'reference: Modest 32, no item, +0 → 152–182 of 189');
   // swap Air Slash for Nasty Plot: the strip gains +2 and the SpA slider a +2 mark at 0 (reference 5)

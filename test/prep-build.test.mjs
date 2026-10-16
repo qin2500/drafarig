@@ -338,29 +338,54 @@ test('setup moves and tools against setup come from the learnset and likely sets
 });
 
 // ---------- teambuilder slider marks (lib/prep-build.mjs speedMarks / koMarks / surviveMarks / markMet) ----------
-test('marks: Speed marks equal a brute-force sweep; ties are their own mark only where they matter; Mega Staraptor 178 is out of reach', () => {
-  const twin = { key: 'twin', forme: 'rotomfan', mega: false, set: rotom('hardy', { spe: 32 }) }; // exactly 138
-  const slow = { key: 'slow', forme: 'mamoswine', mega: false, set: { ...set('mamoswine', 'oblivious', 'adamant', { spe: 0 }, ['iciclecrash']), species: 'mamoswine' } };
-  const targets = [megaRow(), twin, slow];
-  const slowSpe = B.targetSpeed(mech, slow).max;
-  for (const nature of ['modest', 'timid']) for (const spe of [0, 20, 32]) {
-    const me = rotom(nature, { spa: 32, spe });
-    const s = B.speedMarks(mech, me, 'rotomfan', targets);
-    const at = (sp) => statValue('spe', 86, sp, natureSign(mech.natures[nature], 'spe'));
-    for (const speed of [178, 138, slowSpe]) {
-      const brute = [...Array(33).keys()].find((sp) => at(sp) > speed) ?? null;
-      const mk = s.marks.find((m) => m.kind === 'outspeed' && m.speed === speed);
-      assert.equal(mk?.sp ?? null, brute, `${nature} outspeed ${speed}`);
-      const tie = [...Array(33).keys()].find((sp) => at(sp) === speed) ?? null;
-      const tm = s.marks.find((m) => m.kind === 'tie' && m.speed === speed);
-      assert.equal(!!tm, tie !== null && (brute === null || spe === tie), `${nature} ${spe}: tie mark at ${speed} only where it matters`);
-    }
-    assert.ok(s.cant.some((c) => c.speed === 178), '178 is never reachable for Rotom-Fan');
-    assert.equal(s.faster, [178, 138, slowSpe].filter((v) => at(spe) > v).length);
+test('Speed tiers are the standard Lv 50 values from stats.mjs (bases 86, 100, 110, 130, 30, 150)', () => {
+  for (const base of [86, 100, 110, 130, 30, 150]) {
+    const t = B.speedTiers(base);
+    assert.deepEqual(t, { maxPlus: statValue('spe', base, 32, '+'), maxNeutral: statValue('spe', base, 32, ''), uninvested: statValue('spe', base, 0, ''), min: statValue('spe', base, 0, '-') });
+    assert.deepEqual(t, { maxPlus: Math.floor((base + 52) * 1.1), maxNeutral: base + 52, uninvested: base + 20, min: Math.floor((base + 20) * 0.9) }, `base ${base}`);
   }
-  const m = B.speedMarks(mech, rotom('modest', { spa: 32, spe: 32 }), 'rotomfan', [twin]);
-  assert.deepEqual(m.marks.map((x) => [x.kind, x.sp]), [['tie', 32]], 'Modest 32 = 138 ties; nothing beats it');
-  assert.ok(B.markMet(m.marks[0], rotom('modest', { spa: 32, spe: 32 })) && !B.markMet(m.marks[0], rotom('modest', { spa: 32, spe: 31 })));
+  assert.deepEqual(B.speedTiers(110), { maxPlus: 178, maxNeutral: 162, uninvested: 130, min: 117 }, 'Mega Staraptor');
+  assert.deepEqual(B.speedTiers(86), { maxPlus: 151, maxNeutral: 138, uninvested: 106, min: 95 }, 'Rotom-Fan');
+});
+
+test('Speed marks: max +Spe and neutral max tiers per form (Mega base Speed), their saved set first, Scarf and ladder only when asked', () => {
+  const sp = rows(); // base Staraptor (no usage) and Mega Staraptor (ladder guess with a common spread)
+  const fan = rotom('modest', { spa: 32, spe: 32 }); // 138
+  const s = B.speedMarks(mech, fan, 'rotomfan', sp);
+  const speeds = [...new Set([...s.marks, ...s.cant.map((c) => ({ ...c, kind: 'cant' }))].map((m) => m.speed))].sort((a, b) => a - b);
+  assert.deepEqual(speeds, [152, 162, 167, 178], 'Staraptor base 100 → 152 / 167; Mega base 110 → 162 / 178');
+  const who = (v) => [...s.marks, ...s.cant].find((m) => m.speed === v).who.map((w) => [w.forme, w.mark]);
+  assert.deepEqual(who(178), [['staraptormega', 'max-plus']]);
+  assert.deepEqual(who(162), [['staraptormega', 'max-neutral']], "Mega Staraptor uses its own base 110, never base Staraptor's spread");
+  assert.deepEqual([s.fasterNeutral, s.fasterPlus, s.of], [0, 0, 2], 'Rotom-Fan 138 is slower than 162 and 178');
+  assert.ok(s.cant.some((c) => c.speed === 162) && s.cant.some((c) => c.speed === 178), 'Modest Rotom-Fan reaches neither');
+  // brute force: every outspeed mark is the least SP strictly faster, for two natures and three SP values
+  for (const nature of ['modest', 'timid']) for (const spe of [0, 20, 32]) {
+    const r = B.speedMarks(mech, rotom(nature, { spa: 32, spe }), 'rotomfan', sp);
+    const at = (x) => statValue('spe', 86, x, natureSign(mech.natures[nature], 'spe'));
+    for (const v of speeds) {
+      const brute = [...Array(33).keys()].find((x) => at(x) > v) ?? null;
+      assert.equal(r.marks.find((m) => m.kind === 'outspeed' && m.speed === v)?.sp ?? null, brute, `${nature} ${spe} vs ${v}`);
+      const tie = [...Array(33).keys()].find((x) => at(x) === v) ?? null;
+      assert.equal(!!r.marks.find((m) => m.kind === 'tie' && m.speed === v), tie !== null && (brute === null || spe === tie), `tie mark at ${v}`);
+    }
+  }
+  // no Scarf unless the toggle is on or their saved set holds it; the ladder guess (here Scarf-free) only on request
+  const scarfGuess = sp.map((r) => (r.key === 'staraptor' ? { ...r, source: 'ladder', set: { ...r.set, item: 'choicescarf' } } : r));
+  assert.ok(!B.speedMarks(mech, fan, 'rotomfan', scarfGuess).marks.concat(B.speedMarks(mech, fan, 'rotomfan', scarfGuess).cant).some((m) => m.speed > 178), 'a ladder-guessed Scarf is not applied');
+  const withScarf = B.speedMarks(mech, fan, 'rotomfan', scarfGuess, { scarf: true });
+  const all = [...withScarf.marks, ...withScarf.cant];
+  assert.ok(all.some((m) => m.speed === Math.floor(167 * 1.5) && m.who.some((w) => w.forme === 'staraptor')), 'toggle on: Scarf ×1.5 on base Staraptor (250)');
+  assert.ok(all.some((m) => m.speed === 178 && m.who.some((w) => w.forme === 'staraptormega')), 'never on a Mega');
+  const saved = sp.map((r) => (r.key === 'staraptor' ? { ...r, source: 'set', set: { ...set('staraptor', 'intimidate', 'jolly', { hp: 32, spe: 32 }, ['finalgambit'], 'choicescarf'), species: 'staraptor' } } : r));
+  const sv = B.speedMarks(mech, fan, 'rotomfan', saved);
+  assert.ok([...sv.marks, ...sv.cant].some((m) => m.speed === 250 && m.who[0].mark === 'set'), 'their saved Scarf set: 250, labelled their set');
+  assert.ok(![...sv.marks, ...sv.cant].some((m) => m.speed === 152 || m.speed === 167), 'their saved set replaces the tiers');
+  const lad = B.speedMarks(mech, fan, 'rotomfan', sp, { ladder: true });
+  assert.ok([...lad.marks, ...lad.cant].some((m) => m.speed === 178 && m.who.some((w) => w.mark === 'ladder' && w.label === 'Jolly 32')), 'ladder spreads only when asked');
+  const tw = B.speedMarks(mech, rotom('modest', { spa: 32 }), 'rotomfan', sp, { mine: { tailwind: true } });
+  assert.equal(tw.me, 212, 'your Tailwind: 0-Speed Modest Rotom-Fan 212');
+  assert.deepEqual([tw.fasterNeutral, tw.fasterPlus], [2, 2]);
 });
 
 test('marks: KO marks are the koSearch levels for the set shape (Rotom-Fan goldens: Life Orb every roll at 23, +2 Nasty Plot at 0)', () => {

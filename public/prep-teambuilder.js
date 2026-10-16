@@ -136,13 +136,23 @@ function hardestOn(P, set, row, field) {
   return best;
 }
 
+// ---------- Speed options: off by default, never applied silently ----------
+const SPD_KEYS = ['scarf', 'ladder', 'twTheirs', 'twMine'];
+const spdUi = (P) => ((P.ui.tb ??= {}).spd ??= {});
+/** speedMarks options from the toggles: Choice Scarf users, ladder spreads, their / your Tailwind. */
+function spdCond(P) {
+  const s = spdUi(P);
+  return { scarf: !!s.scarf, ladder: !!s.ladder, theirs: s.twTheirs ? { tailwind: true } : {}, mine: s.twMine ? { tailwind: true } : {} };
+}
+const spdToggles = (P) => `<div class="choices tb-spdopts" role="group" aria-label="${esc(T.spdOpts)}"><span class="small muted">${esc(T.spdOpts)}:</span> ${SPD_KEYS.map((k) => chipBtn(T.spdOpt[k], 'tb-spd', { key: k }, !!spdUi(P)[k])).join('')}</div>`;
+
 // ---------- words ----------
 const nm = (P) => ({ move: (id) => P.name('moves', id), item: (id) => P.name('items', id), nature: (id) => P.name('natures', id), mon: (id) => P.spName(id) });
 function markText(P, m, sc, rows) {
   const n = nm(P);
   const who = (key) => { const r = rows.find((x) => x.key === key); return r ? rowName(P, r, sc) : key; };
   if (m.kind === 'outspeed' || m.kind === 'tie') {
-    const names = m.who.map((w) => `${sc.league ? `${w.coach}'s ` : ''}${P.spName(w.forme)}${w.mark === 'ladder' ? ` (ladder: ${w.label})` : w.mark === 'common-max' ? ' (32 SP neutral)' : ''}`).join(', ');
+    const names = m.who.map((w) => `${sc.league ? `${w.coach}'s ` : ''}${P.spName(w.forme)} (${T.tier[w.mark](w.label)}${w.label === 'Scarf' && w.mark !== 'ladder' ? ' + Scarf' : ''})`).join(', ');
     return m.kind === 'tie' ? T.tieText(names, m.speed) : T.outText(names, m.speed);
   }
   const need = m.need ? ` [${T.needs([m.need.nature && n.nature(m.need.nature), m.need.item && n.item(m.need.item)].filter(Boolean).join(', '))}]` : '';
@@ -153,7 +163,8 @@ function markText(P, m, sc, rows) {
 function markCalc(P, m, set, sc, rows) {
   if (m.kind === 'outspeed' || m.kind === 'tie') {
     const forme = B.myForme(P.mech, set);
-    return T.speedCalc(P.name('natures', set.nature), m.sp, B.mySpeed(P.mech, { ...set, sp: { ...set.sp, spe: m.sp } }, forme), m.speed, m.kind === 'tie', m.tieAt);
+    const tiers = [...new Map(m.who.map((w) => [w.forme, w])).values()].map((w) => T.tiers(P.spName(w.forme), w.base, B.speedTiers(w.base))).join(' · ');
+    return `${T.speedCalc(P.name('natures', set.nature), m.sp, B.mySpeed(P.mech, { ...set, sp: { ...set.sp, spe: m.sp } }, forme, spdCond(P).mine), m.speed, m.kind === 'tie', m.tieAt)} ${tiers}.`;
   }
   if (!P.calc) return '';
   const row = rows.find((r) => r.key === m.key);
@@ -185,7 +196,7 @@ export function editor(P, ws, l) {
   const fm = P.mech.species[forme] ?? P.mech.species[l.speciesId];
   const usable = set.sp !== 'unknown';
   const probs = checkSet(P.mech, set, { side: 'mine' }).filter((p) => p.severity === 'error');
-  const speed = usable && P.mech.natures[set.nature] ? B.speedMarks(P.mech, set, forme, rows) : null;
+  const speed = usable && P.mech.natures[set.nature] ? B.speedMarks(P.mech, set, forme, rows, spdCond(P)) : null;
   const em = usable ? engineMarks(P, set, sc, rows) : null;
   const all = [...(speed?.marks ?? []), ...(em?.marks ?? [])];
   const ui = (P.ui.tb ??= {});
@@ -295,7 +306,7 @@ function compareBar(P, l, set, pin, speed, em, sc, rows) {
   const stat = atkMove ? B.moveStats(P.mech, atkMove).atk : 'spa';
   const seeds = B.seedOptions(P.mech, set, { stat, setupNeed: em?.setupNeed ?? null });
   const ideas = seeds.map((s) => btn((T.seed[s.key] ?? (() => s.key))(s.changes[0], nm(P)), 'tb-try', { set: l.id, seed: s.key, need: em?.setupNeed ?? '' }, { cls: 'pchip tb-idea' })).join('');
-  const rank = speed ? T.rank(P.spName(B.myForme(P.mech, set)), speed.me, speed.faster, speed.of, speed.ties, sc.league) : '';
+  const rank = speed ? T.rank(P.spName(B.myForme(P.mech, set)), speed.me, speed.fasterNeutral, speed.fasterPlus, speed.of, speed.ties) : '';
   return `<div class="tb-cmp">${pin ? '' : btn(T.pin, 'tb-pin', { set: l.id })}<span class="small muted">${esc(T.tryLbl)}</span>${ideas}<span class="small muted tb-rank">${esc(rank)}</span></div>
     ${pin ? diffBar(P, l, set, pin, speed, em, sc, rows) : ''}`;
 }
@@ -310,9 +321,12 @@ function diffBar(P, l, set, A, speed, em, sc, rows) {
   const chips = [];
   if (ch.length) chips.push(`<span class="tb-d">${esc(ch.join(' · '))}</span>`);
   else chips.push(`<span class="muted">${esc(T.noChange)}</span>`);
-  const fa = B.myForme(P.mech, a), sa = P.mech.natures[a.nature] ? B.speedMarks(P.mech, a, fa, rows) : null;
+  const fa = B.myForme(P.mech, a), sa = P.mech.natures[a.nature] ? B.speedMarks(P.mech, a, fa, rows, spdCond(P)) : null;
   if (sa && speed && sa.me !== speed.me) chips.push(`<span class="tb-d ${speed.me > sa.me ? 'up' : 'down'}">Spe ${sa.me} → ${speed.me}</span>`);
-  if (sa && speed && (sa.faster !== speed.faster || sa.ties !== speed.ties)) chips.push(`<span class="tb-d ${speed.faster > sa.faster ? 'up' : 'down'}">${esc(T.fasterThan(sa.faster, speed.faster, speed.of, speed.ties))}</span>`);
+  if (sa && speed && (sa.fasterNeutral !== speed.fasterNeutral || sa.fasterPlus !== speed.fasterPlus)) {
+    const up = speed.fasterNeutral + speed.fasterPlus > sa.fasterNeutral + sa.fasterPlus;
+    chips.push(`<span class="tb-d ${up ? 'up' : 'down'}">${esc(T.fasterThan(sa, speed))}</span>`);
+  }
   // marks gained / lost: each side judged with its own marks (another item or nature can change what is reachable)
   const emA = engineMarks(P, a, sc, rows);
   if (em && emA) {
@@ -361,7 +375,7 @@ function statsPanel(P, l, set, fm, all, speed, em, sc, rows) {
       <div class="tb-slidew"><input id="tb-sp-${k}" type="range" min="0" max="${SP_PER_STAT}" step="1" value="${v}" data-pc="sp-value" data-pi="tb-sp-live" data-set="${esc(l.id)}" data-stat="${k}" aria-label="${esc(T.spAria(C.STAT_LONG[k]))}">
         <div class="tb-ticks">${ticks}</div>${busy}${cants}</div>
       <span class="tb-spn"><input id="tb-spn-${k}" type="number" inputmode="numeric" min="0" max="${SP_PER_STAT}" step="1" value="${v}" data-pc="sp-value" data-set="${esc(l.id)}" data-stat="${k}" aria-label="${esc(T.spNumAria(C.STAT_LONG[k]))}"></span>
-      <span class="tb-final">${fin}</span>${tipHtml}</div>`;
+      <span class="tb-final">${fin}</span>${tipHtml}${k === 'spe' ? spdToggles(P) : ''}</div>`;
   }).join('');
   const left = SP_TOTAL - spTotal(set.sp);
   const natures = Object.keys(P.mech.natures).sort().map((n) => { const x = P.mech.natures[n]; return [n, `${x.name}${x.plus && x.plus !== x.minus ? ` (+${C.STAT_SHORT[x.plus]} −${C.STAT_SHORT[x.minus]})` : ''}`]; });
@@ -435,6 +449,7 @@ export const actions = {
     else u[t.dataset.set] = { stat: t.dataset.stat, sp: Number(t.dataset.sp) };
     P.app.rerender();
   },
+  'tb-spd': (t, P) => { const s = spdUi(P); if (SPD_KEYS.includes(t.dataset.key)) s[t.dataset.key] = !s[t.dataset.key]; P.saveUi(); P.app.rerender(); },
   'tb-pin': (t, P) => { const l = lineage(P, t.dataset.set); if (!l) return; (tbUi(P).pin ??= {})[l.id] = structuredClone(draftSet(P, l)); P.saveUi(); P.toast(T.pinned); P.app.rerender(); },
   'tb-unpin': (t, P) => { delete tbUi(P).pin?.[t.dataset.set]; P.saveUi(); P.app.rerender(); },
   'tb-revert': (t, P) => { const a = tbUi(P).pin?.[t.dataset.set]; if (a) intoDraft(P, t.dataset.set, a); },
