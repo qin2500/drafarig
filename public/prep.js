@@ -9,6 +9,7 @@ import { makeBackup, readBackup, planRestore, opponentDocs } from '../lib/prep-b
 import { loadMechanics } from '../lib/calc/mech.mjs';
 import { createCalc } from '../lib/calc/wrapper.mjs';
 import { currentVersion, versionOf, rosterDiff } from '../lib/prep-model.mjs';
+import * as TM from '../lib/prep-teams.mjs';
 import { staleReasons } from '../lib/calc/keys.mjs';
 import { scheduleFor, groupOf } from '../lib/schedule.mjs';
 import { ENGINE_INFO, importEngine } from './prep-engine.js';
@@ -72,6 +73,7 @@ export function createPrep(app) {
     P.docs.rules = loadDoc(KEYS.rules, () => emptyRules(now));
     P.docs.mysets = loadDoc(KEYS.mysets, emptyMySets);
     P.docs.pilot = loadDoc(KEYS.pilot, emptyPilot);
+    P.docs.teams = loadDoc(KEYS.teams, TM.emptyTeams);
     for (const key of P.store.keys()) {
       if (typeOfKey(key) !== 'ws') continue;
       const d = loadDoc(key, () => null);
@@ -81,13 +83,15 @@ export function createPrep(app) {
     const listed = new Map((P.docs.meta.workspaces ?? []).map((w) => [w.id, w]));
     const idx = [...P.ws.values()].map((w) => ({ id: w.id, coach: w.coach, ...(ownerOf(w) ? { pov: w.pov } : {}), updatedAt: w.updatedAt, archived: false, ...(listed.get(w.id) ?? {}) }));
     if (JSON.stringify(idx.map((w) => w.id).sort()) !== JSON.stringify([...listed.keys()].sort())) { P.docs.meta = { ...P.docs.meta, workspaces: idx }; P.dirty.add(KEYS.meta); }
+    teamsOnLoad();
     if (P.dirty.size) flush();
+    Promise.resolve().then(() => P.teamsStep()).catch((e) => console.error('Teams setup failed:', e && e.message));
   };
 
   // ---------- save ----------
   const keyOf = (which) => (which.startsWith('ws:') ? wsKey(which.slice(3)) : KEYS[which]);
-  const docFor = (key) => (key === KEYS.meta ? P.docs.meta : key === KEYS.rules ? P.docs.rules : key === KEYS.mysets ? P.docs.mysets : key === KEYS.pilot ? P.docs.pilot : P.ws.get(key.slice(wsKey('').length)));
-  const setDoc = (key, d) => { if (key === KEYS.meta) P.docs.meta = d; else if (key === KEYS.rules) P.docs.rules = d; else if (key === KEYS.mysets) P.docs.mysets = d; else if (key === KEYS.pilot) P.docs.pilot = d; else P.ws.set(d.id, d); };
+  const docFor = (key) => (key === KEYS.meta ? P.docs.meta : key === KEYS.rules ? P.docs.rules : key === KEYS.mysets ? P.docs.mysets : key === KEYS.pilot ? P.docs.pilot : key === KEYS.teams ? P.docs.teams : P.ws.get(key.slice(wsKey('').length)));
+  const setDoc = (key, d) => { if (key === KEYS.meta) P.docs.meta = d; else if (key === KEYS.rules) P.docs.rules = d; else if (key === KEYS.mysets) P.docs.mysets = d; else if (key === KEYS.pilot) P.docs.pilot = d; else if (key === KEYS.teams) P.docs.teams = d; else P.ws.set(d.id, d); };
   /** Apply a change to a document (on a deep copy) and schedule an autosave. which: meta | rules | mysets | pilot | 'ws:<id>'. */
   P.mutate = (which, fn, { substantive = true, render = true, allowUnassigned = false } = {}) => {
     if (P.readOnly()) { P.toast(C.SAVE.newer); return false; }
@@ -108,6 +112,8 @@ export function createPrep(app) {
     if (key.startsWith(wsKey(''))) out.updatedAt = P.now();
     setDoc(key, out);
     P.dirty.add(key);
+    // a matchup's 6 is its team: an edit of my6 goes into the team (a set held by another team becomes a copy)
+    if (key.startsWith(wsKey('')) && JSON.stringify(cur.my6 ?? []) !== JSON.stringify(out.my6 ?? [])) syncTeamOf(out.id);
     if (substantive && key !== KEYS.meta) {
       P.docs.meta = { ...P.docs.meta, changesSinceBackup: (P.docs.meta.changesSinceBackup ?? 0) + 1 };
       if (key.startsWith(wsKey(''))) P.docs.meta.workspaces = P.docs.meta.workspaces.map((w) => (w.id === out.id ? { ...w, updatedAt: out.updatedAt } : w));
@@ -120,7 +126,9 @@ export function createPrep(app) {
   function schedule() { P.saveState = 'saving'; clearTimeout(P.timer); P.timer = setTimeout(flush, SAVE_DELAY); }
   function flush() {
     clearTimeout(P.timer);
-    const keys = [...P.dirty].sort((a, b) => (a === KEYS.meta) - (b === KEYS.meta)); // meta last
+    // My sets first (copies exist before anything points at them), then teams, then workspaces, the index last
+    const rank = (k) => (k === KEYS.mysets ? 0 : k === KEYS.teams ? 1 : k === KEYS.meta ? 3 : 2);
+    const keys = [...P.dirty].sort((a, b) => rank(a) - rank(b));
     let failed = null, copyMissed = false;
     for (const key of keys) {
       const doc = docFor(key);
@@ -143,7 +151,7 @@ export function createPrep(app) {
   // Another tab saved a prep document. If this tab has no unsaved edits to it, take that version quietly; if it does,
   // keep both untouched and say so (conflict banner). The shared index (meta) is merged instead, so two tabs working on
   // different opponents never block each other.
-  const fallbackFor = (key) => ({ [KEYS.meta]: () => emptyMeta(P.now()), [KEYS.rules]: () => emptyRules(P.now()), [KEYS.mysets]: emptyMySets, [KEYS.pilot]: emptyPilot }[key]);
+  const fallbackFor = (key) => ({ [KEYS.meta]: () => emptyMeta(P.now()), [KEYS.rules]: () => emptyRules(P.now()), [KEYS.mysets]: emptyMySets, [KEYS.pilot]: emptyPilot, [KEYS.teams]: TM.emptyTeams }[key]);
   function adopt(key) {
     const type = typeOfKey(key);
     const r = P.store.load(key);
@@ -447,6 +455,7 @@ export function createPrep(app) {
   // ---------- backup ----------
   P.allDocs = () => {
     const out = { [KEYS.meta]: P.docs.meta, [KEYS.rules]: P.docs.rules, [KEYS.mysets]: P.docs.mysets, [KEYS.pilot]: P.docs.pilot };
+    if (teamsStored()) out[KEYS.teams] = P.docs.teams;
     for (const w of P.ws.values()) out[wsKey(w.id)] = w;
     return out;
   };
@@ -529,6 +538,8 @@ export function createPrep(app) {
     if (P.ui.undo) out.push(`<div class="banner info" role="status">${esc(P.ui.undo.label)}. ${btn('Undo', 'undo-delete', {}, { primary: true })}</div>`);
     // Banners are announced once when they appear (announceBanners), not as role="alert" re-created on every render.
     if (P.newer.size) out.push(`<div class="banner bad">${esc(C.SAVE.newer)} ${btn('Download a backup', 'backup-download')} ${btn('Reload', 'reload-prep')}</div>`);
+    if (P.teamsBlocked) out.push(`<div class="banner warn">${esc(C.TEAMS.blocked)} ${btn(C.TEAMS.blockedBtn, 'teams-backup', {}, { primary: true })}</div>`);
+    if (P.teamsDropped?.length) out.push(`<div class="banner info">${esc(C.TEAMS.dropped(P.teamsDropped.length))} ${btn('OK', 'teams-dropped-ok')}</div>`);
     if (P.saveError && P.saveError.code !== 'conflict') {
       out.push(`<div class="banner bad">⚠ ${esc(saveErrorText())} ${btn('Download a backup now', 'backup-download', {}, { primary: true })} ${P.saveError.code === 'quota' ? btn('Free up space…', 'go-backup') : ''}</div>`);
     }
@@ -766,6 +777,103 @@ export function createPrep(app) {
       <p class="small">${esc(C.GAME_RULES)}</p></section>`;
   }
 
+  // ---------- teams (lib/prep-teams.mjs): set up from per-matchup 6s, kept in step, undoable ----------
+  /** Whether the teams document is stored (teams are set up on this device). */
+  const teamsStored = () => Number.isInteger(P.revs.get(KEYS.teams));
+  const mark = (key, doc) => { setDoc(key, doc); P.dirty.add(key); };
+  /** On every load: Imported sets catch any set no team holds; each matchup's my6 mirrors its team. */
+  function teamsOnLoad() {
+    if (!teamsStored() || P.readOnly() || P.newer.has(KEYS.teams)) return;
+    const r = TM.reconcileTeams(P.docs.teams, P.docs.mysets, { now: P.now() });
+    if (r.changed) mark(KEYS.teams, r.teams);
+    if (r.dropped.length) P.teamsDropped = r.dropped;
+    for (const w of P.ws.values()) {
+      const { main, alt } = TM.teamsOfWs(P.docs.teams, w);
+      if (!main || !TM.isOwnedWs(w) || P.newer.has(wsKey(w.id))) continue;
+      const how = TM.reconcileSix(w, main, alt);
+      if (how === 'adopt') syncTeamOf(w.id); // an older tab changed this 6 after the team: the team takes it
+      else if (how === 'mirror') { const m = TM.mirrorSix(w, main, alt); if (m) mark(wsKey(w.id), m); }
+    }
+  }
+  /** After an edit of a matchup's my6: the team follows (copies for sets another team holds; Imported sets move). */
+  function syncTeamOf(wsId) {
+    if (!teamsStored()) return;
+    let w = P.ws.get(wsId);
+    if (!w || !TM.isOwnedWs(w)) return;
+    if (!w.teamId) {
+      if (!TM.needsTeam(w)) return;
+      const r = TM.migrateTeams({ mysets: P.docs.mysets, teams: P.docs.teams, wss: [w] }, { now: P.now() });
+      if (r.mysets.sets.length !== P.docs.mysets.sets.length) mark(KEYS.mysets, r.mysets);
+      mark(KEYS.teams, r.teams);
+      if (r.wss.get(wsId)) mark(wsKey(wsId), r.wss.get(wsId));
+      return;
+    }
+    const r = TM.syncSix({ teams: P.docs.teams, mysets: P.docs.mysets, ws: w }, { now: P.now(), newId: () => P.id('set') });
+    if (r.mysets !== P.docs.mysets) mark(KEYS.mysets, r.mysets);
+    if (r.teams !== P.docs.teams) mark(KEYS.teams, r.teams);
+    if (r.ws !== w) mark(wsKey(wsId), r.ws);
+  }
+  /**
+   * Set up teams once (and finish a setup a closed tab left half-done): a full backup is stored first (or downloaded, when
+   * it doesn't fit), then the pure, deterministic migration runs and its documents are written My sets → teams →
+   * matchups. Never while anything is read-only, conflicting or unreadable, and never again after "Undo teams setup".
+   */
+  P.teamsStep = async ({ downloaded = false } = {}) => {
+    if (P.teamsBusy || P.readOnly() || P.conflicts.size || P.corrupt.size || P.docs.meta?.teamsUndone) return;
+    const wss = [...P.ws.values()];
+    const stored = teamsStored();
+    if (stored && !wss.some(TM.needsTeam)) return;
+    if (!stored && !wss.some(TM.needsTeam) && !(P.docs.mysets.sets ?? []).length) return; // nothing to organise yet
+    P.teamsBusy = true;
+    try {
+      if (!stored && !downloaded) {
+        let have = null;
+        try { have = app.storage.getItem(TM.PREMIGRATION_KEY); } catch { /* unreadable */ }
+        if (have === null) {
+          const text = await P.backupText(P.allDocs(), 'full');
+          try { app.storage.setItem(TM.PREMIGRATION_KEY, text); } catch { P.teamsBlocked = 'space'; app.rerender(); return; }
+        }
+      }
+      if (P.readOnly() || P.conflicts.size) return; // something changed while the backup was made
+      const r = TM.migrateTeams({ mysets: P.docs.mysets, teams: stored ? P.docs.teams : null, wss: [...P.ws.values()] }, { now: P.now() });
+      if (!r.changed) return;
+      if (r.copies.length) mark(KEYS.mysets, r.mysets);
+      mark(KEYS.teams, { ...r.teams, migration: { ...r.teams.migration, backupKey: downloaded ? null : TM.PREMIGRATION_KEY } });
+      for (const [id, w] of r.wss) mark(wsKey(id), w);
+      P.teamsBlocked = null;
+      flush();
+      app.rerender();
+    } finally { P.teamsBusy = false; }
+  };
+  /** Undo the teams setup: what would be lost, then (confirmed) the matchups' references back, copies and teams gone. */
+  P.teamsUndoPreview = () => (teamsStored() ? TM.undoTeams({ mysets: P.docs.mysets, teams: P.docs.teams, wss: [...P.ws.values()] }) : null);
+  P.teamsUndo = () => {
+    const u = P.teamsUndoPreview();
+    if (!u || P.readOnly()) return false;
+    mark(KEYS.mysets, u.mysets);
+    for (const [id, w] of u.wss) mark(wsKey(id), w);
+    P.docs.meta = { ...P.docs.meta, teamsUndone: true }; P.dirty.add(KEYS.meta);
+    flush();
+    if (P.saveError) return false;
+    const res = P.store.remove(KEYS.teams);
+    if (!res.ok) return false;
+    P.docs.teams = TM.emptyTeams(); P.revs.set(KEYS.teams, null); P.dirty.delete(KEYS.teams);
+    return true;
+  };
+  P.teamsRedo = () => { P.docs.meta = { ...P.docs.meta, teamsUndone: false }; P.dirty.add(KEYS.meta); flush(); return P.teamsStep(); };
+  P.teamsStored = teamsStored;
+
+  /** Backup screen: whether your sets are in teams, and the way back (what it would lose is said first). */
+  function teamsSection() {
+    if (P.docs.meta.teamsUndone) return `<h3>${esc(C.TEAMS.head)}</h3><p>${esc(C.TEAMS.offNow)} ${btn(C.TEAMS.redo, 'teams-redo')}</p>`;
+    if (!teamsStored()) return '';
+    const t = P.docs.teams, n = t.teams.filter((x) => x.kind === 'team').length;
+    const ask = P.ui.backup?.teamsUndo;
+    const u = ask ? P.teamsUndoPreview() : null;
+    return `<h3>${esc(C.TEAMS.head)}</h3><p>${esc(C.TEAMS.status(n, t.migration?.at?.slice(0, 10) ?? '', !!t.migration?.backupKey))}</p>
+      ${ask ? `<p class="banner warn">${esc(C.TEAMS.undoAsk(t.migration?.copies?.length ?? 0, u.lost))} ${btn(C.TEAMS.undoYes, 'teams-undo-confirm', {}, { primary: true })} ${btn('Cancel', 'teams-undo-cancel')}</p>` : `<p>${btn(C.TEAMS.undo, 'teams-undo')}</p>`}`;
+  }
+
   // ---------- backup ----------
   function backupScreen() {
     const meta = P.docs.meta;
@@ -781,6 +889,7 @@ export function createPrep(app) {
       ${meta.lastBackupAt && Date.parse(P.now()) - Date.parse(meta.lastBackupAt) < 5 * 60e3 ? '<p class="small">No file in your downloads? Use "Copy backup as text" and paste it somewhere safe.</p>' : ''}
       <p class="small">${esc(C.BACKUP.privateNote)}</p>
       <label class="field" for="prep-device"><span>Name for this device (goes in the file name)</span><input id="prep-device" data-pi="device-label" value="${esc(meta.deviceLabel ?? '')}" maxlength="20"></label>
+      ${teamsSection()}
       <h3>Protection</h3><p>${esc(persisted === true ? C.BACKUP.protected : persisted === false ? C.BACKUP.notProtected : 'Unknown on this browser.')}</p>
       ${app.persist && persisted !== true ? `<p>${btn(C.BACKUP.protectButton, 'persist')} <span class="small">${esc(C.BACKUP.protectHelp)}</span></p>` : ''}
       <h3>Restore</h3>
@@ -1003,6 +1112,12 @@ export function createPrep(app) {
     'reload-prep': () => P.reloadFromStorage(),
     'retry-mech': () => { P.mechState = 'idle'; P.ensureMech(); },
     'backup-download': () => P.downloadBackup(),
+    'teams-backup': async () => { await P.downloadBackup(); await P.teamsStep({ downloaded: true }); },
+    'teams-dropped-ok': () => { P.teamsDropped = null; app.rerender(); },
+    'teams-undo': () => { (P.ui.backup ??= {}).teamsUndo = true; app.rerender(); },
+    'teams-undo-cancel': () => { (P.ui.backup ??= {}).teamsUndo = false; app.rerender(); },
+    'teams-undo-confirm': () => { P.ui.backup.teamsUndo = false; P.toast(P.teamsUndo() ? C.TEAMS.undone : C.TEAMS.undoFailed); app.rerender(); },
+    'teams-redo': async () => { await P.teamsRedo(); P.toast(C.TEAMS.redone); app.rerender(); },
     // a clipboard isn't a backup until it's pasted somewhere safe, so this doesn't count as one
     'backup-copy': async () => { flush(); const text = await P.backupText(); try { await app.copyText(text); P.toast('Backup copied as text: paste it somewhere safe now (clipboards that sync may keep a copy)'); } catch { P.toast("Couldn't copy; use the download instead"); } },
     persist: async () => {
@@ -1034,7 +1149,7 @@ export function createPrep(app) {
     'ws-export-file': async (t) => {
       const ws = P.ws.get(t.dataset.ws);
       flush();
-      app.download(`drafarig-prep-opponent-${P.now().slice(0, 10)}.json`, await P.backupText(opponentDocs(ws, P.docs.mysets), 'opponent'), 'application/json');
+      app.download(`drafarig-prep-opponent-${P.now().slice(0, 10)}.json`, await P.backupText(opponentDocs(ws, P.docs.mysets, teamsStored() ? P.docs.teams : null), 'opponent'), 'application/json');
     },
     // Archive is two steps: the file first, then removal once the user has seen it downloaded (a blocked download must
     // never cost them the prep).
@@ -1042,7 +1157,7 @@ export function createPrep(app) {
       const ws = P.ws.get(t.dataset.ws);
       flush();
       if (P.conflicts.has(wsKey(ws.id)) || P.dirty.has(wsKey(ws.id))) { P.toast(`vs ${ws.coach} has changes that aren't saved here. Reload it first.`); return; }
-      app.download(`drafarig-prep-opponent-${P.now().slice(0, 10)}.json`, await P.backupText(opponentDocs(ws, P.docs.mysets), 'opponent'), 'application/json');
+      app.download(`drafarig-prep-opponent-${P.now().slice(0, 10)}.json`, await P.backupText(opponentDocs(ws, P.docs.mysets, teamsStored() ? P.docs.teams : null), 'opponent'), 'application/json');
       (P.ui.backup ??= {}).archivePending = ws.id;
       app.rerender();
     },
@@ -1151,7 +1266,7 @@ export function createPrep(app) {
   const UNDOABLE = { 'set-delete': 'Set deleted', 'variant-delete': 'Version deleted', 'calc-delete': 'Calc deleted', 'plan-delete': 'Plan deleted', 'card-delete': 'Card deleted',
     'fd-delete': 'Finding deleted', 'pilot-delete': 'Pilot team deleted', 'rv-del': 'Reveal removed', 'ifthen-remove': 'If-then line removed',
     'owner-assign': 'Earlier prep assigned', 'owner-unassign': 'Earlier prep unassigned' };
-  const docKeys = () => [KEYS.meta, KEYS.rules, KEYS.mysets, KEYS.pilot, ...[...P.ws.keys()].map(wsKey)];
+  const docKeys = () => [KEYS.meta, KEYS.rules, KEYS.mysets, KEYS.pilot, KEYS.teams, ...[...P.ws.keys()].map(wsKey)];
   /** A document's content, without the save bookkeeping autosave changes (rev, saveId, meta's counters). */
   const contentOf = (d) => JSON.stringify(d ? { ...d, rev: 0, saveId: null, changesSinceBackup: 0, updatedAt: null } : null);
   allActions['undo-delete'] = () => {

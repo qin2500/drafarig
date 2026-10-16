@@ -741,3 +741,17 @@ export const TB = {
   importOther: (name) => `That text is for ${name}; open ${name} first.`, imported: 'Imported into the editor: not saved yet',
   unknownItem: (x) => `"${x}" isn't an item this Pokémon can hold in Champions.`, unknownMove: (x, mon) => `${mon} can't learn "${x}" in Champions.`,
 };
+
+// ---------- Teams setup (public/prep.js, lib/prep-teams.mjs) ----------
+const plural = (n, one, many) => (n === 1 ? one : many);
+export const TEAMS = {
+  head: 'Teams',
+  blocked: "Your sets are moving into teams, but there isn't room on this device to keep a backup of how they are now. Download one first; then the move happens.",
+  blockedBtn: 'Download a backup and set up teams',
+  dropped: (n) => `${n} ${plural(n, 'set was', 'sets were')} deleted in another tab or an older version, so ${plural(n, 'it has left its team', 'they have left their teams')}.`,
+  status: (n, at, kept) => `Your sets are in ${n} ${plural(n, 'team', 'teams')} (one per matchup's 6) plus "Imported sets", set up ${at}.${kept ? ' A backup of how they were before is kept on this device.' : ''}`,
+  undo: 'Undo teams setup', undoYes: 'Undo it',
+  undoAsk: (copies, lost) => `Your matchups go back to pointing at your original sets, and the ${copies} ${plural(copies, 'copy', 'copies')} made for them ${plural(copies, 'is', 'are')} removed.${lost.copyVersionsAdded ? ` ${lost.copyVersionsAdded} ${plural(lost.copyVersionsAdded, 'version', 'versions')} saved on copies since would go too.` : ''}${lost.teamsCreatedLater ? ` ${lost.teamsCreatedLater} ${plural(lost.teamsCreatedLater, 'team', 'teams')} made since would go.` : ''} Nothing else changes.`,
+  undone: 'Teams setup undone', undoFailed: "Couldn't undo it right now; nothing changed. Try again after a reload.",
+  offNow: 'Teams are off on this device (you undid the setup).', redo: 'Set up teams again', redone: 'Teams set up',
+};

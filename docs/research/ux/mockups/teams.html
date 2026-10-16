@@ -1,0 +1,654 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drafarig Teams (mockup)</title>
+<style>
+:root {
+  --bg:#14171d; --panel:#1d222b; --panel2:#232a35; --ink:#e7eaf0; --muted:#9aa3b3; --line:#2e3542; --accent:#7d9bff;
+  --ok:#5fd0b5; --okbg:#163a33; --warn:#ffb35c; --warnbg:#3d2b12; --bad:#ff8a80; --badbg:#431c1a; --plus:#ff9e7a; --minus:#7fb2ff; --thumb:16px;
+}
+* { box-sizing:border-box; }
+body { margin:0; font:14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif; background:var(--bg); color:var(--ink); }
+button,input,select,textarea { font:inherit; color:inherit; }
+button { cursor:pointer; background:var(--panel2); border:1px solid var(--line); border-radius:6px; padding:4px 10px; min-height:32px; }
+button:hover { border-color:var(--accent); } button:disabled { opacity:.45; cursor:default; }
+button.primary { background:var(--accent); border-color:var(--accent); color:#0d1220; font-weight:600; }
+button.link { background:none; border-color:transparent; color:var(--accent); padding:2px 4px; }
+button.chip { border-radius:999px; font-size:12px; padding:2px 10px; min-height:28px; }
+button.chip.on { background:var(--accent); color:#0d1220; border-color:var(--accent); }
+:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+input[type=text], select, textarea { background:var(--bg); border:1px solid var(--line); border-radius:5px; padding:4px 7px; min-height:30px; }
+.muted { color:var(--muted); } .small { font-size:12px; } .tiny { font-size:11px; }
+.topbar { display:flex; align-items:center; gap:12px; padding:8px 16px; background:var(--panel); border-bottom:1px solid var(--line); flex-wrap:wrap; }
+.brand { font-weight:800; letter-spacing:.08em; }
+.mocknote { margin-left:auto; font-size:11px; color:var(--warn); }
+.wrap { max-width:1180px; margin:0 auto; padding:12px 16px 90px; }
+.crumbs { display:flex; gap:6px; align-items:center; font-size:13px; margin-bottom:8px; flex-wrap:wrap; }
+h2 { font-size:18px; margin:4px 0 10px; } h3 { font-size:14px; margin:14px 0 6px; }
+.panel { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:12px; margin-bottom:12px; }
+.notice { background:var(--okbg); border:1px solid var(--ok); border-radius:8px; padding:8px 12px; margin-bottom:12px; font-size:13px; }
+.notice ul { margin:4px 0; padding-left:18px; }
+.row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.sprite { flex:none; width:40px; height:40px; border-radius:50%; display:grid; place-items:center; font-weight:800; font-size:12px; color:#0d1220; }
+.sprite.sm { width:26px; height:26px; font-size:10px; } .sprite.lg { width:84px; height:84px; font-size:24px; border-radius:14px; }
+.sprite.empty { background:var(--bg) !important; border:1px dashed var(--line); color:var(--muted); }
+.type { font-size:10px; font-weight:700; padding:1px 6px; border-radius:4px; color:#0d1220; }
+.badge { font-size:11px; padding:0 7px; border-radius:999px; border:1px solid var(--line); color:var(--muted); white-space:nowrap; }
+.badge.warn { color:var(--warn); border-color:var(--warn); } .badge.ok { color:var(--ok); border-color:var(--ok); }
+
+/* teams list */
+.teams { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:10px; }
+.tcard { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:10px; display:flex; flex-direction:column; gap:8px; }
+.tcard.box { border-style:dashed; }
+.tcard .name { font-weight:700; font-size:15px; text-align:left; background:none; border:0; padding:0; min-height:0; }
+.tcard .six { display:flex; gap:4px; flex-wrap:wrap; }
+.matchups { display:flex; gap:8px; flex-wrap:wrap; }
+.mu { display:flex; align-items:center; gap:6px; background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:6px 8px; font-size:13px; }
+.mu select { font-size:12px; }
+
+/* team builder: Showdown team view */
+.slots { display:flex; flex-direction:column; gap:6px; }
+.slot { display:grid; grid-template-columns:44px minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr) auto; gap:10px; align-items:center; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:8px 10px; }
+.slot .open { all:unset; cursor:pointer; display:contents; }
+.slot .nm { font-weight:700; } .slot .sub { font-size:12px; color:var(--muted); }
+.slot .mv { font-size:12px; line-height:1.5; }
+.slot .st { font-size:11px; color:var(--muted); font-variant-numeric:tabular-nums; }
+.slot.emptyslot { border-style:dashed; }
+.menu { position:relative; }
+.menu .pop { position:absolute; right:0; top:100%; z-index:20; background:var(--panel2); border:1px solid var(--line); border-radius:8px; padding:4px; display:flex; flex-direction:column; min-width:170px; }
+.menu .pop button { text-align:left; border:0; background:none; }
+.menu .pop button:hover { background:var(--panel); }
+.warns { display:flex; flex-direction:column; gap:3px; font-size:12px; color:var(--warn); margin:6px 0; }
+
+/* set editor (compact: the full editor is teambuilder.html / the live app) */
+.ed { display:grid; grid-template-columns:110px minmax(0,1fr) minmax(0,1fr); gap:14px; align-items:start; }
+.field { display:flex; flex-direction:column; gap:2px; margin-bottom:6px; min-width:0; }
+.field > span { font-size:11px; color:var(--muted); }
+.field input, .field select { width:100%; }
+.teamstrip { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+.teamstrip button { display:flex; align-items:center; gap:6px; padding:4px 8px; }
+.teamstrip button.sel { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset; }
+.strip { margin:10px 0; padding:8px 10px; background:var(--panel2); border:1px solid var(--line); border-radius:8px; }
+.hits { display:grid; grid-template-columns:repeat(auto-fill, minmax(190px,1fr)); gap:8px; }
+.hit { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:6px 8px; }
+.hit .who { display:flex; gap:6px; align-items:center; font-weight:600; font-size:13px; }
+.hit .src { font-size:11px; color:var(--muted); margin:2px 0 4px; }
+.hit button.v { display:flex; width:100%; justify-content:space-between; gap:6px; font-size:12px; margin-top:3px; background:var(--bg); }
+.v b.ko { color:var(--ok); }
+.srow { display:grid; grid-template-columns:48px minmax(0,1fr) 40px 40px; gap:10px; align-items:center; padding:5px 0; border-top:1px solid var(--line); }
+.srow:first-child { border-top:0; }
+.sname { font-weight:700; } .sname.plus { color:var(--plus); } .sname.minus { color:var(--minus); }
+.fin { font-weight:700; text-align:right; font-variant-numeric:tabular-nums; }
+.num { text-align:right; font-variant-numeric:tabular-nums; }
+.slidew { position:relative; padding-bottom:18px; }
+input[type=range] { width:100%; margin:0; accent-color:var(--accent); }
+.ticks { position:absolute; left:0; right:0; top:20px; height:16px; }
+.tick { position:absolute; top:0; transform:translateX(-50%); width:14px; height:16px; padding:0; min-height:0; border:0; background:none; }
+.tick::before { content:""; position:absolute; left:3px; top:1px; width:8px; height:8px; border-radius:50%; border:2px solid var(--muted); background:var(--bg); }
+.tick.met::before { background:var(--ok); border-color:var(--ok); }
+.marklbl { font-size:11px; color:var(--muted); margin-top:2px; }
+.marklbl button { font-size:11px; }
+
+/* workbench */
+.wbback { position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:40; display:flex; align-items:flex-start; justify-content:center; padding:24px 12px; overflow:auto; }
+.wb { width:min(980px, 100%); background:var(--panel); border:1px solid var(--line); border-radius:12px; box-shadow:0 12px 40px rgba(0,0,0,.5); }
+.wbhead { position:sticky; top:0; z-index:2; background:var(--panel); border-bottom:1px solid var(--line); padding:10px 14px; border-radius:12px 12px 0 0; }
+.wbhead .t { display:flex; align-items:center; gap:8px; }
+.wbhead .t b { font-size:15px; }
+.wbhead .x { margin-left:auto; min-width:40px; }
+.headline { font-size:20px; font-weight:800; margin-top:4px; }
+.headline.ko { color:var(--ok); }
+.rolls { display:grid; grid-template-columns:repeat(16, 1fr); gap:2px; margin:6px 0 4px; max-width:420px; }
+.rolls span { height:10px; border-radius:2px; background:var(--line); }
+.rolls span.k { background:var(--ok); }
+.chips { display:flex; flex-wrap:wrap; gap:4px; margin-top:4px; }
+.chips span { font-size:11px; border:1px solid var(--line); border-radius:999px; padding:0 8px; color:var(--muted); }
+.wbtabs { display:none; }
+.wbbody { display:grid; grid-template-columns:1fr 1fr; gap:0; }
+.side { padding:12px 14px; border-right:1px solid var(--line); }
+.side:last-child { border-right:0; }
+.side h4 { margin:0 0 4px; font-size:13px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
+.side .src { font-size:12px; color:var(--warn); margin-bottom:6px; }
+.side .src.edited { color:var(--accent); }
+.field2 { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.wbfield { padding:10px 14px; border-top:1px solid var(--line); }
+.wbfoot { display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:10px 14px; border-top:1px solid var(--line); position:sticky; bottom:0; background:var(--panel); border-radius:0 0 12px 12px; }
+.seg { display:inline-flex; border:1px solid var(--line); border-radius:6px; overflow:hidden; }
+.seg button { border:0; border-radius:0; min-height:28px; font-size:12px; }
+.seg button.on { background:var(--accent); color:#0d1220; }
+.more summary { cursor:pointer; font-size:12px; color:var(--muted); margin:4px 0; }
+#toast { position:fixed; bottom:16px; left:50%; transform:translateX(-50%); background:var(--ink); color:var(--bg); padding:8px 14px; border-radius:6px; z-index:60; max-width:90vw; }
+dialog { background:var(--panel); color:var(--ink); border:1px solid var(--line); border-radius:10px; width:min(560px, calc(100vw - 24px)); }
+dialog textarea { width:100%; height:240px; font:12px/1.4 ui-monospace,Menlo,monospace; }
+dialog::backdrop { background:rgba(0,0,0,.5); }
+.pick { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:6px; }
+.pick button { display:flex; gap:6px; align-items:center; }
+
+@media (max-width: 820px) {
+  .slot { grid-template-columns:40px minmax(0,1fr) auto; }
+  .slot .mv, .slot .st { display:none; }
+  .ed { grid-template-columns:minmax(0,1fr); }
+}
+@media (max-width: 767px) {
+  .wbback { padding:0; }
+  .wb { width:100%; min-height:100vh; border-radius:0; border:0; }
+  .wbhead { border-radius:0; }
+  .wbtabs { display:flex; position:sticky; top:var(--headh, 0); z-index:1; background:var(--panel); border-bottom:1px solid var(--line); }
+  .wbtabs button { flex:1; border:0; border-radius:0; min-height:44px; background:none; border-bottom:3px solid transparent; }
+  .wbtabs button.on { border-bottom-color:var(--accent); font-weight:700; }
+  .wbbody { grid-template-columns:1fr; }
+  .side { border-right:0; }
+  .wb[data-tab="you"] .side.them, .wb[data-tab="you"] .wbfield,
+  .wb[data-tab="them"] .side.you, .wb[data-tab="them"] .wbfield,
+  .wb[data-tab="field"] .side { display:none; }
+  .wbfoot { border-radius:0; }
+  button, select { min-height:44px; } .tick { min-height:0; }
+}
+</style>
+</head>
+<body>
+<header class="topbar"><span class="brand">DRAFARIG</span><span class="small muted">Battle Prep › Teams</span>
+  <span class="mocknote">Clickable mockup · damage from the standard Gen 9 formula (checked against the app's goldens); the app uses its engine · nothing is saved</span></header>
+<div class="wrap" id="app"></div>
+<div id="wbroot"></div>
+<div id="toast" hidden></div>
+<dialog id="dlg"><form method="dialog" id="dlgform"></form></dialog>
+
+<script>
+"use strict";
+// ======================================================================================================================
+// Mechanics (mockup): Champions stats (lib/calc/stats.mjs statValue) and the standard Gen 9 damage order
+// (base → spread → weather → crit → random → STAB → type → final mods). Reproduces the reference goldens in
+// docs/research/strategy/sp-assist (e.g. Thunderbolt 152–182, Life Orb 198–237, Weather Ball 336–396).
+// ======================================================================================================================
+const STATS = ['hp','atk','def','spa','spd','spe'];
+const SHORT = { hp:'HP', atk:'Atk', def:'Def', spa:'SpA', spd:'SpD', spe:'Spe' };
+const NAT = { Hardy:[], Lonely:['atk','def'], Brave:['atk','spe'], Adamant:['atk','spa'], Naughty:['atk','spd'], Bold:['def','atk'], Relaxed:['def','spe'],
+  Impish:['def','spa'], Lax:['def','spd'], Timid:['spe','atk'], Hasty:['spe','def'], Jolly:['spe','spa'], Naive:['spe','spd'], Modest:['spa','atk'],
+  Mild:['spa','def'], Quiet:['spa','spe'], Rash:['spa','spd'], Calm:['spd','atk'], Gentle:['spd','def'], Sassy:['spd','spe'], Careful:['spd','spa'], Serious:[] };
+const sign = (n, s) => { const x = NAT[n] || []; return x[0] === s ? '+' : x[1] === s ? '-' : ''; };
+const tr = Math.trunc;
+function statValue(s, base, sp, sg) { if (s === 'hp') return base + sp + 75; const v = base + sp + 20; return sg === '+' ? Math.floor(v * 1.1) : sg === '-' ? Math.floor(v * 0.9) : v; }
+const boost = (v, st) => (st >= 0 ? Math.floor(v * (2 + st) / 2) : Math.floor(v * 2 / (2 - st)));
+const modify = (v, m) => tr((tr(v * m) + 2047) / 4096);
+const chain = (ms) => ms.reduce((m, x) => (m * x + 2048) >> 12, 4096);
+const CHART = {
+  Normal:{Rock:.5,Ghost:0,Steel:.5}, Fire:{Fire:.5,Water:.5,Grass:2,Ice:2,Bug:2,Rock:.5,Dragon:.5,Steel:2},
+  Water:{Fire:2,Water:.5,Grass:.5,Ground:2,Rock:2,Dragon:.5}, Electric:{Water:2,Electric:.5,Grass:.5,Ground:0,Flying:2,Dragon:.5},
+  Grass:{Fire:.5,Water:2,Grass:.5,Poison:.5,Ground:2,Flying:.5,Bug:.5,Rock:2,Dragon:.5,Steel:.5}, Ice:{Fire:.5,Water:.5,Grass:2,Ice:.5,Ground:2,Flying:2,Dragon:2,Steel:.5},
+  Fighting:{Normal:2,Ice:2,Poison:.5,Flying:.5,Psychic:.5,Bug:.5,Rock:2,Ghost:0,Dark:2,Steel:2,Fairy:.5}, Poison:{Grass:2,Poison:.5,Ground:.5,Rock:.5,Ghost:.5,Steel:0,Fairy:2},
+  Ground:{Fire:2,Electric:2,Grass:.5,Poison:2,Flying:0,Bug:.5,Rock:2,Steel:2}, Flying:{Electric:.5,Grass:2,Fighting:2,Bug:2,Rock:.5,Steel:.5},
+  Psychic:{Fighting:2,Poison:2,Psychic:.5,Dark:0,Steel:.5}, Bug:{Fire:.5,Grass:2,Fighting:.5,Poison:.5,Flying:.5,Psychic:2,Ghost:.5,Dark:2,Steel:.5,Fairy:.5},
+  Rock:{Fire:2,Ice:2,Fighting:.5,Ground:.5,Flying:2,Bug:2,Steel:.5}, Ghost:{Normal:0,Psychic:2,Ghost:2,Dark:.5}, Dragon:{Dragon:2,Steel:.5,Fairy:0},
+  Dark:{Fighting:.5,Psychic:2,Ghost:2,Dark:.5,Fairy:.5}, Steel:{Fire:.5,Water:.5,Electric:.5,Ice:2,Rock:2,Steel:.5,Fairy:2}, Fairy:{Fire:.5,Fighting:2,Poison:.5,Dragon:2,Dark:2,Steel:.5},
+};
+const eff = (t, defTypes) => defTypes.reduce((m, d) => m * (CHART[t]?.[d] ?? 1), 1);
+const TYPE_COLOR = { Electric:'#f4d23c', Flying:'#8fa8dd', Fire:'#ff9d55', Water:'#4d90d5', Grass:'#63bb5b', Ghost:'#6a6dc0', Fighting:'#ce4069', Normal:'#9099a1',
+  Dark:'#5a5366', Fairy:'#ec8fe6', Steel:'#5a8ea1', Ground:'#d97746', Ice:'#73cec0', Bug:'#90c12c', Rock:'#c7b78b', Poison:'#ab6ac8', Psychic:'#f97176', Dragon:'#0b6dc3' };
+
+// Species (data/mechanics.json, cloud-checkpoint). mega: { item, forme } for the Megas used here.
+const SP = {
+  charizard:{ n:'Charizard', t:['Fire','Flying'], b:[78,84,78,109,85,100], ab:['Blaze','Solar Power'], mega:{ item:'Charizardite Y', forme:'charizardmegay' } },
+  charizardmegay:{ n:'Mega Charizard Y', t:['Fire','Flying'], b:[78,104,78,159,115,100], ab:['Drought'] },
+  rotomfan:{ n:'Rotom-Fan', t:['Electric','Flying'], b:[50,65,107,105,107,86], ab:['Levitate'] },
+  pelipper:{ n:'Pelipper', t:['Water','Flying'], b:[60,50,100,95,70,65], ab:['Drizzle'] },
+  sinistcha:{ n:'Sinistcha', t:['Grass','Ghost'], b:[71,60,106,121,80,70], ab:['Hospitality','Heatproof'] },
+  kangaskhan:{ n:'Kangaskhan', t:['Normal'], b:[105,95,80,40,80,90], ab:['Scrappy','Inner Focus','Early Bird'] },
+  aegislash:{ n:'Aegislash', t:['Steel','Ghost'], b:[60,50,140,50,140,60], ab:['Stance Change'] },
+  morpeko:{ n:'Morpeko', t:['Electric','Dark'], b:[58,95,58,70,58,97], ab:['Hunger Switch'] },
+  conkeldurr:{ n:'Conkeldurr', t:['Fighting'], b:[105,140,95,55,65,45], ab:['Iron Fist','Guts','Sheer Force'] },
+  stunfiskgalar:{ n:'Stunfisk-Galar', t:['Ground','Steel'], b:[109,81,99,66,84,32], ab:['Mimicry'] },
+  simipour:{ n:'Simipour', t:['Water'], b:[75,98,63,98,63,101], ab:['Torrent','Gluttony'] },
+  staraptormega:{ n:'Mega Staraptor', t:['Fighting','Flying'], b:[85,140,100,60,90,110], ab:['Contrary'] },
+  grimmsnarl:{ n:'Grimmsnarl', t:['Dark','Fairy'], b:[95,120,65,95,75,60], ab:['Prankster'] },
+  volcarona:{ n:'Volcarona', t:['Bug','Fire'], b:[85,60,65,135,105,100], ab:['Flame Body'] },
+  basculegionf:{ n:'Basculegion-F', t:['Water','Ghost'], b:[120,92,65,100,75,78], ab:['Adaptability'] },
+  tsareena:{ n:'Tsareena', t:['Grass'], b:[72,120,98,50,98,72], ab:['Queenly Majesty'] },
+};
+const DRAFTED = ['charizard','sinistcha','pelipper','kangaskhan','aegislash','morpeko','conkeldurr','rotomfan','stunfiskgalar','simipour'];
+const MOVES = {
+  'Thunderbolt':{ bp:90, t:'Electric', c:'S' }, 'Air Slash':{ bp:75, t:'Flying', c:'S' }, 'Discharge':{ bp:80, t:'Electric', c:'S', spread:true },
+  'Volt Switch':{ bp:70, t:'Electric', c:'S' }, 'Shadow Ball':{ bp:80, t:'Ghost', c:'S' }, 'Heat Wave':{ bp:95, t:'Fire', c:'S', spread:true },
+  'Weather Ball':{ bp:50, t:'Normal', c:'S', wb:true }, 'Solar Beam':{ bp:120, t:'Grass', c:'S' }, 'Flamethrower':{ bp:90, t:'Fire', c:'S' },
+  'Brave Bird':{ bp:120, t:'Flying', c:'P' }, 'Close Combat':{ bp:120, t:'Fighting', c:'P' },
+  'Protect':{ status:true }, 'Nasty Plot':{ status:true, setup:'spa' }, 'Tailwind':{ status:true }, 'Helping Hand':{ status:true }, 'Will-O-Wisp':{ status:true },
+};
+const LEARN = { rotomfan:['Thunderbolt','Air Slash','Discharge','Volt Switch','Shadow Ball','Protect','Nasty Plot','Helping Hand','Will-O-Wisp'],
+  charizard:['Heat Wave','Weather Ball','Solar Beam','Flamethrower','Air Slash','Protect'] };
+const ITEMS = ['', 'Sitrus Berry', 'Life Orb', 'Mental Herb', 'Magnet', 'Expert Belt', 'Focus Sash', 'Leftovers', 'Charizardite Y', 'Staraptite', 'Light Clay', 'Wide Lens'];
+
+// Damage. side = { sp(species id), set:{item, ability, nature, sp:{}}, boosts:{}, hp% } ; f = field
+function forme(spId, set) { const s = SP[spId]; return s.mega && set.item === s.mega.item ? s.mega.forme : spId; }
+function stats(spId, set) { const f = SP[forme(spId, set)]; return Object.fromEntries(STATS.map((k, i) => [k, statValue(k, f.b[i], set.sp[k] || 0, sign(set.nature, k))])); }
+function damage(att, def, moveName, f) {
+  const mv = MOVES[moveName]; if (!mv || mv.status) return null;
+  const aF = SP[forme(att.sp, att.set)], dF = SP[forme(def.sp, def.set)];
+  let type = mv.t, bp = mv.bp;
+  if (mv.wb && f.weather) { bp = 100; type = { sun:'Fire', rain:'Water', sand:'Rock', snow:'Ice' }[f.weather]; }
+  const phys = mv.c === 'P', aKey = phys ? 'atk' : 'spa', dKey = phys ? 'def' : 'spd';
+  const as = stats(att.sp, att.set), ds = stats(def.sp, def.set);
+  const out = (crit) => {
+    let aStage = (att.boosts?.[aKey] || 0) - (phys ? (f.intim || 0) : 0), dStage = def.boosts?.[dKey] || 0;
+    if (crit) { aStage = Math.max(0, aStage); dStage = Math.min(0, dStage); }
+    const A = boost(as[aKey], aStage), D = boost(ds[dKey], dStage);
+    const bpm = []; if (f.hh) bpm.push(6144); if (att.set.item === 'Magnet' && type === 'Electric') bpm.push(4915);
+    const B = bpm.length ? Math.max(1, modify(bp, chain(bpm))) : bp;
+    let base = tr(tr(tr(22 * B * A / D) / 50)) + 2;
+    if (mv.spread && f.spread) base = modify(base, 3072);
+    if (f.weather === 'sun' && type === 'Fire' || f.weather === 'rain' && type === 'Water') base = modify(base, 6144);
+    if (f.weather === 'sun' && type === 'Water' || f.weather === 'rain' && type === 'Fire') base = modify(base, 2048);
+    if (crit) base = modify(base, 6144);
+    const e = eff(type, dF.t);
+    const fin = [];
+    if (!crit && (phys ? f.reflect : f.screen)) fin.push(2732);
+    if (att.set.item === 'Expert Belt' && e > 1) fin.push(4915);
+    if (att.set.item === 'Life Orb') fin.push(5324);
+    const rolls = [];
+    for (let r = 85; r <= 100; r++) {
+      let d = tr(base * r / 100);
+      if (aF.t.includes(type)) d = modify(d, 6144);
+      d = tr(d * e);
+      if (fin.length) d = modify(d, chain(fin));
+      rolls.push(e === 0 ? 0 : Math.max(1, d));
+    }
+    return rolls;
+  };
+  const hp = tr(ds.hp * (def.hpPct ?? 100) / 100) || 1, maxHP = ds.hp;
+  const rolls = out(false), crit = out(true);
+  const ko = rolls.filter((x) => x >= hp).length;
+  let two = 0; for (const x of rolls) for (const y of rolls) if (x + y >= hp) two++;
+  return { rolls, crit, hp, maxHP, ko, two, type, e: eff(type, dF.t), spreadApplied: !!(mv.spread && f.spread) };
+}
+const pct = (n, d) => (Math.floor(1000 * n / d) / 10).toFixed(1);
+
+// ======================================================================================================================
+// Opponent targets (Calvin). Each assumed set is labelled with where it came from.
+// ======================================================================================================================
+const SPREADS = { // frail / common / max for the workbench "spread" segment
+  staraptormega: { common:{ nature:'Jolly', sp:{ hp:29, atk:1, def:0, spa:0, spd:4, spe:32 } } },
+};
+const TARGETS = [
+  { sp:'staraptormega', set:{ item:'Staraptite', ability:'Contrary', nature:'Jolly', sp:{ hp:29, atk:1, def:0, spa:0, spd:4, spe:32 }, moves:['Close Combat','Brave Bird','Tailwind','Protect'] },
+    src:'ladder guess · Smogon Sept · most used spread (11.8%)', note:'Contrary: each Close Combat gives it +1 Def / +1 SpD' },
+  { sp:'staraptormega', label:'Mega Staraptor after its Close Combat', boosts:{ def:1, spd:1 }, set:{ item:'Staraptite', ability:'Contrary', nature:'Jolly', sp:{ hp:29, atk:1, def:0, spa:0, spd:4, spe:32 }, moves:['Close Combat','Brave Bird','Tailwind','Protect'] },
+    src:'ladder guess · Smogon Sept · most used spread (11.8%) · SpD +1', note:'It moves first (178 Speed), so a setup turn meets this version' },
+  { sp:'grimmsnarl', set:{ item:'Light Clay', ability:'Prankster', nature:'Careful', sp:{ hp:32, atk:0, def:19, spa:0, spd:15, spe:0 }, moves:[] }, src:'ladder guess · Smogon Sept · most used spread' },
+  { sp:'volcarona', set:{ item:'', ability:'Flame Body', nature:'Bold', sp:{ hp:32, atk:0, def:32, spa:0, spd:2, spe:0 }, moves:[] }, src:'ladder guess · Smogon Sept · most used spread · item not counted' },
+  { sp:'basculegionf', set:{ item:'Life Orb', ability:'Adaptability', nature:'Modest', sp:{ hp:0, atk:0, def:1, spa:32, spd:1, spe:32 }, moves:[] }, src:'ladder guess · Smogon Sept · most used spread' },
+  { sp:'tsareena', set:{ item:'Wide Lens', ability:'Queenly Majesty', nature:'Jolly', sp:{ hp:2, atk:32, def:0, spa:0, spd:0, spe:32 }, moves:[] }, src:'ladder guess · Smogon Sept · most used spread' },
+];
+const FRAIL = { nature:'Hardy', sp:{ hp:0, atk:0, def:0, spa:0, spd:0, spe:0 } };
+const MAXB = (t) => ({ nature:'Calm', sp:{ hp:32, atk:0, def:2, spa:0, spd:32, spe:0 } });
+
+// ======================================================================================================================
+// State: teams after the one-time migration (what an existing device would see)
+// ======================================================================================================================
+let nid = 100; const id = (p) => `${p}_${(nid++).toString(36)}`;
+const clone = (x) => JSON.parse(JSON.stringify(x));
+const z = () => ({ hp:0, atk:0, def:0, spa:0, spd:0, spe:0 });
+const mkSet = (sp, data, extra = {}) => ({ id:id('set'), spc:sp, nick:'', versions:3, ...data, ...extra });
+const rotom = () => mkSet('rotomfan', { item:'Sitrus Berry', ability:'Levitate', nature:'Modest', moves:['Thunderbolt','Air Slash','Protect','Nasty Plot'], sp:{ hp:2, atk:0, def:0, spa:32, spd:0, spe:32 } });
+const zard = () => mkSet('charizard', { item:'Charizardite Y', ability:'Solar Power', nature:'Modest', moves:['Heat Wave','Weather Ball','Solar Beam','Protect'], sp:{ hp:2, atk:0, def:0, spa:32, spd:0, spe:32 } });
+const S = {
+  view:'list', teamId:null, slot:null, menu:null, focusMove:null, notice:true, calcs:[], wb:null,
+  teams: [], matchups: [ { w:'W1', coach:'Calvin', team:null }, { w:'W3', coach:'ZhuZi', team:null }, { w:'W4', coach:'Hex', team:null }, { w:'W5', coach:'Jacky', team:null } ],
+};
+(function seed() {
+  const r1 = rotom(), z1 = zard();
+  const t1 = { id:id('team'), name:'vs Calvin (W1)', kind:'team', slots:[ z1, r1, { empty:'pelipper' }, { empty:'sinistcha' }, { empty:'kangaskhan' }, { empty:'aegislash' } ] };
+  const r2 = { ...clone(r1), id:id('set'), copiedFrom:'vs Calvin (W1)' }, z2 = { ...clone(z1), id:id('set'), copiedFrom:'vs Calvin (W1)' };
+  const t2 = { id:id('team'), name:'vs ZhuZi (W3)', kind:'team', slots:[ r2, z2 ] };
+  const r3 = mkSet('rotomfan', { item:'Life Orb', ability:'Levitate', nature:'Modest', moves:['Thunderbolt','Air Slash','Volt Switch','Protect'], sp:{ hp:32, atk:0, def:0, spa:32, spd:2, spe:0 } }, { nick:'Bulky LO' });
+  const box = { id:id('team'), name:'Imported sets', kind:'box', slots:[ r3 ] };
+  S.teams = [t1, t2, box];
+  S.matchups[0].team = t1.id; S.matchups[1].team = t2.id;
+})();
+const team = (tid) => S.teams.find((t) => t.id === tid);
+const curSet = () => { const t = team(S.teamId); return t && S.slot !== null ? t.slots[S.slot] : null; };
+
+// ======================================================================================================================
+// Rendering helpers
+// ======================================================================================================================
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+function sprite(spId, cls = '') {
+  const s = SP[spId]; if (!s) return `<span class="sprite empty ${cls}">?</span>`;
+  const [a, b] = s.t.map((t) => TYPE_COLOR[t]);
+  return `<span class="sprite ${cls}" aria-hidden="true" style="background:linear-gradient(135deg, ${a} 0 50%, ${b || a} 50% 100%)">${esc(s.n.replace(/^Mega /, '').slice(0, 2))}</span>`;
+}
+const setName = (x) => (x.empty ? SP[x.empty].n : SP[forme(x.spc, x)].n);
+function toast(m) { const t = $('#toast'); t.textContent = m; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 2800); }
+function warnings(t) {
+  const sets = t.slots.filter((x) => !x.empty), out = [];
+  const seen = {}; for (const x of t.slots) { const s = x.empty || x.spc; seen[s] = (seen[s] || 0) + 1; }
+  for (const [s, n] of Object.entries(seen)) if (n > 1) out.push(`Species clause: ${n} × ${SP[s].n}; only one can be brought.`);
+  const megas = sets.filter((x) => SP[x.spc].mega && x.item === SP[x.spc].mega.item).length + sets.filter((x) => x.item === 'Staraptite').length;
+  if (megas > 1) out.push(`${megas} Mega Stones: only one can Mega Evolve per battle; choose it per game.`);
+  const items = sets.map((x) => x.item).filter(Boolean), dup = items.find((it, i) => items.indexOf(it) !== i);
+  if (dup) out.push(`Item clause: two ${dup}s; only one can be brought.`);
+  return out;
+}
+function exportSet(x) {
+  const evs = STATS.filter((k) => x.sp[k]).map((k) => `${x.sp[k]} ${SHORT[k]}`).join(' / ');
+  return `${x.nick ? `${x.nick} (${SP[x.spc].n})` : SP[x.spc].n}${x.item ? ` @ ${x.item}` : ''}\nAbility: ${x.ability}\nLevel: 50\n${evs ? `EVs: ${evs}\n` : ''}${x.nature} Nature\n${x.moves.filter(Boolean).map((m) => `- ${m}`).join('\n')}\n`;
+}
+const exportTeam = (t) => `=== [gen9championsvgc2026regmc] ${t.name} ===\n\n${t.slots.filter((x) => !x.empty).map(exportSet).join('\n')}`;
+function parseSets(text) {
+  return text.split(/\n\s*\n/).map((b) => b.trim()).filter((b) => b && !b.startsWith('===')).map((b) => {
+    const L = b.split('\n').map((l) => l.trim());
+    const h = /^(?:(.+?) \((.+?)\)|(.+?))(?: @ (.+))?$/.exec(L[0]); if (!h) return null;
+    const name = (h[2] || h[3] || '').trim(), spId = Object.keys(SP).find((k) => SP[k].n === name && !k.endsWith('mega') && k !== 'charizardmegay');
+    if (!spId) return { bad:name };
+    const x = mkSet(spId, { item:(h[4] || '').trim(), ability:SP[spId].ab[0], nature:'Serious', moves:[], sp:z() }, { nick:h[2] ? h[1] : '' });
+    for (const l of L.slice(1)) {
+      if (l.startsWith('Ability:')) x.ability = l.slice(8).trim();
+      else if (/^EVs:/.test(l)) l.slice(4).split('/').forEach((p) => { const [v, k] = p.trim().split(' '); const s = STATS.find((q) => SHORT[q] === k); if (s) { const n = +v || 0; x.sp[s] = n > 32 ? Math.min(32, Math.round(n / 8)) : n; } }); // 252 → 32 (EV→SP, shown in the app's import screen)
+      else if (/ Nature$/.test(l)) x.nature = l.replace(/ Nature$/, '');
+      else if (l.startsWith('- ')) x.moves.push(l.slice(2));
+    }
+    return x;
+  }).filter(Boolean);
+}
+
+// ---------- views ----------
+function render() {
+  const v = S.view;
+  $('#app').innerHTML = v === 'list' ? listView() : v === 'team' ? teamView() : editorView();
+  renderWb();
+}
+function listView() {
+  const notice = S.notice ? `<div class="notice" role="status"><b>We put your sets into teams.</b> Nothing was deleted.
+    <ul><li><b>vs Calvin (W1)</b>: the 2 sets you'd chosen for that match, plus 4 mons you'd shortlisted (no set yet)</li>
+    <li><b>vs ZhuZi (W3)</b>: 2 sets, copied from vs Calvin (they were shared; now each team has its own)</li>
+    <li><b>Imported sets</b> (box): 1 set that wasn't in any match</li></ul>
+    <span class="small muted">Version history came along with every set. Old calcs still point to the sets they used. A backup from before the change is in Backup &amp; restore.</span>
+    <div class="row" style="margin-top:6px"><button class="primary" data-a="notice-ok">Got it</button></div></div>` : '';
+  const mus = S.matchups.map((m) => `<label class="mu"><b>${m.w}</b> vs ${m.coach} · bring <select data-mu="${m.coach}" aria-label="Team you bring vs ${m.coach}"><option value="">— choose a team</option>${S.teams.filter((t) => t.kind === 'team').map((t) => `<option value="${t.id}" ${m.team === t.id ? 'selected' : ''}>${esc(t.name)}</option>`).join('')}</select></label>`).join('');
+  const cards = S.teams.map((t) => {
+    const used = S.matchups.filter((m) => m.team === t.id).map((m) => `vs ${m.coach}`);
+    const w = warnings(t);
+    return `<div class="tcard ${t.kind === 'box' ? 'box' : ''}">
+      <div class="row"><button class="name" data-a="open-team" data-t="${t.id}">${t.kind === 'box' ? '📦 ' : ''}${esc(t.name)}</button>
+        <span class="badge">${t.kind === 'box' ? `${t.slots.length} sets · box` : `${t.slots.length}/6`}</span>${w.length ? `<span class="badge warn" title="${esc(w.join('\n'))}">⚠ ${w.length}</span>` : ''}
+        <span class="menu" style="margin-left:auto"><button class="link" data-a="menu" data-m="t:${t.id}" aria-haspopup="true" aria-label="More for ${esc(t.name)}">⋯</button>${S.menu === `t:${t.id}` ? `<span class="pop">
+          <button data-a="rename" data-t="${t.id}">Rename</button>${t.kind === 'team' ? `<button data-a="dup" data-t="${t.id}">Duplicate</button>` : ''}
+          <button data-a="export-team" data-t="${t.id}">Export (Showdown text)</button><button data-a="del-team" data-t="${t.id}">Delete…</button></span>` : ''}</span></div>
+      <button class="link" data-a="open-team" data-t="${t.id}" style="padding:0;text-align:left" aria-label="Open ${esc(t.name)}"><span class="six">${t.slots.map((x) => sprite(x.empty || x.spc, x.empty ? 'sm empty' : 'sm')).join('')}${t.kind === 'team' ? Array.from({ length:6 - t.slots.length }, () => '<span class="sprite sm empty">+</span>').join('') : ''}</span></button>
+      <span class="small muted">${used.length ? `Brought ${used.join(', ')}` : t.kind === 'box' ? "Storage: can't be brought to a match" : 'Not brought to a match yet'}</span></div>`;
+  }).join('');
+  return `${notice}<h2>Teams</h2>
+    <div class="row" style="margin-bottom:10px"><button class="primary" data-a="new-team">+ New team</button><button data-a="import-team">Import team</button></div>
+    <h3>Your matches</h3><div class="matchups">${mus}</div>
+    <h3>Your teams</h3><div class="teams">${cards}</div>
+    <h3>Saved calcs (${S.calcs.length})</h3>${S.calcs.length ? `<ul class="small">${S.calcs.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>` : '<p class="small muted">Workbench calcs you save land here, and in that opponent\'s Calcs tab.</p>'}`;
+}
+function teamView() {
+  const t = team(S.teamId);
+  const w = warnings(t);
+  const used = S.matchups.filter((m) => m.team === t.id).map((m) => `vs ${m.coach}`);
+  const others = S.teams.filter((x) => x.id !== t.id);
+  const slots = t.slots.map((x, i) => {
+    if (x.empty) return `<div class="slot emptyslot">${sprite(x.empty)}<div><div class="nm">${esc(SP[x.empty].n)}</div><div class="sub">no set yet (from your shortlist)</div></div><div></div><div></div>
+      <div class="row"><button data-a="open-slot" data-i="${i}">Create set</button><button class="link" data-a="remove" data-i="${i}">Remove</button></div></div>`;
+    const st = stats(x.spc, x);
+    return `<div class="slot"><button class="open" data-a="open-slot" data-i="${i}" aria-label="Edit ${esc(setName(x))}">${sprite(forme(x.spc, x))}
+      <div><div class="nm">${esc(x.nick || setName(x))}${x.copiedFrom ? ` <span class="badge" title="Copied during the move to teams">copy of ${esc(x.copiedFrom)}</span>` : ''}</div><div class="sub">${esc(x.item || 'no item')} · ${esc(SP[forme(x.spc, x)].ab.length === 1 ? SP[forme(x.spc, x)].ab[0] : x.ability)} · ${esc(x.nature)}</div></div>
+      <div class="mv">${x.moves.map((m) => `• ${esc(m)}`).join('<br>')}</div>
+      <div class="st">${STATS.map((k) => `${SHORT[k]} ${st[k]}`).join(' · ')}<br>SP ${STATS.map((k) => x.sp[k]).join('/')}</div></button>
+      <span class="menu"><button class="link" data-a="menu" data-m="s:${i}" aria-label="More for ${esc(setName(x))}">⋯</button>${S.menu === `s:${i}` ? `<span class="pop">
+        <button data-a="export-set" data-i="${i}">Export set</button>
+        ${others.map((o) => `<button data-a="copy-to" data-i="${i}" data-t="${o.id}">Copy to ${esc(o.name)}</button>`).join('')}
+        ${others.map((o) => `<button data-a="move-to" data-i="${i}" data-t="${o.id}">Move to ${esc(o.name)}</button>`).join('')}
+        <button data-a="up" data-i="${i}">Move up</button><button data-a="remove" data-i="${i}">${t.kind === 'box' ? 'Delete set' : 'Remove (to box)'}</button></span>` : ''}</span></div>`;
+  }).join('');
+  return `<div class="crumbs"><button class="link" data-a="go-list">‹ Teams</button></div>
+    <div class="row"><h2 style="margin:0">${t.kind === 'box' ? '📦 ' : ''}${esc(t.name)}</h2><span class="badge">${t.kind === 'box' ? 'box' : `${t.slots.length}/6`}</span>
+      ${t.kind === 'team' ? `<span class="small muted">${used.length ? `Brought ${used.join(', ')}: edits here apply there` : 'Not brought to a match'}</span>` : ''}
+      <span style="margin-left:auto" class="row"><button data-a="import-into">Import into this ${t.kind === 'box' ? 'box' : 'team'}</button><button data-a="export-team" data-t="${t.id}">Export</button></span></div>
+    ${w.length ? `<div class="warns">${w.map((x) => `<span>⚠ ${esc(x)}</span>`).join('')}</div>` : ''}
+    <div class="slots" style="margin-top:8px">${slots}</div>
+    ${t.kind === 'team' && t.slots.length < 6 ? `<p><button data-a="add-mon">+ Add Pokémon</button> <span class="small muted">from your 10 drafted</span></p>` : t.kind === 'box' ? '' : '<p class="small muted">6 of 6. Remove one to add another.</p>'}`;
+}
+// ---------- set editor (inside the team) ----------
+function marksFor(x) {
+  // KO marks: least attacking SP for "every roll" and "15/16" against each target with the set's best damaging move, at +0
+  // and at +2 when the set has a setup move. Computed here per render; the app caches them per set shape.
+  const out = [];
+  const setup = x.moves.some((m) => MOVES[m]?.setup);
+  const dmgMoves = x.moves.filter((m) => MOVES[m] && !MOVES[m].status && MOVES[m].c === 'S');
+  for (const T of TARGETS) for (const st of setup ? [0, 2] : [0]) {
+    for (const lvl of [16, 15]) {
+      for (const mv of dmgMoves) {
+        let at = null;
+        for (let v = 0; v <= 32; v++) {
+          const a = { sp:x.spc, set:{ ...x, sp:{ ...x.sp, spa:v } }, boosts:{ spa:st } };
+          const d = damage(a, { sp:T.sp, set:T.set, boosts:T.boosts }, mv, fieldFor(x, mv));
+          if (d && d.ko >= lvl) { at = v; break; }
+        }
+        if (at !== null) { out.push({ stat:'spa', at, lvl, st, mv, T }); break; }
+      }
+      if (out.some((o) => o.T === T && o.st === st && o.lvl === 16)) break; // every roll reached: skip 15/16 for this boost
+    }
+  }
+  return out;
+}
+const fieldFor = (x, mv) => ({ weather: SP[x.spc].mega && x.item === SP[x.spc].mega.item ? 'sun' : '', spread: !!MOVES[mv]?.spread });
+function editorView() {
+  const t = team(S.teamId), x = curSet();
+  if (x.empty) return '';
+  const fm = forme(x.spc, x), st = stats(x.spc, x), learn = LEARN[x.spc] || Object.keys(MOVES);
+  const marks = marksFor(x);
+  const strip = S.focusMove !== null && x.moves[S.focusMove] ? moveStrip(x, x.moves[S.focusMove]) : '';
+  const srows = STATS.map((k) => {
+    const sg = sign(x.nature, k), ms = marks.filter((m) => m.stat === k);
+    const groups = new Map(); for (const m of ms) groups.set(m.at, [...(groups.get(m.at) || []), m]);
+    const ticks = [...groups].map(([at, g]) => `<button class="tick ${x.sp[k] >= at ? 'met' : ''}" style="left:calc(var(--thumb)/2 + (100% - var(--thumb)) * ${at / 32})" data-a="mark" data-at="${at}" data-k="${k}" title="${esc(g.map(markText).join(' · '))}" aria-label="${esc(`${SHORT[k]} ${at}: ${g.map(markText).join('; ')}. Open in workbench`)}"></button>`).join('');
+    const next = ms.filter((m) => m.at > x.sp[k]).sort((a, b) => a.at - b.at)[0], passed = ms.filter((m) => m.at <= x.sp[k]).sort((a, b) => b.at - a.at)[0];
+    const lbl = ms.length ? `<div class="marklbl">${passed ? `✓ <button class="link" data-a="mark" data-at="${passed.at}" data-k="${k}">${esc(markText(passed))}</button>` : ''}${next ? ` · next: <button class="link" data-a="mark" data-at="${next.at}" data-k="${k}">${esc(markText(next))}</button>` : ''}</div>` : '';
+    return `<div class="srow"><span class="sname ${sg === '+' ? 'plus' : sg === '-' ? 'minus' : ''}">${SHORT[k]}${sg ? `<sup>${sg === '+' ? '+' : '−'}</sup>` : ''}</span>
+      <div class="slidew"><input type="range" min="0" max="32" value="${x.sp[k]}" data-sp="${k}" aria-label="${SHORT[k]} Stat Points"><div class="ticks">${ticks}</div>${lbl}</div>
+      <span class="num">${x.sp[k]}</span><span class="fin">${st[k]}</span></div>`;
+  }).join('');
+  const left = 66 - STATS.reduce((s, k) => s + x.sp[k], 0);
+  return `<div class="crumbs"><button class="link" data-a="go-list">‹ Teams</button> › <button class="link" data-a="open-team" data-t="${t.id}">${esc(t.name)}</button> › ${esc(setName(x))}</div>
+    <div class="teamstrip">${t.slots.map((y, i) => `<button class="${i === S.slot ? 'sel' : ''}" data-a="open-slot" data-i="${i}">${sprite(y.empty || forme(y.spc, y), 'sm')}${esc(y.empty ? SP[y.empty].n : (y.nick || setName(y)))}</button>`).join('')}</div>
+    <div class="panel"><div class="ed">
+      <div style="text-align:center">${sprite(fm, 'lg')}<div class="row" style="justify-content:center;margin-top:6px">${SP[fm].t.map((ty) => `<span class="type" style="background:${TYPE_COLOR[ty]}">${ty}</span>`).join('')}</div></div>
+      <div><label class="field"><span>Nickname</span><input type="text" data-f="nick" value="${esc(x.nick)}" placeholder="${esc(SP[x.spc].n)}"></label>
+        <label class="field"><span>Item</span><select data-f="item">${ITEMS.map((i) => `<option value="${i}" ${i === x.item ? 'selected' : ''}>${i || 'No item'}</option>`).join('')}</select></label>
+        <label class="field"><span>Ability</span><select data-f="ability" ${fm !== x.spc ? 'disabled' : ''}>${SP[fm].ab.map((a) => `<option ${a === x.ability ? 'selected' : ''}>${a}</option>`).join('')}</select></label>
+        <label class="field"><span>Nature</span><select data-f="nature">${Object.keys(NAT).map((n) => `<option ${n === x.nature ? 'selected' : ''}>${n}</option>`).join('')}</select></label></div>
+      <div>${[0, 1, 2, 3].map((i) => `<label class="field"><span>Move ${i + 1}</span><input type="text" list="learn" data-move="${i}" value="${esc(x.moves[i] || '')}" autocomplete="off"></label>`).join('')}
+        <datalist id="learn">${learn.map((m) => `<option value="${esc(m)}">`).join('')}</datalist></div>
+    </div>${strip}
+    <div style="margin-top:10px">${srows}</div>
+    <div class="row" style="margin-top:8px"><b>${left < 0 ? `${-left} over` : `${left} left`}</b><span class="small muted">of 66 · max 32 per stat · tap a mark or a number to open its calc</span></div>
+    <div class="row" style="margin-top:10px"><button class="primary" data-a="save">Save</button><button data-a="export-set" data-i="${S.slot}">Export set</button><span class="small muted">Version history is kept under ⋯ (as today)</span></div></div>`;
+}
+const markText = (m) => `${m.lvl === 16 ? 'OHKO every roll' : 'OHKO 15/16'}${m.st ? ` at +${m.st}` : ''}: ${m.T.label || SP[m.T.sp].n} (${m.mv}) at ${m.at}`;
+function moveStrip(x, mv) {
+  const M = MOVES[mv];
+  if (!M) return `<div class="strip small muted">${esc(mv)}: no data in this mockup.</div>`;
+  if (M.status) return `<div class="strip small"><b>${esc(mv)}</b> <span class="muted">${M.setup ? 'Setup move: adds the +2 column to every hit and +2 marks on SpA.' : 'Status move: no damage.'}</span></div>`;
+  const setup = x.moves.some((m) => MOVES[m]?.setup), f = fieldFor(x, mv);
+  const cols = [0, ...(setup ? [2] : [])];
+  const cards = TARGETS.map((T, ti) => `<div class="hit"><div class="who">${sprite(T.sp, 'sm')}${esc(T.label || SP[T.sp].n)}</div>
+    <div class="src">${esc(T.set.nature)} ${STATS.map((k) => T.set.sp[k]).join('/')} · ${esc(T.set.item || 'no item')} · ${esc(T.src.split(' · ')[0])}</div>
+    ${cols.map((b) => { const d = damage({ sp:x.spc, set:x, boosts:{ spa:b, atk:b } }, { sp:T.sp, set:T.set, boosts:T.boosts }, mv, f);
+      return `<button class="v" data-a="wb-open" data-ti="${ti}" data-mv="${esc(mv)}" data-b="${b}" aria-label="Open calc: ${esc(mv)} on ${esc(SP[T.sp].n)} at +${b}"><span class="muted">+${b}</span><b class="${d.ko === 16 ? 'ko' : ''}">${pct(d.rolls[0], d.maxHP)}–${pct(d.rolls[15], d.maxHP)}%${d.ko === 16 ? ' KO' : d.ko ? ` ${d.ko}/16` : ''}</b><span>⤢</span></button>`; }).join('')}</div>`).join('');
+  return `<div class="strip"><div class="row" style="margin-bottom:6px"><b>${esc(mv)}</b><span class="small muted">vs Calvin · tap any number to open it${f.weather ? ' · sun from your Drought' : ''}${f.spread ? ' · hits both foes (×0.75)' : ''}</span></div><div class="hits">${cards}</div></div>`;
+}
+
+// ======================================================================================================================
+// Calc workbench
+// ======================================================================================================================
+function openWb(ti, mv, b, atSp) {
+  const x = curSet(), T = TARGETS[ti];
+  const you = { sp:x.spc, set:clone(x), boosts:{ atk:0, def:0, spa:0, spd:0 }, hpPct:100 };
+  if (atSp) you.set.sp[atSp.k] = atSp.v;
+  you.boosts[MOVES[mv].c === 'P' ? 'atk' : 'spa'] = b;
+  S.wb = { ti, mv, you, them:{ sp:T.sp, set:clone(T.set), boosts:{ atk:0, def:0, spa:0, spd:0, ...(T.boosts || {}) }, hpPct:100 }, assumed:clone(T.set), field:{ ...fieldFor(x, mv), hh:false, screen:false, reflect:false, intim:0, crit:false }, tab:'you', spread:'common', edited:false };
+  history.pushState({ wb:true }, '');
+  render();
+  setTimeout(() => $('#wbclose')?.focus(), 0);
+}
+function closeWb(fromPop) { if (!S.wb) return; S.wb = null; if (!fromPop && history.state?.wb) history.back(); render(); }
+function sidePanel(who) {
+  const W = S.wb, s = W[who], fm = forme(s.sp, s.set), st = stats(s.sp, s.set);
+  const keyStat = who === 'you' ? (MOVES[W.mv].c === 'P' ? 'atk' : 'spa') : (MOVES[W.mv].c === 'P' ? 'def' : 'spd');
+  const row = (k) => `<div class="srow"><span class="sname ${sign(s.set.nature, k) === '+' ? 'plus' : sign(s.set.nature, k) === '-' ? 'minus' : ''}">${SHORT[k]}</span><input type="range" min="0" max="32" value="${s.set.sp[k]}" data-wbsp="${who}:${k}" aria-label="${who === 'you' ? 'Your' : 'Their'} ${SHORT[k]} SP"><span class="num" data-num="${who}:${k}">${s.set.sp[k]}</span><span class="fin" data-fin="${who}:${k}">${st[k]}</span></div>`;
+  const others = STATS.filter((k) => k !== keyStat && k !== 'hp');
+  const src = who === 'you' ? `<div class="src edited">your set as it is in the editor · changes here stay here unless you apply them</div>`
+    : `<div class="src ${W.edited ? 'edited' : ''}">${W.edited ? 'edited by you · ' : ''}${esc(TARGETS[W.ti].src)}${TARGETS[W.ti].note ? `<br>${esc(TARGETS[W.ti].note)}` : ''}</div>`;
+  return `<div class="side ${who}"><h4>${who === 'you' ? 'You' : 'Them (assumed)'}</h4>
+    <div class="row">${sprite(fm, 'sm')}<b>${esc(SP[fm].n)}</b></div>${src}
+    <div class="field2"><label class="field"><span>Nature</span><select data-wbf="${who}:nature">${Object.keys(NAT).map((n) => `<option ${n === s.set.nature ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
+      <label class="field"><span>Item</span><select data-wbf="${who}:item">${ITEMS.map((i) => `<option value="${i}" ${i === s.set.item ? 'selected' : ''}>${i || 'No item'}</option>`).join('')}</select></label>
+      <label class="field"><span>Ability</span><select disabled><option>${esc(SP[fm].ab.length === 1 ? SP[fm].ab[0] : s.set.ability)}</option></select></label>
+      <label class="field"><span>${SHORT[keyStat]} stage</span><select data-wbb="${who}:${keyStat}">${[-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6].map((n) => `<option value="${n}" ${n === (s.boosts[keyStat] || 0) ? 'selected' : ''}>${n > 0 ? '+' : ''}${n}</option>`).join('')}</select></label></div>
+    ${who === 'them' ? `<div class="row small" style="margin:4px 0"><span class="muted">Spread:</span><span class="seg">${['frail','common','max'].map((k) => `<button type="button" class="${W.spread === k && !W.edited ? 'on' : ''}" data-a="wb-spread" data-k="${k}">${k}</button>`).join('')}</span>${W.edited ? '<button class="link" data-a="wb-reset">↺ back to assumed</button>' : ''}</div>` : ''}
+    ${row('hp')}${row(keyStat)}
+    <details class="more"><summary>More stats</summary>${others.map(row).join('')}</details>
+    <label class="field small" style="max-width:120px"><span>HP %</span><input type="text" inputmode="numeric" value="${s.hpPct}" data-wbhp="${who}"></label></div>`;
+}
+function resultHtml() {
+  const W = S.wb;
+  const f = { ...W.field, intim:W.field.intim };
+  const d = damage(W.you, W.them, W.mv, f);
+  if (!d) return '';
+  const koWords = d.ko === 16 ? 'KO every roll' : d.ko ? `KO ${d.ko} of 16` : 'no KO';
+  const chips = [d.spreadApplied ? 'hits both foes ×0.75' : 'single target', f.weather ? `${f.weather}` : 'no weather',
+    W.you.boosts.spa || W.you.boosts.atk ? `you ${MOVES[W.mv].c === 'P' ? 'Atk' : 'SpA'} ${W.you.boosts[MOVES[W.mv].c === 'P' ? 'atk' : 'spa'] > 0 ? '+' : ''}${W.you.boosts[MOVES[W.mv].c === 'P' ? 'atk' : 'spa']}` : null,
+    W.them.boosts.spd || W.them.boosts.def ? `them ${MOVES[W.mv].c === 'P' ? 'Def' : 'SpD'} ${W.them.boosts[MOVES[W.mv].c === 'P' ? 'def' : 'spd'] > 0 ? '+' : ''}${W.them.boosts[MOVES[W.mv].c === 'P' ? 'def' : 'spd']}` : null,
+    f.hh ? 'Helping Hand' : null, f.screen ? 'Light Screen' : null, f.reflect ? 'Reflect' : null, f.intim ? `Intimidate −${f.intim}` : null, W.you.set.item ? W.you.set.item : null,
+    forme(W.them.sp, W.them.set) !== W.them.sp || W.them.sp.endsWith('mega') ? `${SP[forme(W.them.sp, W.them.set)].n} (after Mega Evolution)` : null].filter(Boolean);
+  const critKo = d.crit.filter((r) => r >= d.hp).length;
+  return `<div class="headline ${d.ko === 16 ? 'ko' : ''}" aria-live="polite">${pct(d.rolls[0], d.maxHP)}–${pct(d.rolls[15], d.maxHP)}% · ${koWords}</div>
+    <div class="rolls" aria-hidden="true">${d.rolls.map((r) => `<span class="${r >= d.hp ? 'k' : ''}"></span>`).join('')}</div>
+    <div class="small">${d.rolls[0]}–${d.rolls[15]} of ${d.hp} HP · two hits KO ${Math.round(100 * d.two / 256)}% · if crit: ${critKo ? `KO ${critKo}/16` : `${pct(d.crit[0], d.maxHP)}–${pct(d.crit[15], d.maxHP)}%`}</div>
+    <div class="chips">${chips.map((c) => `<span>${esc(c)}</span>`).join('')}</div>`;
+}
+function renderWb() {
+  const W = S.wb, root = $('#wbroot');
+  if (!W) { root.innerHTML = ''; return; }
+  const diffs = applyDiff();
+  const f = W.field;
+  const t = (k, l) => `<button type="button" class="chip ${f[k] ? 'on' : ''}" aria-pressed="${!!f[k]}" data-a="wb-tog" data-k="${k}">${l}</button>`;
+  root.innerHTML = `<div class="wbback" data-a="wb-backdrop"><div class="wb" role="dialog" aria-modal="true" aria-labelledby="wbt" data-tab="${W.tab}">
+    <div class="wbhead"><div class="t"><b id="wbt">${esc(W.mv)} → ${esc(SP[forme(W.them.sp, W.them.set)].n)}</b><span class="small muted">calc workbench</span><button id="wbclose" class="x" data-a="wb-close" aria-label="Close">✕</button></div>
+      <div id="wbres">${resultHtml()}</div></div>
+    <div class="wbtabs" role="tablist">${['you','them','field'].map((k) => `<button role="tab" aria-selected="${W.tab === k}" class="${W.tab === k ? 'on' : ''}" data-a="wb-tab" data-k="${k}">${{ you:'You', them:'Them', field:'Field' }[k]}</button>`).join('')}</div>
+    <div class="wbbody">${sidePanel('you')}${sidePanel('them')}</div>
+    <div class="wbfield"><h4 class="small muted" style="margin:0 0 6px">FIELD</h4>
+      <div class="row small">Weather <span class="seg">${['', 'sun', 'rain', 'sand', 'snow'].map((w) => `<button type="button" class="${f.weather === w ? 'on' : ''}" data-a="wb-weather" data-k="${w}">${w || 'none'}</button>`).join('')}</span></div>
+      <div class="row" style="margin-top:6px">${MOVES[W.mv].spread ? t('spread', 'Both foes (×0.75)') : ''}${t('hh', 'Helping Hand')}${t('screen', 'Light Screen')}${t('reflect', 'Reflect')}${t('crit', 'Crit')}
+        ${MOVES[W.mv].c === 'P' ? `<span class="seg">${[0, 1, 2].map((n) => `<button type="button" class="${f.intim === n ? 'on' : ''}" data-a="wb-intim" data-k="${n}">${n ? `Intimidate −${n}` : 'No Intimidate'}</button>`).join('')}</span>` : '<span class="small muted">Intimidate: n/a (special move)</span>'}</div></div>
+    <div class="wbfoot"><button class="primary" data-a="wb-apply" ${diffs.length ? '' : 'disabled'}>Apply to my set${diffs.length ? ` (${diffs.join(', ')})` : ''}</button>
+      <button data-a="wb-save">Save as calc</button><span class="small muted" style="margin-left:auto">Changes here aren't saved. Close to go back.</span></div>
+  </div></div>`;
+  if (f.crit) { /* crit is shown as a line; the toggle also drives the headline */ }
+}
+function applyDiff() {
+  const W = S.wb, x = curSet(), y = W.you.set, out = [];
+  if (y.nature !== x.nature) out.push('nature');
+  if (y.item !== x.item) out.push('item');
+  for (const k of STATS) if (y.sp[k] !== x.sp[k]) out.push(SHORT[k]);
+  return out;
+}
+function liveWb() { // update result + numbers in place while dragging
+  const W = S.wb; $('#wbres').innerHTML = resultHtml();
+  for (const who of ['you', 'them']) { const st = stats(W[who].sp, W[who].set); for (const k of STATS) { const n = document.querySelector(`[data-num="${who}:${k}"]`), fe = document.querySelector(`[data-fin="${who}:${k}"]`); if (n) n.textContent = W[who].set.sp[k]; if (fe) fe.textContent = st[k]; } }
+  const btnA = document.querySelector('[data-a="wb-apply"]'); if (btnA) { const d = applyDiff(); btnA.disabled = !d.length; btnA.textContent = `Apply to my set${d.length ? ` (${d.join(', ')})` : ''}`; }
+}
+// crit toggle: the headline uses crit rolls when on
+const _damage = damage;
+// eslint-disable-next-line no-func-assign
+damage = function (att, def, mv, f) { const d = _damage(att, def, mv, f); if (d && f && f.crit) { d.rolls = d.crit; d.ko = d.rolls.filter((x) => x >= d.hp).length; let two = 0; for (const a of d.rolls) for (const b of d.rolls) if (a + b >= d.hp) two++; d.two = two; } return d; };
+
+// ======================================================================================================================
+// Events
+// ======================================================================================================================
+function dialog(title, body, actions) {
+  const d = $('#dlg'); $('#dlgform').innerHTML = `<p style="margin-top:0"><b>${esc(title)}</b></p>${body}<p class="row" style="justify-content:flex-end">${actions}</p>`; d.showModal(); return d;
+}
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-a]'); if (!b) { if (S.menu) { S.menu = null; render(); } return; }
+  const a = b.dataset.a, t = team(S.teamId);
+  if (a === 'wb-backdrop') { if (e.target === b) closeWb(); return; }
+  if (a !== 'menu' && S.menu && !b.closest('.pop')) S.menu = null;
+  switch (a) {
+    case 'notice-ok': S.notice = false; break;
+    case 'menu': S.menu = S.menu === b.dataset.m ? null : b.dataset.m; break;
+    case 'go-list': S.view = 'list'; S.slot = null; S.focusMove = null; break;
+    case 'open-team': S.view = 'team'; S.teamId = b.dataset.t; S.slot = null; break;
+    case 'open-slot': { const i = +b.dataset.i; const x = t.slots[i]; if (x.empty) { t.slots[i] = mkSet(x.empty, { item:'', ability:SP[x.empty].ab[0], nature:'Serious', moves:[], sp:z() }); toast(`New ${SP[x.empty].n} set in ${t.name}`); } S.view = 'editor'; S.slot = i; S.focusMove = null; break; }
+    case 'new-team': { const n = S.teams.filter((x) => x.kind === 'team').length + 1; const nt = { id:id('team'), name:`Team ${n}`, kind:'team', slots:[] }; S.teams.splice(S.teams.length - 1, 0, nt); S.view = 'team'; S.teamId = nt.id; toast('New team. Add up to 6 of your drafted mons.'); break; }
+    case 'rename': { const tt = team(b.dataset.t); const nm = prompt('Team name', tt.name); if (nm) tt.name = nm.slice(0, 40); S.menu = null; break; }
+    case 'dup': { const tt = team(b.dataset.t); const c = { id:id('team'), name:`${tt.name} (copy)`, kind:'team', slots:tt.slots.map((x) => (x.empty ? { ...x } : { ...clone(x), id:id('set'), copiedFrom:tt.name })) }; S.teams.splice(S.teams.indexOf(tt) + 1, 0, c); S.menu = null; toast('Duplicated: every set copied with its history'); break; }
+    case 'del-team': { const tt = team(b.dataset.t); const used = S.matchups.filter((m) => m.team === tt.id).map((m) => `vs ${m.coach}`);
+      dialog(`Delete ${tt.name}?`, `<p class="small">Its ${tt.slots.filter((x) => !x.empty).length} sets move to the Imported sets box (not destroyed).${used.length ? ` Matches bringing it (${used.join(', ')}) will have no team.` : ''}</p>`, `<button value="cancel">Cancel</button><button value="ok" class="primary" id="dlgok">Delete team</button>`);
+      $('#dlgok').onclick = () => { const box = S.teams.find((x) => x.kind === 'box'); if (tt.kind !== 'box') { box.slots.push(...tt.slots.filter((x) => !x.empty)); S.teams = S.teams.filter((x) => x !== tt); S.matchups.forEach((m) => { if (m.team === tt.id) m.team = null; }); S.view = 'list'; render(); toast(`Deleted ${tt.name} · Undo`); } };
+      S.menu = null; break; }
+    case 'export-team': { const tt = team(b.dataset.t); dialog(`Export ${tt.name}`, `<textarea readonly>${esc(exportTeam(tt))}</textarea>`, '<button value="cancel">Close</button><button value="ok" class="primary">Copy</button>'); S.menu = null; break; }
+    case 'export-set': { const x = t.slots[+b.dataset.i]; dialog(`Export ${setName(x)}`, `<textarea readonly>${esc(exportSet(x))}</textarea>`, '<button value="cancel">Close</button><button value="ok" class="primary">Copy</button>'); S.menu = null; break; }
+    case 'import-team': case 'import-into': {
+      dialog(a === 'import-team' ? 'Import a team' : `Import into ${t.name}`, `<p class="small muted">Paste Showdown text (a whole team or single sets). Regular EVs are converted to Stat Points.</p><textarea id="imptext">${esc(exportTeam(S.teams[0]).replace(/^=== .*? ===/, '=== [gen9championsvgc2026regmc] Pasted team ==='))}</textarea>`, '<button value="cancel">Cancel</button><button value="ok" class="primary" id="dlgok">Import</button>');
+      $('#dlgok').onclick = () => {
+        const text = $('#imptext').value, sets = parseSets(text), ok = sets.filter((x) => !x.bad), bad = sets.filter((x) => x.bad);
+        const box = S.teams.find((x) => x.kind === 'box');
+        if (a === 'import-team') { const nm = /^=== \[[^\]]*\] (.+?) ===/m.exec(text)?.[1] || 'Imported team'; const nt = { id:id('team'), name:nm, kind:'team', slots:ok.filter((x) => DRAFTED.includes(x.spc)).slice(0, 6) }; S.teams.splice(S.teams.length - 1, 0, nt); box.slots.push(...ok.filter((x) => !DRAFTED.includes(x.spc))); S.view = 'team'; S.teamId = nt.id; }
+        else { for (const x of ok) { if (t.kind === 'team' && t.slots.length >= 6) box.slots.push(x); else t.slots.push(x); } }
+        render(); toast(`Imported ${ok.length} set${ok.length === 1 ? '' : 's'}${bad.length ? ` · ${bad.length} not recognised in this mockup` : ''}`);
+      }; break; }
+    case 'copy-to': case 'move-to': { const i = +b.dataset.i, x = t.slots[i], dest = team(b.dataset.t);
+      if (dest.kind === 'team' && dest.slots.length >= 6) { toast(`${dest.name} is full (6). Remove one there first.`); S.menu = null; break; }
+      if (a === 'copy-to') dest.slots.push({ ...clone(x), id:id('set'), copiedFrom:t.name }); else { dest.slots.push(x); t.slots.splice(i, 1); }
+      toast(`${a === 'copy-to' ? 'Copied' : 'Moved'} ${setName(x)} to ${dest.name}${a === 'copy-to' ? ' (independent copy, history included)' : ''}`); S.menu = null; break; }
+    case 'up': { const i = +b.dataset.i; if (i > 0) [t.slots[i - 1], t.slots[i]] = [t.slots[i], t.slots[i - 1]]; S.menu = null; break; }
+    case 'remove': { const i = +b.dataset.i, x = t.slots[i]; const box = S.teams.find((y) => y.kind === 'box'); t.slots.splice(i, 1); if (!x.empty && t.kind !== 'box') box.slots.push(x); S.menu = null; toast(t.kind === 'box' ? `Deleted ${setName(x)} · Undo` : x.empty ? 'Removed' : `${setName(x)} moved to the box · Undo`); break; }
+    case 'add-mon': { const inTeam = new Set(t.slots.map((x) => x.empty || x.spc));
+      dialog('Add a Pokémon', `<div class="pick">${DRAFTED.map((s) => `<button value="ok" data-add="${s}">${sprite(s, 'sm')}${esc(SP[s].n)}${inTeam.has(s) ? ' <span class="badge warn">in team</span>' : ''}</button>`).join('')}</div><p class="small muted">Only your 10 drafted mons. A second copy of a species is allowed here but flagged (species clause).</p>`, '<button value="cancel">Cancel</button>');
+      document.querySelectorAll('[data-add]').forEach((el) => el.onclick = () => { t.slots.push({ empty:el.dataset.add }); render(); });
+      break; }
+    case 'save': toast(`Saved ${setName(curSet())} (a new version; history kept)`); break;
+    case 'mark': { const x = curSet(); const k = b.dataset.k, at = +b.dataset.at; const m = marksFor(x).find((q) => q.stat === k && q.at === at); if (m) openWb(TARGETS.indexOf(m.T), m.mv, m.st, { k, v:at }); return; }
+    case 'wb-open': openWb(+b.dataset.ti, b.dataset.mv, +b.dataset.b); return;
+    case 'wb-close': closeWb(); return;
+    case 'wb-tab': S.wb.tab = b.dataset.k; break;
+    case 'wb-tog': S.wb.field[b.dataset.k] = !S.wb.field[b.dataset.k]; break;
+    case 'wb-weather': S.wb.field.weather = b.dataset.k; break;
+    case 'wb-intim': S.wb.field.intim = +b.dataset.k; break;
+    case 'wb-spread': { const W = S.wb, k = b.dataset.k; W.spread = k; W.edited = false; const T = TARGETS[W.ti];
+      const s = k === 'frail' ? FRAIL : k === 'max' ? MAXB(T) : { nature:T.set.nature, sp:T.set.sp }; W.them.set = { ...clone(T.set), nature:s.nature, sp:clone(s.sp) }; break; }
+    case 'wb-reset': { const W = S.wb; W.them.set = clone(W.assumed); W.them.boosts = { atk:0, def:0, spa:0, spd:0, ...(TARGETS[W.ti].boosts || {}) }; W.edited = false; W.spread = 'common'; break; }
+    case 'wb-apply': { const x = curSet(), y = S.wb.you.set, d = applyDiff(); x.nature = y.nature; x.item = y.item; x.sp = clone(y.sp); toast(`Applied ${d.join(', ')} to your set (unsaved: tap Save to keep it)`); closeWb(); return; }
+    case 'wb-save': { const W = S.wb; const d = damage(W.you, W.them, W.mv, W.field); S.calcs.push(`${SP[forme(W.you.sp, W.you.set)].n} ${W.mv} → ${SP[forme(W.them.sp, W.them.set)].n}: ${pct(d.rolls[0], d.maxHP)}–${pct(d.rolls[15], d.maxHP)}% (${d.ko}/16) · saved to vs Calvin › Calcs`); toast('Saved to vs Calvin › Calcs'); return; }
+    default: return;
+  }
+  render();
+});
+document.addEventListener('change', (e) => {
+  const el = e.target, x = curSet();
+  if (el.dataset.mu) { S.matchups.find((m) => m.coach === el.dataset.mu).team = el.value || null; toast(el.value ? `vs ${el.dataset.mu}: bringing ${team(el.value).name}` : 'No team chosen'); render(); return; }
+  if (el.dataset.f && x) { x[el.dataset.f] = el.value; if (el.dataset.f === 'item' && SP[x.spc].mega && x.item !== SP[x.spc].mega.item && !SP[x.spc].ab.includes(x.ability)) x.ability = SP[x.spc].ab[0]; render(); return; }
+  if (el.dataset.move !== undefined && x) { x.moves[+el.dataset.move] = el.value.trim(); S.focusMove = +el.dataset.move; render(); return; }
+  if (el.dataset.sp && x) { x.sp[el.dataset.sp] = +el.value; render(); return; }
+  if (el.dataset.wbf) { const [who, k] = el.dataset.wbf.split(':'); S.wb[who].set[k] = el.value; if (who === 'them') S.wb.edited = true; render(); return; }
+  if (el.dataset.wbb) { const [who, k] = el.dataset.wbb.split(':'); S.wb[who].boosts[k] = +el.value; render(); return; }
+  if (el.dataset.wbhp) { S.wb[el.dataset.wbhp].hpPct = Math.max(1, Math.min(100, parseInt(el.value, 10) || 100)); render(); return; }
+});
+document.addEventListener('input', (e) => {
+  const el = e.target;
+  if (el.dataset.wbsp) { const [who, k] = el.dataset.wbsp.split(':'); S.wb[who].set.sp[k] = +el.value; if (who === 'them') S.wb.edited = true; liveWb(); }
+  else if (el.dataset.sp) { const x = curSet(); x.sp[el.dataset.sp] = +el.value; const row = el.closest('.srow'); row.querySelector('.num').textContent = el.value; row.querySelector('.fin').textContent = stats(x.spc, x)[el.dataset.sp]; }
+  else if (el.dataset.f === 'nick') curSet().nick = el.value.slice(0, 18);
+});
+document.addEventListener('focusin', (e) => { const el = e.target; if (el.dataset && el.dataset.move !== undefined && S.focusMove !== +el.dataset.move) { S.focusMove = +el.dataset.move; const pos = el.value.length; render(); const n = document.querySelector(`[data-move="${el.dataset.move}"]`); if (n) { n.focus(); n.setSelectionRange(pos, pos); } } });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && S.wb) { e.preventDefault(); closeWb(); } });
+window.addEventListener('popstate', () => { if (S.wb) closeWb(true); });
+render();
+</script>
+</body>
+</html>
