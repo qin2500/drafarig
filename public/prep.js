@@ -23,11 +23,12 @@ import * as Matchup from './prep-matchup.js';
 import * as Chat from './prep-chat.js';
 import * as TB from './prep-teambuilder.js';
 import * as Teams from './prep-teams.js';
+import * as Moves from './prep-moves.js';
 import * as WB from './prep-workbench.js';
 
 const SAVE_DELAY = 400;
 const TAB_LABEL = { brief: 'Brief', plan: 'Plan', sets: 'Sets', calcs: 'Calcs', practice: 'Practice' };
-const MODULES = [Sets, Calcs, Plan, Practice, Matchup, Chat, TB, Teams, WB];
+const MODULES = [Sets, Calcs, Plan, Practice, Matchup, Chat, TB, Teams, WB, Moves];
 
 /**
  * app: { dex, league(), sheet(), usage(), coresCx(), viewingCoach(), setViewingCoach(name), goMode(mode), toast(msg),
@@ -508,6 +509,7 @@ export function createPrep(app) {
       else if (r.view === 'backup') body = backupScreen();
       else if (r.view === 'pilot') body = Practice.pilot(P);
       else if (r.view === 'teams') body = Teams.screen(P, r);
+      else if (r.view === 'moves') body = Moves.screen(P);
       else if (r.view === 'my-sets') { const l = r.id ? P.docs.mysets.sets.find((s) => s.id === r.id) : null; body = l ? `<section class="panel prep-set">${TB.editor(P, null, l)}</section>` : Sets.mySets(P, r); }
       else if (isMatch(r)) body = matchScreen(r);
       else if (r.view === 'ws') {
@@ -695,6 +697,7 @@ export function createPrep(app) {
       <ul class="toolrows">
         <li>${btn('Rules you know', 'go-rules', {}, { cls: 'linkish' })} <span class="small muted">${known} known · ${Object.keys(rules).length - known} don't know</span></li>
         <li>${btn(teamsStored() ? 'Teams' : 'My sets', 'go-mysets', {}, { cls: 'linkish' })} <span class="small muted">${mineCount} set${mineCount === 1 ? '' : 's'}${teamsStored() ? ` in ${P.docs.teams.teams.filter((t) => t.kind !== 'holding').length} teams` : ' in your library'}</span> ${btn('Paste your team', 'go-mysets-import', {}, { cls: 'linkish' })}</li>
+        <li>${btn(C.MOVES.head, 'go-moves', {}, { cls: 'linkish' })} <span class="small muted">${esc(C.MOVES.homeNote)}</span></li>
         <li>${btn('Help a friend practise (pilot card)', 'go-pilot', {}, { cls: 'linkish' })}</li>
         <li>${btn('Backup & restore', 'go-backup', {}, { cls: 'linkish' })} <span class="small muted backup-line">${esc(C.HOME.savedLocal)} Last backup: ${meta.lastBackupAt ? `${backupAge} days ago` : 'never'} (${meta.changesSinceBackup ?? 0} changes since).</span></li>
         <li>${Chat.chatUi(P).open ? btn(C.CHATUI.open, 'chat-open', {}, { cls: 'linkish' }) : Chat.entry(C.CHATUI.open)} <span class="small muted">${esc(C.CHATUI.title)}: it sees the screen you have open</span></li>
@@ -775,6 +778,7 @@ export function createPrep(app) {
     else body = (tab === 'plan' && !legacy.length && Plan.previewTab(P, m)) || startPanel(m, legacy, tab);
     return `<section class="panel prep-match" data-key="match">${povRow(m.pov.name, src)}${oppStrip(m.pov, m.opp.order)}
       ${Matchup.hero(P, { r, pov: m.pov, opp: m.opp, ws, legacy })}${tabs}<div id="ptab-panel">${body}</div>
+      <p class="small mv-link">${btn(C.MOVES.vs(m.opp.name), 'go-moves', { scope: m.opp.name }, { cls: 'linkish' })}</p>
       ${Chat.chatUi(P).open ? '' : `<p class="chat-foot">${Chat.entry(C.CHATUI.openHere)}</p>`}
       <p class="small muted ws-foot">${esc(C.HOME.savedLocal)} ${ws ? (P.saveState === 'saving' ? esc(C.SAVE.saving) : P.saveState === 'error' ? '' : esc(C.SAVE.saved)) : esc(C.BRIEF.nothingSaved)}</p></section>`;
   }

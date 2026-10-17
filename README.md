@@ -18,7 +18,7 @@ Then open http://localhost:4600. The server binds to 127.0.0.1 only. Change the 
 ## Test
 
 ```sh
-npm test               # builds the Worker artifact, then node --test: 419 tests (calc engine, searches, Prep UI on a stub DOM, Build, chat, Worker)
+npm test               # builds the Worker artifact, then node --test: 423 tests (calc engine, searches, Prep UI on a stub DOM, Build, chat, Worker)
 ```
 
 The tests use a saved copy of the real sheet in `test/fixtures/`, so they run offline.
@@ -49,6 +49,14 @@ Showdown text (a Showdown export's EVs convert to Stat Points on import, with a 
 are held back, by name). A matchup brings one team ("Bring" on its Sets tab); a new matchup brings the last team used. Species clause,
 two Mega Stones and a repeated item are warnings, never blocks. Existing prep moves into teams once, on load, after a backup
 is kept on the device (Backup › Teams has Undo). Logic: `lib/prep-teams.mjs`; screens: `public/prep-teams.js`.
+
+## Move search (`#prep/moves`)
+
+Who in a scope (one opponent's 10, all opponents, the whole draft board, your 10) can LEARN a move: by name, type, category,
+minimum power, flags (spread, priority, contact, sound, secondary effect) and ability. Full legal learnsets from
+`data/mechanics.json`, never usage, so drafted mons with no ladder data are included. Abilities that power the move up are
+starred (Sheer Force + a secondary effect, Technician + ≤ 60 BP, …); each result has a worst-case damage chip into your sets
+that opens the workbench. Logic: `lib/move-search.mjs`; screen: `public/prep-moves.js`.
 
 ## Teambuilder (the set editor: a team's slot, or a matchup's Sets)
 

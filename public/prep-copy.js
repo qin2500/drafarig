@@ -797,7 +797,7 @@ export const TEAMS = {
 export const WB = {
   close: 'Close the workbench', sections: 'Sections', tab: { you: 'You', them: 'Them', field: 'Field' },
   you: 'You', them: 'Them', field: 'Field', yourDraft: 'your draft', edited: 'edited here',
-  src: { set: 'their saved set', ladder: (c) => `ladder guess${c ? `, most used spread: ${c.nature[0].toUpperCase()}${c.nature.slice(1)} ${['hp', 'atk', 'def', 'spa', 'spd', 'spe'].map((k) => c.sp[k] ?? 0).join('/')}` : ''}`, base: "ladder guess (the Mega uses base species' usage)", keymoves: 'no usage data: moves from key moves', none: 'no set: range' },
+  src: { set: 'their saved set', ladder: (c) => `ladder guess${c ? `, most used spread: ${c.nature[0].toUpperCase()}${c.nature.slice(1)} ${['hp', 'atk', 'def', 'spa', 'spd', 'spe'].map((k) => c.sp[k] ?? 0).join('/')}` : ''}`, base: "ladder guess (the Mega uses base species' usage)", keymoves: 'no usage data: moves from key moves', none: 'no set: range', search: 'worst case: + nature, 32 SP, Life Orb (or its Mega), its best ability' },
   spread: 'Their spread', boost: (stat) => `Stage (${stat})`, asMega: 'as Mega', nature: 'Nature', item: 'Item', ability: 'Ability', noItem: 'No item',
   moreStats: 'More stats', spLeft: (n) => (n < 0 ? `${-n} Stat Points over` : `${n} Stat Points left`), backToAssumed: '↺ back to assumed', backToDraft: '↺ back to your draft',
   weather: 'Weather', terrain: 'Terrain', sides: 'Screens and support', noWeather: 'No weather', noTerrain: 'No terrain',
@@ -808,4 +808,18 @@ export const WB = {
   noMatchup: 'Save as calc needs an opponent: open this from a matchup or pick one under "Checking against".',
   calcNote: (src, edited) => `From the workbench. Their side: ${src}.${edited ? ' Your side edited in the workbench (not your saved set).' : ''}`,
   open: 'Open in the workbench',
+};
+
+// ---------- Move search (public/prep-moves.js) ----------
+export const MOVES = {
+  head: 'Move search', homeNote: 'who can learn a move, from full learnsets (not usage)', vs: (c) => `Search ${c}'s moves`,
+  intro: 'Every mon in the scope that can LEARN a matching move (full Champions learnsets, so mons with no usage data are included), its abilities (★ = the ability powers that move up), its coach and ladder usage as context.',
+  loading: 'Loading the Reg M-C data and the league sheet…', move: 'Move', movePh: 'e.g. Rock Slide', type: 'Type', anyType: 'Any type', category: 'Category', damaging: 'Damaging', anyCat: 'Any',
+  minBP: 'Min power', ability: 'Ability', anyAbility: 'Any ability', scope: 'Search', their10: (c) => `${c}'s 10`, allOpp: 'All opponents', board: 'Whole draft board', mine: 'My 10',
+  flags: 'Move flags', flag: { spread: 'Spread', priority: 'Priority', contact: 'Contact', sound: 'Sound', secondary: 'Secondary effect (Sheer Force)' }, clear: 'Clear',
+  hint: 'Type a move, or pick a type, power, flag or ability.', none: 'No mon in this scope can learn a move like that.',
+  count: (n, of) => `${n} of ${of} mons can learn it.`, dmgNote: 'Chip: its strongest match at worst case into your hardest-hit set; tap for the workbench.', noTeam: 'Save sets for your 10 to see damage into them.',
+  more: (n) => `Show ${n} more`, spreadShort: 'spread', ownedBy: (c) => c, undrafted: 'undrafted', usage: (p) => `${Math.round(p * 10) / 10}% ladder usage`, noUsage: 'no usage data',
+  calculating: 'Calculating…', dmg: (mv, who, lo, hi) => `${mv} → your ${who}: up to ${lo}–${hi}%`, dmgAria: (mv, who, lo, hi) => `${mv} into your ${who}, worst case ${lo} to ${hi} percent: open in the workbench`,
+  unknownAbility: (x) => `"${x}" isn't an ability in Champions.`,
 };

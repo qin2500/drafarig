@@ -90,7 +90,12 @@ KNOWN_ABIL = {'levitate', 'intimidate', 'contrary', 'reckless', 'toughclaws', 'a
               'protean', 'moldbreaker', 'flashfire', 'voltabsorb', 'lightningrod', 'motordrive', 'waterabsorb', 'stormdrain',
               'dryskin', 'sapsipper', 'wellbakedbody', 'eartheater', 'levitate',
               # no effect on these numbers
-              'illuminate', 'poisonpoint', 'symbiosis', 'telepathy', 'mimicry'}
+              'illuminate', 'poisonpoint', 'symbiosis', 'telepathy', 'mimicry',
+              # no effect on a single full-HP hit, or conditional and not modelled (Analytic: moving last; Anger Point/Merciless: crits)
+              'analytic', 'angerpoint', 'cheekpouch', 'curiousmedicine', 'gooey', 'leafguard', 'lightmetal', 'limber', 'merciless',
+              'opportunist', 'overcoat', 'pickup', 'plus', 'poisonheal', 'ripen', 'sandspit', 'shedskin', 'skilllink', 'stall',
+              'suctioncups', 'sweetveil', 'tangledfeet', 'vitalspirit', 'weakarmor',
+              'strongjaw', 'sheerforce'}
 RESIST_BERRY = {'occaberry': 'Fire', 'passhoberry': 'Water', 'wacanberry': 'Electric', 'rindoberry': 'Grass', 'yacheberry': 'Ice',
                 'chopleberry': 'Fighting', 'kebiaberry': 'Poison', 'shucaberry': 'Ground', 'cobaberry': 'Flying', 'payapaberry': 'Psychic',
                 'tangaberry': 'Bug', 'chartiberry': 'Rock', 'kasibberry': 'Ghost', 'habanberry': 'Dragon', 'colburberry': 'Dark',
@@ -142,6 +147,11 @@ def rolls(att, dfn, move_id, ctx=None):
     if aab == 'ironfist' and 'punch' in mv['flags']: bpm.append(4915)
     if aab == 'sharpness' and 'slicing' in mv['flags']: bpm.append(6144)
     if aab == 'punkrock' and 'sound' in mv['flags']: bpm.append(5325)
+    # Sheer Force: x5325/4096 on moves with secondary effects (data/abilities.ts L4203-4217); Life Orb recoil is then skipped
+    # (sim/battle-actions.ts L538 suppressingSecondaries), but its damage boost stays.
+    if aab == 'sheerforce' and mv.get('hasSecondary'): bpm.append(5325)
+    if aab == 'strongjaw' and 'bite' in mv['flags']: bpm.append(6144)
+    if att.get('item') == 'normalgem' and mtype == 'Normal': bpm.append(5325)  # one use
     terrain = ctx.get('terrain')
     grounded = aab != 'levitate' and 'Flying' not in a_types and att.get('item') != 'airballoon'
     if terrain and grounded and {'electric': 'Electric', 'grassy': 'Grass', 'psychic': 'Psychic'}.get(terrain) == mtype: bpm.append(5325)
@@ -162,6 +172,7 @@ def rolls(att, dfn, move_id, ctx=None):
     A, D = boosted(A, ab), boosted(D, db)
     am = []
     if aab == 'hugepower' and phys: am.append(8192)
+    if att.get('item') == 'lightball' and att['id'].startswith('pikachu'): am.append(8192)
     if aab == 'waterbubble' and mtype == 'Water': am.append(8192)
     if dab == 'waterbubble' and mtype == 'Fire': am.append(2048)
     if dab == 'thickfat' and mtype in ('Fire', 'Ice'): am.append(2048)

@@ -75,6 +75,7 @@ function sourceLine(wb) {
   if (wb.their) return W.edited;
   const r = wb.row;
   if (r.source === 'set') return W.src.set;
+  if (r.source === 'search') return W.src.search;
   if (r.source === 'ladder') return r.usageFrom === 'base' ? W.src.base : r.usageFrom === 'keymoves' ? W.src.keymoves : W.src.ladder(r.common);
   return W.src.none;
 }
