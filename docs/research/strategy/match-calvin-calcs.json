@@ -1,0 +1,9257 @@
+{
+ "generated": "2026-10-16",
+ "engine": "@smogon/calc 0.12.0 via lib/calc (Champions projection data/mechanics.json)",
+ "assumptions": {
+  "field": "doubles; spread moves ×0.75; Auto weather (Mega Charizard Y sun, Pelipper rain); no screens, crits, Intimidate, Helping Hand",
+  "anthony": [
+   {
+    "mon": "charizard",
+    "set": {
+     "species": "charizard",
+     "item": "charizarditey",
+     "ability": "blaze",
+     "nature": "timid",
+     "sp": {
+      "hp": 2,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 0,
+      "spe": 32
+     },
+     "moves": [
+      "heatwave",
+      "weatherball",
+      "solarbeam",
+      "protect"
+     ]
+    },
+    "basis": "modal usage spread; moves from usage"
+   },
+   {
+    "mon": "sinistcha",
+    "set": {
+     "species": "sinistcha",
+     "item": "sitrusberry",
+     "ability": "hospitality",
+     "nature": "bold",
+     "sp": {
+      "hp": 32,
+      "atk": 0,
+      "def": 14,
+      "spa": 0,
+      "spd": 20,
+      "spe": 0
+     },
+     "moves": [
+      "matchagotcha",
+      "shadowball",
+      "ragepowder",
+      "trickroom"
+     ]
+    },
+    "basis": "modal usage spread; moves from usage"
+   },
+   {
+    "mon": "pelipper",
+    "set": {
+     "species": "pelipper",
+     "item": "focussash",
+     "ability": "drizzle",
+     "nature": "modest",
+     "sp": {
+      "hp": 2,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 0,
+      "spe": 32
+     },
+     "moves": [
+      "hurricane",
+      "weatherball",
+      "tailwind",
+      "wideguard"
+     ]
+    },
+    "basis": "top usage spread (Focus Sash: survives any one full-HP hit)"
+   },
+   {
+    "mon": "kangaskhan",
+    "set": {
+     "species": "kangaskhan",
+     "item": "kangaskhanite",
+     "ability": "scrappy",
+     "nature": "brave",
+     "sp": {
+      "hp": 32,
+      "atk": 32,
+      "def": 1,
+      "spa": 0,
+      "spd": 1,
+      "spe": 0
+     },
+     "moves": [
+      "fakeout",
+      "doubleedge",
+      "icepunch",
+      "suckerpunch",
+      "hammerarm"
+     ]
+    },
+    "basis": "modal usage spread; moves from usage (5 listed)"
+   },
+   {
+    "mon": "aegislash",
+    "set": {
+     "species": "aegislash",
+     "item": "lifeorb",
+     "ability": "stancechange",
+     "nature": "adamant",
+     "sp": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+     },
+     "moves": [
+      "ironhead",
+      "poltergeist",
+      "shadowsneak",
+      "kingsshield"
+     ]
+    },
+    "basis": "modal usage spread; Blade forme when attacking"
+   },
+   {
+    "mon": "morpeko",
+    "set": {
+     "species": "morpeko",
+     "item": "focussash",
+     "ability": "hungerswitch",
+     "nature": "jolly",
+     "sp": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+     },
+     "moves": [
+      "aurawheel",
+      "fakeout",
+      "partingshot",
+      "protect"
+     ]
+    },
+    "basis": "modal usage spread (Full Belly Aura Wheel: Electric)"
+   },
+   {
+    "mon": "conkeldurr",
+    "set": {
+     "species": "conkeldurr",
+     "item": "lifeorb",
+     "ability": "ironfist",
+     "nature": "brave",
+     "sp": {
+      "hp": 32,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+     },
+     "moves": [
+      "drainpunch",
+      "machpunch",
+      "thunderpunch",
+      "knockoff",
+      "icepunch"
+     ]
+    },
+    "basis": "modal usage spread; moves from usage (5 listed)"
+   },
+   {
+    "mon": "rotomfan",
+    "set": {
+     "species": "rotomfan",
+     "item": "lifeorb",
+     "ability": "levitate",
+     "nature": "modest",
+     "sp": {
+      "hp": 32,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 2,
+      "spe": 0
+     },
+     "moves": [
+      "thunderbolt",
+      "airslash",
+      "voltswitch",
+      "nastyplot"
+     ]
+    },
+    "basis": "GUESS: the O2 build in rotom-fan-case.md (no usage data)"
+   },
+   {
+    "mon": "stunfiskgalar",
+    "set": {
+     "species": "stunfiskgalar",
+     "item": "sitrusberry",
+     "ability": "runaway",
+     "nature": "brave",
+     "sp": {
+      "hp": 32,
+      "atk": 32,
+      "def": 2,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+     },
+     "moves": [
+      "stompingtantrum",
+      "earthquake",
+      "rockslide",
+      "protect"
+     ]
+    },
+    "basis": "GUESS: Trick Room tank (no usage data). Mimicry calced as no effect (no terrain; the app refuses Mimicry, so this script uses Run Away)"
+   },
+   {
+    "mon": "simipour",
+    "set": {
+     "species": "simipour",
+     "item": "mysticwater",
+     "ability": "torrent",
+     "nature": "modest",
+     "sp": {
+      "hp": 2,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 0,
+      "spe": 32
+     },
+     "moves": [
+      "hydropump",
+      "scald",
+      "icebeam",
+      "nastyplot"
+     ]
+    },
+    "basis": "GUESS: no usage data"
+   }
+  ],
+  "calvin": [
+   {
+    "form": "staraptor",
+    "set": {
+     "species": "staraptor",
+     "item": "choicescarf",
+     "ability": "intimidate",
+     "nature": "adamant",
+     "sp": {
+      "hp": 32,
+      "atk": 4,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 30
+     },
+     "moves": [
+      "finalgambit",
+      "closecombat",
+      "uturn",
+      "dualwingbeat",
+      "bravebird"
+     ]
+    },
+    "basis": "ladder: Adamant 32/4/0/0/0/30 (53% of its top 3), Choice Scarf, usage 0.968%"
+   },
+   {
+    "form": "staraptormega",
+    "set": {
+     "species": "staraptor",
+     "item": "staraptite",
+     "ability": "intimidate",
+     "nature": "jolly",
+     "sp": {
+      "hp": 29,
+      "atk": 1,
+      "def": 0,
+      "spa": 0,
+      "spd": 4,
+      "spe": 32
+     },
+     "moves": [
+      "closecombat",
+      "bravebird"
+     ]
+    },
+    "basis": "ladder: Jolly 29/1/0/0/4/32 (44% of its top 3), Staraptite, usage 6.257%"
+   },
+   {
+    "form": "grimmsnarl",
+    "set": {
+     "species": "grimmsnarl",
+     "item": "lightclay",
+     "ability": "prankster",
+     "nature": "careful",
+     "sp": {
+      "hp": 32,
+      "atk": 0,
+      "def": 19,
+      "spa": 0,
+      "spd": 15,
+      "spe": 0
+     },
+     "moves": [
+      "spiritbreak"
+     ]
+    },
+    "basis": "ladder: Careful 32/0/19/0/15/0 (44% of its top 3), Light Clay, usage 5.215%"
+   },
+   {
+    "form": "empoleon",
+    "set": {
+     "species": "empoleon",
+     "item": "leftovers",
+     "ability": "competitive",
+     "nature": "modest",
+     "sp": {
+      "hp": 32,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 2,
+      "spe": 0
+     },
+     "moves": [
+      "flashcannon",
+      "hydropump",
+      "icebeam",
+      "icywind"
+     ]
+    },
+    "basis": "ladder: Modest 32/0/0/32/2/0 (51% of its top 3), Leftovers, usage 0.48%"
+   },
+   {
+    "form": "basculegionf",
+    "set": {
+     "species": "basculegionf",
+     "item": "lifeorb",
+     "ability": "swiftswim",
+     "nature": "modest",
+     "sp": {
+      "hp": 0,
+      "atk": 0,
+      "def": 1,
+      "spa": 32,
+      "spd": 1,
+      "spe": 32
+     },
+     "moves": [
+      "shadowball",
+      "muddywater",
+      "icebeam"
+     ]
+    },
+    "basis": "ladder: Modest 0/0/1/32/1/32 (50% of its top 3), Life Orb, usage 1.661%"
+   },
+   {
+    "form": "jolteon",
+    "set": {
+     "species": "jolteon",
+     "item": "focussash",
+     "ability": "voltabsorb",
+     "nature": "timid",
+     "sp": {
+      "hp": 2,
+      "atk": 0,
+      "def": 0,
+      "spa": 32,
+      "spd": 0,
+      "spe": 32
+     },
+     "moves": [
+      "thunderbolt",
+      "voltswitch",
+      "electroweb",
+      "weatherball",
+      "discharge",
+      "risingvoltage",
+      "shadowball",
+      "alluringvoice"
+     ]
+    },
+    "basis": "ladder: Timid 2/0/0/32/0/32 (74% of its top 3), Focus Sash, usage 0.062%"
+   },
+   {
+    "form": "volcarona",
+    "set": {
+     "species": "volcarona",
+     "item": "grassyseed",
+     "ability": "flamebody",
+     "nature": "bold",
+     "sp": {
+      "hp": 32,
+      "atk": 0,
+      "def": 32,
+      "spa": 0,
+      "spd": 2,
+      "spe": 0
+     },
+     "moves": [
+      "strugglebug",
+      "overheat",
+      "heatwave",
+      "gigadrain",
+      "bugbuzz",
+      "fierydance"
+     ]
+    },
+    "basis": "ladder: Bold 32/0/32/0/2/0 (40% of its top 3), Grassy Seed, usage 7%"
+   },
+   {
+    "form": "tsareena",
+    "set": {
+     "species": "tsareena",
+     "item": "widelens",
+     "ability": "queenlymajesty",
+     "nature": "jolly",
+     "sp": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+     },
+     "moves": [
+      "tripleaxel",
+      "powerwhip",
+      "highjumpkick",
+      "tropkick",
+      "uturn"
+     ]
+    },
+    "basis": "ladder: Jolly 2/32/0/0/0/32 (57% of its top 3), Wide Lens, usage 0.848%"
+   },
+   {
+    "form": "mamoswine",
+    "set": {
+     "species": "mamoswine",
+     "item": "focussash",
+     "ability": "oblivious",
+     "nature": "adamant",
+     "sp": {
+      "hp": 2,
+      "atk": 32,
+      "def": 0,
+      "spa": 0,
+      "spd": 0,
+      "spe": 32
+     },
+     "moves": [
+      "iceshard",
+      "highhorsepower",
+      "iciclecrash",
+      "earthquake",
+      "rockslide"
+     ]
+    },
+    "basis": "ladder: Adamant 2/32/0/0/0/32 (51% of its top 3), Focus Sash, usage 0.771%"
+   },
+   {
+    "form": "tauros",
+    "set": {
+     "species": "tauros",
+     "item": "lifeorb",
+     "ability": "intimidate",
+     "nature": "adamant",
+     "sp": "unknown",
+     "moves": [
+      "doubleedge",
+      "closecombat",
+      "rockslide",
+      "highhorsepower"
+     ]
+    },
+    "basis": "GUESS: no usage data; Adamant Life Orb Intimidate, Double-Edge / Close Combat / Rock Slide / High Horsepower; SP unknown → frail…max range"
+   },
+   {
+    "form": "swalot",
+    "set": {
+     "species": "swalot",
+     "item": "leftovers",
+     "ability": "liquidooze",
+     "nature": "calm",
+     "sp": {
+      "hp": 32,
+      "atk": 0,
+      "def": 0,
+      "spa": 2,
+      "spd": 32,
+      "spe": 0
+     },
+     "moves": [
+      "bodypress",
+      "clearsmog",
+      "gigadrain"
+     ]
+    },
+    "basis": "ladder: Calm 32/0/0/2/32/0 (37% of its top 3), Leftovers, usage 0.016%"
+   }
+  ]
+ },
+ "offense": [
+  {
+   "mon": "charizard",
+   "label": "Mega Charizard Y",
+   "targets": [
+    {
+     "target": "mamoswine",
+     "label": "Mamoswine",
+     "weather": "Sun",
+     "moves": [
+      {
+       "move": "weatherball",
+       "lo": 240.6,
+       "hi": 283.4,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "heatwave",
+       "lo": 171.1,
+       "hi": 202.1,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "solarbeam",
+       "lo": 127.2,
+       "hi": 150.8,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 283.4
+    },
+    {
+     "target": "tsareena",
+     "label": "Tsareena",
+     "weather": "Sun",
+     "moves": [
+      {
+       "move": "weatherball",
+       "lo": 205.3,
+       "hi": 241.6,
+       "v": "OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "heatwave",
+       "lo": 144.9,
+       "hi": 170.4,
+       "v": "OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "solarbeam",
+       "lo": 26.8,
+       "hi": 32.2,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 241.6
+    },
+    {
+     "target": "tauros",
+     "label": "Tauros",
+     "weather": "Sun",
+     "moves": [
+      {
+       "move": "weatherball",
+       "lo": 74.1,
+       "hi": 174,
+       "v": "frail: OHKO, max: 2HKO",
+       "range": true,
+       "boosted": null
+      },
+      {
+       "move": "heatwave",
+       "lo": 51.6,
+       "hi": 122.6,
+       "v": "frail: OHKO, max: 2HKO",
+       "range": true,
+       "boosted": null
+      },
+      {
+       "move": "solarbeam",
+       "lo": 39.5,
+       "hi": 92.6,
+       "v": "frail: 2HKO, max: 3HKO+",
+       "range": true,
+       "boosted": null
+      }
+     ],
+     "best": 174
+    },
+    {
+     "target": "staraptor",
+     "label": "Staraptor (Scarf)",
+     "weather": "Sun",
+     "moves": [
+      {
+       "move": "weatherball",
+       "lo": 117.1,
+       "hi": 138,
+       "v": "OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "heatwave",
+       "lo": 83.3,
+       "hi": 98.4,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "solarbeam",
+       "lo": 30.7,
+       "hi": 36.4,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 138
+    },
+    {
+     "target": "jolteon",
+     "label": "Jolteon",
+     "weather": "Sun",
+     "moves": [
+      {
+       "move": "weatherball",
+       "lo": 109.8,
+       "hi": 129.5,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "heatwave",
+       "lo": 76.7,
+       "hi": 91.5,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "solarbeam",
+       "lo": 58.4,
+       "hi": 69,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 129.5
+    },
+    {
+     "target": "basculegionf",
+     "label": "Basculegion-F",
+     "weather": "Sun",
+     "moves": [
+      {
+       "move": "solarbeam",
+       "lo": 102.5,
+       "hi": 121,
+       "v": "OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "weatherball",
+       "lo": 47.6,
+       "hi": 56.4,
+       "v": "85% 2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "heatwave",
+       "lo": 33.8,
+       "hi": 40,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 121
+    },
+    {
+     "target": "staraptormega",
+     "label": "Staraptor-Mega",
+     "weather": "Sun",
+     "moves": [
+      {
+       "move": "weatherball",
+       "lo": 83,
+       "hi": 98.4,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "heatwave",
+       "lo": 58.7,
+       "hi": 69.8,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "solarbeam",
+       "lo": 22.2,
+       "hi": 25.9,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 98.4
+    },
+    {
+     "target": "empoleon",
+     "label": "Empoleon",
+     "weather": "Sun",
+     "moves": [
+      {
+       "move": "weatherball",
+       "lo": 75.9,
+       "hi": 90,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "heatwave",
+       "lo": 53.9,
+       "hi": 64.3,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "solarbeam",
+       "lo": 40.8,
+       "hi": 48.1,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 90
+    },
+    {
+     "target": "volcarona",
+     "label": "Volcarona",
+     "weather": "Sun",
+     "moves": [
+      {
+       "move": "weatherball",
+       "lo": 73.9,
+       "hi": 87.5,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "heatwave",
+       "lo": 52,
+       "hi": 61.4,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "solarbeam",
+       "lo": 9.3,
+       "hi": 11.4,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 87.5
+    },
+    {
+     "target": "grimmsnarl",
+     "label": "Grimmsnarl",
+     "weather": "Sun",
+     "moves": [
+      {
+       "move": "weatherball",
+       "lo": 73.2,
+       "hi": 86.6,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "heatwave",
+       "lo": 50.9,
+       "hi": 60.8,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "solarbeam",
+       "lo": 39.1,
+       "hi": 46.5,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 86.6
+    },
+    {
+     "target": "swalot",
+     "label": "Swalot",
+     "weather": "Sun",
+     "moves": [
+      {
+       "move": "weatherball",
+       "lo": 58.4,
+       "hi": 69.5,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "heatwave",
+       "lo": 42,
+       "hi": 49.7,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "solarbeam",
+       "lo": 15.4,
+       "hi": 18.3,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 69.5
+    }
+   ]
+  },
+  {
+   "mon": "sinistcha",
+   "label": "Sinistcha",
+   "targets": [
+    {
+     "target": "basculegionf",
+     "label": "Basculegion-F",
+     "weather": "",
+     "moves": [
+      {
+       "move": "shadowball",
+       "lo": 68.7,
+       "hi": 81,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "matchagotcha",
+       "lo": 52.3,
+       "hi": 61.5,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 81
+    },
+    {
+     "target": "mamoswine",
+     "label": "Mamoswine",
+     "weather": "",
+     "moves": [
+      {
+       "move": "matchagotcha",
+       "lo": 64.1,
+       "hi": 77,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "shadowball",
+       "lo": 43.3,
+       "hi": 51.3,
+       "v": "5% 2HKO",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 77
+    },
+    {
+     "target": "jolteon",
+     "label": "Jolteon",
+     "weather": "",
+     "moves": [
+      {
+       "move": "shadowball",
+       "lo": 40.1,
+       "hi": 47.1,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "matchagotcha",
+       "lo": 29.5,
+       "hi": 35.9,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 47.1
+    },
+    {
+     "target": "tauros",
+     "label": "Tauros",
+     "weather": "",
+     "moves": [
+      {
+       "move": "matchagotcha",
+       "lo": 19.7,
+       "hi": 46.6,
+       "v": "frail: 3HKO+, max: 3HKO+",
+       "range": true,
+       "boosted": null
+      },
+      {
+       "move": "shadowball",
+       "immune": true,
+       "boosted": null
+      }
+     ],
+     "best": 46.6
+    },
+    {
+     "target": "tsareena",
+     "label": "Tsareena",
+     "weather": "",
+     "moves": [
+      {
+       "move": "shadowball",
+       "lo": 36.9,
+       "hi": 44.2,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "matchagotcha",
+       "lo": 14,
+       "hi": 16.1,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 44.2
+    },
+    {
+     "target": "staraptormega",
+     "label": "Staraptor-Mega",
+     "weather": "",
+     "moves": [
+      {
+       "move": "shadowball",
+       "lo": 30.1,
+       "hi": 35.4,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "matchagotcha",
+       "lo": 11.1,
+       "hi": 13.2,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 35.4
+    },
+    {
+     "target": "empoleon",
+     "label": "Empoleon",
+     "weather": "",
+     "moves": [
+      {
+       "move": "shadowball",
+       "lo": 27.2,
+       "hi": 32.9,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "matchagotcha",
+       "lo": 20.4,
+       "hi": 24,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 32.9
+    },
+    {
+     "target": "volcarona",
+     "label": "Volcarona",
+     "weather": "",
+     "moves": [
+      {
+       "move": "shadowball",
+       "lo": 26.5,
+       "hi": 31.7,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "matchagotcha",
+       "lo": 4.6,
+       "hi": 5.7,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 31.7
+    },
+    {
+     "target": "swalot",
+     "label": "Swalot",
+     "weather": "",
+     "moves": [
+      {
+       "move": "shadowball",
+       "lo": 20.7,
+       "hi": 25.1,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "matchagotcha",
+       "lo": 7.7,
+       "hi": 9.1,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 25.1
+    },
+    {
+     "target": "grimmsnarl",
+     "label": "Grimmsnarl",
+     "weather": "",
+     "moves": [
+      {
+       "move": "matchagotcha",
+       "lo": 19.8,
+       "hi": 23.7,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "shadowball",
+       "lo": 13.3,
+       "hi": 15.8,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 23.7
+    },
+    {
+     "target": "staraptor",
+     "label": "Staraptor (Scarf)",
+     "weather": "",
+     "moves": [
+      {
+       "move": "matchagotcha",
+       "lo": 15.6,
+       "hi": 18.7,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "shadowball",
+       "immune": true,
+       "boosted": null
+      }
+     ],
+     "best": 18.7
+    }
+   ]
+  },
+  {
+   "mon": "pelipper",
+   "label": "Pelipper",
+   "targets": [
+    {
+     "target": "mamoswine",
+     "label": "Mamoswine",
+     "weather": "Rain",
+     "moves": [
+      {
+       "move": "weatherball",
+       "lo": 182.8,
+       "hi": 216,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "hurricane",
+       "lo": 67.3,
+       "hi": 79.1,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 216
+    },
+    {
+     "target": "tsareena",
+     "label": "Tsareena",
+     "weather": "Rain",
+     "moves": [
+      {
+       "move": "hurricane",
+       "lo": 114,
+       "hi": 136.9,
+       "v": "OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "weatherball",
+       "lo": 39.5,
+       "hi": 46.3,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 136.9
+    },
+    {
+     "target": "tauros",
+     "label": "Tauros",
+     "weather": "Rain",
+     "moves": [
+      {
+       "move": "weatherball",
+       "lo": 56,
+       "hi": 132.6,
+       "v": "frail: OHKO, max: 2HKO",
+       "range": true,
+       "boosted": null
+      },
+      {
+       "move": "hurricane",
+       "lo": 41.7,
+       "hi": 98,
+       "v": "frail: 2HKO, max: 3HKO+",
+       "range": true,
+       "boosted": null
+      }
+     ],
+     "best": 132.6
+    },
+    {
+     "target": "volcarona",
+     "label": "Volcarona",
+     "weather": "Rain",
+     "moves": [
+      {
+       "move": "weatherball",
+       "lo": 112.5,
+       "hi": 132.2,
+       "v": "OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "hurricane",
+       "lo": 82.2,
+       "hi": 97.9,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 132.2
+    },
+    {
+     "target": "staraptormega",
+     "label": "Staraptor-Mega",
+     "weather": "Rain",
+     "moves": [
+      {
+       "move": "hurricane",
+       "lo": 93.1,
+       "hi": 111.1,
+       "v": "9/16 OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "weatherball",
+       "lo": 64,
+       "hi": 76.1,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 111.1
+    },
+    {
+     "target": "staraptor",
+     "label": "Staraptor (Scarf)",
+     "weather": "Rain",
+     "moves": [
+      {
+       "move": "weatherball",
+       "lo": 89,
+       "hi": 105.2,
+       "v": "38% OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "hurricane",
+       "lo": 65.6,
+       "hi": 77,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 105.2
+    },
+    {
+     "target": "jolteon",
+     "label": "Jolteon",
+     "weather": "Rain",
+     "moves": [
+      {
+       "move": "weatherball",
+       "lo": 83,
+       "hi": 99.2,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "hurricane",
+       "lo": 30.2,
+       "hi": 35.9,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 99.2
+    },
+    {
+     "target": "grimmsnarl",
+     "label": "Grimmsnarl",
+     "weather": "Rain",
+     "moves": [
+      {
+       "move": "weatherball",
+       "lo": 56.4,
+       "hi": 66.8,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "hurricane",
+       "lo": 41.5,
+       "hi": 49,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 66.8
+    },
+    {
+     "target": "basculegionf",
+     "label": "Basculegion-F",
+     "weather": "Rain",
+     "moves": [
+      {
+       "move": "hurricane",
+       "lo": 53.8,
+       "hi": 63.5,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "weatherball",
+       "lo": 36.4,
+       "hi": 43,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 63.5
+    },
+    {
+     "target": "swalot",
+     "label": "Swalot",
+     "weather": "Rain",
+     "moves": [
+      {
+       "move": "weatherball",
+       "lo": 44.9,
+       "hi": 52.6,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "hurricane",
+       "lo": 32.3,
+       "hi": 39.1,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 52.6
+    },
+    {
+     "target": "empoleon",
+     "label": "Empoleon",
+     "weather": "Rain",
+     "moves": [
+      {
+       "move": "weatherball",
+       "lo": 28.7,
+       "hi": 34.5,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "hurricane",
+       "lo": 21.4,
+       "hi": 25.1,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 34.5
+    }
+   ]
+  },
+  {
+   "mon": "kangaskhan",
+   "label": "Mega Kangaskhan",
+   "targets": [
+    {
+     "target": "jolteon",
+     "label": "Jolteon",
+     "weather": "",
+     "moves": [
+      {
+       "move": "doubleedge",
+       "lo": 144.3,
+       "hi": 171.1,
+       "v": "OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "hammerarm",
+       "lo": 79.5,
+       "hi": 95,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 60.5,
+       "hi": 71.8,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "suckerpunch",
+       "lo": 56.3,
+       "hi": 66.9,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "fakeout",
+       "lo": 47.8,
+       "hi": 57.7,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 171.1
+    },
+    {
+     "target": "tauros",
+     "label": "Tauros",
+     "weather": "",
+     "moves": [
+      {
+       "move": "hammerarm",
+       "lo": 62.6,
+       "hi": 140,
+       "v": "frail: OHKO, max: 2HKO",
+       "range": true,
+       "boosted": null
+      },
+      {
+       "move": "doubleedge",
+       "lo": 55.4,
+       "hi": 125.3,
+       "v": "frail: OHKO, max: 2HKO",
+       "range": true,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 23,
+       "hi": 53.3,
+       "v": "frail: 23% 2HKO, max: 3HKO+",
+       "range": true,
+       "boosted": null
+      },
+      {
+       "move": "suckerpunch",
+       "lo": 22.5,
+       "hi": 50,
+       "v": "frail: <1% 2HKO, max: 3HKO+",
+       "range": true,
+       "boosted": null
+      },
+      {
+       "move": "fakeout",
+       "lo": 19.2,
+       "hi": 43.3,
+       "v": "frail: no KO in 2, max: no KO in 2",
+       "range": true,
+       "boosted": null
+      }
+     ],
+     "best": 140
+    },
+    {
+     "target": "mamoswine",
+     "label": "Mamoswine",
+     "weather": "",
+     "moves": [
+      {
+       "move": "hammerarm",
+       "lo": 97.3,
+       "hi": 116.5,
+       "v": "93% OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "doubleedge",
+       "lo": 88.2,
+       "hi": 104.2,
+       "v": "16% OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 36.8,
+       "hi": 43.8,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "suckerpunch",
+       "lo": 33.6,
+       "hi": 40.6,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "fakeout",
+       "lo": 29.4,
+       "hi": 35.8,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 116.5
+    },
+    {
+     "target": "staraptor",
+     "label": "Staraptor (Scarf)",
+     "weather": "",
+     "moves": [
+      {
+       "move": "doubleedge",
+       "lo": 94.2,
+       "hi": 111.9,
+       "v": "74% OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 80.2,
+       "hi": 94.7,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "hammerarm",
+       "lo": 52.6,
+       "hi": 62.5,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "suckerpunch",
+       "lo": 36.9,
+       "hi": 44.2,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "fakeout",
+       "lo": 31.7,
+       "hi": 38,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 111.9
+    },
+    {
+     "target": "tsareena",
+     "label": "Tsareena",
+     "weather": "",
+     "moves": [
+      {
+       "move": "doubleedge",
+       "lo": 92.6,
+       "hi": 110.7,
+       "v": "59% OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 77.8,
+       "hi": 93.9,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "hammerarm",
+       "lo": 51.6,
+       "hi": 61.7,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "fakeout",
+       "immune": true,
+       "boosted": null
+      },
+      {
+       "move": "suckerpunch",
+       "immune": true,
+       "boosted": null
+      }
+     ],
+     "best": 110.7
+    },
+    {
+     "target": "empoleon",
+     "label": "Empoleon",
+     "weather": "",
+     "moves": [
+      {
+       "move": "hammerarm",
+       "lo": 89,
+       "hi": 105.7,
+       "v": "26% OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "doubleedge",
+       "lo": 39.2,
+       "hi": 47.1,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "suckerpunch",
+       "lo": 30.8,
+       "hi": 37.1,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "fakeout",
+       "lo": 13,
+       "hi": 15.7,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 7.8,
+       "hi": 9.4,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 105.7
+    },
+    {
+     "target": "grimmsnarl",
+     "label": "Grimmsnarl",
+     "weather": "",
+     "moves": [
+      {
+       "move": "doubleedge",
+       "lo": 78.2,
+       "hi": 92.5,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "hammerarm",
+       "lo": 43.5,
+       "hi": 51.9,
+       "v": "6% 2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 32.6,
+       "hi": 39.1,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "fakeout",
+       "lo": 25.2,
+       "hi": 31.1,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "suckerpunch",
+       "lo": 7.4,
+       "hi": 8.4,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 92.5
+    },
+    {
+     "target": "basculegionf",
+     "label": "Basculegion-F",
+     "weather": "",
+     "moves": [
+      {
+       "move": "suckerpunch",
+       "lo": 76.9,
+       "hi": 91.2,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 20.5,
+       "hi": 24.1,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "fakeout",
+       "immune": true,
+       "boosted": null
+      },
+      {
+       "move": "doubleedge",
+       "immune": true,
+       "boosted": null
+      },
+      {
+       "move": "hammerarm",
+       "immune": true,
+       "boosted": null
+      }
+     ],
+     "best": 91.2
+    },
+    {
+     "target": "swalot",
+     "label": "Swalot",
+     "weather": "",
+     "moves": [
+      {
+       "move": "doubleedge",
+       "lo": 76.3,
+       "hi": 90.8,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 32.3,
+       "hi": 38.6,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "suckerpunch",
+       "lo": 30.4,
+       "hi": 36.2,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "fakeout",
+       "lo": 25.6,
+       "hi": 31.4,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "hammerarm",
+       "lo": 20.7,
+       "hi": 25.1,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 90.8
+    },
+    {
+     "target": "staraptormega",
+     "label": "Staraptor-Mega",
+     "weather": "",
+     "moves": [
+      {
+       "move": "doubleedge",
+       "lo": 71.9,
+       "hi": 86.2,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 60.3,
+       "hi": 73,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "fakeout",
+       "lo": 23.2,
+       "hi": 29.1,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "hammerarm",
+       "lo": 20.1,
+       "hi": 23.8,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "suckerpunch",
+       "lo": 13.7,
+       "hi": 16.4,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 86.2
+    },
+    {
+     "target": "volcarona",
+     "label": "Volcarona",
+     "weather": "",
+     "moves": [
+      {
+       "move": "doubleedge",
+       "lo": 66.6,
+       "hi": 79.6,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "suckerpunch",
+       "lo": 26,
+       "hi": 31.2,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "fakeout",
+       "lo": 21.3,
+       "hi": 27,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "hammerarm",
+       "lo": 18.2,
+       "hi": 21.8,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 14,
+       "hi": 16.6,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 79.6
+    }
+   ]
+  },
+  {
+   "mon": "aegislash",
+   "label": "Aegislash",
+   "targets": [
+    {
+     "target": "basculegionf",
+     "label": "Basculegion-F",
+     "weather": "",
+     "moves": [
+      {
+       "move": "poltergeist",
+       "lo": 204.1,
+       "hi": 240,
+       "v": "OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "shadowsneak",
+       "lo": 75.8,
+       "hi": 89.2,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "ironhead",
+       "lo": 36.4,
+       "hi": 44.1,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 240
+    },
+    {
+     "target": "jolteon",
+     "label": "Jolteon",
+     "weather": "",
+     "moves": [
+      {
+       "move": "poltergeist",
+       "lo": 149.2,
+       "hi": 176.7,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "shadowsneak",
+       "lo": 54.9,
+       "hi": 66.1,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "ironhead",
+       "lo": 54.2,
+       "hi": 64,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 176.7
+    },
+    {
+     "target": "mamoswine",
+     "label": "Mamoswine",
+     "weather": "",
+     "moves": [
+      {
+       "move": "ironhead",
+       "lo": 133.6,
+       "hi": 158.2,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "poltergeist",
+       "lo": 91.9,
+       "hi": 108.5,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "shadowsneak",
+       "lo": 34.2,
+       "hi": 40.1,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 158.2
+    },
+    {
+     "target": "grimmsnarl",
+     "label": "Grimmsnarl",
+     "weather": "",
+     "moves": [
+      {
+       "move": "ironhead",
+       "lo": 119.8,
+       "hi": 140,
+       "v": "OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "poltergeist",
+       "lo": 40.5,
+       "hi": 48,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "shadowsneak",
+       "lo": 14.8,
+       "hi": 17.3,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 140
+    },
+    {
+     "target": "tsareena",
+     "label": "Tsareena",
+     "weather": "",
+     "moves": [
+      {
+       "move": "poltergeist",
+       "lo": 96.6,
+       "hi": 115.4,
+       "v": "13/16 OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "ironhead",
+       "lo": 70.4,
+       "hi": 83.8,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "shadowsneak",
+       "immune": true,
+       "boosted": null
+      }
+     ],
+     "best": 115.4
+    },
+    {
+     "target": "empoleon",
+     "label": "Empoleon",
+     "weather": "",
+     "moves": [
+      {
+       "move": "poltergeist",
+       "lo": 82.1,
+       "hi": 97.9,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "shadowsneak",
+       "lo": 30.3,
+       "hi": 36.6,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "ironhead",
+       "lo": 15.1,
+       "hi": 17.8,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 97.9
+    },
+    {
+     "target": "tauros",
+     "label": "Tauros",
+     "weather": "",
+     "moves": [
+      {
+       "move": "ironhead",
+       "lo": 42.8,
+       "hi": 96,
+       "v": "frail: 2HKO, max: 5% 2HKO",
+       "range": true,
+       "boosted": null
+      },
+      {
+       "move": "poltergeist",
+       "immune": true,
+       "boosted": null
+      },
+      {
+       "move": "shadowsneak",
+       "immune": true,
+       "boosted": null
+      }
+     ],
+     "best": 96
+    },
+    {
+     "target": "swalot",
+     "label": "Swalot",
+     "weather": "",
+     "moves": [
+      {
+       "move": "poltergeist",
+       "lo": 79.7,
+       "hi": 94.6,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "ironhead",
+       "lo": 58.4,
+       "hi": 69.5,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "shadowsneak",
+       "lo": 29.9,
+       "hi": 35.7,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 94.6
+    },
+    {
+     "target": "staraptormega",
+     "label": "Staraptor-Mega",
+     "weather": "",
+     "moves": [
+      {
+       "move": "poltergeist",
+       "lo": 75.1,
+       "hi": 89.4,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "ironhead",
+       "lo": 54.4,
+       "hi": 64.5,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "shadowsneak",
+       "lo": 27.5,
+       "hi": 32.8,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 89.4
+    },
+    {
+     "target": "staraptor",
+     "label": "Staraptor (Scarf)",
+     "weather": "",
+     "moves": [
+      {
+       "move": "ironhead",
+       "lo": 71.8,
+       "hi": 85.4,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "poltergeist",
+       "immune": true,
+       "boosted": null
+      },
+      {
+       "move": "shadowsneak",
+       "immune": true,
+       "boosted": null
+      }
+     ],
+     "best": 85.4
+    },
+    {
+     "target": "volcarona",
+     "label": "Volcarona",
+     "weather": "",
+     "moves": [
+      {
+       "move": "poltergeist",
+       "lo": 69.2,
+       "hi": 81.7,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "shadowsneak",
+       "lo": 26.5,
+       "hi": 31.2,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "ironhead",
+       "lo": 25.5,
+       "hi": 30.2,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 81.7
+    }
+   ]
+  },
+  {
+   "mon": "morpeko",
+   "label": "Morpeko",
+   "targets": [
+    {
+     "target": "basculegionf",
+     "label": "Basculegion-F",
+     "weather": "",
+     "moves": [
+      {
+       "move": "aurawheel",
+       "lo": 108.7,
+       "hi": 129.2,
+       "v": "OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "fakeout",
+       "immune": true,
+       "boosted": null
+      }
+     ],
+     "best": 129.2
+    },
+    {
+     "target": "staraptor",
+     "label": "Staraptor (Scarf)",
+     "weather": "",
+     "moves": [
+      {
+       "move": "aurawheel",
+       "lo": 106.2,
+       "hi": 126,
+       "v": "OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "fakeout",
+       "lo": 13,
+       "hi": 15.6,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 126
+    },
+    {
+     "target": "empoleon",
+     "label": "Empoleon",
+     "weather": "",
+     "moves": [
+      {
+       "move": "aurawheel",
+       "lo": 87.9,
+       "hi": 104.7,
+       "v": "5/16 OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "fakeout",
+       "lo": 5.2,
+       "hi": 6.2,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 104.7
+    },
+    {
+     "target": "staraptormega",
+     "label": "Staraptor-Mega",
+     "weather": "",
+     "moves": [
+      {
+       "move": "aurawheel",
+       "lo": 80.4,
+       "hi": 96.2,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "fakeout",
+       "lo": 10,
+       "hi": 12.1,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 96.2
+    },
+    {
+     "target": "tauros",
+     "label": "Tauros",
+     "weather": "",
+     "moves": [
+      {
+       "move": "aurawheel",
+       "lo": 31.8,
+       "hi": 70.6,
+       "v": "frail: 2HKO, max: 3HKO+",
+       "range": true,
+       "boosted": null
+      },
+      {
+       "move": "fakeout",
+       "lo": 8.2,
+       "hi": 18,
+       "v": "frail: no KO in 2, max: no KO in 2",
+       "range": true,
+       "boosted": null
+      }
+     ],
+     "best": 70.6
+    },
+    {
+     "target": "grimmsnarl",
+     "label": "Grimmsnarl",
+     "weather": "",
+     "moves": [
+      {
+       "move": "aurawheel",
+       "lo": 43.5,
+       "hi": 51.9,
+       "v": "11% 2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "fakeout",
+       "lo": 10.8,
+       "hi": 12.8,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 51.9
+    },
+    {
+     "target": "swalot",
+     "label": "Swalot",
+     "weather": "",
+     "moves": [
+      {
+       "move": "aurawheel",
+       "lo": 43.4,
+       "hi": 51.2,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "fakeout",
+       "lo": 10.6,
+       "hi": 13,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 51.2
+    },
+    {
+     "target": "volcarona",
+     "label": "Volcarona",
+     "weather": "",
+     "moves": [
+      {
+       "move": "aurawheel",
+       "lo": 37.5,
+       "hi": 44.2,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "fakeout",
+       "lo": 9.3,
+       "hi": 11.4,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 44.2
+    },
+    {
+     "target": "tsareena",
+     "label": "Tsareena",
+     "weather": "",
+     "moves": [
+      {
+       "move": "aurawheel",
+       "lo": 26.1,
+       "hi": 30.8,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "fakeout",
+       "immune": true,
+       "boosted": null
+      }
+     ],
+     "best": 30.8
+    },
+    {
+     "target": "jolteon",
+     "label": "Jolteon",
+     "weather": "",
+     "moves": [
+      {
+       "move": "fakeout",
+       "lo": 19.7,
+       "hi": 23.9,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "aurawheel",
+       "immune": true,
+       "boosted": null
+      }
+     ],
+     "best": 23.9
+    },
+    {
+     "target": "mamoswine",
+     "label": "Mamoswine",
+     "weather": "",
+     "moves": [
+      {
+       "move": "fakeout",
+       "lo": 11.7,
+       "hi": 14.4,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "aurawheel",
+       "immune": true,
+       "boosted": null
+      }
+     ],
+     "best": 14.4
+    }
+   ]
+  },
+  {
+   "mon": "conkeldurr",
+   "label": "Conkeldurr",
+   "targets": [
+    {
+     "target": "tauros",
+     "label": "Tauros",
+     "weather": "",
+     "moves": [
+      {
+       "move": "drainpunch",
+       "lo": 95.6,
+       "hi": 214.6,
+       "v": "frail: OHKO, max: 75% OHKO",
+       "range": true,
+       "boosted": null
+      },
+      {
+       "move": "machpunch",
+       "lo": 51.6,
+       "hi": 116,
+       "v": "frail: 88% OHKO, max: 2HKO",
+       "range": true,
+       "boosted": null
+      },
+      {
+       "move": "knockoff",
+       "lo": 34,
+       "hi": 77.3,
+       "v": "frail: no KO in 2, max: no KO in 2",
+       "range": true,
+       "boosted": null
+      },
+      {
+       "move": "thunderpunch",
+       "lo": 31.8,
+       "hi": 72,
+       "v": "frail: 2HKO, max: 3HKO+",
+       "range": true,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 31.8,
+       "hi": 72,
+       "v": "frail: 2HKO, max: 3HKO+",
+       "range": true,
+       "boosted": null
+      }
+     ],
+     "best": 214.6
+    },
+    {
+     "target": "mamoswine",
+     "label": "Mamoswine",
+     "weather": "",
+     "moves": [
+      {
+       "move": "drainpunch",
+       "lo": 150.2,
+       "hi": 176.4,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "machpunch",
+       "lo": 80.7,
+       "hi": 95.7,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "knockoff",
+       "lo": 54,
+       "hi": 64.1,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 50.2,
+       "hi": 58.8,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "thunderpunch",
+       "immune": true,
+       "boosted": null
+      }
+     ],
+     "best": 176.4
+    },
+    {
+     "target": "empoleon",
+     "label": "Empoleon",
+     "weather": "",
+     "moves": [
+      {
+       "move": "drainpunch",
+       "lo": 136.1,
+       "hi": 160.7,
+       "v": "OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "thunderpunch",
+       "lo": 91,
+       "hi": 107.3,
+       "v": "7/16 OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "machpunch",
+       "lo": 73.2,
+       "hi": 86.9,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "knockoff",
+       "lo": 49.2,
+       "hi": 57.5,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 10.9,
+       "hi": 13,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 160.7
+    },
+    {
+     "target": "jolteon",
+     "label": "Jolteon",
+     "weather": "",
+     "moves": [
+      {
+       "move": "drainpunch",
+       "lo": 123.2,
+       "hi": 145.7,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "knockoff",
+       "lo": 88,
+       "hi": 104.2,
+       "v": "(Focus Sash holds)",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 82.3,
+       "hi": 97.1,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "machpunch",
+       "lo": 66.1,
+       "hi": 77.4,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "thunderpunch",
+       "immune": true,
+       "boosted": null
+      }
+     ],
+     "best": 145.7
+    },
+    {
+     "target": "basculegionf",
+     "label": "Basculegion-F",
+     "weather": "",
+     "moves": [
+      {
+       "move": "knockoff",
+       "lo": 120,
+       "hi": 141.5,
+       "v": "OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "thunderpunch",
+       "lo": 111.7,
+       "hi": 131.7,
+       "v": "OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 28.2,
+       "hi": 32.8,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "drainpunch",
+       "immune": true,
+       "boosted": null
+      },
+      {
+       "move": "machpunch",
+       "immune": true,
+       "boosted": null
+      }
+     ],
+     "best": 141.5
+    },
+    {
+     "target": "staraptor",
+     "label": "Staraptor (Scarf)",
+     "weather": "",
+     "moves": [
+      {
+       "move": "thunderpunch",
+       "lo": 106.7,
+       "hi": 127,
+       "v": "OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 106.7,
+       "hi": 127,
+       "v": "OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "drainpunch",
+       "lo": 79.6,
+       "hi": 95.3,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "knockoff",
+       "lo": 58.3,
+       "hi": 69.2,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "machpunch",
+       "lo": 43.2,
+       "hi": 51.5,
+       "v": "1/16 2HKO",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 127
+    },
+    {
+     "target": "tsareena",
+     "label": "Tsareena",
+     "weather": "",
+     "moves": [
+      {
+       "move": "icepunch",
+       "lo": 106.7,
+       "hi": 125.5,
+       "v": "OHKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "drainpunch",
+       "lo": 79.1,
+       "hi": 93.9,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "knockoff",
+       "lo": 57.7,
+       "hi": 67.7,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "thunderpunch",
+       "lo": 26.1,
+       "hi": 31.5,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "machpunch",
+       "immune": true,
+       "boosted": null
+      }
+     ],
+     "best": 125.5
+    },
+    {
+     "target": "staraptormega",
+     "label": "Staraptor-Mega",
+     "weather": "",
+     "moves": [
+      {
+       "move": "thunderpunch",
+       "lo": 82.5,
+       "hi": 97.8,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 82.5,
+       "hi": 97.8,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "drainpunch",
+       "lo": 30.6,
+       "hi": 36.5,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "machpunch",
+       "lo": 16.4,
+       "hi": 20.1,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "knockoff",
+       "lo": 15.3,
+       "hi": 17.9,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 97.8
+    },
+    {
+     "target": "grimmsnarl",
+     "label": "Grimmsnarl",
+     "weather": "",
+     "moves": [
+      {
+       "move": "drainpunch",
+       "lo": 66.3,
+       "hi": 79.2,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "thunderpunch",
+       "lo": 44.5,
+       "hi": 52.9,
+       "v": "22% 2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 44.5,
+       "hi": 52.9,
+       "v": "22% 2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "machpunch",
+       "lo": 35.1,
+       "hi": 42.5,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "knockoff",
+       "lo": 11.3,
+       "hi": 14.3,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 79.2
+    },
+    {
+     "target": "swalot",
+     "label": "Swalot",
+     "weather": "",
+     "moves": [
+      {
+       "move": "knockoff",
+       "lo": 46.8,
+       "hi": 56,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "thunderpunch",
+       "lo": 43.9,
+       "hi": 52.1,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 43.9,
+       "hi": 52.1,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "drainpunch",
+       "lo": 32.8,
+       "hi": 39.1,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "machpunch",
+       "lo": 17.3,
+       "hi": 20.7,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 56
+    },
+    {
+     "target": "volcarona",
+     "label": "Volcarona",
+     "weather": "",
+     "moves": [
+      {
+       "move": "knockoff",
+       "lo": 41.1,
+       "hi": 48.9,
+       "v": "no KO in 2",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "thunderpunch",
+       "lo": 38,
+       "hi": 45.3,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "drainpunch",
+       "lo": 28.6,
+       "hi": 33.8,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "icepunch",
+       "lo": 18.7,
+       "hi": 22.3,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "machpunch",
+       "lo": 15.1,
+       "hi": 18.2,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 48.9
+    }
+   ]
+  },
+  {
+   "mon": "rotomfan",
+   "label": "Rotom-Fan",
+   "targets": [
+    {
+     "target": "staraptor",
+     "label": "Staraptor (Scarf)",
+     "weather": "",
+     "moves": [
+      {
+       "move": "thunderbolt",
+       "lo": 147.3,
+       "hi": 176,
+       "v": "OHKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 296.3,
+        "hi": 349.4,
+        "v": "OHKO",
+        "range": false
+       }
+      },
+      {
+       "move": "voltswitch",
+       "lo": 115.1,
+       "hi": 138,
+       "v": "OHKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 228.6,
+        "hi": 272.3,
+        "v": "OHKO",
+        "range": false
+       }
+      },
+      {
+       "move": "airslash",
+       "lo": 61.4,
+       "hi": 72.9,
+       "v": "2HKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 122.3,
+        "hi": 144.7,
+        "v": "OHKO",
+        "range": false
+       }
+      }
+     ],
+     "best": 176
+    },
+    {
+     "target": "basculegionf",
+     "label": "Basculegion-F",
+     "weather": "",
+     "moves": [
+      {
+       "move": "thunderbolt",
+       "lo": 121.5,
+       "hi": 144.1,
+       "v": "OHKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 241.5,
+        "hi": 285.1,
+        "v": "OHKO",
+        "range": false
+       }
+      },
+      {
+       "move": "voltswitch",
+       "lo": 95.8,
+       "hi": 113.3,
+       "v": "13/16 OHKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 189.2,
+        "hi": 224.1,
+        "v": "OHKO",
+        "range": false
+       }
+      },
+      {
+       "move": "airslash",
+       "lo": 50.7,
+       "hi": 60.5,
+       "v": "2HKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 102,
+        "hi": 120,
+        "v": "OHKO",
+        "range": false
+       }
+      }
+     ],
+     "best": 144.1
+    },
+    {
+     "target": "tsareena",
+     "label": "Tsareena",
+     "weather": "",
+     "moves": [
+      {
+       "move": "airslash",
+       "lo": 110,
+       "hi": 130.8,
+       "v": "OHKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 216.1,
+        "hi": 256.3,
+        "v": "OHKO",
+        "range": false
+       }
+      },
+      {
+       "move": "thunderbolt",
+       "lo": 32.2,
+       "hi": 38.2,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 64.4,
+        "hi": 75.8,
+        "v": "2HKO",
+        "range": false
+       }
+      },
+      {
+       "move": "voltswitch",
+       "lo": 25.5,
+       "hi": 29.5,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 49.6,
+        "hi": 59,
+        "v": "100% 2HKO",
+        "range": false
+       }
+      }
+     ],
+     "best": 130.8
+    },
+    {
+     "target": "staraptormega",
+     "label": "Staraptor-Mega",
+     "weather": "",
+     "moves": [
+      {
+       "move": "thunderbolt",
+       "lo": 104.7,
+       "hi": 125.3,
+       "v": "OHKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 210.5,
+        "hi": 249.2,
+        "v": "OHKO",
+        "range": false
+       }
+      },
+      {
+       "move": "airslash",
+       "lo": 87.8,
+       "hi": 104.7,
+       "v": "25% OHKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 174.6,
+        "hi": 207.9,
+        "v": "OHKO",
+        "range": false
+       }
+      },
+      {
+       "move": "voltswitch",
+       "lo": 82.5,
+       "hi": 98.9,
+       "v": "2HKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 162.4,
+        "hi": 194.1,
+        "v": "OHKO",
+        "range": false
+       }
+      }
+     ],
+     "best": 125.3
+    },
+    {
+     "target": "empoleon",
+     "label": "Empoleon",
+     "weather": "",
+     "moves": [
+      {
+       "move": "thunderbolt",
+       "lo": 97.9,
+       "hi": 115.7,
+       "v": "13/16 OHKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 193.1,
+        "hi": 228.7,
+        "v": "OHKO",
+        "range": false
+       }
+      },
+      {
+       "move": "voltswitch",
+       "lo": 77.4,
+       "hi": 91,
+       "v": "2HKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 151.3,
+        "hi": 179.5,
+        "v": "OHKO",
+        "range": false
+       }
+      },
+      {
+       "move": "airslash",
+       "lo": 20.4,
+       "hi": 24.6,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 40.3,
+        "hi": 47.6,
+        "v": "3HKO+",
+        "range": false
+       }
+      }
+     ],
+     "best": 115.7
+    },
+    {
+     "target": "tauros",
+     "label": "Tauros",
+     "weather": "",
+     "moves": [
+      {
+       "move": "thunderbolt",
+       "lo": 47.2,
+       "hi": 112,
+       "v": "frail: 63% OHKO, max: 67% 2HKO",
+       "range": true,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 92.8,
+        "hi": 220.6,
+        "v": "frail: OHKO, max: 9/16 OHKO",
+        "range": true
+       }
+      },
+      {
+       "move": "airslash",
+       "lo": 39,
+       "hi": 93.3,
+       "v": "frail: 2HKO, max: 3HKO+",
+       "range": true,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 78,
+        "hi": 184.6,
+        "v": "frail: OHKO, max: 2HKO",
+        "range": true
+       }
+      },
+      {
+       "move": "voltswitch",
+       "lo": 36.2,
+       "hi": 86.6,
+       "v": "frail: 2HKO, max: 3HKO+",
+       "range": true,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 73,
+        "hi": 171.3,
+        "v": "frail: OHKO, max: 2HKO",
+        "range": true
+       }
+      }
+     ],
+     "best": 112
+    },
+    {
+     "target": "volcarona",
+     "label": "Volcarona",
+     "weather": "",
+     "moves": [
+      {
+       "move": "airslash",
+       "lo": 78.6,
+       "hi": 93.2,
+       "v": "2HKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 155.7,
+        "hi": 184.3,
+        "v": "OHKO",
+        "range": false
+       }
+      },
+      {
+       "move": "thunderbolt",
+       "lo": 46.8,
+       "hi": 55.7,
+       "v": "72% 2HKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 93.2,
+        "hi": 110.4,
+        "v": "63% OHKO",
+        "range": false
+       }
+      },
+      {
+       "move": "voltswitch",
+       "lo": 36.4,
+       "hi": 43.2,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 72.9,
+        "hi": 85.9,
+        "v": "2HKO",
+        "range": false
+       }
+      }
+     ],
+     "best": 93.2
+    },
+    {
+     "target": "mamoswine",
+     "label": "Mamoswine",
+     "weather": "",
+     "moves": [
+      {
+       "move": "airslash",
+       "lo": 63.1,
+       "hi": 74.8,
+       "v": "2HKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 125.6,
+        "hi": 148.6,
+        "v": "2HKO (Focus Sash holds)",
+        "range": false
+       }
+      },
+      {
+       "move": "thunderbolt",
+       "immune": true,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "immune": true
+       }
+      },
+      {
+       "move": "voltswitch",
+       "immune": true,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "immune": true
+       }
+      }
+     ],
+     "best": 74.8
+    },
+    {
+     "target": "grimmsnarl",
+     "label": "Grimmsnarl",
+     "weather": "",
+     "moves": [
+      {
+       "move": "thunderbolt",
+       "lo": 47,
+       "hi": 55.9,
+       "v": "76% 2HKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 92.5,
+        "hi": 109.9,
+        "v": "9/16 OHKO",
+        "range": false
+       }
+      },
+      {
+       "move": "airslash",
+       "lo": 38.6,
+       "hi": 46.5,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 77.2,
+        "hi": 91.5,
+        "v": "2HKO",
+        "range": false
+       }
+      },
+      {
+       "move": "voltswitch",
+       "lo": 36.6,
+       "hi": 43,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 72.2,
+        "hi": 85.6,
+        "v": "2HKO",
+        "range": false
+       }
+      }
+     ],
+     "best": 55.9
+    },
+    {
+     "target": "swalot",
+     "label": "Swalot",
+     "weather": "",
+     "moves": [
+      {
+       "move": "thunderbolt",
+       "lo": 37.6,
+       "hi": 45.4,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 73.9,
+        "hi": 88.4,
+        "v": "2HKO",
+        "range": false
+       }
+      },
+      {
+       "move": "airslash",
+       "lo": 31.8,
+       "hi": 37.6,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 62.3,
+        "hi": 73.4,
+        "v": "2HKO",
+        "range": false
+       }
+      },
+      {
+       "move": "voltswitch",
+       "lo": 28.9,
+       "hi": 34.2,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 58.4,
+        "hi": 68.5,
+        "v": "2HKO",
+        "range": false
+       }
+      }
+     ],
+     "best": 45.4
+    },
+    {
+     "target": "jolteon",
+     "label": "Jolteon",
+     "weather": "",
+     "moves": [
+      {
+       "move": "airslash",
+       "lo": 29.5,
+       "hi": 34.5,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 57.7,
+        "hi": 68.3,
+        "v": "2HKO",
+        "range": false
+       }
+      },
+      {
+       "move": "thunderbolt",
+       "immune": true,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "immune": true
+       }
+      },
+      {
+       "move": "voltswitch",
+       "immune": true,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "immune": true
+       }
+      }
+     ],
+     "best": 34.5
+    }
+   ]
+  },
+  {
+   "mon": "stunfiskgalar",
+   "label": "Stunfisk-Galar",
+   "targets": [
+    {
+     "target": "jolteon",
+     "label": "Jolteon",
+     "weather": "",
+     "moves": [
+      {
+       "move": "stompingtantrum",
+       "lo": 109.8,
+       "hi": 130.9,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "earthquake",
+       "lo": 107,
+       "hi": 128.1,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "rockslide",
+       "lo": 27.4,
+       "hi": 32.3,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 130.9
+    },
+    {
+     "target": "empoleon",
+     "label": "Empoleon",
+     "weather": "",
+     "moves": [
+      {
+       "move": "stompingtantrum",
+       "lo": 60.7,
+       "hi": 72.2,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "earthquake",
+       "lo": 60.7,
+       "hi": 72.2,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "rockslide",
+       "lo": 7.3,
+       "hi": 8.9,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 72.2
+    },
+    {
+     "target": "swalot",
+     "label": "Swalot",
+     "weather": "",
+     "moves": [
+      {
+       "move": "stompingtantrum",
+       "lo": 57.9,
+       "hi": 69.5,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "earthquake",
+       "lo": 57.9,
+       "hi": 69.5,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "rockslide",
+       "lo": 14.4,
+       "hi": 17.3,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 69.5
+    },
+    {
+     "target": "volcarona",
+     "label": "Volcarona",
+     "weather": "",
+     "moves": [
+      {
+       "move": "rockslide",
+       "lo": 50,
+       "hi": 60.4,
+       "v": "2HKO",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "stompingtantrum",
+       "lo": 25.5,
+       "hi": 30.2,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "earthquake",
+       "lo": 25.5,
+       "hi": 30.2,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 60.4
+    },
+    {
+     "target": "tauros",
+     "label": "Tauros",
+     "weather": "",
+     "moves": [
+      {
+       "move": "stompingtantrum",
+       "lo": 21.4,
+       "hi": 48,
+       "v": "frail: 3HKO+, max: 3HKO+",
+       "range": true,
+       "boosted": null
+      },
+      {
+       "move": "earthquake",
+       "lo": 21.4,
+       "hi": 48,
+       "v": "frail: 3HKO+, max: 3HKO+",
+       "range": true,
+       "boosted": null
+      },
+      {
+       "move": "rockslide",
+       "lo": 10.4,
+       "hi": 24,
+       "v": "frail: 3HKO+, max: 3HKO+",
+       "range": true,
+       "boosted": null
+      }
+     ],
+     "best": 48
+    },
+    {
+     "target": "basculegionf",
+     "label": "Basculegion-F",
+     "weather": "",
+     "moves": [
+      {
+       "move": "stompingtantrum",
+       "lo": 37.4,
+       "hi": 44.6,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "earthquake",
+       "lo": 36.9,
+       "hi": 43.5,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "rockslide",
+       "lo": 18.4,
+       "hi": 22,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 44.6
+    },
+    {
+     "target": "staraptor",
+     "label": "Staraptor (Scarf)",
+     "weather": "",
+     "moves": [
+      {
+       "move": "rockslide",
+       "lo": 35.4,
+       "hi": 42.7,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "stompingtantrum",
+       "immune": true,
+       "boosted": null
+      },
+      {
+       "move": "earthquake",
+       "immune": true,
+       "boosted": null
+      }
+     ],
+     "best": 42.7
+    },
+    {
+     "target": "mamoswine",
+     "label": "Mamoswine",
+     "weather": "",
+     "moves": [
+      {
+       "move": "stompingtantrum",
+       "lo": 33.6,
+       "hi": 40.1,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "earthquake",
+       "lo": 32.6,
+       "hi": 39,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "rockslide",
+       "lo": 16.5,
+       "hi": 19.7,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 40.1
+    },
+    {
+     "target": "grimmsnarl",
+     "label": "Grimmsnarl",
+     "weather": "",
+     "moves": [
+      {
+       "move": "stompingtantrum",
+       "lo": 29.7,
+       "hi": 35.6,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "earthquake",
+       "lo": 28.7,
+       "hi": 34.6,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "rockslide",
+       "lo": 14.8,
+       "hi": 17.8,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 35.6
+    },
+    {
+     "target": "tsareena",
+     "label": "Tsareena",
+     "weather": "",
+     "moves": [
+      {
+       "move": "stompingtantrum",
+       "lo": 17.4,
+       "hi": 20.8,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "earthquake",
+       "lo": 17.4,
+       "hi": 20.8,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "rockslide",
+       "lo": 17.4,
+       "hi": 20.8,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      }
+     ],
+     "best": 20.8
+    },
+    {
+     "target": "staraptormega",
+     "label": "Staraptor-Mega",
+     "weather": "",
+     "moves": [
+      {
+       "move": "rockslide",
+       "lo": 13.7,
+       "hi": 16.4,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": null
+      },
+      {
+       "move": "stompingtantrum",
+       "immune": true,
+       "boosted": null
+      },
+      {
+       "move": "earthquake",
+       "immune": true,
+       "boosted": null
+      }
+     ],
+     "best": 16.4
+    }
+   ]
+  },
+  {
+   "mon": "simipour",
+   "label": "Simipour",
+   "targets": [
+    {
+     "target": "mamoswine",
+     "label": "Mamoswine",
+     "weather": "",
+     "moves": [
+      {
+       "move": "hydropump",
+       "lo": 163.6,
+       "hi": 193.5,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 327.2,
+        "hi": 386,
+        "v": "2HKO (Focus Sash holds)",
+        "range": false
+       }
+      },
+      {
+       "move": "scald",
+       "lo": 119.7,
+       "hi": 142.2,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 238.5,
+        "hi": 282.3,
+        "v": "2HKO (Focus Sash holds)",
+        "range": false
+       }
+      },
+      {
+       "move": "icebeam",
+       "lo": 37.4,
+       "hi": 44.3,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 74.8,
+        "hi": 88.2,
+        "v": "2HKO",
+        "range": false
+       }
+      }
+     ],
+     "best": 193.5
+    },
+    {
+     "target": "tauros",
+     "label": "Tauros",
+     "weather": "",
+     "moves": [
+      {
+       "move": "hydropump",
+       "lo": 51,
+       "hi": 120,
+       "v": "frail: OHKO, max: 2HKO",
+       "range": true,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 101,
+        "hi": 238,
+        "v": "frail: OHKO, max: OHKO",
+        "range": true
+       }
+      },
+      {
+       "move": "scald",
+       "lo": 36.8,
+       "hi": 88,
+       "v": "frail: 2HKO, max: 3HKO+",
+       "range": true,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 74.1,
+        "hi": 174,
+        "v": "frail: OHKO, max: 2HKO",
+        "range": true
+       }
+      },
+      {
+       "move": "icebeam",
+       "lo": 23,
+       "hi": 54.6,
+       "v": "frail: 58% 2HKO, max: 3HKO+",
+       "range": true,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 46.1,
+        "hi": 108.6,
+        "v": "frail: 50% OHKO, max: 59% 2HKO",
+        "range": true
+       }
+      }
+     ],
+     "best": 120
+    },
+    {
+     "target": "volcarona",
+     "label": "Volcarona",
+     "weather": "",
+     "moves": [
+      {
+       "move": "hydropump",
+       "lo": 101,
+       "hi": 119.7,
+       "v": "OHKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 201,
+        "hi": 237.5,
+        "v": "OHKO",
+        "range": false
+       }
+      },
+      {
+       "move": "scald",
+       "lo": 72.9,
+       "hi": 87.5,
+       "v": "2HKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 146.8,
+        "hi": 172.9,
+        "v": "OHKO",
+        "range": false
+       }
+      },
+      {
+       "move": "icebeam",
+       "lo": 11.4,
+       "hi": 13.5,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 22.9,
+        "hi": 27,
+        "v": "3HKO+",
+        "range": false
+       }
+      }
+     ],
+     "best": 119.7
+    },
+    {
+     "target": "staraptor",
+     "label": "Staraptor (Scarf)",
+     "weather": "",
+     "moves": [
+      {
+       "move": "hydropump",
+       "lo": 79.6,
+       "hi": 94.2,
+       "v": "2HKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 159.3,
+        "hi": 188,
+        "v": "OHKO",
+        "range": false
+       }
+      },
+      {
+       "move": "icebeam",
+       "lo": 72.9,
+       "hi": 86.4,
+       "v": "2HKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 145.8,
+        "hi": 171.8,
+        "v": "OHKO",
+        "range": false
+       }
+      },
+      {
+       "move": "scald",
+       "lo": 58.3,
+       "hi": 69.2,
+       "v": "2HKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 116.1,
+        "hi": 137.5,
+        "v": "OHKO",
+        "range": false
+       }
+      }
+     ],
+     "best": 94.2
+    },
+    {
+     "target": "jolteon",
+     "label": "Jolteon",
+     "weather": "",
+     "moves": [
+      {
+       "move": "hydropump",
+       "lo": 76,
+       "hi": 89.4,
+       "v": "2HKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 150,
+        "hi": 177.4,
+        "v": "2HKO (Focus Sash holds)",
+        "range": false
+       }
+      },
+      {
+       "move": "scald",
+       "lo": 54.9,
+       "hi": 65.4,
+       "v": "2HKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 109.8,
+        "hi": 129.5,
+        "v": "2HKO (Focus Sash holds)",
+        "range": false
+       }
+      },
+      {
+       "move": "icebeam",
+       "lo": 34.5,
+       "hi": 40.8,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 68.3,
+        "hi": 80.9,
+        "v": "2HKO",
+        "range": false
+       }
+      }
+     ],
+     "best": 89.4
+    },
+    {
+     "target": "tsareena",
+     "label": "Tsareena",
+     "weather": "",
+     "moves": [
+      {
+       "move": "icebeam",
+       "lo": 64.4,
+       "hi": 76.5,
+       "v": "2HKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 127.5,
+        "hi": 150.3,
+        "v": "OHKO",
+        "range": false
+       }
+      },
+      {
+       "move": "hydropump",
+       "lo": 34.8,
+       "hi": 41.6,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 69.7,
+        "hi": 82.5,
+        "v": "2HKO",
+        "range": false
+       }
+      },
+      {
+       "move": "scald",
+       "lo": 25.5,
+       "hi": 30.2,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 51,
+        "hi": 60.4,
+        "v": "2HKO",
+        "range": false
+       }
+      }
+     ],
+     "best": 76.5
+    },
+    {
+     "target": "staraptormega",
+     "label": "Staraptor-Mega",
+     "weather": "",
+     "moves": [
+      {
+       "move": "hydropump",
+       "lo": 57.6,
+       "hi": 68.2,
+       "v": "2HKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 114.2,
+        "hi": 134.9,
+        "v": "OHKO",
+        "range": false
+       }
+      },
+      {
+       "move": "icebeam",
+       "lo": 52.9,
+       "hi": 62.4,
+       "v": "2HKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 103.7,
+        "hi": 122.7,
+        "v": "OHKO",
+        "range": false
+       }
+      },
+      {
+       "move": "scald",
+       "lo": 41.7,
+       "hi": 49.7,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 83,
+        "hi": 98.4,
+        "v": "2HKO",
+        "range": false
+       }
+      }
+     ],
+     "best": 68.2
+    },
+    {
+     "target": "grimmsnarl",
+     "label": "Grimmsnarl",
+     "weather": "",
+     "moves": [
+      {
+       "move": "hydropump",
+       "lo": 50.4,
+       "hi": 59.9,
+       "v": "2HKO",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 100.9,
+        "hi": 118.8,
+        "v": "OHKO",
+        "range": false
+       }
+      },
+      {
+       "move": "scald",
+       "lo": 37.1,
+       "hi": 43.5,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 73.2,
+        "hi": 86.6,
+        "v": "2HKO",
+        "range": false
+       }
+      },
+      {
+       "move": "icebeam",
+       "lo": 23.2,
+       "hi": 27.7,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 46,
+        "hi": 54.4,
+        "v": "55% 2HKO",
+        "range": false
+       }
+      }
+     ],
+     "best": 59.9
+    },
+    {
+     "target": "swalot",
+     "label": "Swalot",
+     "weather": "",
+     "moves": [
+      {
+       "move": "hydropump",
+       "lo": 40.5,
+       "hi": 47.8,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 80.1,
+        "hi": 94.6,
+        "v": "2HKO",
+        "range": false
+       }
+      },
+      {
+       "move": "scald",
+       "lo": 29.4,
+       "hi": 35.2,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 58.4,
+        "hi": 69.5,
+        "v": "2HKO",
+        "range": false
+       }
+      },
+      {
+       "move": "icebeam",
+       "lo": 18.8,
+       "hi": 22.2,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 36.7,
+        "hi": 43.4,
+        "v": "3HKO+",
+        "range": false
+       }
+      }
+     ],
+     "best": 47.8
+    },
+    {
+     "target": "basculegionf",
+     "label": "Basculegion-F",
+     "weather": "",
+     "moves": [
+      {
+       "move": "hydropump",
+       "lo": 32.3,
+       "hi": 38.4,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 65.1,
+        "hi": 76.9,
+        "v": "2HKO",
+        "range": false
+       }
+      },
+      {
+       "move": "scald",
+       "lo": 23.5,
+       "hi": 28.2,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 47.6,
+        "hi": 56.4,
+        "v": "85% 2HKO",
+        "range": false
+       }
+      },
+      {
+       "move": "icebeam",
+       "lo": 14.8,
+       "hi": 17.9,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 29.7,
+        "hi": 35.3,
+        "v": "3HKO+",
+        "range": false
+       }
+      }
+     ],
+     "best": 38.4
+    },
+    {
+     "target": "empoleon",
+     "label": "Empoleon",
+     "weather": "",
+     "moves": [
+      {
+       "move": "hydropump",
+       "lo": 26.1,
+       "hi": 30.8,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 51.8,
+        "hi": 61.2,
+        "v": "98% 2HKO",
+        "range": false
+       }
+      },
+      {
+       "move": "scald",
+       "lo": 18.8,
+       "hi": 22.5,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 37.6,
+        "hi": 45,
+        "v": "3HKO+",
+        "range": false
+       }
+      },
+      {
+       "move": "icebeam",
+       "lo": 5.7,
+       "hi": 6.8,
+       "v": "3HKO+",
+       "range": false,
+       "boosted": {
+        "stage": 2,
+        "by": "nastyplot",
+        "lo": 11.5,
+        "hi": 14.1,
+        "v": "3HKO+",
+        "range": false
+       }
+      }
+     ],
+     "best": 30.8
+    }
+   ]
+  }
+ ],
+ "defense": [
+  {
+   "mon": "charizard",
+   "label": "Mega Charizard Y",
+   "rows": [
+    {
+     "attacker": "tauros",
+     "label": "Tauros",
+     "weather": "Sun",
+     "hits": [
+      {
+       "move": "rockslide",
+       "lo": 77.4,
+       "hi": 144.5,
+       "v": "frail: 2HKO, max: OHKO",
+       "range": true,
+       "survive": {
+        "stat": "def",
+        "cant": true,
+        "survivesNow": false,
+        "budget": 2
+       }
+      },
+      {
+       "move": "doubleedge",
+       "lo": 63.8,
+       "hi": 114.1,
+       "v": "frail: 2HKO, max: 13/16 OHKO",
+       "range": true,
+       "survive": {
+        "stat": "def",
+        "cant": true,
+        "survivesNow": false,
+        "budget": 2
+       }
+      }
+     ],
+     "top": 144.5
+    },
+    {
+     "attacker": "mamoswine",
+     "label": "Mamoswine",
+     "weather": "Sun",
+     "hits": [
+      {
+       "move": "rockslide",
+       "lo": 113.5,
+       "hi": 134.1,
+       "v": "OHKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "cant": true,
+        "survivesNow": false,
+        "budget": 2
+       }
+      },
+      {
+       "move": "iciclecrash",
+       "lo": 63.8,
+       "hi": 75.4,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "timid",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 134.1
+    },
+    {
+     "attacker": "staraptor",
+     "label": "Staraptor (Scarf)",
+     "weather": "Sun",
+     "hits": [
+      {
+       "move": "finalgambit",
+       "lo": 123.8,
+       "hi": 123.8,
+       "v": "OHKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "cant": true,
+        "survivesNow": false,
+        "budget": 2
+       }
+      },
+      {
+       "move": "bravebird",
+       "lo": 70.3,
+       "hi": 83.8,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "timid",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 123.8
+    },
+    {
+     "attacker": "jolteon",
+     "label": "Jolteon",
+     "weather": "Sun",
+     "hits": [
+      {
+       "move": "thunderbolt",
+       "lo": 78.7,
+       "hi": 94.1,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "timid",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "voltswitch",
+       "lo": 61.9,
+       "hi": 73.5,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "timid",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 94.1
+    },
+    {
+     "attacker": "staraptormega",
+     "label": "Staraptor-Mega",
+     "weather": "Sun",
+     "hits": [
+      {
+       "move": "bravebird",
+       "lo": 71.6,
+       "hi": 85.1,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "timid",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "closecombat",
+       "lo": 35.4,
+       "hi": 42.5,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "timid",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 85.1
+    },
+    {
+     "attacker": "empoleon",
+     "label": "Empoleon",
+     "weather": "Sun",
+     "hits": [
+      {
+       "move": "hydropump",
+       "lo": 54.1,
+       "hi": 63.2,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "timid",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "icebeam",
+       "lo": 29,
+       "hi": 34.8,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "timid",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 63.2
+    },
+    {
+     "attacker": "tsareena",
+     "label": "Tsareena",
+     "weather": "Sun",
+     "hits": [
+      {
+       "move": "tripleaxel",
+       "lo": 52.2,
+       "hi": 62.5,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "timid",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "highjumpkick",
+       "lo": 27.7,
+       "hi": 32.9,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "timid",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 62.5
+    },
+    {
+     "attacker": "basculegionf",
+     "label": "Basculegion-F",
+     "weather": "Sun",
+     "hits": [
+      {
+       "move": "shadowball",
+       "lo": 47.7,
+       "hi": 56.1,
+       "v": "78% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "timid",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "muddywater",
+       "lo": 36.7,
+       "hi": 45.1,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "timid",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 56.1
+    },
+    {
+     "attacker": "volcarona",
+     "label": "Volcarona",
+     "weather": "Sun",
+     "hits": [
+      {
+       "move": "overheat",
+       "lo": 40.6,
+       "hi": 48.3,
+       "v": "no KO in 2",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "timid",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "fierydance",
+       "lo": 25.1,
+       "hi": 30.3,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "timid",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 48.3
+    },
+    {
+     "attacker": "grimmsnarl",
+     "label": "Grimmsnarl",
+     "weather": "Sun",
+     "hits": [
+      {
+       "move": "spiritbreak",
+       "lo": 19.3,
+       "hi": 23.2,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "timid",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 23.2
+    },
+    {
+     "attacker": "swalot",
+     "label": "Swalot",
+     "weather": "Sun",
+     "hits": [
+      {
+       "move": "clearsmog",
+       "lo": 13.5,
+       "hi": 16.1,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "timid",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "bodypress",
+       "lo": 10.3,
+       "hi": 12.2,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "timid",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 16.1
+    }
+   ]
+  },
+  {
+   "mon": "sinistcha",
+   "label": "Sinistcha",
+   "rows": [
+    {
+     "attacker": "volcarona",
+     "label": "Volcarona",
+     "weather": "",
+     "hits": [
+      {
+       "move": "overheat",
+       "lo": 105.6,
+       "hi": 125.8,
+       "v": "OHKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "cant": true,
+        "survivesNow": false,
+        "budget": 52
+       }
+      },
+      {
+       "move": "fierydance",
+       "lo": 65.1,
+       "hi": 78.6,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 1,
+        "def": 14,
+        "nature": "bold",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 52,
+        "already": true
+       }
+      }
+     ],
+     "top": 125.8
+    },
+    {
+     "attacker": "basculegionf",
+     "label": "Basculegion-F",
+     "weather": "",
+     "hits": [
+      {
+       "move": "shadowball",
+       "lo": 92.1,
+       "hi": 109.5,
+       "v": "9/16 OHKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 21,
+        "def": 28,
+        "nature": "calm",
+        "natureChange": true,
+        "survivesNow": false,
+        "budget": 52,
+        "already": false
+       }
+      },
+      {
+       "move": "icebeam",
+       "lo": 70.2,
+       "hi": 83.1,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 3,
+        "def": 19,
+        "nature": "bold",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 52,
+        "already": true
+       }
+      }
+     ],
+     "top": 109.5
+    },
+    {
+     "attacker": "staraptormega",
+     "label": "Staraptor-Mega",
+     "weather": "",
+     "hits": [
+      {
+       "move": "bravebird",
+       "lo": 80.8,
+       "hi": 95.5,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 19,
+        "def": 18,
+        "nature": "bold",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 46,
+        "already": true
+       }
+      },
+      {
+       "move": "closecombat",
+       "immune": true,
+       "survive": null
+      }
+     ],
+     "top": 95.5
+    },
+    {
+     "attacker": "staraptor",
+     "label": "Staraptor (Scarf)",
+     "weather": "",
+     "hits": [
+      {
+       "move": "bravebird",
+       "lo": 78.6,
+       "hi": 94.3,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 7,
+        "def": 26,
+        "nature": "bold",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 46,
+        "already": true
+       }
+      },
+      {
+       "move": "dualwingbeat",
+       "lo": 56.1,
+       "hi": 67.4,
+       "v": "15% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "bold",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 46,
+        "already": true
+       }
+      }
+     ],
+     "top": 94.3
+    },
+    {
+     "attacker": "mamoswine",
+     "label": "Mamoswine",
+     "weather": "",
+     "hits": [
+      {
+       "move": "iciclecrash",
+       "lo": 70.7,
+       "hi": 84.2,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 1,
+        "def": 16,
+        "nature": "bold",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 46,
+        "already": true
+       }
+      },
+      {
+       "move": "iceshard",
+       "lo": 33.7,
+       "hi": 40.4,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "bold",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 46,
+        "already": true
+       }
+      }
+     ],
+     "top": 84.2
+    },
+    {
+     "attacker": "tsareena",
+     "label": "Tsareena",
+     "weather": "",
+     "hits": [
+      {
+       "move": "tripleaxel",
+       "lo": 58.4,
+       "hi": 70.7,
+       "v": "87% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "bold",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 46,
+        "already": true
+       }
+      },
+      {
+       "move": "powerwhip",
+       "lo": 21.3,
+       "hi": 25.2,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "bold",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 46,
+        "already": true
+       }
+      }
+     ],
+     "top": 70.7
+    },
+    {
+     "attacker": "empoleon",
+     "label": "Empoleon",
+     "weather": "",
+     "hits": [
+      {
+       "move": "icebeam",
+       "lo": 57.3,
+       "hi": 68.5,
+       "v": "62% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "bold",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 52,
+        "already": true
+       }
+      },
+      {
+       "move": "flashcannon",
+       "lo": 37.6,
+       "hi": 45.5,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "bold",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 52,
+        "already": true
+       }
+      }
+     ],
+     "top": 68.5
+    },
+    {
+     "attacker": "jolteon",
+     "label": "Jolteon",
+     "weather": "",
+     "hits": [
+      {
+       "move": "shadowball",
+       "lo": 46,
+       "hi": 55,
+       "v": "18% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "bold",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 52,
+        "already": true
+       }
+      },
+      {
+       "move": "alluringvoice",
+       "lo": 23,
+       "hi": 27.5,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "bold",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 52,
+        "already": true
+       }
+      }
+     ],
+     "top": 55
+    },
+    {
+     "attacker": "grimmsnarl",
+     "label": "Grimmsnarl",
+     "weather": "",
+     "hits": [
+      {
+       "move": "spiritbreak",
+       "lo": 22.4,
+       "hi": 26.9,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "bold",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 46,
+        "already": true
+       }
+      }
+     ],
+     "top": 26.9
+    },
+    {
+     "attacker": "tauros",
+     "label": "Tauros",
+     "weather": "",
+     "hits": [
+      {
+       "move": "rockslide",
+       "lo": 11.7,
+       "hi": 20.2,
+       "v": "frail: 3HKO+, max: 3HKO+",
+       "range": true,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "bold",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 46,
+        "already": true
+       }
+      },
+      {
+       "move": "highhorsepower",
+       "lo": 9.5,
+       "hi": 16.8,
+       "v": "frail: 3HKO+, max: 3HKO+",
+       "range": true,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "bold",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 46,
+        "already": true
+       }
+      }
+     ],
+     "top": 20.2
+    },
+    {
+     "attacker": "swalot",
+     "label": "Swalot",
+     "weather": "",
+     "hits": [
+      {
+       "move": "clearsmog",
+       "lo": 13.4,
+       "hi": 15.7,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "bold",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 52,
+        "already": true
+       }
+      },
+      {
+       "move": "gigadrain",
+       "lo": 6.1,
+       "hi": 7.8,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "bold",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 52,
+        "already": true
+       }
+      }
+     ],
+     "top": 15.7
+    }
+   ]
+  },
+  {
+   "mon": "pelipper",
+   "label": "Pelipper",
+   "rows": [
+    {
+     "attacker": "jolteon",
+     "label": "Jolteon",
+     "weather": "Rain",
+     "hits": [
+      {
+       "move": "thunderbolt",
+       "lo": 271.5,
+       "hi": 318.2,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "voltswitch",
+       "lo": 210.2,
+       "hi": 248.1,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 318.2
+    },
+    {
+     "attacker": "staraptor",
+     "label": "Staraptor (Scarf)",
+     "weather": "Rain",
+     "hits": [
+      {
+       "move": "finalgambit",
+       "lo": 140.1,
+       "hi": 140.1,
+       "v": "(Focus Sash holds)",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "bravebird",
+       "lo": 65.6,
+       "hi": 77.3,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 140.1
+    },
+    {
+     "attacker": "tauros",
+     "label": "Tauros",
+     "weather": "Rain",
+     "hits": [
+      {
+       "move": "doubleedge",
+       "lo": 57.6,
+       "hi": 106.5,
+       "v": "frail: 2HKO, max: 2HKO (Focus Sash holds)",
+       "range": true,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "rockslide",
+       "lo": 35.7,
+       "hi": 66.4,
+       "v": "frail: 3HKO+, max: 2HKO",
+       "range": true,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 106.5
+    },
+    {
+     "attacker": "basculegionf",
+     "label": "Basculegion-F",
+     "weather": "Rain",
+     "hits": [
+      {
+       "move": "shadowball",
+       "lo": 79.5,
+       "hi": 94.8,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "icebeam",
+       "lo": 59.8,
+       "hi": 70.8,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 94.8
+    },
+    {
+     "attacker": "tsareena",
+     "label": "Tsareena",
+     "weather": "Rain",
+     "hits": [
+      {
+       "move": "powerwhip",
+       "lo": 70.8,
+       "hi": 83.9,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "tropkick",
+       "lo": 50.3,
+       "hi": 59.8,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 83.9
+    },
+    {
+     "attacker": "empoleon",
+     "label": "Empoleon",
+     "weather": "Rain",
+     "hits": [
+      {
+       "move": "hydropump",
+       "lo": 67.8,
+       "hi": 80.2,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "icebeam",
+       "lo": 49.6,
+       "hi": 58.3,
+       "v": "98% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 80.2
+    },
+    {
+     "attacker": "staraptormega",
+     "label": "Staraptor-Mega",
+     "weather": "Rain",
+     "hits": [
+      {
+       "move": "bravebird",
+       "lo": 66.4,
+       "hi": 78.8,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "closecombat",
+       "lo": 32.8,
+       "hi": 39.4,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 78.8
+    },
+    {
+     "attacker": "mamoswine",
+     "label": "Mamoswine",
+     "weather": "Rain",
+     "hits": [
+      {
+       "move": "iciclecrash",
+       "lo": 59.1,
+       "hi": 70,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "rockslide",
+       "lo": 52.5,
+       "hi": 62.7,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 70
+    },
+    {
+     "attacker": "grimmsnarl",
+     "label": "Grimmsnarl",
+     "weather": "Rain",
+     "hits": [
+      {
+       "move": "spiritbreak",
+       "lo": 37.2,
+       "hi": 43.7,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 43.7
+    },
+    {
+     "attacker": "volcarona",
+     "label": "Volcarona",
+     "weather": "Rain",
+     "hits": [
+      {
+       "move": "gigadrain",
+       "lo": 35.7,
+       "hi": 42.3,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "bugbuzz",
+       "lo": 32.1,
+       "hi": 37.9,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 42.3
+    },
+    {
+     "attacker": "swalot",
+     "label": "Swalot",
+     "weather": "Rain",
+     "hits": [
+      {
+       "move": "clearsmog",
+       "lo": 22.6,
+       "hi": 27,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "gigadrain",
+       "lo": 21.8,
+       "hi": 26.2,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 27
+    }
+   ]
+  },
+  {
+   "mon": "kangaskhan",
+   "label": "Mega Kangaskhan",
+   "rows": [
+    {
+     "attacker": "staraptormega",
+     "label": "Staraptor-Mega",
+     "weather": "",
+     "hits": [
+      {
+       "move": "closecombat",
+       "lo": 85.8,
+       "hi": 101.8,
+       "v": "13% OHKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 3,
+        "def": 22,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": false,
+        "budget": 33,
+        "already": false
+       }
+      },
+      {
+       "move": "bravebird",
+       "lo": 42.9,
+       "hi": 50.9,
+       "v": "2% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 33,
+        "already": true
+       }
+      }
+     ],
+     "top": 101.8
+    },
+    {
+     "attacker": "staraptor",
+     "label": "Staraptor (Scarf)",
+     "weather": "",
+     "hits": [
+      {
+       "move": "finalgambit",
+       "lo": 90.5,
+       "hi": 90.5,
+       "v": "no KO in 2",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 13,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 33,
+        "already": true
+       }
+      },
+      {
+       "move": "closecombat",
+       "lo": 55.6,
+       "hi": 66,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 33,
+        "already": true
+       }
+      }
+     ],
+     "top": 90.5
+    },
+    {
+     "attacker": "tauros",
+     "label": "Tauros",
+     "weather": "",
+     "hits": [
+      {
+       "move": "closecombat",
+       "lo": 50.4,
+       "hi": 90.5,
+       "v": "frail: 2HKO, max: 2HKO",
+       "range": true,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 10,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 33,
+        "already": true
+       }
+      },
+      {
+       "move": "doubleedge",
+       "lo": 37.2,
+       "hi": 67.9,
+       "v": "frail: 3HKO+, max: 2HKO",
+       "range": true,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 33,
+        "already": true
+       }
+      }
+     ],
+     "top": 90.5
+    },
+    {
+     "attacker": "tsareena",
+     "label": "Tsareena",
+     "weather": "",
+     "hits": [
+      {
+       "move": "highjumpkick",
+       "lo": 66,
+       "hi": 78.3,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 33,
+        "already": true
+       }
+      },
+      {
+       "move": "powerwhip",
+       "lo": 45.7,
+       "hi": 54.2,
+       "v": "50% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 33,
+        "already": true
+       }
+      }
+     ],
+     "top": 78.3
+    },
+    {
+     "attacker": "volcarona",
+     "label": "Volcarona",
+     "weather": "",
+     "hits": [
+      {
+       "move": "overheat",
+       "lo": 44.3,
+       "hi": 52.8,
+       "v": "no KO in 2",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 33,
+        "already": true
+       }
+      },
+      {
+       "move": "bugbuzz",
+       "lo": 31.1,
+       "hi": 36.7,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 33,
+        "already": true
+       }
+      }
+     ],
+     "top": 52.8
+    },
+    {
+     "attacker": "empoleon",
+     "label": "Empoleon",
+     "weather": "",
+     "hits": [
+      {
+       "move": "hydropump",
+       "lo": 43.8,
+       "hi": 51.4,
+       "v": "7% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 33,
+        "already": true
+       }
+      },
+      {
+       "move": "flashcannon",
+       "lo": 31.6,
+       "hi": 38.2,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 33,
+        "already": true
+       }
+      }
+     ],
+     "top": 51.4
+    },
+    {
+     "attacker": "mamoswine",
+     "label": "Mamoswine",
+     "weather": "",
+     "hits": [
+      {
+       "move": "highhorsepower",
+       "lo": 42.4,
+       "hi": 50,
+       "v": "<1% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 33,
+        "already": true
+       }
+      },
+      {
+       "move": "iciclecrash",
+       "lo": 37.2,
+       "hi": 44.3,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 33,
+        "already": true
+       }
+      }
+     ],
+     "top": 50
+    },
+    {
+     "attacker": "basculegionf",
+     "label": "Basculegion-F",
+     "weather": "",
+     "hits": [
+      {
+       "move": "muddywater",
+       "lo": 32,
+       "hi": 38.6,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 33,
+        "already": true
+       }
+      },
+      {
+       "move": "icebeam",
+       "lo": 28.7,
+       "hi": 34.4,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 33,
+        "already": true
+       }
+      }
+     ],
+     "top": 38.6
+    },
+    {
+     "attacker": "jolteon",
+     "label": "Jolteon",
+     "weather": "",
+     "hits": [
+      {
+       "move": "thunderbolt",
+       "lo": 32.5,
+       "hi": 38.6,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 33,
+        "already": true
+       }
+      },
+      {
+       "move": "voltswitch",
+       "lo": 25.4,
+       "hi": 30.1,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 33,
+        "already": true
+       }
+      }
+     ],
+     "top": 38.6
+    },
+    {
+     "attacker": "swalot",
+     "label": "Swalot",
+     "weather": "",
+     "hits": [
+      {
+       "move": "bodypress",
+       "lo": 24.5,
+       "hi": 29.2,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 33,
+        "already": true
+       }
+      },
+      {
+       "move": "clearsmog",
+       "lo": 11.3,
+       "hi": 13.2,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 33,
+        "already": true
+       }
+      }
+     ],
+     "top": 29.2
+    },
+    {
+     "attacker": "grimmsnarl",
+     "label": "Grimmsnarl",
+     "weather": "",
+     "hits": [
+      {
+       "move": "spiritbreak",
+       "lo": 24,
+       "hi": 28.3,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 33,
+        "already": true
+       }
+      }
+     ],
+     "top": 28.3
+    }
+   ]
+  },
+  {
+   "mon": "aegislash",
+   "label": "Aegislash",
+   "rows": [
+    {
+     "attacker": "volcarona",
+     "label": "Volcarona",
+     "weather": "",
+     "hits": [
+      {
+       "move": "overheat",
+       "lo": 105.1,
+       "hi": 124,
+       "v": "OHKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "cant": true,
+        "survivesNow": false,
+        "budget": 2
+       }
+      },
+      {
+       "move": "fierydance",
+       "lo": 65.6,
+       "hi": 78.8,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "adamant",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 124
+    },
+    {
+     "attacker": "mamoswine",
+     "label": "Mamoswine",
+     "weather": "",
+     "hits": [
+      {
+       "move": "highhorsepower",
+       "lo": 97.8,
+       "hi": 118.2,
+       "v": "15/16 OHKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "cant": true,
+        "survivesNow": false,
+        "budget": 2
+       }
+      },
+      {
+       "move": "earthquake",
+       "lo": 78.8,
+       "hi": 93.4,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "adamant",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 118.2
+    },
+    {
+     "attacker": "basculegionf",
+     "label": "Basculegion-F",
+     "weather": "",
+     "hits": [
+      {
+       "move": "shadowball",
+       "lo": 91.2,
+       "hi": 108,
+       "v": "38% OHKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 1,
+        "def": 0,
+        "nature": "careful",
+        "natureChange": true,
+        "survivesNow": false,
+        "budget": 2,
+        "already": false
+       }
+      },
+      {
+       "move": "muddywater",
+       "lo": 37.9,
+       "hi": 45.2,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "adamant",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 108
+    },
+    {
+     "attacker": "tauros",
+     "label": "Tauros",
+     "weather": "",
+     "hits": [
+      {
+       "move": "highhorsepower",
+       "lo": 47.4,
+       "hi": 85.4,
+       "v": "frail: 84% 2HKO, max: 2HKO",
+       "range": true,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "adamant",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "rockslide",
+       "lo": 6.5,
+       "hi": 12.4,
+       "v": "frail: 3HKO+, max: 3HKO+",
+       "range": true,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "adamant",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 85.4
+    },
+    {
+     "attacker": "empoleon",
+     "label": "Empoleon",
+     "weather": "",
+     "hits": [
+      {
+       "move": "hydropump",
+       "lo": 51,
+       "hi": 61.3,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "adamant",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "flashcannon",
+       "lo": 18.2,
+       "hi": 21.8,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "adamant",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 61.3
+    },
+    {
+     "attacker": "jolteon",
+     "label": "Jolteon",
+     "weather": "",
+     "hits": [
+      {
+       "move": "shadowball",
+       "lo": 45.2,
+       "hi": 54,
+       "v": "35% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "adamant",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "thunderbolt",
+       "lo": 37.9,
+       "hi": 45.9,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "adamant",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 54
+    },
+    {
+     "attacker": "tsareena",
+     "label": "Tsareena",
+     "weather": "",
+     "hits": [
+      {
+       "move": "powerwhip",
+       "lo": 26.2,
+       "hi": 31.3,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "adamant",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "tropkick",
+       "lo": 18.9,
+       "hi": 22.6,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "adamant",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 31.3
+    },
+    {
+     "attacker": "staraptormega",
+     "label": "Staraptor-Mega",
+     "weather": "",
+     "hits": [
+      {
+       "move": "bravebird",
+       "lo": 24.8,
+       "hi": 29.9,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "adamant",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "closecombat",
+       "immune": true,
+       "survive": null
+      }
+     ],
+     "top": 29.9
+    },
+    {
+     "attacker": "staraptor",
+     "label": "Staraptor (Scarf)",
+     "weather": "",
+     "hits": [
+      {
+       "move": "bravebird",
+       "lo": 24,
+       "hi": 29.1,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "adamant",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "dualwingbeat",
+       "lo": 17.5,
+       "hi": 20.4,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "adamant",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 29.1
+    },
+    {
+     "attacker": "grimmsnarl",
+     "label": "Grimmsnarl",
+     "weather": "",
+     "hits": [
+      {
+       "move": "spiritbreak",
+       "lo": 13.1,
+       "hi": 16,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "adamant",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 16
+    },
+    {
+     "attacker": "swalot",
+     "label": "Swalot",
+     "weather": "",
+     "hits": [
+      {
+       "move": "gigadrain",
+       "lo": 5.8,
+       "hi": 7.2,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "adamant",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "bodypress",
+       "immune": true,
+       "survive": null
+      }
+     ],
+     "top": 7.2
+    }
+   ]
+  },
+  {
+   "mon": "morpeko",
+   "label": "Morpeko",
+   "rows": [
+    {
+     "attacker": "staraptormega",
+     "label": "Staraptor-Mega",
+     "weather": "",
+     "hits": [
+      {
+       "move": "closecombat",
+       "lo": 205.9,
+       "hi": 244.4,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "bravebird",
+       "lo": 51.1,
+       "hi": 60.7,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 244.4
+    },
+    {
+     "attacker": "mamoswine",
+     "label": "Mamoswine",
+     "weather": "",
+     "hits": [
+      {
+       "move": "highhorsepower",
+       "lo": 204.4,
+       "hi": 241.4,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "earthquake",
+       "lo": 160,
+       "hi": 188.1,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 241.4
+    },
+    {
+     "attacker": "tauros",
+     "label": "Tauros",
+     "weather": "",
+     "hits": [
+      {
+       "move": "closecombat",
+       "lo": 121.4,
+       "hi": 221.4,
+       "v": "frail: 2HKO (Focus Sash holds), max: 2HKO (Focus Sash holds)",
+       "range": true,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "highhorsepower",
+       "lo": 96.2,
+       "hi": 175.5,
+       "v": "frail: 2HKO (Focus Sash holds), max: 2HKO (Focus Sash holds)",
+       "range": true,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 221.4
+    },
+    {
+     "attacker": "tsareena",
+     "label": "Tsareena",
+     "weather": "",
+     "hits": [
+      {
+       "move": "highjumpkick",
+       "lo": 160,
+       "hi": 189.6,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "powerwhip",
+       "lo": 111.1,
+       "hi": 131.1,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 189.6
+    },
+    {
+     "attacker": "volcarona",
+     "label": "Volcarona",
+     "weather": "",
+     "hits": [
+      {
+       "move": "bugbuzz",
+       "lo": 151.1,
+       "hi": 177.7,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "overheat",
+       "lo": 107.4,
+       "hi": 127.4,
+       "v": "(Focus Sash holds)",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 177.7
+    },
+    {
+     "attacker": "staraptor",
+     "label": "Staraptor (Scarf)",
+     "weather": "",
+     "hits": [
+      {
+       "move": "closecombat",
+       "lo": 134.8,
+       "hi": 160,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "finalgambit",
+       "lo": 142.2,
+       "hi": 142.2,
+       "v": "(Focus Sash holds)",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 160
+    },
+    {
+     "attacker": "grimmsnarl",
+     "label": "Grimmsnarl",
+     "weather": "",
+     "hits": [
+      {
+       "move": "spiritbreak",
+       "lo": 112.5,
+       "hi": 134.8,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 134.8
+    },
+    {
+     "attacker": "empoleon",
+     "label": "Empoleon",
+     "weather": "",
+     "hits": [
+      {
+       "move": "hydropump",
+       "lo": 106.6,
+       "hi": 125.1,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "icebeam",
+       "lo": 57.7,
+       "hi": 68.1,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 125.1
+    },
+    {
+     "attacker": "jolteon",
+     "label": "Jolteon",
+     "weather": "",
+     "hits": [
+      {
+       "move": "alluringvoice",
+       "lo": 93.3,
+       "hi": 111.1,
+       "v": "2HKO (Focus Sash holds)",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "thunderbolt",
+       "lo": 39.2,
+       "hi": 46.6,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 111.1
+    },
+    {
+     "attacker": "basculegionf",
+     "label": "Basculegion-F",
+     "weather": "",
+     "hits": [
+      {
+       "move": "muddywater",
+       "lo": 77.7,
+       "hi": 92.5,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "icebeam",
+       "lo": 70.3,
+       "hi": 82.9,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 92.5
+    },
+    {
+     "attacker": "swalot",
+     "label": "Swalot",
+     "weather": "",
+     "hits": [
+      {
+       "move": "bodypress",
+       "lo": 59.2,
+       "hi": 71.1,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "gigadrain",
+       "lo": 25.9,
+       "hi": 31.1,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "jolly",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 71.1
+    }
+   ]
+  },
+  {
+   "mon": "conkeldurr",
+   "label": "Conkeldurr",
+   "rows": [
+    {
+     "attacker": "staraptormega",
+     "label": "Staraptor-Mega",
+     "weather": "",
+     "hits": [
+      {
+       "move": "bravebird",
+       "lo": 88.6,
+       "hi": 105.6,
+       "v": "38% OHKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 3,
+        "def": 27,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": false,
+        "budget": 32,
+        "already": false
+       }
+      },
+      {
+       "move": "closecombat",
+       "lo": 44.3,
+       "hi": 52.8,
+       "v": "25% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      }
+     ],
+     "top": 105.6
+    },
+    {
+     "attacker": "staraptor",
+     "label": "Staraptor (Scarf)",
+     "weather": "",
+     "hits": [
+      {
+       "move": "bravebird",
+       "lo": 87.7,
+       "hi": 104.7,
+       "v": "5/16 OHKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 3,
+        "def": 25,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": false,
+        "budget": 32,
+        "already": false
+       }
+      },
+      {
+       "move": "finalgambit",
+       "lo": 90.5,
+       "hi": 90.5,
+       "v": "no KO in 2",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 13,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      }
+     ],
+     "top": 104.7
+    },
+    {
+     "attacker": "volcarona",
+     "label": "Volcarona",
+     "weather": "",
+     "hits": [
+      {
+       "move": "overheat",
+       "lo": 61.3,
+       "hi": 72.6,
+       "v": "no KO in 2",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      },
+      {
+       "move": "fierydance",
+       "lo": 38.2,
+       "hi": 45.2,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      }
+     ],
+     "top": 72.6
+    },
+    {
+     "attacker": "tauros",
+     "label": "Tauros",
+     "weather": "",
+     "hits": [
+      {
+       "move": "doubleedge",
+       "lo": 39.1,
+       "hi": 71.6,
+       "v": "frail: 3HKO+, max: 2HKO",
+       "range": true,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      },
+      {
+       "move": "closecombat",
+       "lo": 26.4,
+       "hi": 47.6,
+       "v": "frail: 3HKO+, max: 3HKO+",
+       "range": true,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      }
+     ],
+     "top": 71.6
+    },
+    {
+     "attacker": "empoleon",
+     "label": "Empoleon",
+     "weather": "",
+     "hits": [
+      {
+       "move": "hydropump",
+       "lo": 59.9,
+       "hi": 71.2,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      },
+      {
+       "move": "flashcannon",
+       "lo": 43.8,
+       "hi": 52.3,
+       "v": "15% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      }
+     ],
+     "top": 71.2
+    },
+    {
+     "attacker": "basculegionf",
+     "label": "Basculegion-F",
+     "weather": "",
+     "hits": [
+      {
+       "move": "shadowball",
+       "lo": 53.3,
+       "hi": 63.2,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      },
+      {
+       "move": "muddywater",
+       "lo": 44.8,
+       "hi": 53.3,
+       "v": "28% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      }
+     ],
+     "top": 63.2
+    },
+    {
+     "attacker": "jolteon",
+     "label": "Jolteon",
+     "weather": "",
+     "hits": [
+      {
+       "move": "alluringvoice",
+       "lo": 52.8,
+       "hi": 63.2,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      },
+      {
+       "move": "thunderbolt",
+       "lo": 44.3,
+       "hi": 52.8,
+       "v": "25% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      }
+     ],
+     "top": 63.2
+    },
+    {
+     "attacker": "grimmsnarl",
+     "label": "Grimmsnarl",
+     "weather": "",
+     "hits": [
+      {
+       "move": "spiritbreak",
+       "lo": 49,
+       "hi": 59.4,
+       "v": "100% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      }
+     ],
+     "top": 59.4
+    },
+    {
+     "attacker": "tsareena",
+     "label": "Tsareena",
+     "weather": "",
+     "hits": [
+      {
+       "move": "powerwhip",
+       "lo": 48.1,
+       "hi": 56.6,
+       "v": "84% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      },
+      {
+       "move": "highjumpkick",
+       "lo": 34.4,
+       "hi": 41,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      }
+     ],
+     "top": 56.6
+    },
+    {
+     "attacker": "mamoswine",
+     "label": "Mamoswine",
+     "weather": "",
+     "hits": [
+      {
+       "move": "highhorsepower",
+       "lo": 43.8,
+       "hi": 52.3,
+       "v": "15% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      },
+      {
+       "move": "iciclecrash",
+       "lo": 39.6,
+       "hi": 47.1,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      }
+     ],
+     "top": 52.3
+    },
+    {
+     "attacker": "swalot",
+     "label": "Swalot",
+     "weather": "",
+     "hits": [
+      {
+       "move": "clearsmog",
+       "lo": 15.5,
+       "hi": 18.3,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      },
+      {
+       "move": "gigadrain",
+       "lo": 15,
+       "hi": 17.9,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      }
+     ],
+     "top": 18.3
+    }
+   ]
+  },
+  {
+   "mon": "rotomfan",
+   "label": "Rotom-Fan",
+   "rows": [
+    {
+     "attacker": "staraptor",
+     "label": "Staraptor (Scarf)",
+     "weather": "",
+     "hits": [
+      {
+       "move": "finalgambit",
+       "lo": 122.2,
+       "hi": 122.2,
+       "v": "OHKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "cant": true,
+        "survivesNow": false,
+        "budget": 34
+       }
+      },
+      {
+       "move": "bravebird",
+       "lo": 26.7,
+       "hi": 31.8,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      }
+     ],
+     "top": 122.2
+    },
+    {
+     "attacker": "mamoswine",
+     "label": "Mamoswine",
+     "weather": "",
+     "hits": [
+      {
+       "move": "iciclecrash",
+       "lo": 96.8,
+       "hi": 114.6,
+       "v": "75% OHKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "cant": true,
+        "survivesNow": false,
+        "budget": 32
+       }
+      },
+      {
+       "move": "iceshard",
+       "lo": 45.8,
+       "hi": 54.7,
+       "v": "52% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      }
+     ],
+     "top": 114.6
+    },
+    {
+     "attacker": "tsareena",
+     "label": "Tsareena",
+     "weather": "",
+     "hits": [
+      {
+       "move": "tripleaxel",
+       "lo": 80.2,
+       "hi": 95.5,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 14,
+        "def": 11,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      },
+      {
+       "move": "powerwhip",
+       "lo": 29.2,
+       "hi": 34.3,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      }
+     ],
+     "top": 95.5
+    },
+    {
+     "attacker": "basculegionf",
+     "label": "Basculegion-F",
+     "weather": "",
+     "hits": [
+      {
+       "move": "icebeam",
+       "lo": 74.5,
+       "hi": 87.8,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 11,
+        "def": 3,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      },
+      {
+       "move": "shadowball",
+       "lo": 47.7,
+       "hi": 57.9,
+       "v": "95% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      }
+     ],
+     "top": 87.8
+    },
+    {
+     "attacker": "tauros",
+     "label": "Tauros",
+     "weather": "",
+     "hits": [
+      {
+       "move": "doubleedge",
+       "lo": 47.7,
+       "hi": 87.8,
+       "v": "frail: 87% 2HKO, max: 2HKO",
+       "range": true,
+       "survive": {
+        "stat": "def",
+        "hp": 12,
+        "def": 1,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      },
+      {
+       "move": "rockslide",
+       "lo": 29.9,
+       "hi": 56,
+       "v": "frail: 3HKO+, max: 69% 2HKO",
+       "range": true,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      }
+     ],
+     "top": 87.8
+    },
+    {
+     "attacker": "empoleon",
+     "label": "Empoleon",
+     "weather": "",
+     "hits": [
+      {
+       "move": "icebeam",
+       "lo": 59.8,
+       "hi": 71.3,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      },
+      {
+       "move": "hydropump",
+       "lo": 55.4,
+       "hi": 65.6,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      }
+     ],
+     "top": 71.3
+    },
+    {
+     "attacker": "volcarona",
+     "label": "Volcarona",
+     "weather": "",
+     "hits": [
+      {
+       "move": "overheat",
+       "lo": 56,
+       "hi": 66.8,
+       "v": "no KO in 2",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      },
+      {
+       "move": "fierydance",
+       "lo": 35,
+       "hi": 42,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      }
+     ],
+     "top": 66.8
+    },
+    {
+     "attacker": "jolteon",
+     "label": "Jolteon",
+     "weather": "",
+     "hits": [
+      {
+       "move": "thunderbolt",
+       "lo": 40.7,
+       "hi": 48.4,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      },
+      {
+       "move": "voltswitch",
+       "lo": 32.4,
+       "hi": 38.2,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      }
+     ],
+     "top": 48.4
+    },
+    {
+     "attacker": "grimmsnarl",
+     "label": "Grimmsnarl",
+     "weather": "",
+     "hits": [
+      {
+       "move": "spiritbreak",
+       "lo": 30.5,
+       "hi": 36.3,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      }
+     ],
+     "top": 36.3
+    },
+    {
+     "attacker": "staraptormega",
+     "label": "Staraptor-Mega",
+     "weather": "",
+     "hits": [
+      {
+       "move": "closecombat",
+       "lo": 26.7,
+       "hi": 32.4,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      },
+      {
+       "move": "bravebird",
+       "lo": 26.7,
+       "hi": 32.4,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      }
+     ],
+     "top": 32.4
+    },
+    {
+     "attacker": "swalot",
+     "label": "Swalot",
+     "weather": "",
+     "hits": [
+      {
+       "move": "clearsmog",
+       "lo": 14,
+       "hi": 17.1,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      },
+      {
+       "move": "bodypress",
+       "lo": 7.6,
+       "hi": 9.5,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      }
+     ],
+     "top": 17.1
+    }
+   ]
+  },
+  {
+   "mon": "stunfiskgalar",
+   "label": "Stunfisk-Galar",
+   "rows": [
+    {
+     "attacker": "volcarona",
+     "label": "Volcarona",
+     "weather": "",
+     "hits": [
+      {
+       "move": "overheat",
+       "lo": 100.9,
+       "hi": 120.3,
+       "v": "OHKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 31,
+        "nature": "careful",
+        "natureChange": true,
+        "survivesNow": false,
+        "budget": 32,
+        "already": false
+       }
+      },
+      {
+       "move": "fierydance",
+       "lo": 62,
+       "hi": 75,
+       "v": "100% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      }
+     ],
+     "top": 120.3
+    },
+    {
+     "attacker": "empoleon",
+     "label": "Empoleon",
+     "weather": "",
+     "hits": [
+      {
+       "move": "hydropump",
+       "lo": 100,
+       "hi": 117.5,
+       "v": "OHKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 28,
+        "nature": "careful",
+        "natureChange": true,
+        "survivesNow": false,
+        "budget": 32,
+        "already": false
+       }
+      },
+      {
+       "move": "icebeam",
+       "lo": 27.3,
+       "hi": 32.4,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      }
+     ],
+     "top": 117.5
+    },
+    {
+     "attacker": "staraptormega",
+     "label": "Staraptor-Mega",
+     "weather": "",
+     "hits": [
+      {
+       "move": "closecombat",
+       "lo": 84.2,
+       "hi": 100,
+       "v": "1/16 OHKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 23,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": false,
+        "budget": 34,
+        "already": false
+       }
+      },
+      {
+       "move": "bravebird",
+       "lo": 20.8,
+       "hi": 25,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      }
+     ],
+     "top": 100
+    },
+    {
+     "attacker": "mamoswine",
+     "label": "Mamoswine",
+     "weather": "",
+     "hits": [
+      {
+       "move": "highhorsepower",
+       "lo": 83.3,
+       "hi": 98.1,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 5,
+        "def": 16,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      },
+      {
+       "move": "earthquake",
+       "lo": 63.8,
+       "hi": 75.9,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      }
+     ],
+     "top": 98.1
+    },
+    {
+     "attacker": "staraptor",
+     "label": "Staraptor (Scarf)",
+     "weather": "",
+     "hits": [
+      {
+       "move": "finalgambit",
+       "lo": 88.8,
+       "hi": 88.8,
+       "v": "no KO in 2",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 9,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      },
+      {
+       "move": "closecombat",
+       "lo": 54.6,
+       "hi": 64.8,
+       "v": "11% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      }
+     ],
+     "top": 88.8
+    },
+    {
+     "attacker": "tauros",
+     "label": "Tauros",
+     "weather": "",
+     "hits": [
+      {
+       "move": "closecombat",
+       "lo": 49.5,
+       "hi": 88.8,
+       "v": "frail: 6% 2HKO, max: 2HKO",
+       "range": true,
+       "survive": {
+        "stat": "def",
+        "hp": 2,
+        "def": 7,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      },
+      {
+       "move": "highhorsepower",
+       "lo": 39.8,
+       "hi": 70.8,
+       "v": "frail: 3HKO+, max: 88% 2HKO",
+       "range": true,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      }
+     ],
+     "top": 88.8
+    },
+    {
+     "attacker": "basculegionf",
+     "label": "Basculegion-F",
+     "weather": "",
+     "hits": [
+      {
+       "move": "muddywater",
+       "lo": 73.6,
+       "hi": 87.9,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 3,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      },
+      {
+       "move": "shadowball",
+       "lo": 43.9,
+       "hi": 52.3,
+       "v": "4% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      }
+     ],
+     "top": 87.9
+    },
+    {
+     "attacker": "tsareena",
+     "label": "Tsareena",
+     "weather": "",
+     "hits": [
+      {
+       "move": "highjumpkick",
+       "lo": 64.8,
+       "hi": 76.8,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      },
+      {
+       "move": "powerwhip",
+       "lo": 44.9,
+       "hi": 53.2,
+       "v": "1/16 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      }
+     ],
+     "top": 76.8
+    },
+    {
+     "attacker": "swalot",
+     "label": "Swalot",
+     "weather": "",
+     "hits": [
+      {
+       "move": "bodypress",
+       "lo": 24,
+       "hi": 28.7,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      },
+      {
+       "move": "gigadrain",
+       "lo": 12.5,
+       "hi": 14.8,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      }
+     ],
+     "top": 28.7
+    },
+    {
+     "attacker": "jolteon",
+     "label": "Jolteon",
+     "weather": "",
+     "hits": [
+      {
+       "move": "shadowball",
+       "lo": 21.7,
+       "hi": 25.9,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      },
+      {
+       "move": "alluringvoice",
+       "lo": 10.6,
+       "hi": 12.9,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 32,
+        "already": true
+       }
+      }
+     ],
+     "top": 25.9
+    },
+    {
+     "attacker": "grimmsnarl",
+     "label": "Grimmsnarl",
+     "weather": "",
+     "hits": [
+      {
+       "move": "spiritbreak",
+       "lo": 11.5,
+       "hi": 13.8,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "brave",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 34,
+        "already": true
+       }
+      }
+     ],
+     "top": 13.8
+    }
+   ]
+  },
+  {
+   "mon": "simipour",
+   "label": "Simipour",
+   "rows": [
+    {
+     "attacker": "tsareena",
+     "label": "Tsareena",
+     "weather": "",
+     "hits": [
+      {
+       "move": "powerwhip",
+       "lo": 185.5,
+       "hi": 218.4,
+       "v": "OHKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "cant": true,
+        "survivesNow": false,
+        "budget": 2
+       }
+      },
+      {
+       "move": "tropkick",
+       "lo": 131.5,
+       "hi": 155.2,
+       "v": "OHKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "cant": true,
+        "survivesNow": false,
+        "budget": 2
+       }
+      }
+     ],
+     "top": 218.4
+    },
+    {
+     "attacker": "jolteon",
+     "label": "Jolteon",
+     "weather": "",
+     "hits": [
+      {
+       "move": "thunderbolt",
+       "lo": 131.5,
+       "hi": 155.2,
+       "v": "OHKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "cant": true,
+        "survivesNow": false,
+        "budget": 2
+       }
+      },
+      {
+       "move": "voltswitch",
+       "lo": 102.6,
+       "hi": 122.3,
+       "v": "OHKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "cant": true,
+        "survivesNow": false,
+        "budget": 2
+       }
+      }
+     ],
+     "top": 155.2
+    },
+    {
+     "attacker": "tauros",
+     "label": "Tauros",
+     "weather": "",
+     "hits": [
+      {
+       "move": "doubleedge",
+       "lo": 75,
+       "hi": 138.8,
+       "v": "frail: 2HKO, max: OHKO",
+       "range": true,
+       "survive": {
+        "stat": "def",
+        "cant": true,
+        "survivesNow": false,
+        "budget": 2
+       }
+      },
+      {
+       "move": "closecombat",
+       "lo": 50.6,
+       "hi": 92.1,
+       "v": "frail: 2HKO, max: 2HKO",
+       "range": true,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 138.8
+    },
+    {
+     "attacker": "staraptor",
+     "label": "Staraptor (Scarf)",
+     "weather": "",
+     "hits": [
+      {
+       "move": "finalgambit",
+       "lo": 126.3,
+       "hi": 126.3,
+       "v": "OHKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "cant": true,
+        "survivesNow": false,
+        "budget": 2
+       }
+      },
+      {
+       "move": "bravebird",
+       "lo": 84.8,
+       "hi": 100.6,
+       "v": "1/16 OHKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "bold",
+        "natureChange": true,
+        "survivesNow": false,
+        "budget": 2,
+        "already": false
+       }
+      }
+     ],
+     "top": 126.3
+    },
+    {
+     "attacker": "staraptormega",
+     "label": "Staraptor-Mega",
+     "weather": "",
+     "hits": [
+      {
+       "move": "closecombat",
+       "lo": 86.8,
+       "hi": 102.6,
+       "v": "13% OHKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "bold",
+        "natureChange": true,
+        "survivesNow": false,
+        "budget": 2,
+        "already": false
+       }
+      },
+      {
+       "move": "bravebird",
+       "lo": 86.8,
+       "hi": 102.6,
+       "v": "13% OHKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "bold",
+        "natureChange": true,
+        "survivesNow": false,
+        "budget": 2,
+        "already": false
+       }
+      }
+     ],
+     "top": 102.6
+    },
+    {
+     "attacker": "mamoswine",
+     "label": "Mamoswine",
+     "weather": "",
+     "hits": [
+      {
+       "move": "highhorsepower",
+       "lo": 84.8,
+       "hi": 100.6,
+       "v": "1/16 OHKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "bold",
+        "natureChange": true,
+        "survivesNow": false,
+        "budget": 2,
+        "already": false
+       }
+      },
+      {
+       "move": "earthquake",
+       "lo": 67.1,
+       "hi": 79.6,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 100.6
+    },
+    {
+     "attacker": "basculegionf",
+     "label": "Basculegion-F",
+     "weather": "",
+     "hits": [
+      {
+       "move": "shadowball",
+       "lo": 77.6,
+       "hi": 92.1,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "muddywater",
+       "lo": 32.2,
+       "hi": 38.1,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 92.1
+    },
+    {
+     "attacker": "volcarona",
+     "label": "Volcarona",
+     "weather": "",
+     "hits": [
+      {
+       "move": "gigadrain",
+       "lo": 69.7,
+       "hi": 82.8,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "bugbuzz",
+       "lo": 61.8,
+       "hi": 73.6,
+       "v": "2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 82.8
+    },
+    {
+     "attacker": "grimmsnarl",
+     "label": "Grimmsnarl",
+     "weather": "",
+     "hits": [
+      {
+       "move": "spiritbreak",
+       "lo": 47.3,
+       "hi": 55.9,
+       "v": "79% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 55.9
+    },
+    {
+     "attacker": "empoleon",
+     "label": "Empoleon",
+     "weather": "",
+     "hits": [
+      {
+       "move": "hydropump",
+       "lo": 44,
+       "hi": 51.9,
+       "v": "13% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "flashcannon",
+       "lo": 31.5,
+       "hi": 37.5,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 51.9
+    },
+    {
+     "attacker": "swalot",
+     "label": "Swalot",
+     "weather": "",
+     "hits": [
+      {
+       "move": "gigadrain",
+       "lo": 43.4,
+       "hi": 51.3,
+       "v": "6% 2HKO",
+       "range": false,
+       "survive": {
+        "stat": "spd",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      },
+      {
+       "move": "bodypress",
+       "lo": 25,
+       "hi": 29.6,
+       "v": "3HKO+",
+       "range": false,
+       "survive": {
+        "stat": "def",
+        "hp": 0,
+        "def": 0,
+        "nature": "modest",
+        "natureChange": false,
+        "survivesNow": true,
+        "budget": 2,
+        "already": true
+       }
+      }
+     ],
+     "top": 51.3
+    }
+   ]
+  }
+ ],
+ "speed": [
+  {
+   "side": "Calvin",
+   "mon": "staraptor",
+   "label": "Staraptor (Scarf)",
+   "base": 100,
+   "set": 225,
+   "setNote": "Adamant 30 Spe + Scarf",
+   "tiers": {
+    "maxPlus": 167,
+    "maxNeutral": 152,
+    "uninvested": 120,
+    "min": 108
+   }
+  },
+  {
+   "side": "Calvin",
+   "mon": "jolteon",
+   "label": "Jolteon",
+   "base": 130,
+   "set": 200,
+   "setNote": "Timid 32 Spe",
+   "tiers": {
+    "maxPlus": 200,
+    "maxNeutral": 182,
+    "uninvested": 150,
+    "min": 135
+   }
+  },
+  {
+   "side": "Calvin",
+   "mon": "staraptormega",
+   "label": "Staraptor-Mega",
+   "base": 110,
+   "set": 178,
+   "setNote": "Jolly 32 Spe",
+   "tiers": {
+    "maxPlus": 178,
+    "maxNeutral": 162,
+    "uninvested": 130,
+    "min": 117
+   }
+  },
+  {
+   "side": "Anthony",
+   "mon": "charizard",
+   "label": "Mega Charizard Y",
+   "base": 100,
+   "set": 167,
+   "setNote": "Timid 32 Spe",
+   "tiers": {
+    "maxPlus": 167,
+    "maxNeutral": 152,
+    "uninvested": 120,
+    "min": 108
+   }
+  },
+  {
+   "side": "Anthony",
+   "mon": "morpeko",
+   "label": "Morpeko",
+   "base": 97,
+   "set": 163,
+   "setNote": "Jolly 32 Spe",
+   "tiers": {
+    "maxPlus": 163,
+    "maxNeutral": 149,
+    "uninvested": 117,
+    "min": 105
+   }
+  },
+  {
+   "side": "Calvin",
+   "mon": "tauros",
+   "label": "Tauros",
+   "base": 110,
+   "set": null,
+   "setNote": "unknown",
+   "tiers": {
+    "maxPlus": 178,
+    "maxNeutral": 162,
+    "uninvested": 130,
+    "min": 117
+   }
+  },
+  {
+   "side": "Anthony",
+   "mon": "simipour",
+   "label": "Simipour",
+   "base": 101,
+   "set": 153,
+   "setNote": "Modest 32 Spe",
+   "tiers": {
+    "maxPlus": 168,
+    "maxNeutral": 153,
+    "uninvested": 121,
+    "min": 108
+   }
+  },
+  {
+   "side": "Calvin",
+   "mon": "tsareena",
+   "label": "Tsareena",
+   "base": 72,
+   "set": 136,
+   "setNote": "Jolly 32 Spe",
+   "tiers": {
+    "maxPlus": 136,
+    "maxNeutral": 124,
+    "uninvested": 92,
+    "min": 82
+   }
+  },
+  {
+   "side": "Calvin",
+   "mon": "mamoswine",
+   "label": "Mamoswine",
+   "base": 80,
+   "set": 132,
+   "setNote": "Adamant 32 Spe",
+   "tiers": {
+    "maxPlus": 145,
+    "maxNeutral": 132,
+    "uninvested": 100,
+    "min": 90
+   }
+  },
+  {
+   "side": "Calvin",
+   "mon": "basculegionf",
+   "label": "Basculegion-F",
+   "base": 78,
+   "set": 130,
+   "setNote": "Modest 32 Spe",
+   "tiers": {
+    "maxPlus": 143,
+    "maxNeutral": 130,
+    "uninvested": 98,
+    "min": 88
+   }
+  },
+  {
+   "side": "Calvin",
+   "mon": "volcarona",
+   "label": "Volcarona",
+   "base": 100,
+   "set": 120,
+   "setNote": "Bold 0 Spe",
+   "tiers": {
+    "maxPlus": 167,
+    "maxNeutral": 152,
+    "uninvested": 120,
+    "min": 108
+   }
+  },
+  {
+   "side": "Anthony",
+   "mon": "pelipper",
+   "label": "Pelipper",
+   "base": 65,
+   "set": 117,
+   "setNote": "Modest 32 Spe",
+   "tiers": {
+    "maxPlus": 128,
+    "maxNeutral": 117,
+    "uninvested": 85,
+    "min": 76
+   }
+  },
+  {
+   "side": "Anthony",
+   "mon": "aegislash",
+   "label": "Aegislash",
+   "base": 60,
+   "set": 112,
+   "setNote": "Adamant 32 Spe",
+   "tiers": {
+    "maxPlus": 123,
+    "maxNeutral": 112,
+    "uninvested": 80,
+    "min": 72
+   }
+  },
+  {
+   "side": "Anthony",
+   "mon": "kangaskhan",
+   "label": "Mega Kangaskhan",
+   "base": 100,
+   "set": 108,
+   "setNote": "Brave 0 Spe",
+   "tiers": {
+    "maxPlus": 167,
+    "maxNeutral": 152,
+    "uninvested": 120,
+    "min": 108
+   }
+  },
+  {
+   "side": "Anthony",
+   "mon": "rotomfan",
+   "label": "Rotom-Fan",
+   "base": 86,
+   "set": 106,
+   "setNote": "Modest 0 Spe",
+   "tiers": {
+    "maxPlus": 151,
+    "maxNeutral": 138,
+    "uninvested": 106,
+    "min": 95
+   }
+  },
+  {
+   "side": "Anthony",
+   "mon": "sinistcha",
+   "label": "Sinistcha",
+   "base": 70,
+   "set": 90,
+   "setNote": "Bold 0 Spe",
+   "tiers": {
+    "maxPlus": 134,
+    "maxNeutral": 122,
+    "uninvested": 90,
+    "min": 81
+   }
+  },
+  {
+   "side": "Calvin",
+   "mon": "grimmsnarl",
+   "label": "Grimmsnarl",
+   "base": 60,
+   "set": 80,
+   "setNote": "Careful 0 Spe",
+   "tiers": {
+    "maxPlus": 123,
+    "maxNeutral": 112,
+    "uninvested": 80,
+    "min": 72
+   }
+  },
+  {
+   "side": "Calvin",
+   "mon": "empoleon",
+   "label": "Empoleon",
+   "base": 60,
+   "set": 80,
+   "setNote": "Modest 0 Spe",
+   "tiers": {
+    "maxPlus": 123,
+    "maxNeutral": 112,
+    "uninvested": 80,
+    "min": 72
+   }
+  },
+  {
+   "side": "Calvin",
+   "mon": "swalot",
+   "label": "Swalot",
+   "base": 55,
+   "set": 75,
+   "setNote": "Calm 0 Spe",
+   "tiers": {
+    "maxPlus": 117,
+    "maxNeutral": 107,
+    "uninvested": 75,
+    "min": 67
+   }
+  },
+  {
+   "side": "Anthony",
+   "mon": "conkeldurr",
+   "label": "Conkeldurr",
+   "base": 45,
+   "set": 58,
+   "setNote": "Brave 0 Spe",
+   "tiers": {
+    "maxPlus": 106,
+    "maxNeutral": 97,
+    "uninvested": 65,
+    "min": 58
+   }
+  },
+  {
+   "side": "Anthony",
+   "mon": "stunfiskgalar",
+   "label": "Stunfisk-Galar",
+   "base": 32,
+   "set": 46,
+   "setNote": "Brave 0 Spe",
+   "tiers": {
+    "maxPlus": 92,
+    "maxNeutral": 84,
+    "uninvested": 52,
+    "min": 46
+   }
+  }
+ ]
+}

@@ -19,7 +19,8 @@ from collections import Counter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..', '..', '..'))
-MECH = json.load(open(os.environ.get('MECH', '/tmp/sp/mech.json')))
+_REPO_MECH = os.path.join(ROOT, 'data', 'mechanics.json')
+MECH = json.load(open(os.environ.get('MECH', _REPO_MECH if os.path.exists(_REPO_MECH) else '/tmp/sp/mech.json')))
 TC = json.load(open(os.path.join(ROOT, 'data', 'dex.json')))['typechart']
 SPC, MOVES, NAT = MECH['species'], MECH['moves'], MECH['natures']
 # mechanics.json has no Aegislash-Blade (the app handles it with wrapper rule W-AEGISLASH-FORME). Stats from Showdown
@@ -90,6 +91,10 @@ KNOWN_ABIL = {'levitate', 'intimidate', 'contrary', 'reckless', 'toughclaws', 'a
               'dryskin', 'sapsipper', 'wellbakedbody', 'eartheater', 'levitate',
               # no effect on these numbers
               'illuminate', 'poisonpoint', 'symbiosis', 'telepathy', 'mimicry'}
+RESIST_BERRY = {'occaberry': 'Fire', 'passhoberry': 'Water', 'wacanberry': 'Electric', 'rindoberry': 'Grass', 'yacheberry': 'Ice',
+                'chopleberry': 'Fighting', 'kebiaberry': 'Poison', 'shucaberry': 'Ground', 'cobaberry': 'Flying', 'payapaberry': 'Psychic',
+                'tangaberry': 'Bug', 'chartiberry': 'Rock', 'kasibberry': 'Ghost', 'habanberry': 'Dragon', 'colburberry': 'Dark',
+                'babiriberry': 'Steel', 'roseliberry': 'Fairy', 'chilanberry': 'Normal'}
 IMMUNE = {'levitate': 'Ground', 'eartheater': 'Ground', 'flashfire': 'Fire', 'wellbakedbody': 'Fire', 'voltabsorb': 'Electric',
           'lightningrod': 'Electric', 'motordrive': 'Electric', 'waterabsorb': 'Water', 'stormdrain': 'Water', 'dryskin': 'Water',
           'sapsipper': 'Grass'}
@@ -195,6 +200,7 @@ def rolls(att, dfn, move_id, ctx=None):
             if dab == 'punkrock' and 'sound' in mv['flags']: fm.append(2048)
             if dab == 'auraguard' and 'contact' in mv['flags']: fm.append(2048)
             if att.get('item') == 'lifeorb': fm.append(5324)
+            if RESIST_BERRY.get(dfn.get('item', '')) == mtype and (e > 1 or mtype == 'Normal'): fm.append(2048)  # one use only
             if att.get('item') == 'expertbelt' and e > 1: fm.append(4915)
             if fm: d = modify(d, chain(fm))
             hit.append(max(1, d % 65536))
