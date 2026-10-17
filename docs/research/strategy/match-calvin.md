@@ -248,3 +248,125 @@ What each spread hits:
 That sheet uses usage-default sets for Anthony. This plan uses the match sets in §5.
 
 **Uncertainty:** Calvin's real sets and items are unknown (ladder defaults). Tauros and Swalot have no data. Crits, accuracy (Rock Slide 90, Air Slash 95) and Wide Lens aren't modelled.
+
+---
+
+## §7 Deep guidance (v2)
+
+### 7.1 Turn-by-turn lines
+
+**A. His Staraptor + Grimmsnarl vs our Charizard + Morpeko** (back: Aegislash, Rotom-Fan)
+
+| Turn | We do | If he… |
+|---|---|---|
+| T1 | Morpeko **Fake Out Grimmsnarl**. Charizard **Megas + Heat Wave** (Rap 65–77%, Grimmsnarl 57–67%) | **Doesn't Mega and outspeeds Morpeko** → Scarf Final Gambit set: T2 Protect whoever it targets (Charizard / Morpeko), or switch to Aegislash. **Tailwinds** → expect T2 Brave Bird on Charizard (84–99%, survives once) |
+| T2 | Morpeko **Aura Wheel Rap** (finishes it after the chip). Charizard **Heat Wave** again or Weather Ball Grimmsnarl (81–96%) | **Rap Protects** → Charizard Heat Wave still chips Grimmsnarl. Next turn double into Rap. **Screens went up** (Grimmsnarl moved after Fake Out wore off) → see 7.3. Prefer Charizard Weather Ball into Rap (74–87% even through Light Screen) |
+| T3 | Bring **Aegislash** for Rap (Close Combat immune) or **Rotom-Fan** to finish | Under his Tailwind: Protect / King's Shield, stall the 4 turns |
+
+**B. His Volcarona + Staraptor vs our Charizard + Morpeko** (back: Aegislash, Rotom-Fan)
+
+| Turn | We do | If he… |
+|---|---|---|
+| T1 | Morpeko **Fake Out Volcarona** (stops Rage Powder / Quiver Dance / Tailwind). Charizard **Heat Wave** (spread: Rage Powder can't redirect it) | Rap Tailwinds → fine, we keep chipping |
+| T2 | Morpeko **Taunt Volcarona** (Morpeko 163 is faster). Charizard **Weather Ball Volcarona** (81–96%, 87–103% on the Modest set) | **Volcarona used Rage Powder**: our single-target moves go to it; Weather Ball it then. **It Quiver Danced**: kill it NOW (Weather Ball + Aura Wheel) |
+| T3 | Aegislash in **only after Volcarona is gone** (Overheat OHKOs it in sun) | — |
+
+**C. His Grimmsnarl + Basculegion-F vs our Charizard + Morpeko**
+
+| Turn | We do | If he… |
+|---|---|---|
+| T1 | Fake Out Grimmsnarl; Charizard **Solar Beam Basculegion-F** (OHKO 112–132% in sun, no charge turn) | **Basculegion Protects** → T2 Solar Beam again; Muddy Water in sun does only 36–44% to Charizard |
+| T2 | Charizard Heat Wave / Weather Ball Grimmsnarl; Morpeko Aura Wheel Basculegion-F if alive (109–129%) | — |
+
+**D. Mamoswine in his lead** → lead **Aegislash + Morpeko**, Charizard in the back.
+- T1: Fake Out Mamoswine (Tsareena blocks it if Tsareena is beside it). Aegislash Iron Head Mamoswine (OHKO; 81–97% at −1 if Staraptor came in).
+- Bring Charizard in after Mamoswine is gone (its Rock Slide OHKOs Charizard).
+
+**E. Trick Room mode** (Sinistcha + Conkeldurr) vs double Tailwind:
+- T1: Sinistcha **Trick Room**, Conkeldurr **Protect**. Brave Bird OHKOs Conkeldurr; Sinistcha survives Brave Bird with Coba (57–68%).
+- T2–T5: Conkeldurr moves first. Drain Punch Mamoswine / Empoleon, Thunder Punch Basculegion / Rap (83–98%).
+
+### 7.2 Reading his tells
+
+| Tell | Means | Do |
+|---|---|---|
+| Staraptor **Megas T1** (form changes, Contrary) | Brave Bird / Close Combat / Tailwind set, 178 Speed | Aegislash walls it; Charizard + Morpeko/Rotom-Fan KO it |
+| Staraptor **no Mega and moves before Morpeko (163)** | **Choice Scarf** (225+), likely **Final Gambit** (192 fixed) | Protect the target, or keep a Ghost/Conkeldurr in its slot. After it's locked into a move, it's free |
+| Intimidate pops on Staraptor's entry | Both sets have it (Mega only after evolving) | Our physical hits at −1 (7.4) |
+| Volcarona **Rage Powder T1** | Support set (57%) | Spread moves (Heat Wave), or Weather Ball it directly |
+| Volcarona **Quiver Dance T1** | Sweeper set | Taunt / kill this turn. +1 Overheat is lethal to Aegislash and Sinistcha |
+| Grimmsnarl **Reflect first** | He's protecting physical (Rap/Mamoswine targets: our Aegislash/Conkeldurr/Morpeko) | Lean on Charizard / Rotom-Fan (special) |
+| Grimmsnarl **Light Screen first** | He fears Charizard / Rotom-Fan | Lean on Aegislash / Morpeko / Conkeldurr (physical) |
+| Mamoswine's Icicle Crash does ~81–96% to Charizard (not 62–74%) | **Life Orb** (it takes 10% recoil per hit) | It has no Sash: any hit KOs |
+| Mamoswine survives Heat Wave at 1 HP | **Focus Sash** | Finish with anything (Shadow Sneak / Mach Punch, but not into Tsareena's side) |
+| Ice Shard does ~60–71% to Rotom-Fan (not 46–55%) | Life Orb Mamoswine | — |
+
+### 7.3 Screens (×0.67 in doubles): what still KOs
+
+| Hit | No screen | Through screen |
+|---|---|---|
+| Charizard Heat Wave → Mamoswine / Tsareena | OHKO | **Still OHKO** (125–148% / 105–126%) |
+| Charizard Heat Wave → Rap | 65–77% | 43–51% |
+| Charizard Weather Ball → Rap (2-HP spread) / Volcarona | 110–130% / 81–96% | 74–87% / 54–64% |
+| Charizard Solar Beam → Basculegion-F | OHKO | 74–88% |
+| Rotom-Fan Thunderbolt → Basculegion-F / Rap | 93–111% / 80–96% | 62–74% / 53–64% |
+| Aegislash Poltergeist → Basculegion-F | 157–185% | **Still OHKO** (105–123%) |
+| Aegislash Iron Head → Mamoswine / Grimmsnarl | OHKO | 82–97% / 72–86% |
+| Morpeko Aura Wheel → Basculegion-F | OHKO | 72–86% |
+| Conkeldurr Drain Punch → Mamoswine | OHKO | **Still OHKO** (100–118%) |
+| Conkeldurr Thunder Punch → Basculegion-F | OHKO | 75–88% |
+
+Screens last 8 turns with Light Clay (96% of Grimmsnarl sets). Kill Grimmsnarl, or wait them out with Protect turns; don't spread into them.
+
+### 7.4 After Intimidate (−1 Atk)
+
+| Hit | +0 | −1 |
+|---|---|---|
+| Aegislash Poltergeist → Basculegion-F | 157–185% | **105–123% (still OHKO)** |
+| Aegislash Iron Head → Mamoswine | 123–145% | 81–97% |
+| Aegislash Iron Head → Grimmsnarl | 108–129% | 72–86% |
+| Morpeko Aura Wheel → Basculegion-F | 109–129% | 74–87% |
+| Morpeko Aura Wheel → Rap (2-HP spread) | 94–112% | 63–75% |
+| Conkeldurr Drain Punch → Mamoswine / Empoleon | OHKO / OHKO | **OHKO** / 91–107% |
+| Conkeldurr Ice Punch → Tsareena | OHKO | 70–84% |
+
+Reset Intimidate by switching. Charizard and Rotom-Fan (special) don't care.
+
+### 7.5 Double-target danger and answers
+
+| His combo | Into | Total | Answer |
+|---|---|---|---|
+| Rap Brave Bird + Volcarona Heat Wave (our sun) | Charizard | 108–127% | Protect Charizard that turn, or Fake Out Volcarona |
+| Rap Brave Bird + Mamoswine Ice Shard | Charizard | 113–133% | Protect; Aegislash Wide Guard doesn't stop single-target moves |
+| Mamoswine Rock Slide + Ice Shard | Charizard | 140–165% | **Aegislash Wide Guard** blocks Rock Slide; or Protect |
+| Mamoswine Ice Shard + Basculegion-F Ice Beam | Rotom-Fan | 120–143% | Protect Rotom-Fan; it never sits beside Mamoswine |
+| Rap Brave Bird + Icicle Crash | Rotom-Fan | 129–153% | Same |
+| Rap Brave Bird + Basculegion Shadow Ball (Coba used) | Sinistcha | 190–228% | Rage Powder only redirects to Sinistcha, so Protect it the turn after Trick Room |
+| Spirit Break + Close Combat | Conkeldurr | 103–123% | Protect T1; it acts under Trick Room |
+| Basculegion Shadow Ball + Volcarona Heat Wave | Aegislash Shield | 126–151% | Don't keep Aegislash beside our sun vs Volcarona; switch it |
+
+### 7.6 Endgame checklist
+- **Preserve Aegislash for Mega Staraptor** (it's our only full wall: Close Combat 0, Final Gambit 0). Trade it only after Rap is gone, or for Volcarona.
+- **Preserve Charizard for Mamoswine / Tsareena / Basculegion-F** (OHKOs through screens). Never let it take a Rock Slide: Wide Guard or Protect.
+- **Morpeko's Sash** is its life: use Fake Out early and save it for the Final Gambit or Close Combat turn.
+- **Bad trades:**
+  - Rotom-Fan into Mamoswine.
+  - Aegislash into Volcarona in sun.
+  - Conkeldurr outside Trick Room into Rap.
+  - Sinistcha into Volcarona or Basculegion-F after Coba is used.
+- **Ending 2v2:** count his speed. Outside Tailwind, only Rap / Jolteon / Scarf Staraptor beat Morpeko.
+
+### 7.7 Timing
+- **Mega Charizard Y** on the first turn it's on the field. Drought goes up before moves (VERIFIED), so that turn's attacks get sun. Sun lasts 5 turns (counting the Mega turn). Re-setting needs Charizard to switch out and back in.
+- **Tailwind:** 4 turns including the turn it's set (3 more after). Stall with Protect / King's Shield, or set Trick Room.
+- **Trick Room:** 5 turns including the set turn (4 useful turns). Set it on the turn he Tailwinds, so his doubled Speed becomes slowest. Re-setting TR while it's up cancels it.
+- **Light Clay screens:** 8 turns.
+
+### 7.8 Five ways we lose (and the fix)
+1. **Final Gambit wipes Charizard turn 1** (Scarf, no Mega). Fix: when Staraptor doesn't Mega, Protect Charizard or switch to Aegislash.
+2. **Volcarona Quiver Dances behind Rage Powder** and sweeps our Ghosts. Fix: Fake Out / Taunt it T1–T2; Heat Wave + Weather Ball.
+3. **Mamoswine Rock Slide / Ice Shard cleans Charizard and Rotom-Fan.** Fix: Aegislash Wide Guard, Heat Wave Mamoswine first (OHKO through screens), keep Rotom-Fan away.
+4. **Tailwind + screens snowball.** Fix: Fake Out Grimmsnarl T1, Trick Room mode, Protect the 4 Tailwind turns.
+5. **Rain on our side** (if Pelipper ever comes) powers Basculegion-F. Fix: don't bring Pelipper; keep sun up.
+
+*Assumptions:* Calvin's sets are ladder defaults. Combo totals add the min and max rolls of each hit. No crits; Rock Slide 90% / Air Slash 95% accuracy not modelled.
