@@ -3,3 +3,4 @@ data/cache/
 dist/
 .DS_Store
 .claude/
+__pycache__/
