@@ -24,11 +24,12 @@ import * as Chat from './prep-chat.js';
 import * as TB from './prep-teambuilder.js';
 import * as Teams from './prep-teams.js';
 import * as Moves from './prep-moves.js';
+import * as Threats from './prep-threats.js';
 import * as WB from './prep-workbench.js';
 
 const SAVE_DELAY = 400;
 const TAB_LABEL = { brief: 'Brief', plan: 'Plan', sets: 'Sets', calcs: 'Calcs', practice: 'Practice' };
-const MODULES = [Sets, Calcs, Plan, Practice, Matchup, Chat, TB, Teams, WB, Moves];
+const MODULES = [Sets, Calcs, Plan, Practice, Matchup, Chat, TB, Teams, WB, Moves, Threats];
 
 /**
  * app: { dex, league(), sheet(), usage(), coresCx(), viewingCoach(), setViewingCoach(name), goMode(mode), toast(msg),

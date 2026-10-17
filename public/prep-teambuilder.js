@@ -19,6 +19,7 @@ import * as C from './prep-copy.js';
 import { esc, btn, chipBtn, h2, select, koWords, itemIcon } from './prep-ui.js';
 import { updateDraft, createMySet, theirSetFor, spForUnknown, revisionPrompt } from './prep-sets.js';
 import * as WB from './prep-workbench.js';
+import * as Threats from './prep-threats.js';
 
 const LEAGUE = '__league';
 const NEAR = 8; // whole-league scope: only marks within this many SP of the current value
@@ -217,6 +218,7 @@ export function editor(P, ws, l, { team = null } = {}) {
       ${probs.length ? `<ul class="ferrs" role="alert">${probs.map((p) => `<li>${esc(T.problem(p, nm(P)))}</li>`).join('')}</ul>` : ''}
       ${usable ? compareBar(P, l, set, pin, speed, em, sc, rows) : ''}
       ${usable ? statsPanel(P, l, set, fm, all, speed, em, sc, rows) : `<p class="banner warn">${esc(T.spUnknown)}</p>`}
+      ${usable ? `<details class="tb-threats" open><summary>${esc(C.THREATS.editorHead(sc.league ? T.league : sc.value))}</summary>${Threats.editorBody(P, l, set, sc.league ? sc.others.map((c) => c.name) : [sc.value])}</details>` : ''}
       ${saveRow(P, l, set)}
       ${seen.length ? `<p class="small">${esc(T.seenBy)} ${seen.map((e) => `${esc(e.who.replace(/^partner:/, 'partner '))} (${esc(e.where ?? '')})`).join('; ')}</p>` : ''}
     </div></div>`;

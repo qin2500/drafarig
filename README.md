@@ -18,7 +18,7 @@ Then open http://localhost:4600. The server binds to 127.0.0.1 only. Change the 
 ## Test
 
 ```sh
-npm test               # builds the Worker artifact, then node --test: 423 tests (calc engine, searches, Prep UI on a stub DOM, Build, chat, Worker)
+npm test               # builds the Worker artifact, then node --test: 431 tests (calc engine, searches, Prep UI on a stub DOM, Build, chat, Worker)
 ```
 
 The tests use a saved copy of the real sheet in `test/fixtures/`, so they run offline.
@@ -57,6 +57,16 @@ minimum power, flags (spread, priority, contact, sound, secondary effect) and ab
 `data/mechanics.json`, never usage, so drafted mons with no ladder data are included. Abilities that power the move up are
 starred (Sheer Force + a secondary effect, Technician + ≤ 60 BP, …); each result has a worst-case damage chip into your sets
 that opens the workbench. Logic: `lib/move-search.mjs`; screen: `public/prep-moves.js`.
+
+## Worst-case threats ("Can wreck you", "Threats to this mon")
+
+`lib/threat-scan.mjs` implements `docs/research/strategy/threat-scan.md` §2: every form of every drafted opponent mon, its full
+learnset × each damage-relevant ability × Life Orb / the move type's item / its ladder item (Megas: their stone), max offence,
+spread ×0.75, every weather or terrain their roster can set (and your own sun around Mega Charizard Y), into your saved sets.
+Ranked by OHKO odds × plausibility (×1.25 spread, ×1.25 priority); no-usage mons are not down-weighted. The Brief's "Can wreck
+you" shows what OHKOs Mega Charizard Y, spread double KOs, priority KOs and the top 3 per mon; the teambuilder lists the
+threats to the set being edited. Each row names its conditions and whether it's the ladder set or a learnset worst case.
+Goldens G1–G7 are in `test/threat-scan.test.mjs`.
 
 ## Teambuilder (the set editor: a team's slot, or a matchup's Sets)
 

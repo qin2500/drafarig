@@ -7,6 +7,7 @@ import { buildBriefing, relevantSpeedIds, ownerOf, workspacesFor } from '../lib/
 import { compareSpeed, natureSign, speedRange } from '../lib/calc/stats.mjs';
 import { currentVersion, defaultVariant } from '../lib/prep-model.mjs';
 import { formatRoute } from '../lib/prep-route.mjs';
+import * as Threats from './prep-threats.js';
 import * as C from './prep-copy.js';
 import { esc, btn, chipBtn, h2, select, term } from './prep-ui.js';
 
@@ -136,6 +137,7 @@ export function brief(P, ctx) {
     <div class="bcols"><div class="bcol bcol-them">
     ${safe(() => poolSection(P, ctx, b))}
     ${safe(() => threatsSection(P, ctx, b))}
+    ${safe(() => wreckSection(P, ctx))}
     ${safe(() => plansSection(P, ctx, b))}
     ${safe(() => speedSection(P, ctx, b, st, six))}
     </div><div class="bcol bcol-you">
@@ -168,6 +170,11 @@ function poolSection(P, { pov, opp }, b) {
     <p class="lkey small">${esc(C.BRIEF.keyLine)} <span class="ring-key lf">${esc(C.BRIEF.lookFirstKey)}</span> <span class="ring-key w">${esc(C.BRIEF.watchKey)}</span> <span class="megad inline">M</span> ${term(C.BRIEF.megaLabel, 'Mega badge (M)')}${megaCount > 1 ? ` · ${esc(C.BRIEF.megaNote)}` : ''}</p>${myStrip}`, 'them');
 }
 
+/** "Can wreck you": the worst-case threat scan of their 10 into your saved sets (your own perspective only). */
+function wreckSection(P, ctx) {
+  if (ctx.pov.name !== P.ownSide()) return '';
+  return section('wreck', C.THREATS.head, C.THREATS.sub, Threats.briefBody(P, ctx.opp.name), 'them');
+}
 function threatsSection(P, ctx, b) {
   const looks = b.threats.filter((t) => t.ring === 'look-first');
   if (!looks.length) return section('threats', C.BRIEF.lookFirst, C.BRIEF.lookFirstSub, `<p class="small">${esc(b.poolTheirs.length ? 'Nothing in their pool stands out by type or Speed against yours. Check their plans below.' : C.BRIEF.emptyPool(ctx.opp.name))}</p>`, 'them');

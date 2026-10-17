@@ -823,3 +823,16 @@ export const MOVES = {
   calculating: 'Calculating…', dmg: (mv, who, lo, hi) => `${mv} → your ${who}: up to ${lo}–${hi}%`, dmgAria: (mv, who, lo, hi) => `${mv} into your ${who}, worst case ${lo} to ${hi} percent: open in the workbench`,
   unknownAbility: (x) => `"${x}" isn't an ability in Champions.`,
 };
+
+// ---------- Worst-case threats (public/prep-threats.js; docs/research/strategy/threat-scan.md) ----------
+export const THREATS = {
+  head: 'Can wreck you', sub: 'Worst case from their full learnsets, not ladder usage',
+  intro: 'Every move each of their 10 can legally learn, with each ability and the strongest realistic item, max offence, into your saved sets. Ranked by OHKO odds × how plausible the set is. Mons with no ladder data count fully.',
+  editorHead: (who) => `Threats to this mon (${who}, worst case)`,
+  zardHead: 'OHKOs your Mega Charizard Y', doubleHead: 'Spread moves that OHKO two of yours at once', priorityHead: 'Priority KOs', perMon: 'Top 3 per mon of theirs',
+  spread: 'spread', priority: 'priority', your: (m) => `your ${m}`, odds: (p) => `${p}% OHKO`, noKo: 'no OHKO', sash: 'Sash holds',
+  ifCond: (x) => `if ${x}`, noItem: 'no item', weather: (w, mine) => `in ${w.toLowerCase()}${mine ? ' (yours)' : ''}`, terrain: (t) => `on ${t} Terrain`,
+  ladder: 'Ladder set', worst: 'Worst case (learnset)', working: 'Scanning their learnsets…', engineFailed: "The calculator didn't load.",
+  noSets: 'Save sets for your 10 to see what can wreck them.', nothing: 'Nothing of theirs OHKOs a set of yours.', safe: 'Nothing in scope OHKOs this set, even at worst case.',
+  openAria: (mon, mv, who) => `${mon} ${mv} into your ${who}: open in the workbench`,
+};

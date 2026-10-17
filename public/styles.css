@@ -974,3 +974,13 @@ button.st-btn:hover, button.st-btn:focus-visible { border-color: var(--line); }
   .prep .mv-list { grid-template-columns: minmax(0, 1fr); }
   .prep button.mv-dmg { min-height: 44px; }
 }
+
+/* worst-case threats (public/prep-threats.js) */
+.prep .tw-list, .prep .tw-mons, .prep .tw-mon ul { list-style: none; padding: 0; margin: 4px 0; display: grid; gap: 4px; }
+.prep .tw-row { border-left: 3px solid var(--line); padding: 2px 0 2px 8px; }
+.prep .tw-row.ko { border-left-color: var(--bad); }
+.prep .tw-row button.tw-open { text-align: left; font-size: 14px; padding: 2px 0; min-height: 32px; }
+.prep .tw-src { font-style: italic; }
+.prep .tw-h { margin: 6px 0 2px; display: flex; align-items: center; gap: 6px; }
+.prep .tb-threats summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
+@media (max-width: 767px) { .prep .tw-row button.tw-open { min-height: 44px; } }
