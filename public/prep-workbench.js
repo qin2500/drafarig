@@ -12,6 +12,7 @@ import * as B from '../lib/prep-build.mjs';
 import * as C from './prep-copy.js';
 import { esc, btn, chipBtn, h2, select, resultBlock, rollsDetail, itemIcon } from './prep-ui.js';
 import { updateDraft } from './prep-sets.js';
+import { SYNERGY } from '../lib/move-search.mjs';
 import { summarize } from './prep-calcs.js';
 
 const W = C.WB;
@@ -31,6 +32,8 @@ export function open(P, seed) {
     their: null, spread: seed.row.set.sp === 'unknown' ? (seed.row.common ? 'common' : 'max') : 'set', move: seed.move, mineRole: seed.mineRole ?? 'attacker',
     boosts: { mine: seed.boost ?? 0, theirs: seed.stage ?? 0 }, field, crit: false, intimidated: 0, defHp: 100, tab: 'you', saved: null,
   };
+  // their hit on a ladder guess: open at their worst case (the ladder set is one tap away)
+  if (P.ui.wb.mineRole === 'defender' && seed.row.source === 'ladder' && P.mech) { P.ui.wb.theirMode = 'worst'; P.ui.wb.their = worstCaseOf(P, P.ui.wb.row, seed.move); }
   try { P.app.history.pushState({ prep: true, wb: true, names: P.app.history.state?.names ?? null, wsId: P.app.history.state?.wsId ?? null, from: P.app.location.hash }, '', P.app.location.hash); } catch { /* no history */ }
   P.ensureEngine();
   P.pendingFocus = true; P.pendingFocusId = 'wb-h';
@@ -71,7 +74,20 @@ const names = (P, wb) => {
   const mine = P.spName(B.myForme(P.mech, wb.mine)), them = `${wb.row.coach ? `${wb.row.coach}'s ` : ''}${P.spName(wb.row.forme)}`;
   return wb.mineRole === 'attacker' ? { attacker: mine, defender: them, attackerSet: W.yourDraft, defenderSet: sourceLine(wb) } : { attacker: them, defender: mine, attackerSet: sourceLine(wb), defenderSet: W.yourDraft };
 };
+/**
+ * §5 (3): their worst case for this move, as an alternative to the ladder / saved set: + nature, 32 SP in the move's stat,
+ * the ability that powers the move up (else theirs), Life Orb (a Mega keeps its stone). Other stats as their set has them.
+ */
+export function worstCaseOf(P, row, move) {
+  const mv = P.mech.moves[move];
+  const stat = mv?.category === 'Special' ? 'spa' : 'atk';
+  const base = row.set;
+  const syn = legalAbilities(P.mech, row.species).find((a) => SYNERGY[a]?.test(mv, P.mech.species[row.forme] ?? P.mech.species[row.species]));
+  const sp = base.sp === 'unknown' ? { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 } : { ...base.sp };
+  return { ...structuredClone(base), ability: row.mega ? base.ability : syn ?? base.ability, item: row.mega ? base.item : 'lifeorb', nature: stat === 'spa' ? 'modest' : 'adamant', sp: { ...sp, [stat]: 32 } };
+}
 function sourceLine(wb) {
+  if (wb.theirMode === 'worst') return W.src.search;
   if (wb.their) return W.edited;
   const r = wb.row;
   if (r.source === 'set') return W.src.set;
@@ -129,13 +145,14 @@ function sidePanel(P, wb, side) {
       <span class="wb-num">${v}</span><span class="wb-fin">${fin}</span></div>`;
   };
   const main = ['hp', key].filter((k, i, a) => a.indexOf(k) === i), rest = STAT_IDS.filter((k) => !main.includes(k));
+  const modeSeg = !mine && wb.mineRole === 'defender' && !['worst', 'search'].includes(wb.row.source) ? `<div class="choices" role="group" aria-label="${esc(W.theirMode)}">${chipBtn(W.ladderSet, 'wb-their-mode', { mode: 'ladder' }, wb.theirMode !== 'worst')}${chipBtn(W.worstSet, 'wb-their-mode', { mode: 'worst' }, wb.theirMode === 'worst')}</div>` : '';
   const spreadSeg = !mine && wb.row.set.sp === 'unknown' && !wb.their ? `<div class="choices" role="group" aria-label="${esc(W.spread)}"><span class="small">${esc(W.spread)}:</span> ${['frail', 'common', 'max'].map((k) => chipBtn(C.ENVELOPE_ROW[k], 'wb-spread', { k }, wb.spread === k, { disabled: k === 'common' && !wb.row.common })).join('')}</div>` : '';
   const boost = select(`wb-${side}-boost`, [-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6].map((n) => [String(n), n > 0 ? `+${n}` : String(n)]), String(mine ? wb.boosts.mine : wb.boosts.theirs), { label: W.boost(C.STAT_SHORT[key]), data: { pc: 'wb-boost', ...d } });
   return `<p class="small">${P.pt(set.species, { size: 'sm' })} <b>${esc(P.spName(forme))}</b>${fm?.mega ? ` <span class="chip">${esc(W.asMega)}</span>` : ''}</p>
     <div class="frow">${select(`wb-${side}-nature`, natureOpts, shown.nature, { label: W.nature, data: { pc: 'wb-field-set', key: 'nature', ...d } })}
       <span class="wb-item">${itemIcon(set.item)}${select(`wb-${side}-item`, [['', W.noItem], ...items.map((i) => [i, P.name('items', i)])], set.item, { label: W.item, data: { pc: 'wb-field-set', key: 'item', ...d } })}</span>
       ${select(`wb-${side}-ability`, abil.map((a) => [a, P.name('abilities', a)]), fm?.mega ? abil[0] : set.ability, { label: W.ability, data: { pc: 'wb-field-set', key: 'ability', ...d } })}</div>
-    ${spreadSeg}
+    ${modeSeg}${spreadSeg}
     <div class="wb-stats">${main.map(row).join('')}<details class="wb-more"><summary>${esc(W.moreStats)}</summary>${rest.map(row).join('')}</details></div>
     <p class="small">${sp ? esc(W.spLeft(SP_TOTAL - spTotal(sp))) : ''}</p>
     ${boost}
@@ -211,7 +228,8 @@ export const actions = {
   },
   'wb-crit': (t, P) => { const wb = live(P); if (wb) { wb.crit = !wb.crit; P.app.rerender(); } },
   'wb-intim': (t, P) => { const wb = live(P); if (wb) { wb.intimidated = Number(t.dataset.n) || 0; P.app.rerender(); } },
-  'wb-reset-their': (t, P) => { const wb = live(P); if (wb) { wb.their = null; P.app.rerender(); } },
+  'wb-reset-their': (t, P) => { const wb = live(P); if (wb) { wb.their = null; wb.theirMode = null; P.app.rerender(); } },
+  'wb-their-mode': (t, P) => { const wb = live(P); if (!wb) return; wb.theirMode = t.dataset.mode === 'worst' ? 'worst' : null; wb.their = wb.theirMode ? worstCaseOf(P, wb.row, wb.move) : null; P.app.rerender(); },
   'wb-reset-mine': (t, P) => { const wb = live(P); if (wb) { wb.mine = structuredClone(wb.mineBase); P.app.rerender(); } },
   // your side into the set's draft (never a version): Save version in the editor keeps it
   'wb-apply': (t, P) => {

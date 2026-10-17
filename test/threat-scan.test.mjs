@@ -101,3 +101,35 @@ test('teambuilder: "Threats to this mon" for your Charizard set includes the Tau
   await app.waitFor(() => /Threats to this mon \(Calvin/.test(TXT(app)) && /Rock Slide/.test(TXT(app)), 'Calvin', 30000);
   assert.match(TXT(app), /Calvin Tauros Rock Slide spread → your Charizard-Mega-Y/);
 });
+
+// ---------- §5 usage-bias fixes ----------
+test('§5 (1): the Brief pool shows every mon\'s worst case; Tauros (no usage data) is badged as able to OHKO one of yours', async (t) => {
+  const app = await bootApp({ mode: 'prep/5v8', storage: device({ coach: 'Calvin' }), raw: withTauros() });
+  t.after(() => app.restore());
+  await app.waitFor(() => /worst case: Rock Slide → Charizard-Mega-Y/.test(TXT(app)), 'the pool line', 30000);
+  assert.match(app.html(), /class="wreckd"/);
+  assert.match(app.html(), /aria-label="Tauros, Normal[^"]*can OHKO one of yours \(worst case\), worst case: Rock Slide → Charizard-Mega-Y \d+–\d+% OHKO/);
+});
+
+test('§5 (2): the teambuilder\'s defence marks come from the worst-case scan (Calvin\'s Tauros, not only the top ladder mons)', async (t) => {
+  const app = await bootApp({ mode: `prep/my-sets/${SET_MINE}`, storage: device({ coach: 'Calvin' }), raw: withTauros() });
+  t.after(() => app.restore());
+  await app.changeData({ pc: 'tb-scope' }, { value: 'Calvin' });
+  await app.waitFor(() => /tb-srow/.test(app.html()) && !/Calculating…/.test(app.html()), 'the marks', 30000);
+  const html = app.html();
+  assert.ok(/Calvin&#39;s Tauros \(worst case\)/.test(html), 'a pin from the scan, labelled worst case');
+});
+
+test('§5 (3) and (4): the workbench offers "Ladder set" / "Worst case" for their hit; the bulk score counts no-usage forms at their worst case', async () => {
+  const { worstCaseOf } = await import('../public/prep-workbench.js');
+  const P = { mech };
+  const w = worstCaseOf(P, { species: 'tauros', forme: 'tauros', mega: false, set: { species: 'tauros', item: '', ability: 'intimidate', nature: 'jolly', sp: 'unknown', moves: ['rockslide'] } }, 'rockslide');
+  assert.deepEqual([w.ability, w.item, w.nature, w.sp.atk], ['sheerforce', 'lifeorb', 'adamant', 32]);
+  const B = await import('../lib/prep-build.mjs');
+  const pool = ['tauros', 'mamoswine'];
+  const sorted = (o) => Object.entries(o ?? {}).sort((x, y) => y[1] - x[1]);
+  const slim = { species: Object.fromEntries(Object.entries(usage.species).map(([k, u]) => [k, { usage: u.usage, spreads: sorted(u.spreads), items: sorted(u.items), abilities: sorted(u.abilities), moves: sorted(u.moves) }])) };
+  const withWorst = B.bulkScore(calc, mech, T.zard.set, pool, slim), skip = B.bulkScore(calc, mech, T.zard.set, pool, slim, { noUsage: 'skip' });
+  assert.ok(withWorst.hits.some((h) => h.species === 'tauros' && h.worst && h.p > 0.5), 'Tauros counts');
+  assert.ok(!skip.hits.some((h) => h.species === 'tauros') && withWorst.score > skip.score);
+});

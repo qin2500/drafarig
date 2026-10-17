@@ -20,6 +20,8 @@ import { esc, btn, chipBtn, h2, select, koWords, itemIcon } from './prep-ui.js';
 import { updateDraft, createMySet, theirSetFor, spForUnknown, revisionPrompt } from './prep-sets.js';
 import * as WB from './prep-workbench.js';
 import * as Threats from './prep-threats.js';
+import { scanThreats, typeEffFrom } from '../lib/threat-scan.mjs';
+import { worstCaseAttacker } from '../lib/move-search.mjs';
 
 const LEAGUE = '__league';
 const NEAR = 8; // whole-league scope: only marks within this many SP of the current value
@@ -70,11 +72,12 @@ function rowsOf(P, sc) {
   return rows;
 }
 const topRows = (rows, n) => { const keep = new Set(B.defaultPins(rows, n)); return rows.filter((r) => keep.has(r.key)); };
-const rowName = (P, r, sc) => `${sc.league ? `${r.coach}'s ` : ''}${P.spName(r.forme)}`;
+const rowName = (P, r, sc) => `${sc.league || r.source === 'worst' ? `${r.coach}'s ` : ''}${P.spName(r.forme)}${r.source === 'worst' ? ` (${T.worstCase})` : ''}`;
 const fieldFor = (P, set, row) => { const w = B.autoWeather(P.mech, set, row); return w.weather ? { weather: w.weather } : {}; };
 
 // ---------- marks (deferred engine job, cached per set shape + scope) ----------
-function markKey(P, set, sc, rows) { return JSON.stringify(['tb-marks', B.shapeOf(set), sc.value, rows.map((r) => [r.key, r.set, r.common])]); }
+const baseRows = (rows) => rows.filter((r) => r.source !== 'worst'); // the scan's rows are added by the marks, never keyed on
+function markKey(P, set, sc, rows) { return JSON.stringify(['tb-marks', B.shapeOf(set), sc.value, baseRows(rows).map((r) => [r.key, r.set, r.common])]); }
 /** Damage + survive marks for a set shape, or null while they're being computed (a job is started once per key). */
 function engineMarks(P, set, sc, rows) {
   if (!P.calc) return null;
@@ -97,7 +100,8 @@ function engineMarks(P, set, sc, rows) {
   }
   return null;
 }
-export function computeMarks(P, set, sc, rows) {
+export function computeMarks(P, set, sc, rows0) {
+  const rows = baseRows(rows0);
   const shape = B.shapeOf(set);
   const targets = topRows(rows, sc.league ? TOP.league : TOP.match);
   const marks = [], cant = [];
@@ -116,10 +120,32 @@ export function computeMarks(P, set, sc, rows) {
         if (lv && lv.nature === set.nature) setupNeed = lv.a;
       }
     }
-    const hard = hardestOn(P, shape, row, field);
-    if (hard) { const s = B.surviveMarks(P.calc, P.mech, set, row, hard, { field }); marks.push(...s.marks); cant.push(...s.cant); }
   }
-  return { marks, cant, setupNeed };
+  // §5 (2): the defence pins come from the worst-case scan (full learnsets, max offence, no usage weighting): the hits that
+  // most threaten this set uninvested, ranked by severity; one survive benchmark each, at that attacker and field
+  const extraRows = defensePins(P, shape, sc);
+  for (const row of extraRows) { const s = B.surviveMarks(P.calc, P.mech, set, row, row.move, { field: row.field, spread: 'max' }); marks.push(...s.marks); cant.push(...s.cant); }
+  return { marks, cant, setupNeed, extraRows };
+}
+/** The scope's worst-case attackers into this set's shape (0 SP), top TOP by severity, as target rows (source 'worst'). */
+function defensePins(P, shape, sc) {
+  if (!P.engine) return [];
+  const coaches = sc.league ? sc.others : sc.others.filter((c) => c.name === sc.value);
+  const pool = coaches.flatMap((c) => c.picks.filter((p) => p.id).map((p) => ({ species: p.id, coach: c.name })));
+  // ponytail: one synchronous scan per shape and scope (~0.2 s per opponent, Life Orb only); chunk it if the league scope janks
+  const rows = scanThreats(P.calc, P.mech, pool, [{ key: 'self', set: { ...shape } }], { usage: P.app.usage?.() ?? null, typeEff: typeEffFrom(P.engine), fast: true });
+  const seen = new Set(), out = [];
+  for (const r of rows) {
+    const k = `${r.coach}|${r.forme}|${r.move}`;
+    if (seen.has(k) || r.severity <= 0) continue;
+    seen.add(k);
+    const atk = worstCaseAttacker(P.mech, { species: r.species, abilities: [{ id: r.ability, forme: r.forme, synergy: [r.move] }] }, r.move);
+    if (!r.mega) { atk.set.item = r.item; atk.set.ability = r.ability; }
+    out.push({ key: `worst|${k}`, coach: r.coach, species: r.species, forme: r.forme, mega: r.mega, set: atk.set, common: null, source: 'worst', move: r.move,
+      field: { ...(r.field.weather ? { weather: r.field.weather } : {}), ...(r.field.terrain ? { terrain: r.field.terrain } : {}) } });
+    if (out.length >= (sc.league ? TOP.league : TOP.match)) break;
+  }
+  return out;
 }
 function bestMove(P, set, row, field) {
   let best = null, top = -1;
@@ -193,8 +219,8 @@ export function editor(P, ws, l, { team = null } = {}) {
   const set = draftSet(P, l);
   // inside a team, the default opponent is a matchup that brings it
   const sc = scopeOf(P, ws ?? (team ? [...P.ws.values()].find((w) => w.teamId === team.id && w.pov === P.ownSide()) ?? null : null));
-  const rows = rowsOf(P, sc);
-  P.tbLast = { setId: l.id, rows }; // what a tap into the workbench (tb-wb) looks its target row up in
+  let rows = rowsOf(P, sc);
+  P.tbLast = { setId: l.id, rows }; // what a tap into the workbench (tb-wb) looks its target row up in (+ the scan's pins below)
   const back = btn(team ? `‹ ${team.name}` : ws ? '‹ Sets' : '‹ Teams', 'back', {}, { cls: 'back', aria: 'Back' });
   if (!P.mech) return `${back}${h2(P.spName(l.speciesId))}<p class="small">${esc(T.loadingData)}</p>`;
   const forme = B.myForme(P.mech, set);
@@ -203,6 +229,7 @@ export function editor(P, ws, l, { team = null } = {}) {
   const probs = checkSet(P.mech, set, { side: 'mine' }).filter((p) => p.severity === 'error');
   const speed = usable && P.mech.natures[set.nature] ? B.speedMarks(P.mech, set, forme, rows, spdCond(P)) : null;
   const em = usable ? engineMarks(P, set, sc, rows) : null;
+  if (em?.extraRows?.length) { rows = [...rows, ...em.extraRows]; P.tbLast = { setId: l.id, rows }; } // a copy: rows is cached
   const all = [...(speed?.marks ?? []), ...(em?.marks ?? [])];
   const ui = (P.ui.tb ??= {});
   const focus = ui.focus?.[l.id] ?? null;

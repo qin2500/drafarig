@@ -65,6 +65,28 @@ function line(P, r, targets, { who = true } = {}) {
     <span class="small muted">${esc(conditions(P, r))} · <span class="tw-src">${esc(label)}</span></span></li>`;
 }
 
+/**
+ * The scan of one opponent's 10 into your saved sets, for the rest of the Brief (pool badges, plan order): rows, or null
+ * when it isn't ready / you have no saved sets. The worst case per mon is topPerMon(rows, 1).
+ */
+export function scanFor(P, coach) {
+  const targets = myTargets(P);
+  if (!targets.length) return null;
+  P.ensureEngine();
+  return rowsFor(P, coach, targets);
+}
+/** The mons of theirs whose worst case OHKOs one of yours (plausibility ≥ 0.6): Map species → that row. */
+export function wreckers(rows) {
+  const out = new Map();
+  for (const r of rows ?? []) if (r.odds >= 0.5 && r.plausibility >= 0.6 && !out.has(r.species)) out.set(r.species, r);
+  return out;
+}
+/** One line for a pool card: "Rock Slide → your Charizard-Mega-Y 153–183%". */
+export function worstLine(P, r) {
+  const t = myTargets(P).find((x) => x.key === r.target);
+  return T.worstLine(P.name('moves', r.move), t ? P.spName(myForme(P.mech, t.set)) : '', r.lo, r.hi, r.odds >= 1);
+}
+
 /** The Brief section body for one opponent (their 10 into your sets), or '' when there is nothing to scan into. */
 export function briefBody(P, coach) {
   const targets = myTargets(P);

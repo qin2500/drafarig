@@ -984,3 +984,5 @@ button.st-btn:hover, button.st-btn:focus-visible { border-color: var(--line); }
 .prep .tw-h { margin: 6px 0 2px; display: flex; align-items: center; gap: 6px; }
 .prep .tb-threats summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
 @media (max-width: 767px) { .prep .tw-row button.tw-open { min-height: 44px; } }
+.prep .pcard .wreckd { position: absolute; top: 4px; left: 6px; width: 18px; height: 18px; border-radius: 50%; background: var(--bad); color: #fff; font-weight: 700; font-size: 12px; line-height: 18px; }
+.prep .pcard .pworst { color: var(--bad); line-height: 1.2; }

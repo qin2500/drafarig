@@ -145,7 +145,7 @@ test('bulk score vs Calvin\'s pool (dashboard-goldens.md §2): 42 hits; matches 
   const fan = (sp) => ({ ...set('rotomfan', 'levitate', 'modest', sp, ['thunderbolt']), species: 'rotomfan' });
   const cases = [[{ hp: 2, spa: 32, spe: 32 }, 2.5235, 3], [{ hp: 32, spa: 32, spd: 2 }, 1.5031, 2], [{ hp: 32, def: 14, spa: 16, spd: 4 }, 1.1266, 1]];
   for (const [sp, golden] of cases) {
-    const b = B.bulkScore(calc, mech, fan(sp), pool, usage);
+    const b = B.bulkScore(calc, mech, fan(sp), pool, usage, { noUsage: 'skip' }); // the goldens: ladder hits only
     assert.equal(b.hits.length, 42, '42 common hits');
     assert.deepEqual(b.skipped, ['tauros'], 'forms without usage data are skipped and reported');
     assert.equal(b.notCounted.length, 0);
@@ -156,7 +156,7 @@ test('bulk score vs Calvin\'s pool (dashboard-goldens.md §2): 42 hits; matches 
     const ta = b.hits.find((h) => h.forme === 'tsareena' && h.move === 'tripleaxel').p;
     assert.ok(Math.abs(b.score - ta - golden) < 5e-4, `${b.score} − Triple Axel ${ta} vs golden ${golden}`);
   }
-  const o1 = B.bulkScore(calc, mech, fan(cases[0][0]), pool, usage), o2 = B.bulkScore(calc, mech, fan(cases[1][0]), pool, usage);
+  const o1 = B.bulkScore(calc, mech, fan(cases[0][0]), pool, usage, { noUsage: 'skip' }), o2 = B.bulkScore(calc, mech, fan(cases[1][0]), pool, usage, { noUsage: 'skip' });
   assert.ok(o2.score < o1.score, 'Speed SP → HP is bulkier');
   assert.equal(o1.strong, 4);
   assert.ok(B.bulkScore(calc, mech, fan(cases[0][0]), pool, null).skipped.length >= 10, 'no usage table: every form skipped, score 0');

@@ -8,6 +8,7 @@ import { compareSpeed, natureSign, speedRange } from '../lib/calc/stats.mjs';
 import { currentVersion, defaultVariant } from '../lib/prep-model.mjs';
 import { formatRoute } from '../lib/prep-route.mjs';
 import * as Threats from './prep-threats.js';
+import { topPerMon as topPer } from '../lib/threat-scan.mjs';
 import * as C from './prep-copy.js';
 import { esc, btn, chipBtn, h2, select, term } from './prep-ui.js';
 
@@ -152,14 +153,19 @@ export function brief(P, ctx) {
 
 function poolSection(P, { pov, opp }, b) {
   const ringOf = new Map(b.threats.map((t) => [t.id, t]));
+  // §5 (1): no drafted mon reads as harmless without its worst case: the scan's top row per mon, and a badge when it OHKOs
+  const rows = pov.name === P.ownSide() ? Threats.scanFor(P, opp.name) : null;
+  const worst = rows ? Threats.wreckers(rows) : new Map();
+  const top = rows ? new Map([...topPer(rows)].map(([sp, list]) => [sp, list[0]])) : new Map();
   const order = [...b.threats.map((t) => t.id)];
   const cell = (id) => {
     const t = ringOf.get(id), s = dexSp(P, id);
     const megas = s?.forms.filter((f) => f.mega).length ?? 0;
-    const label = [P.spName(id), (s?.forms[0].types ?? []).join(' '), t?.ring === 'look-first' ? C.BRIEF.ringLabel(t.rank) : t?.ring === 'watch' ? C.BRIEF.watchLabel : '', megas ? C.BRIEF.megaLabel : ''].filter(Boolean).join(', ');
+    const w = top.get(id), wreck = worst.has(id);
+    const label = [P.spName(id), (s?.forms[0].types ?? []).join(' '), t?.ring === 'look-first' ? C.BRIEF.ringLabel(t.rank) : t?.ring === 'watch' ? C.BRIEF.watchLabel : '', megas ? C.BRIEF.megaLabel : '', wreck ? C.THREATS.wreckBadge : '', w ? Threats.worstLine(P, w) : ''].filter(Boolean).join(', ');
     return `<li><button type="button" class="pcard${t?.ring ? ` ring-${t.ring}` : ''}" data-pa="brief-open" data-side="their" data-n="${slotOf(opp, id)}" aria-label="${esc(`${label}. Details`)}">
       ${t?.ring === 'look-first' ? `<span class="rank" aria-hidden="true">${t.rank}</span>` : ''}${megas ? `<span class="megad" aria-hidden="true">M${megas > 1 ? `×${megas}` : ''}</span>` : ''}
-      ${P.pt(id, { size: 'md' })}<span class="pname">${esc(P.spName(id))}</span>${typeBars(s?.forms[0].types ?? [])}</button></li>`;
+      ${wreck ? '<span class="wreckd" aria-hidden="true">!</span>' : ''}${P.pt(id, { size: 'md' })}<span class="pname">${esc(P.spName(id))}</span>${typeBars(s?.forms[0].types ?? [])}${w ? `<span class="pworst small">${esc(Threats.worstLine(P, w))}</span>` : ''}</button></li>`;
   };
   const open = Math.max(0, b.rosterState.theirSlotsLeft);
   const openCells = Array.from({ length: Math.min(open, 10) }, () => `<li><span class="pcard open"><span class="pt pt-md noimg" data-ini="?"></span><span class="pname">${esc(C.BRIEF.openSlot(b.rosterState.theirMaxNextPick))}</span></span></li>`).join('');
@@ -202,7 +208,7 @@ function plansSection(P, ctx, b) {
   const card = (p) => {
     const st = p.myStatus ?? 'none';
     const counted = p.myCounted;
-    return `<li class="plancard conf-${esc(p.confidence)}"><button type="button" class="plan-open" data-pa="brief-open" data-core="${esc(p.coreId)}" aria-label="${esc(`${p.label}, ${C.BRIEF.confidence[p.confidence]}. ${C.BRIEF.you} ${C.BRIEF.status[st]}. Details`)}">
+    return `<li class="plancard conf-${esc(p.confidence)}">${hits(p) ? `<p class="small warnline">⚠ ${esc(C.THREATS.planWreck)}</p>` : ''}<button type="button" class="plan-open" data-pa="brief-open" data-core="${esc(p.coreId)}" aria-label="${esc(`${p.label}, ${C.BRIEF.confidence[p.confidence]}. ${C.BRIEF.you} ${C.BRIEF.status[st]}. Details`)}">
       <span class="ph">${modeBadge(p.coreId)} <span class="rc">${esc(p.label)}</span> <span class="conf">${esc(C.BRIEF.confidence[p.confidence])}</span></span></button>
       <div class="minis">${p.members.map((id) => mini(P, id, `${p.tells.includes(id) ? '<span class="tell" aria-label="preview tell">◎</span>' : ''}${p.megaUser === id ? '<span class="megad inline" aria-label="Mega">M</span>' : ''}`)).join('')}</div>
       <p class="status st-${esc(st)}"><b>${term(C.BRIEF.you, 'Has answers / Thin / No answer found')}</b> <span class="chip ${st === 'has' ? 'ok' : st === 'thin' ? 'tight' : 'breaks'}">${st === 'has' ? '✓' : st === 'thin' ? '◐' : '✕'} ${esc(C.BRIEF.status[st])}</span>${p.myStatusB && p.myStatusB !== st ? ` <span class="small muted">${esc(C.BRIEF.statusB(C.BRIEF.status[p.myStatusB]))}</span>` : ''} <span class="small muted">(${esc(C.BRIEF.yourAnswers)})</span></p>
@@ -210,7 +216,10 @@ function plansSection(P, ctx, b) {
       ${p.cofailTypes.slice(0, 1).map((c) => `<p class="small warnline">⚠ ${esc(C.BRIEF.cofail(c.type, c.victims.map(nm(P)).join(', ')))}</p>`).join('')}
       ${p.speedMode === 'tailwind' || p.speedMode === 'trick-room' ? `<p>${btn(p.speedMode === 'tailwind' ? 'See Speed under their Tailwind' : 'See Speed under Trick Room', 'brief-scenario-go', { scenario: p.speedMode === 'tailwind' ? 'tw-theirs' : 'tr' }, { cls: 'linkish' })}</p>` : ''}</li>`;
   };
-  const shown = b.theirPlans.slice(0, 3), rest = b.theirPlans.slice(3);
+  const wreck = ctx.pov.name === P.ownSide() ? Threats.wreckers(Threats.scanFor(P, ctx.opp.name)) : new Map();
+  const hits = (p) => p.members.filter((id) => wreck.has(id)).length;
+  const plans = b.theirPlans.map((p, i) => ({ p, i })).sort((a, z) => hits(z.p) - hits(a.p) || a.i - z.i).map((x) => x.p);
+  const shown = plans.slice(0, 3), rest = plans.slice(3);
   const tellKey = b.theirPlans.some((p) => p.tells.length) ? `<p class="lkey small"><span class="tell" aria-hidden="true">◎</span> ${esc(C.BRIEF.tellKey)} · ${term(C.BRIEF.confidence.likely, 'Likely / Possible core')}</p>` : '';
   return section('plans', C.BRIEF.theirPlans, C.BRIEF.theirPlansSub, `<ul class="plancards">${shown.map(card).join('')}</ul>${rest.length ? `<details><summary>${esc(C.BRIEF.morePlans(rest.length))}</summary><ul class="plancards">${rest.map(card).join('')}</ul></details>` : ''}${tellKey}`, 'them', C.BRIEF.theirPlansExplain);
 }
