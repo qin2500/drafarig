@@ -91,10 +91,12 @@ export async function bootApp({ root = ROOT, source = readFileSync(new URL('publ
   const lookedUp = []; // ids the app asked for (focus targets after a render: no real elements here)
   const body = new El('body');
   body.appendChild = () => {};
+  // the header's app switch (static in index.html): its links take the active state
+  const appLinks = ['draft', 'prep', 'mocks'].map((k) => Object.assign(new El(), { dataset: { appLink: k }, attrs: {}, setAttribute(n, v) { this.attrs[n] = v; }, removeAttribute(n) { delete this.attrs[n]; } }));
   const stubs = {
     document: {
       hidden: false, activeElement: null, body, documentElement: new El('html'),
-      querySelector: (s) => els[s] ?? null, querySelectorAll: () => [], getElementById: (id) => { lookedUp.push(id); return null; },
+      querySelector: (s) => els[s] ?? null, querySelectorAll: (s) => (s === '.appswitch a' ? appLinks : []), getElementById: (id) => { lookedUp.push(id); return null; },
       createElement: () => new El(),
       addEventListener: (type, fn) => (listeners[type] ??= []).push(fn),
     },
@@ -151,7 +153,9 @@ export async function bootApp({ root = ROOT, source = readFileSync(new URL('publ
     return t;
   };
   return {
-    main: els['#main'], drawer: els['#drawer'], toast: els['#toast'], banners: els['#banners'], body, clipboard, storage, session, history, location, fetches, downloads,
+    main: els['#main'], drawer: els['#drawer'], appLinks,
+    /** The header tab shown as current (aria-current="page"), or null. */
+    currentApp: () => appLinks.find((a) => a.attrs['aria-current'] === 'page')?.dataset.appLink ?? null, toast: els['#toast'], banners: els['#banners'], body, clipboard, storage, session, history, location, fetches, downloads,
     html: () => els['#main'].innerHTML,
     async click(attrs) { const t = target(attrs); for (const fn of listeners.click ?? []) await fn({ target: { closest: () => t } }); await settle(5); },
     async change(id, props) { const t = Object.assign(new El(id), props); for (const fn of listeners.change ?? []) fn({ target: t }); await settle(5); },

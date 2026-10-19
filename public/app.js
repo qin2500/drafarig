@@ -559,8 +559,11 @@ function markMode() {
   document.body.dataset.app = app;
   document.querySelectorAll('#modes button').forEach((b) => b.classList.toggle('active', b.dataset.mode === S.mode));
   const unsaved = !!prep?.P?.saveError;
+  // Mocks (#prep/mocks…) is a Battle Prep screen with its own tab, so it's one tap from every screen
+  const onMocks = app === 'prep' && /^#prep\/mocks/.test(location.hash);
+  const tab = onMocks ? 'mocks' : app;
   document.querySelectorAll('.appswitch a').forEach((a) => {
-    const on = a.dataset.appLink === app;
+    const on = a.dataset.appLink === tab;
     a.classList.toggle('active', on);
     if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     if (a.dataset.appLink === 'prep') { a.classList.toggle('warn', unsaved); a.setAttribute('aria-label', unsaved ? 'Battle Prep: changes not saved' : 'Battle Prep'); }
@@ -765,7 +768,12 @@ function goTo(mode) {
   S.mode = mode; history.replaceState(null, '', mode === 'prep' && prep ? prep.hash() : '#' + mode); save(); render();
 }
 /** The app switch: Battle Prep returns to its last screen; Draft returns to the last Draft screen this session. */
-const switchApp = (app) => goTo(app === 'prep' ? 'prep' : lastDraftMode);
+const switchApp = (app) => {
+  const onMocks = S.mode === 'prep' && /^#prep\/mocks/.test(location.hash);
+  const to = app === 'mocks' ? '#prep/mocks' : app === 'prep' && onMocks ? '#prep' : null;
+  if (to) { if (location.hash !== to) history.pushState(null, '', to); return onHashChange(); }
+  goTo(app === 'prep' ? 'prep' : lastDraftMode);
+};
 /** "Battle Prep vs <coach>" from Draft: the matchup from your Battle Prep perspective. */
 function prepVs(seat) { goTo('prep'); if (prep) prep.openVs?.(seat); else pendingVs = seat; }
 // While viewing League as an opponent, your own coach is what stays saved; a stand-in coach (the stored one isn't on the

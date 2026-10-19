@@ -23,7 +23,7 @@ test('Draft and Battle Prep are two apps behind one switch; Draft keeps its mode
   assert.deepEqual([...html.matchAll(/data-mode="([a-z]+)"/g)].map((m) => m[1]), ['draft', 'team', 'league', 'learn', 'setup'], 'the Draft rail no longer holds Prep');
   const sw = find(parseHtml(html), (n) => n.tag === 'nav' && hasClass(n, 'appswitch'));
   assert.equal(sw.attrs['aria-label'], 'Apps');
-  assert.deepEqual(findAll(sw, (n) => n.tag === 'a').map((a) => [a.attrs.href, a.attrs['data-app-link'], text(a)]), [['#draft', 'draft', 'Draft'], ['#prep', 'prep', 'Battle Prep']]);
+  assert.deepEqual(findAll(sw, (n) => n.tag === 'a').map((a) => [a.attrs.href, a.attrs['data-app-link'], text(a)]), [['#draft', 'draft', 'Draft'], ['#prep', 'prep', 'Battle Prep'], ['#prep/mocks', 'mocks', 'Mocks']]);
   for (const id of ['sync', 'turn', 'budget', 'coach', 'explain', 'main', 'banners', 'live']) assert.match(html, new RegExp(`id="${id}"`), `${id} kept`);
   const app = await bootApp();
   t.after(() => app.restore());

@@ -3,6 +3,7 @@
 // (never your own prep), the pilot document's additive storage, and #prep/pilot redirecting.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { mech } from './calc-helpers.mjs';
 import { bootApp } from './ui-harness.mjs';
 import { device, T, btns, flushSaves } from './prep-helpers.mjs';
@@ -198,4 +199,28 @@ test('W5 Hex: a generated mock too, with the clauses checked and nothing saved u
   assert.match(T(app), /Play Hex\(法拉\) vs Calvin · W5/);
   assert.match(T(app), /Item clause ok/);
   assert.equal(JSON.parse(storage.getItem(KEYS.pilot) ?? '{}').mocks, undefined, 'viewing saves nothing');
+});
+
+test('the header has a Mocks tab: from Draft, the Prep overview, a matchup Brief and the teambuilder it opens #prep/mocks; active state follows', async (t) => {
+  const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
+  assert.match(html, /<nav class="appswitch"[^>]*>.*<a href="#prep\/mocks" data-app-link="mocks">Mocks<\/a><\/nav>/, 'one header for every screen');
+  for (const mode of ['draft', 'prep/5', 'prep/5v3', 'prep/5v2/build/1']) {
+    const app = await bootApp({ mode, storage: device() });
+    t.after(() => app.restore());
+    if (mode !== 'draft') await app.waitFor(() => /class="prep"/.test(app.html()) && !/Loading the league/.test(T(app)), mode, 20000);
+    assert.equal(app.currentApp(), mode === 'draft' ? 'draft' : 'prep', `${mode}: active tab before`);
+    await app.click({ appLink: 'mocks' });
+    await app.waitFor(() => /Play your friend's next opponent/.test(T(app)), `${mode} → Mocks`, 20000);
+    assert.equal(app.location.hash, '#prep/mocks', mode);
+    assert.equal(app.currentApp(), 'mocks', `${mode}: Mocks is the active tab`);
+    if (mode === 'prep/5v3') {
+      // Back returns to the Brief; Battle Prep from Mocks goes to Prep home
+      app.history.back();
+      await app.waitFor(() => app.location.hash === '#prep/5v3' && app.currentApp() === 'prep', 'back to the Brief', 20000);
+      await app.click({ appLink: 'mocks' });
+      await app.click({ appLink: 'prep' });
+      await app.waitFor(() => !/^#prep\/mocks/.test(app.location.hash), 'Battle Prep from Mocks', 20000);
+      assert.equal(app.currentApp(), 'prep');
+    }
+  }
 });
