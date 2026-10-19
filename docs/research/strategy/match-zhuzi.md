@@ -319,6 +319,8 @@ Modest Nature
 - Last Resort → Infernape: 204–242.
 
 `lib/guides/5v3.mjs` passes the app's `validateGuide` with 0 problems, and isn't stale against the live rosters.
+All 30 of its calcs reproduce in the app engine (`sp-assist/verify_curated.mjs`). The Stunfisk-Galar Stomping Tantrum calc
+was dropped from the guide: the engine refuses Mimicry ("type-change unsupported"). It stays in this doc (spcalc).
 
 **Uncertainty:**
 - ZhuZi's real sets are unknown (ladder vs worst case shown).

@@ -36,7 +36,7 @@ export function tab(P, ws) {
     ${open.length ? `<ul class="findcards">${open.map((f) => findingRow(P, ws, f)).join('')}</ul>` : `<p class="small ok-line">✓ ${esc(C.PRACTICE.noOpen)}</p>`}
     <p>${btn('+ Finding', 'finding-new', {}, { cls: 'linkish' })}</p>
     ${unretested.length ? `<p class="small">⟳ ${unretested.length} change${unretested.length === 1 ? '' : 's'} not retested yet.</p>` : ''}
-    <p>${btn('Revision log', 'go-revisions')} ${btn('Help a friend practise (pilot card)', 'go-pilot')} ${term('What is a pilot card?', 'Pilot card')}</p>
+    <p>${btn('Revision log', 'go-revisions')} ${btn(C.MOCKS.tool, 'go-mocks')} ${term('What is a pilot card?', 'Pilot card')}</p>
     <div class="bottombar">${btn('Make a mock brief', 'go-brief', {}, { primary: true })}${btn('Log a game', 'go-log')}</div>`;
 }
 function mockCard(P, ws, m) {

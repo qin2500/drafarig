@@ -18,7 +18,7 @@ Then open http://localhost:4600. The server binds to 127.0.0.1 only. Change the 
 ## Test
 
 ```sh
-npm test               # builds the Worker artifact, then node --test: 443 tests (calc engine, searches, Prep UI on a stub DOM, Build, chat, Worker)
+npm test               # builds the Worker artifact, then node --test: 456 tests (calc engine, searches, Prep UI on a stub DOM, Build, chat, Worker)
 ```
 
 The tests use a saved copy of the real sheet in `test/fixtures/`, so they run offline.
@@ -79,6 +79,27 @@ sheets, a Guide box in the teambuilder ("Guide runs …" · Try it), every guide
 now …" line, its double targets and answers merged into "Can wreck you", "Import as team" / "Update from guide" (never
 overwrites; "Use guide version" adds a version), a Fill row on the Plan board, a Move search sub-line, and a "Game plan"
 button on Brief, Plan and Sets. Only for your own side; no guide = the screens as before.
+
+Every calc in every guide and curated mock must reproduce in the app's engine within 0.5 points of its stated range
+(`test/curated-calcs.test.mjs`, one failure list; known exceptions sit in its `PENDING` list with a reason).
+
+## Mocks (`#prep/mocks`)
+
+Play a friend's next opponent on Showdown (`docs/research/ux/mocks.md`): pick the friend and the week, then "Play X vs Y" shows
+X's team (Team / Notes / Log tabs), Copy for Showdown (the exact export, no header), key calcs as workbench links in pilot mode
+(the "mock" side; nothing saves to your prep), and a running record per (friend, opponent) with a note for the friend that
+never contains your own sets or teams. Storage: optional `mocks` entries on the pilot document (no version bump).
+
+- **Curated** (`lib/mocks/<x>v<y>.mjs`, static registry in `lib/mocks/index.mjs`, tolerant validation, stale when either
+  roster changes).
+- **Generated** (`lib/mock-gen.mjs`, `docs/research/dev/mocks-plan.md` §2) when there's no curated one: both directions of the
+  worst-case threat scan over X's drafted 10 vs Y's, scored by offence into Y, Y's hits back, shared spread weaknesses and
+  roles (weights in code), then every legal six is enumerated: species clause by dex number, at most one Mega, the item clause
+  (a moved item marks the set "matchup-tuned"); every set is made coherent (a Choice item runs no status moves, no two moves of one type unless a spread / stronger single-target split, Protect kept where the ladder runs it). No-usage mons stay in (full-learnset worst case). Variants: best six, best with
+  another Mega, next best. Each set is labelled ladder / matchup-tuned / worst case / your guess / edited.
+- **Edit ›** changes a mock set (nature, item, ability, moves, Stat Points); saved on the mock's record only. **Regenerate**
+  asks first when it would replace your edits. "Use my saved guesses of X's sets" is opt-in, with a warning that the friend
+  will see them. The generated team is stored on the record the first time you copy, log or edit it.
 
 ## Teambuilder (the set editor: a team's slot, or a matchup's Sets)
 

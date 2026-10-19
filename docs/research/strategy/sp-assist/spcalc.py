@@ -293,7 +293,17 @@ def _selfcheck():
     zard = mon('charizardmegay', 'Timid', {'spa': 32, 'spe': 32, 'hp': 2}, 'Drought', 'charizarditey')
     rilla = mon('rillaboom', 'Adamant', {'hp': 32, 'atk': 32, 'spd': 2}, 'Overgrow')
     assert rolls(zard, rilla, 'heatwave', {'spread': True, 'weather': 'sun'})[0] == [276, 278, 282, 284, 290, 294, 296, 300, 302, 306, 308, 312, 314, 318, 320, 326]
-    print('selfcheck ok (incl. 6 app engine goldens)')
+    # Mega DEFENDERS, app engine (createCalc) 2026-10-19: min/max absolute damage.
+    rap = mon('staraptormega', 'Jolly', {'hp': 29, 'atk': 1, 'spd': 4, 'spe': 32}, 'Contrary', 'staraptite')
+    meta = mon('metagrossmega', 'Jolly', {'hp': 2, 'atk': 32, 'spe': 32}, 'Tough Claws', 'metagrossite')
+    for a, d, mv, ctx, want in (
+        (mon('torkoal', 'Quiet', {'hp': 32, 'spa': 32, 'spd': 2}, 'Drought', 'charcoal'), rap, 'eruption', {'spread': True, 'weather': 'sun'}, (150, 177)),
+        (mon('mrrime', 'Quiet', {'hp': 32, 'def': 2, 'spa': 32}, 'Screen Cleaner', 'twistedspoon'), rap, 'psychic', {}, (192, 228)),
+        (mon('charizardmegay', 'Modest', {'hp': 6, 'spa': 32, 'spd': 2, 'spe': 26}, 'Drought', 'charizarditey'), meta, 'heatwave', {'spread': True, 'weather': 'sun'}, (216, 254)),
+        (mon('aegislashblade', 'Brave', {'hp': 32, 'atk': 32, 'def': 2}, 'Stance Change', 'metalcoat'), meta, 'poltergeist', {}, (156, 186))):
+        r = rolls(a, d, mv, ctx)[0]
+        assert (r[0], r[-1]) == want, (mv, d['id'], r[0], r[-1], want)
+    print('selfcheck ok (incl. 10 app engine goldens, 4 with Mega defenders)')
 
 
 if __name__ == '__main__':

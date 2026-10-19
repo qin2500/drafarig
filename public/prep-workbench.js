@@ -28,12 +28,13 @@ const wbOf = (P) => (P.ui.wb?.open ? P.ui.wb : null);
 export function open(P, seed) {
   const field = structuredClone(seed.field ?? {});
   P.ui.wb = {
-    open: true, guide: seed.guide ?? null, setId: seed.setId, mine: structuredClone(seed.mine), mineBase: structuredClone(seed.base ?? seed.mine), row: structuredClone(seed.row),
+    open: true, guide: seed.guide ?? null, pilot: seed.pilot ?? null, forms: seed.forms ?? {}, setId: seed.setId, mine: structuredClone(seed.mine), mineBase: structuredClone(seed.base ?? seed.mine), row: structuredClone(seed.row),
     their: null, spread: seed.row.set.sp === 'unknown' ? (seed.row.common ? 'common' : 'max') : 'set', move: seed.move, mineRole: seed.mineRole ?? 'attacker',
     boosts: { mine: seed.boost ?? 0, theirs: seed.stage ?? 0 }, field, crit: false, intimidated: 0, defHp: 100, tab: 'you', saved: null,
   };
   // their hit on a ladder guess: open at their worst case (the ladder set is one tap away)
-  if (P.ui.wb.mineRole === 'defender' && seed.row.source === 'ladder' && P.mech) { P.ui.wb.theirMode = 'worst'; P.ui.wb.their = worstCaseOf(P, P.ui.wb.row, seed.move); }
+  // (a stated set — guide, mock — opens as stated)
+  if (P.ui.wb.mineRole === 'defender' && seed.row.source === 'ladder' && P.mech && !seed.guide && !seed.pilot) { P.ui.wb.theirMode = 'worst'; P.ui.wb.their = worstCaseOf(P, P.ui.wb.row, seed.move); }
   try { P.app.history.pushState({ prep: true, wb: true, names: P.app.history.state?.names ?? null, wsId: P.app.history.state?.wsId ?? null, from: P.app.location.hash }, '', P.app.location.hash); } catch { /* no history */ }
   P.ensureEngine();
   P.pendingFocus = true; P.pendingFocusId = 'wb-h';
@@ -50,6 +51,7 @@ export function close(P, { fromHistory = false } = {}) {
 
 // ---------- the scenario ----------
 const theirSet = (wb) => wb.their ?? wb.row.set;
+const formOf = (wb, side) => (wb.forms?.[side] ? { form: wb.forms[side] } : {});
 /** Your side and theirs as a normalized scenario (their unknown SP filled from the chosen spread). */
 export function scenarioOf(P, wb) {
   const mv = B.moveStats(P.mech, wb.move) ?? { atk: 'atk', def: 'def' };
@@ -58,8 +60,8 @@ export function scenarioOf(P, wb) {
   const field = { ...wb.field, attackerSide: { ...(wb.field.attackerSide ?? {}) }, defenderSide: { ...(wb.field.defenderSide ?? {}) } };
   const aBoost = mineAtk ? wb.boosts.mine : wb.boosts.theirs, dBoost = mineAtk ? wb.boosts.theirs : wb.boosts.mine;
   let sc = normalizeScenario({
-    attacker: { set: mineAtk ? mineSet : theirs, state: { boosts: { [mv.atk]: aBoost }, intimidated: wb.intimidated, ...(mineAtk ? {} : { mega: wb.row.mega }) } },
-    defender: { set: mineAtk ? theirs : mineSet, state: { boosts: { [mv.def]: dBoost }, hpPct: wb.defHp, ...(mineAtk ? { mega: wb.row.mega } : {}) } },
+    attacker: { set: mineAtk ? mineSet : theirs, state: { boosts: { [mv.atk]: aBoost }, intimidated: wb.intimidated, ...(mineAtk ? {} : { mega: wb.row.mega }), ...formOf(wb, mineAtk ? 'mine' : 'theirs') } },
+    defender: { set: mineAtk ? theirs : mineSet, state: { boosts: { [mv.def]: dBoost }, hpPct: wb.defHp, ...(mineAtk ? { mega: wb.row.mega } : {}), ...formOf(wb, mineAtk ? 'theirs' : 'mine') } },
     move: { id: wb.move, crit: wb.crit }, field,
   });
   const side = mineAtk ? 'defender' : 'attacker';
@@ -72,7 +74,8 @@ export function result(P, wb) {
 }
 const names = (P, wb) => {
   const mine = P.spName(B.myForme(P.mech, wb.mine)), them = `${wb.row.coach ? `${wb.row.coach}'s ` : ''}${P.spName(wb.row.forme)}`;
-  return wb.mineRole === 'attacker' ? { attacker: mine, defender: them, attackerSet: W.yourDraft, defenderSet: sourceLine(wb) } : { attacker: them, defender: mine, attackerSet: sourceLine(wb), defenderSet: W.yourDraft };
+  const own = wb.pilot ? W.mockSet(wb.pilot.coach) : W.yourDraft; // a mock: "your" side is the team you pilot, not yours
+  return wb.mineRole === 'attacker' ? { attacker: mine, defender: them, attackerSet: own, defenderSet: sourceLine(wb) } : { attacker: them, defender: mine, attackerSet: sourceLine(wb), defenderSet: own };
 };
 /**
  * §5 (3): their worst case for this move, as an alternative to the ladder / saved set: + nature, 32 SP in the move's stat,
@@ -83,7 +86,10 @@ export function worstCaseOf(P, row, move) {
   const stat = mv?.category === 'Special' ? 'spa' : 'atk';
   const base = row.set;
   const syn = legalAbilities(P.mech, row.species).find((a) => SYNERGY[a]?.test(mv, P.mech.species[row.forme] ?? P.mech.species[row.species]));
+  // + nature, 32 SP in the move's stat; the rest of their known spread kept only while it fits in 66
   const sp = base.sp === 'unknown' ? { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 } : { ...base.sp };
+  const room = 66 - 32 - Object.entries(sp).filter(([k]) => k !== (mv?.category === 'Special' ? 'spa' : 'atk')).reduce((t, [, v]) => t + (v ?? 0), 0);
+  if (room < 0) for (const k of ['spe', 'spd', 'def', 'hp', 'atk', 'spa']) { if (k === (mv?.category === 'Special' ? 'spa' : 'atk')) continue; sp[k] = 0; if (66 - 32 - Object.entries(sp).filter(([x]) => x !== (mv?.category === 'Special' ? 'spa' : 'atk')).reduce((t, [, v]) => t + (v ?? 0), 0) >= 0) break; }
   return { ...structuredClone(base), ability: row.mega ? base.ability : syn ?? base.ability, item: row.mega ? base.item : 'lifeorb', nature: stat === 'spa' ? 'modest' : 'adamant', sp: { ...sp, [stat]: 32 } };
 }
 function sourceLine(wb) {
@@ -128,12 +134,12 @@ export function render(P) {
     <div class="wb-result" id="wb-result">${resultHtml(P, wb)}</div>
     <div class="wb-tabs" role="group" aria-label="${esc(W.sections)}">${tabs}</div>
     <div class="wb-cols">
-      <section class="wb-side wb-you" aria-label="${esc(W.you)}"><h3>${esc(W.you)} <span class="small muted">(${esc(W.yourDraft)})</span></h3>${sidePanel(P, wb, 'mine')}</section>
+      <section class="wb-side wb-you" aria-label="${esc(W.you)}"><h3>${esc(wb.pilot ? wb.pilot.coach : W.you)} <span class="small muted">(${esc(wb.pilot ? W.mockSet(wb.pilot.coach) : W.yourDraft)})</span></h3>${sidePanel(P, wb, 'mine')}</section>
       <section class="wb-side wb-them" aria-label="${esc(W.them)}"><h3>${esc(W.them)} <span class="small muted">(${esc(sourceLine(wb))})</span></h3>${sidePanel(P, wb, 'theirs')}</section>
     </div>
     <section class="wb-field" aria-label="${esc(W.field)}"><h3>${esc(W.field)}</h3>${fieldPanel(P, wb)}</section>
-    <div class="wb-bar">${wb.guide?.fromGuide ? btn(C.GUIDE.importTeam, 'guide-import', { pov: wb.guide.pov, opp: wb.guide.opp, coach: wb.guide.coach }, { primary: true }) : btn(diff.length ? W.apply(diff.map((k) => W.fieldName[k] ?? C.STAT_SHORT[k] ?? k)) : W.applyNone, 'wb-apply', {}, { primary: true, disabled: !diff.length })}
-      ${btn(W.saveCalc, 'wb-save-calc')} <span class="small muted">${esc(wb.saved ? W.savedTo(wb.saved.coach) : W.notSaved)}</span>
+    <div class="wb-bar">${wb.pilot ? `<span class="small muted">${esc(W.pilotNote)}</span>` : wb.guide?.fromGuide ? btn(C.GUIDE.importTeam, 'guide-import', { pov: wb.guide.pov, opp: wb.guide.opp, coach: wb.guide.coach }, { primary: true }) : btn(diff.length ? W.apply(diff.map((k) => W.fieldName[k] ?? C.STAT_SHORT[k] ?? k)) : W.applyNone, 'wb-apply', {}, { primary: true, disabled: !diff.length })}
+      ${wb.pilot ? '' : btn(W.saveCalc, 'wb-save-calc')} <span class="small muted">${esc(wb.saved ? W.savedTo(wb.saved.coach) : W.notSaved)}</span>
       ${wb.saved ? btn(W.openCalcs, 'wb-open-calcs', {}, { cls: 'linkish' }) : ''}</div></div></div>`;
 }
 

@@ -26,11 +26,12 @@ import * as Teams from './prep-teams.js';
 import * as Moves from './prep-moves.js';
 import * as Threats from './prep-threats.js';
 import * as Guide from './prep-guide.js';
+import * as Mocks from './prep-mocks.js';
 import * as WB from './prep-workbench.js';
 
 const SAVE_DELAY = 400;
 const TAB_LABEL = { brief: 'Brief', plan: 'Plan', sets: 'Sets', calcs: 'Calcs', practice: 'Practice' };
-const MODULES = [Sets, Calcs, Plan, Practice, Matchup, Chat, TB, Teams, WB, Moves, Threats, Guide];
+const MODULES = [Sets, Calcs, Plan, Practice, Matchup, Chat, TB, Teams, WB, Moves, Threats, Guide, Mocks];
 
 /**
  * app: { dex, league(), sheet(), usage(), coresCx(), viewingCoach(), setViewingCoach(name), goMode(mode), toast(msg),
@@ -325,6 +326,8 @@ export function createPrep(app) {
    */
   P.canonical = (r) => {
     if (!r) return { view: 'home' };
+    // the pilot card became Mocks: old links open it (pasted teams are under "Pasted teams")
+    if (r.view === 'pilot') return { view: 'mocks' };
     // My sets became Teams: its old addresses open the Teams list, or the set in its team's slot
     if (r.view === 'my-sets' && r.kind !== 'import' && teamsStored()) {
       const team = r.id ? TM.teamOf(P.docs.teams, r.id) : null;
@@ -509,7 +512,7 @@ export function createPrep(app) {
       if (r.view === 'home' || r.view === 'overview') body = home(r);
       else if (r.view === 'rules') body = rulesScreen();
       else if (r.view === 'backup') body = backupScreen();
-      else if (r.view === 'pilot') body = Practice.pilot(P);
+      else if (r.view === 'mocks') body = Mocks.screen(P, r);
       else if (r.view === 'teams') body = Teams.screen(P, r);
       else if (r.view === 'moves') body = Moves.screen(P);
       else if (r.view === 'my-sets') { const l = r.id ? P.docs.mysets.sets.find((s) => s.id === r.id) : null; body = l ? `<section class="panel prep-set">${TB.editor(P, null, l)}</section>` : Sets.mySets(P, r); }
@@ -700,7 +703,7 @@ export function createPrep(app) {
         <li>${btn('Rules you know', 'go-rules', {}, { cls: 'linkish' })} <span class="small muted">${known} known · ${Object.keys(rules).length - known} don't know</span></li>
         <li>${btn(teamsStored() ? 'Teams' : 'My sets', 'go-mysets', {}, { cls: 'linkish' })} <span class="small muted">${mineCount} set${mineCount === 1 ? '' : 's'}${teamsStored() ? ` in ${P.docs.teams.teams.filter((t) => t.kind !== 'holding').length} teams` : ' in your library'}</span> ${btn('Paste your team', 'go-mysets-import', {}, { cls: 'linkish' })}</li>
         <li>${btn(C.MOVES.head, 'go-moves', {}, { cls: 'linkish' })} <span class="small muted">${esc(C.MOVES.homeNote)}</span></li>
-        <li>${btn('Help a friend practise (pilot card)', 'go-pilot', {}, { cls: 'linkish' })}</li>
+        <li>${btn(C.MOCKS.tool, 'go-mocks', {}, { cls: 'linkish' })}</li>
         <li>${btn('Backup & restore', 'go-backup', {}, { cls: 'linkish' })} <span class="small muted backup-line">${esc(C.HOME.savedLocal)} Last backup: ${meta.lastBackupAt ? `${backupAge} days ago` : 'never'} (${meta.changesSinceBackup ?? 0} changes since).</span></li>
         <li>${Chat.chatUi(P).open ? btn(C.CHATUI.open, 'chat-open', {}, { cls: 'linkish' }) : Chat.entry(C.CHATUI.open)} <span class="small muted">${esc(C.CHATUI.title)}: it sees the screen you have open</span></li>
       </ul>
@@ -1132,7 +1135,7 @@ export function createPrep(app) {
     back: () => P.back(),
     'go-rules': () => P.go({ view: 'rules' }, { push: true }),
     'go-backup': () => P.go({ view: 'backup' }, { push: true }),
-    'go-pilot': () => P.go({ view: 'pilot' }, { push: true }),
+    'go-pilot': () => P.go({ view: 'mocks' }, { push: true }),
     'go-mysets': () => P.go({ view: 'my-sets' }, { push: true }),
     'go-mysets-import': () => P.go({ view: 'my-sets', kind: 'import' }, { push: true }),
     continue: () => { const r = parseRoute(P.store.hint('lastRoute') ?? P.docs.meta.lastRoute); if (r) P.go(r, { push: true }); },

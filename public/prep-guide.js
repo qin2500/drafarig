@@ -167,10 +167,11 @@ export function guideSetLine(P, povName, oppName, l, set) {
 
 // ---------- calc seeds (workbench) ----------
 const ZERO = { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 };
-const battleOf = (mech, id) => { const s = mech.species[id]; return s?.mega ? { species: s.mega.from, item: s.mega.item, mega: true, forme: id } : { species: id, item: null, mega: false, forme: id }; };
-function over(set, side) {
+export const battleOf = (mech, id) => { const s = mech.species[id]; return s?.mega ? { species: s.mega.from, item: s.mega.item, mega: true, forme: id } : { species: id, item: null, mega: false, forme: id }; };
+export function over(set, side, mega = false) {
   const out = { ...set };
-  for (const k of ['ability', 'item', 'nature']) if (typeof side[k] === 'string' && side[k]) out[k] = toID(side[k]);
+  // a Mega keeps its base ability in the set (the calc applies the Mega's own); a stated Mega ability is that, not an override
+  for (const k of ['ability', 'item', 'nature']) if (typeof side[k] === 'string' && side[k] && !(mega && k === 'ability')) out[k] = toID(side[k]);
   if (side.sp && typeof side.sp === 'object') out.sp = { ...ZERO, ...side.sp };
   return out;
 }
@@ -187,18 +188,18 @@ function oursSide(P, g, side, draftSetId) {
   if (!set) { const s = guideSetFor(P, g, b.species); if (s) { set = structuredClone(s); fromGuide = true; } }
   set ??= { species: b.species, item: b.item ?? '', ability: legalAbilities(P.mech, b.species)[0], nature: 'hardy', moves: [], sp: { ...ZERO, hp: 32 } };
   if (b.item) set.item = b.item;
-  return { set: over(set, side), setId: !fromGuide && data ? l?.id ?? null : null, fromGuide };
+  return { set: over(set, side, b.mega), setId: !fromGuide && data ? l?.id ?? null : null, fromGuide };
 }
 /** Their side: the ladder row (as the Brief uses it), or the worst case for this move; the guide's overrides on top. */
-function theirSide(P, g, side, move, attacking) {
+export function theirSide(P, g, side, move, attacking) {
   const b = battleOf(P.mech, side.id);
   const usage = P.app.usage?.() ?? null;
   const row = targetsOf(P.mech, [b.species], { usage, dexSpecies: (id) => P.dexSp(id), asOf: P.now().slice(0, 10) }).find((r) => r.forme === b.forme) ?? null;
   const r = row ? { ...row, coach: g.coach, key: `guide|${g.coach}|${row.key}` }
     : { key: `guide|${b.forme}`, coach: g.coach, species: b.species, forme: b.forme, mega: b.mega, set: { species: b.species, item: b.item ?? '', ability: legalAbilities(P.mech, b.species)[0], nature: 'hardy', moves: [move], sp: 'unknown' }, source: 'none', common: null };
-  if (side.set === 'worst' && attacking) return { ...r, set: over(WB.worstCaseOf(P, r, move), side), source: 'search' };
-  if (side.set === 'worst') { const stat = P.mech.moves[move]?.category === 'Special' ? 'spd' : 'def'; return { ...r, set: over({ ...r.set, nature: stat === 'spd' ? 'calm' : 'bold', sp: { ...ZERO, hp: 32, [stat]: 32 } }, side), source: 'bulk' }; }
-  return { ...r, set: over({ ...r.set }, side) };
+  if (side.set === 'worst' && attacking) return { ...r, set: over(WB.worstCaseOf(P, r, move), side, b.mega), source: 'search' };
+  if (side.set === 'worst') { const stat = P.mech.moves[move]?.category === 'Special' ? 'spd' : 'def'; return { ...r, set: over({ ...r.set, nature: stat === 'spd' ? 'calm' : 'bold', sp: { ...ZERO, hp: 32, [stat]: 32 } }, side, b.mega), source: 'bulk' }; }
+  return { ...r, set: over({ ...r.set }, side, b.mega) };
 }
 /** A guide calc → a WB.open seed (matchup-guide.md §4.1). */
 export function calcSeed(P, g, c, { draftSetId = null } = {}) {
@@ -211,7 +212,8 @@ export function calcSeed(P, g, c, { draftSetId = null } = {}) {
     // their side attacks with the guide's move; defending, it keeps its own (learnable) moves
     row: { ...row, set: { ...row.set, moves: !oursAttacks ? [c.move] : (row.set.moves ?? []).filter((m) => P.mech.moves[m]).slice(0, 4).length ? row.set.moves.filter((m) => P.mech.moves[m]).slice(0, 4) : learnset(P.mech, row.species).slice(0, 1) } },
     field: { ...(f.weather ? { weather: f.weather } : {}), ...(f.terrain ? { terrain: f.terrain } : {}), ...(screen ? { defenderSide: { [screen]: true } } : {}) },
-    guide: { range: c.range, coach: g.coach, pov: g.pov, opp: g.opp, fromGuide: mine.fromGuide }, intimidate: Number(f.intimidate) || 0 };
+    guide: { range: c.range, coach: g.coach, pov: g.pov, opp: g.opp, fromGuide: mine.fromGuide }, intimidate: Number(f.intimidate) || 0,
+    forms: { mine: (oursAttacks ? c.attacker : c.defender).form ?? '', theirs: (oursAttacks ? c.defender : c.attacker).form ?? '' } };
 }
 function openSeed(P, seed) {
   WB.open(P, seed);
