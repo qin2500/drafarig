@@ -18,7 +18,7 @@ Then open http://localhost:4600. The server binds to 127.0.0.1 only. Change the 
 ## Test
 
 ```sh
-npm test               # builds the Worker artifact, then node --test: 434 tests (calc engine, searches, Prep UI on a stub DOM, Build, chat, Worker)
+npm test               # builds the Worker artifact, then node --test: 443 tests (calc engine, searches, Prep UI on a stub DOM, Build, chat, Worker)
 ```
 
 The tests use a saved copy of the real sheet in `test/fixtures/`, so they run offline.
@@ -67,6 +67,18 @@ Ranked by OHKO odds × plausibility (×1.25 spread, ×1.25 priority); no-usage m
 you" shows what OHKOs Mega Charizard Y, spread double KOs, priority KOs and the top 3 per mon; the teambuilder lists the
 threats to the set being edited. Each row names its conditions and whether it's the ladder set or a learnset worst case.
 Goldens G1–G7 are in `test/threat-scan.test.mjs`.
+
+## Matchup guides (`lib/guides/`)
+
+A guide is curated advice for one matchup (`docs/research/strategy/guide-schema.md`), one `lib/guides/<pov>v<opp>.mjs` each,
+listed statically in `lib/guides/index.mjs` (tolerant validation, matched by the opponent's name, stale detection from
+`rosters` or the species it mentions). `public/prep-guide.js` puts it into the existing screens
+(`docs/research/ux/matchup-guide.md`): the Brief's "Game plan" card (remember, bring, "His preview shows…" which sets the
+Brief to those 4, folded leads / tells / how we lose / endgame / our double KOs), a "G" dot and Guide blocks on the detail
+sheets, a Guide box in the teambuilder ("Guide runs …" · Try it), every guide number as a workbench link with a "Guide: … ·
+now …" line, its double targets and answers merged into "Can wreck you", "Import as team" / "Update from guide" (never
+overwrites; "Use guide version" adds a version), a Fill row on the Plan board, a Move search sub-line, and a "Game plan"
+button on Brief, Plan and Sets. Only for your own side; no guide = the screens as before.
 
 ## Teambuilder (the set editor: a team's slot, or a matchup's Sets)
 

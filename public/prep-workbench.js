@@ -28,7 +28,7 @@ const wbOf = (P) => (P.ui.wb?.open ? P.ui.wb : null);
 export function open(P, seed) {
   const field = structuredClone(seed.field ?? {});
   P.ui.wb = {
-    open: true, setId: seed.setId, mine: structuredClone(seed.mine), mineBase: structuredClone(seed.base ?? seed.mine), row: structuredClone(seed.row),
+    open: true, guide: seed.guide ?? null, setId: seed.setId, mine: structuredClone(seed.mine), mineBase: structuredClone(seed.base ?? seed.mine), row: structuredClone(seed.row),
     their: null, spread: seed.row.set.sp === 'unknown' ? (seed.row.common ? 'common' : 'max') : 'set', move: seed.move, mineRole: seed.mineRole ?? 'attacker',
     boosts: { mine: seed.boost ?? 0, theirs: seed.stage ?? 0 }, field, crit: false, intimidated: 0, defHp: 100, tab: 'you', saved: null,
   };
@@ -87,18 +87,33 @@ export function worstCaseOf(P, row, move) {
   return { ...structuredClone(base), ability: row.mega ? base.ability : syn ?? base.ability, item: row.mega ? base.item : 'lifeorb', nature: stat === 'spa' ? 'modest' : 'adamant', sp: { ...sp, [stat]: 32 } };
 }
 function sourceLine(wb) {
+  return `${sourceBase(wb)}${wb.guide && !wb.their ? W.asGuide : ''}`;
+}
+function sourceBase(wb) {
   if (wb.theirMode === 'worst') return W.src.search;
   if (wb.their) return W.edited;
   const r = wb.row;
   if (r.source === 'set') return W.src.set;
   if (r.source === 'search') return W.src.search;
+  if (r.source === 'bulk') return W.src.bulk;
   if (r.source === 'ladder') return r.usageFrom === 'base' ? W.src.base : r.usageFrom === 'keymoves' ? W.src.keymoves : W.src.ladder(r.common);
   return W.src.none;
 }
 function resultHtml(P, wb) {
   if (!P.calc) return `<p class="small">${esc(P.engineState === 'failed' ? C.TB.engineFailed : C.TB.calculating)}</p>`;
   const r = result(P, wb);
-  return `${resultBlock(r, names(P, wb), { fixActions: false })}${r.class === 'exact' ? rollsDetail(r) : ''}`;
+  return `${guideCheck(P, wb, r)}${resultBlock(r, names(P, wb), { fixActions: false })}${r.class === 'exact' ? rollsDetail(r) : ''}`;
+}
+/** "Guide: 65–77% · now 65–77% ✓", or why it differs (your set as it is now). Computed only here, when it's open. */
+function guideCheck(P, wb, r) {
+  if (!wb.guide?.range || r?.class !== 'exact') return '';
+  const p = (n) => Math.floor((1000 * n) / r.maxHP) / 10;
+  const now = `${p(r.range.min)}–${p(r.range.max)}%`;
+  const m = /^(\d+(?:\.\d+)?)–(\d+(?:\.\d+)?)%$/.exec(wb.guide.range);
+  const same = m && Math.abs(Number(m[1]) - p(r.range.min)) <= 0.5 && Math.abs(Number(m[2]) - p(r.range.max)) <= 0.5;
+  const s = wb.mine, key = wb.mineRole === 'attacker' ? (P.mech.moves[wb.move]?.category === 'Special' ? 'spa' : 'atk') : (P.mech.moves[wb.move]?.category === 'Special' ? 'spd' : 'def');
+  const yours = `${P.spName(B.myForme(P.mech, s))} (${P.name('natures', s.nature)} ${s.sp?.hp ?? 0} HP / ${s.sp?.[key] ?? 0} ${C.STAT_SHORT[key]})`;
+  return `<p class="small gd-check${same ? ' same' : ''}">${same ? esc(W.guideSame(wb.guide.range, now)) : esc(W.guideDiffers(wb.guide.range, now, yours))}${wb.guide.fromGuide ? ` <span class="muted">${esc(W.guideSetNote)}</span>` : ''}</p>`;
 }
 
 // ---------- the sheet ----------
@@ -117,7 +132,7 @@ export function render(P) {
       <section class="wb-side wb-them" aria-label="${esc(W.them)}"><h3>${esc(W.them)} <span class="small muted">(${esc(sourceLine(wb))})</span></h3>${sidePanel(P, wb, 'theirs')}</section>
     </div>
     <section class="wb-field" aria-label="${esc(W.field)}"><h3>${esc(W.field)}</h3>${fieldPanel(P, wb)}</section>
-    <div class="wb-bar">${btn(diff.length ? W.apply(diff.map((k) => W.fieldName[k] ?? C.STAT_SHORT[k] ?? k)) : W.applyNone, 'wb-apply', {}, { primary: true, disabled: !diff.length })}
+    <div class="wb-bar">${wb.guide?.fromGuide ? btn(C.GUIDE.importTeam, 'guide-import', { pov: wb.guide.pov, opp: wb.guide.opp, coach: wb.guide.coach }, { primary: true }) : btn(diff.length ? W.apply(diff.map((k) => W.fieldName[k] ?? C.STAT_SHORT[k] ?? k)) : W.applyNone, 'wb-apply', {}, { primary: true, disabled: !diff.length })}
       ${btn(W.saveCalc, 'wb-save-calc')} <span class="small muted">${esc(wb.saved ? W.savedTo(wb.saved.coach) : W.notSaved)}</span>
       ${wb.saved ? btn(W.openCalcs, 'wb-open-calcs', {}, { cls: 'linkish' }) : ''}</div></div></div>`;
 }

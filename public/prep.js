@@ -25,11 +25,12 @@ import * as TB from './prep-teambuilder.js';
 import * as Teams from './prep-teams.js';
 import * as Moves from './prep-moves.js';
 import * as Threats from './prep-threats.js';
+import * as Guide from './prep-guide.js';
 import * as WB from './prep-workbench.js';
 
 const SAVE_DELAY = 400;
 const TAB_LABEL = { brief: 'Brief', plan: 'Plan', sets: 'Sets', calcs: 'Calcs', practice: 'Practice' };
-const MODULES = [Sets, Calcs, Plan, Practice, Matchup, Chat, TB, Teams, WB, Moves, Threats];
+const MODULES = [Sets, Calcs, Plan, Practice, Matchup, Chat, TB, Teams, WB, Moves, Threats, Guide];
 
 /**
  * app: { dex, league(), sheet(), usage(), coresCx(), viewingCoach(), setViewingCoach(name), goMode(mode), toast(msg),
@@ -780,6 +781,7 @@ export function createPrep(app) {
     return `<section class="panel prep-match" data-key="match">${povRow(m.pov.name, src)}${oppStrip(m.pov, m.opp.order)}
       ${Matchup.hero(P, { r, pov: m.pov, opp: m.opp, ws, legacy })}${tabs}<div id="ptab-panel">${body}</div>
       <p class="small mv-link">${btn(C.MOVES.vs(m.opp.name), 'go-moves', { scope: m.opp.name }, { cls: 'linkish' })}</p>
+      ${['brief', 'plan', 'sets'].includes(tab) && !r.detail ? Guide.trayButton(P, m) : ''}
       ${Chat.chatUi(P).open ? '' : `<p class="chat-foot">${Chat.entry(C.CHATUI.openHere)}</p>`}
       <p class="small muted ws-foot">${esc(C.HOME.savedLocal)} ${ws ? (P.saveState === 'saving' ? esc(C.SAVE.saving) : P.saveState === 'error' ? '' : esc(C.SAVE.saved)) : esc(C.BRIEF.nothingSaved)}</p></section>`;
   }

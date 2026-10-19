@@ -14,6 +14,7 @@ import * as C from './prep-copy.js';
 import { esc, attrs, btn, chipBtn } from './prep-ui.js';
 import { modelFor, sixOf, savedSpeeds } from './prep-matchup.js';
 import { variantOf, theirSetFor } from './prep-sets.js';
+import * as Guide from './prep-guide.js';
 
 const MODE_ICON = { 'trick-room': 'i-tr', tailwind: 'i-tw', sun: 'i-sun', rain: 'i-rain', sand: 'i-sand', 'snow-veil': 'i-snow', 'seed-trick-room': 'i-tr', 'seed-tailwind': 'i-tw', 'seed-sun': 'i-sun', 'seed-rain': 'i-rain', 'seed-sand': 'i-sand', 'seed-snow': 'i-snow' };
 const icon = (key) => (MODE_ICON[key] ? `<svg class="ic" aria-hidden="true" focusable="false"><use href="#${MODE_ICON[key]}"></use></svg>` : '');
@@ -34,6 +35,13 @@ export function boardModel(P, ws) {
   const exact = P.identity() === pov.name ? savedSpeeds(P, pov, ws).mine : {};
   const ctx = boardContext({ dex: P.app.dex, cx: P.app.coresCx?.() ?? null, b, roster, theirIds: opp.picks.map((p) => p.id).filter(Boolean), savedMine: exact });
   const ui = boardUi(P, ws);
+  // arriving from the guide's "Use on Plan board": select the plan of theirs that lead answers (most members in its "vs")
+  if (P.ui.guidePlan?.coach === ws.coach) {
+    const vs = new Set(P.ui.guidePlan.vs);
+    const best = [...targets].sort((a, z) => (z.members ?? z.focus ?? []).filter((id) => vs.has(id)).length - (a.members ?? a.focus ?? []).filter((id) => vs.has(id)).length)[0];
+    if (best) ui.sel = best.key;
+    P.ui.guidePlan = null;
+  }
   const target = targets.find((t) => t.key === ui.sel) ?? targets[0] ?? null;
   return { pov, opp, b, roster, six, targets, couldAlso, ctx, target, ui };
 }
@@ -261,6 +269,7 @@ export function board(P, ws, facts) {
     <div class="pb-vs" aria-hidden="true">${esc(C.BOARD.vs)}</div>
     <div class="pb-side you"><span class="pb-lab">${esc(C.BOARD.yourSide)}</span>
       ${locked && !P.readOnly() ? `<p class="small">🔒 ${esc(C.BOARD.locked.earlier)}</p>` : ''}
+      ${locked ? '' : guideFillRow(P, m, target, picks)}
       <div class="pb-row"><span class="pb-lab">${esc(C.BOARD.lead)}</span>${slotRow('lead')}</div>
       <div class="pb-row"><span class="pb-lab">${esc(C.BOARD.back)}</span>${slotRow('back')}</div>
       ${slotMenu}${megaRow}
@@ -332,6 +341,26 @@ export function previewWs(P) {
   return newWorkspace({ id: previewKey(m), coach: m.opp.name, roster: { fetchedAt: null, speciesIds: m.opp.picks.map((x) => x.id).filter(Boolean) }, now: P.now(), pov: m.pov.name });
 }
 
+// ---------- the guide's leads (matchup-guide.md §7): offered, never written without a tap ----------
+/** The guide's leads for this plan of theirs (its members among a lead's "vs"), best overlap first: [{ i, lead }]. */
+function guideLeads(P, m, target) {
+  const g = Guide.guideOf(P, m.pov.name, m.opp.name)?.guide;
+  if (!g) return { g: null, list: [] };
+  const members = new Set(target.members ?? target.focus ?? []);
+  const list = g.leads.map((lead, i) => ({ i, lead, n: lead.vs.filter((id) => members.has(id)).length })).filter((x) => x.n > 0 || !members.size).sort((a, b) => b.n - a.n || a.i - b.i);
+  return { g, list };
+}
+function guideFillRow(P, m, target, picks) {
+  const { g, list } = guideLeads(P, m, target);
+  if (!g || !list.length) return '';
+  const pair = (l) => l.ours.map((id) => P.spName(id)).join(' + ');
+  const empty = !picks.lead.length && !picks.back.length;
+  if (empty) return `<p class="small gd-fill">${Guide.guidePill(g)} ${list.slice(0, 3).map((x, k) => `${k ? ' · ' : ''}${esc(C.GUIDE.fill(pair(x.lead)))} ${btn(C.GUIDE.fillBtn, 'pb-guide-fill', { i: x.i })}`).join('')}</p>`;
+  const top = list[0];
+  const same = top.lead.ours.length === picks.lead.length && top.lead.ours.every((id) => picks.lead.includes(id));
+  return same ? '' : `<p class="small gd-fill">${Guide.guidePill(g)} ${esc(C.GUIDE.differs(pair(top.lead)))} ${btn(C.GUIDE.useBtn, 'pb-guide-fill', { i: top.i })}</p>`;
+}
+
 // ---------- actions ----------
 /** The board's workspace for reading: the open one, else the unsaved preview. */
 const W = (P) => P.ws.get(P.route.wsId) ?? previewWs(P);
@@ -350,6 +379,20 @@ function Wc(P) {
   return P.ws.get(made.id) ?? made;
 }
 export const actions = {
+  // the guide's lead onto this plan card: lead, bring 4 (the matching preview, else lead + the next two of its six), Mega
+  'pb-guide-fill': (t, P) => {
+    const ws = Wc(P);
+    const m = ws && boardModel(P, ws);
+    const g = m && Guide.guideOf(P, m.pov.name, m.opp.name)?.guide;
+    const lead = g?.leads[Number(t.dataset.i)];
+    if (!lead) return;
+    const base = (id) => P.mech?.species[id]?.mega?.from ?? id;
+    const ours = lead.ours.map(base);
+    const pv = g.previews.find((p) => p.lead.length === ours.length && p.lead.map(base).every((id) => ours.includes(id)));
+    const bring = uniq([...ours, ...(pv ? pv.bring4.map(base) : (g.bring?.six ?? []).map(base).filter((id) => !ours.includes(id)).slice(0, 2))]).filter((id) => m.roster.includes(id)).slice(0, 4);
+    const mega = g.bring?.mega ? base(g.bring.mega.id) : '';
+    editPicks(P, ws, (p) => ({ ...p, bring, lead: ours.filter((id) => bring.includes(id)), mega: bring.includes(mega) ? mega : p.mega }), C.GUIDE.filled(ours.map((x) => P.spName(x)).join(' + ')));
+  },
   'pb-target': (t, P) => { const ui = boardUi(P, W(P)); ui.sel = t.dataset.key; ui.slot = null; ui.calcs = false; P.saveUi?.(); P.app.rerender(); },
   'pb-pick': (t, P) => {
     const ws = Wc(P), sp = t.dataset.species;

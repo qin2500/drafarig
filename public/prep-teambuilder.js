@@ -20,6 +20,7 @@ import { esc, btn, chipBtn, h2, select, koWords, itemIcon } from './prep-ui.js';
 import { updateDraft, createMySet, theirSetFor, spForUnknown, revisionPrompt } from './prep-sets.js';
 import * as WB from './prep-workbench.js';
 import * as Threats from './prep-threats.js';
+import * as Guide from './prep-guide.js';
 import { scanThreats, typeEffFrom } from '../lib/threat-scan.mjs';
 import { worstCaseAttacker } from '../lib/move-search.mjs';
 
@@ -245,6 +246,7 @@ export function editor(P, ws, l, { team = null } = {}) {
       ${probs.length ? `<ul class="ferrs" role="alert">${probs.map((p) => `<li>${esc(T.problem(p, nm(P)))}</li>`).join('')}</ul>` : ''}
       ${usable ? compareBar(P, l, set, pin, speed, em, sc, rows) : ''}
       ${usable ? statsPanel(P, l, set, fm, all, speed, em, sc, rows) : `<p class="banner warn">${esc(T.spUnknown)}</p>`}
+      ${!sc.league ? (() => { const b = Guide.monBlock(P, sc.me, sc.value, [l.speciesId, forme], { draftSetId: l.id, maxNotes: 4 }); const s = usable ? Guide.guideSetLine(P, sc.me, sc.value, l, set) : ''; return b || s ? `<div class="tb-guide">${b}${s}</div>` : ''; })() : ''}
       ${usable ? `<details class="tb-threats" open><summary>${esc(C.THREATS.editorHead(sc.league ? T.league : sc.value))}</summary>${Threats.editorBody(P, l, set, sc.league ? sc.others.map((c) => c.name) : [sc.value])}</details>` : ''}
       ${saveRow(P, l, set)}
       ${seen.length ? `<p class="small">${esc(T.seenBy)} ${seen.map((e) => `${esc(e.who.replace(/^partner:/, 'partner '))} (${esc(e.where ?? '')})`).join('; ')}</p>` : ''}
@@ -589,6 +591,18 @@ export const actions = {
   'tb-open': (t, P) => openSpecies(P, t.dataset.species),
   'tb-focus': (t, P) => { const u = (tbUi(P).focus ??= {}); const i = Number(t.dataset.i); if (u[t.dataset.set] !== i) { u[t.dataset.set] = i; P.app.rerender(); } },
   'tb-wb': openWorkbench,
+  // the guide's set for this mon, as a trial: your set is pinned as A, the guide's goes into the draft (nothing saves)
+  'tb-guide-try': (t, P) => {
+    const l = lineage(P, t.dataset.set);
+    const g = l ? Guide.guideOf(P, P.coachBySeat(Number(t.dataset.pov))?.name, t.dataset.coach)?.guide : null;
+    const s = g ? Guide.guideSetFor(P, g, l.speciesId) : null;
+    if (!s) return;
+    const pins = (tbUi(P).pin ??= {});
+    if (!pins[l.id]) pins[l.id] = structuredClone(draftSet(P, l));
+    P.saveUi();
+    intoDraft(P, l.id, s);
+    P.toast(T.trying);
+  },
   'tb-item-open': (t) => { const d = comboEls(t); if (d) showList(t, d.list, true); t.select?.(); },
   'tb-item-pick': (t, P) => { const input = globalThis.document?.getElementById?.('tb-item'); const d = input && comboEls(input); if (d) showList(input, d.list, false); pickItem(P, t.dataset.set, t.dataset.item ?? ''); },
   'tb-tip': (t, P) => {

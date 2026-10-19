@@ -12,6 +12,7 @@ import * as C from './prep-copy.js';
 import { esc, btn, h2, select, itemIcon } from './prep-ui.js';
 import { createMySet, spForUnknown } from './prep-sets.js';
 import * as TB from './prep-teambuilder.js';
+import * as Guide from './prep-guide.js';
 
 const T = C.TEAMS;
 const teamsDoc = (P) => P.docs.teams;
@@ -73,10 +74,16 @@ function list(P) {
       <p>${btn(T.importIt, 'team-import', {}, { primary: true })} ${btn(T.cancel, 'team-import-toggle')}</p></div>` : '';
   return `${btn('‹ Prep', 'go-home', {}, { cls: 'back', aria: 'Back to Prep home' })}${h2(T.head)}
     <p class="small">${esc(T.intro)}</p>
-    <p>${btn(T.newTeam, 'team-new', {}, { primary: true })} ${btn(T.importTeam, 'team-import-toggle', {}, { pressed: !!ui.importOpen })}</p>${report(P)}${imp}
+    <p>${btn(T.newTeam, 'team-new', {}, { primary: true })} ${btn(T.importTeam, 'team-import-toggle', {}, { pressed: !!ui.importOpen })}</p>${guideLines(P)}${report(P)}${imp}
     <ul class="tm-list">${cards}</ul>`;
 }
 
+/** "ZhuZi (W3) has a game plan · Import its team": matchups whose guide's team isn't in Teams yet. */
+function guideLines(P) {
+  const me = P.ownSide();
+  const lines = (P.coaches() ?? []).filter((c) => c.name !== me).map((c) => Guide.guideOf(P, me, c.name)?.guide).filter((g) => g?.sets && !teamsDoc(P).teams.some((t) => t.name === C.GUIDE.teamName(g.coach)));
+  return lines.map((g) => `<p class="small">${Guide.guidePill(g)} ${esc(C.GUIDE.hasPlan(g.coach, g.week))} ${btn(C.GUIDE.importIts, 'guide-import', { pov: g.pov, opp: g.opp, coach: g.coach }, { cls: 'linkish' })}</p>`).join('');
+}
 function slotRow(P, team, l, i) {
   const d = currentVersion(l).data;
   const st = P.mech ? setStats(P.mech, asSet(l, currentVersion(l)), { megaEvolved: true }) : null;
@@ -90,6 +97,7 @@ function slotRow(P, team, l, i) {
       <span class="tm-s-det small"><span>${itemIcon(d.item)}${esc(P.name('items', d.item) || T.noItem)}</span><span>${esc(P.name('abilities', d.ability) || '—')}</span><span>${esc(P.name('natures', d.nature) || '—')}</span></span>
       <span class="tm-s-moves small">${(d.moves ?? []).map((m) => `<span>${esc(P.name('moves', m))}</span>`).join('')}</span>
       <span class="tm-s-stats small">${st ? STAT_IDS.map((k) => `<span>${C.STAT_SHORT[k]} ${st[k]}</span>`).join('') : esc(T.noSp)}</span></button>
+    ${box ? '' : Guide.slotDiffers(P, team, l)}
     <details class="tm-more"><summary aria-label="${esc(T.moreFor(P.spName(l.speciesId)))}">⋯</summary><div class="tm-acts">
       ${box ? '' : `${btn('↑', 'team-up', { team: team.id, i }, { aria: T.up, disabled: i === 0 })} ${btn('↓', 'team-down', { team: team.id, i }, { aria: T.down, disabled: i === team.slots.length - 1 })}`}
       ${select(`tm-copy-${i}`, opts(T.copyTo), '', { data: { pc: 'team-copy-to', set: l.id }, aria: T.copyTo })}
@@ -147,7 +155,7 @@ export function bring(P, ws) {
   return `<div class="tm-bring">${select('tm-bring-ws', [['', T.noTeam], ...teams.map((t) => [t.id, t.name])], main?.id ?? '', { label: T.bring, data: { pc: 'ws-bring', ws: ws.id } })}
     ${main ? `<p class="tm-faces">${sets.map((l) => `<button type="button" class="tm-face" data-pa="team-slot" data-team="${esc(main.id)}" data-slot="${main.slots.indexOf(l.id) + 1}" aria-label="${esc(`${P.spName(l.speciesId)}: ${T.editSet}`)}">${pt(P, l.speciesId)}</button>`).join('')}${(main.planned ?? []).map((sp) => `<span class="tm-ghost">${pt(P, sp)}</span>`).join('')}</p>
       ${warns.map((w) => `<p class="small warnline">⚠ ${esc(w)}</p>`).join('')}<p>${btn(T.editTeam, 'team-open', { team: main.id })} ${btn(T.newFromMatch, 'ws-new-team', { ws: ws.id }, { cls: 'linkish' })}</p>`
-    : `<p class="small">${esc(T.pickTeam)} ${btn(T.newFromMatch, 'ws-new-team', { ws: ws.id }, { cls: 'linkish' })}</p>`}</div>`;
+    : `<p class="small">${esc(T.pickTeam)} ${btn(T.newFromMatch, 'ws-new-team', { ws: ws.id }, { cls: 'linkish' })}${(() => { const g = Guide.guideOf(P, me, ws.coach)?.guide; return g?.sets ? ` ${btn(C.GUIDE.importGuideTeam, 'guide-import', { pov: g.pov, opp: g.opp, coach: g.coach }, { cls: 'linkish' })}` : ''; })()}</p>`}</div>`;
 }
 
 // ---------- actions ----------
@@ -171,7 +179,8 @@ function report(P) {
   const conv = r.converted.map((c) => `<li>${esc(T.evsConverted(c.name, c.text))} ${c.team ? btn(T.review, 'team-slot', { team: c.team, slot: c.slot }, { cls: 'linkish' }) : ''}</li>`).join('');
   const held = r.held.map((h) => `<li>${esc(T.heldBack(h.name, h.why))}</li>`).join('');
   return `<div class="banner ${r.held.length ? 'warn' : 'info'} tm-report" role="status"><p>${esc(r.summary)} ${btn('✕', 'team-import-dismiss', {}, { cls: 'linkish', aria: T.dismiss })}</p>
-    ${conv ? `<ul class="small">${conv}</ul>` : ''}${held ? `<ul class="small">${held}</ul><p class="small">${btn(T.fullImport, 'go-mysets-import', {}, { cls: 'linkish' })}</p>` : ''}</div>`;
+    ${conv ? `<ul class="small">${conv}</ul>` : ''}${held ? `<ul class="small">${held}</ul><p class="small">${btn(T.fullImport, 'go-mysets-import', {}, { cls: 'linkish' })}</p>` : ''}
+    ${r.bringFor ? `<p>${btn(C.GUIDE.bringAsk(r.bringFor.coach), 'guide-bring', { team: r.bringFor.team, coach: r.bringFor.coach }, { primary: true })}</p>` : ''}</div>`;
 }
 /** Why a parsed set was held back: its first problem line (a set that can't import, or a question with no safe answer). */
 function whyHeld(s) {
@@ -179,14 +188,16 @@ function whyHeld(s) {
   const f = l && C.PASTE[l.code];
   return typeof f === 'function' ? f(l) : '';
 }
-function importText(P, text, team) {
+/** The one-tap import, for other screens (the matchup guide's "Import recommended team"). */
+export const importTeamText = (P, text, team = null, opts = {}) => importText(P, text, team, opts);
+function importText(P, text, team, { reason = 'imported', bringFor = null } = {}) {
   const r = parseTeamQuick(text ?? '', { mech: P.mech, side: 'mine' });
   const u = ui(P);
   if (r.rejected) { P.importReport = { summary: T.importRejected, converted: [], held: [] }; P.app.rerender(); return; }
   const roster = new Set(myRoster(P));
   const ready = r.sets.filter((s) => s.set);
   const held = r.sets.filter((s) => !s.set).map((s) => ({ name: s.draft?.species ? P.spName(s.draft.species) : s.header.split(' @ ')[0], why: whyHeld(s) }));
-  const made = ready.map((s) => newLineage({ id: P.id('set'), side: 'mine', speciesId: s.set.species, name: s.set.cosmetic?.nickname || 'Set', data: cleanSetData(s.set), now: P.now(), reason: 'imported' }));
+  const made = ready.map((s) => newLineage({ id: P.id('set'), side: 'mine', speciesId: s.set.species, name: s.set.cosmetic?.nickname || 'Set', data: cleanSetData(s.set), now: P.now(), reason }));
   if (!made.length) { P.importReport = { summary: T.importNone(held.length), converted: [], held }; P.app.rerender(); return; }
   if (!P.mutate('mysets', (d) => { d.sets.push(...made); }, { render: false })) return;
   let t = teamsDoc(P);
@@ -211,7 +222,7 @@ function importText(P, text, team) {
   const where = (id) => { const tm = teamsDoc(P).teams.find((x) => x.slots.includes(id)); return tm ? { team: tm.id, slot: tm.slots.indexOf(id) + 1 } : {}; };
   const converted = ready.map((s, i) => (s.converted ? { name: P.spName(s.set.species), text: C.evsConverted(s.converted.from, s.converted.to), ...where(made[i].id) } : null)).filter(Boolean);
   Object.assign(u, { importText: '', importOpen: false, importInto: null });
-  P.importReport = { summary: T.imported(placed, boxed, held.length), converted, held };
+  P.importReport = { summary: T.imported(placed, boxed, held.length), converted, held, bringFor: bringFor && created.length === 1 ? { coach: bringFor, team: created[0] } : null };
   // one new team: open it (Back returns to the list)
   if (created.length === 1 && !team) { P.go({ view: 'teams', teamId: created[0] }, { push: true }); return; }
   P.app.rerender();

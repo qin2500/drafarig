@@ -8,6 +8,7 @@ import * as C from './prep-copy.js';
 import { esc, btn, chipBtn, h2, select } from './prep-ui.js';
 import * as WB from './prep-workbench.js';
 import { myForme } from '../lib/prep-build.mjs';
+import * as Guide from './prep-guide.js';
 
 const T = C.MOVES;
 const SHOWN = 40;
@@ -97,6 +98,7 @@ export function screen(P) {
   const team = myTeam(P);
   const chips = active ? chipsFor(P, shown, team) : null;
   const usage = P.app.usage?.() ?? null;
+  const guide = coaches.some((c) => c.name === u.scope) ? Guide.guideOf(P, me, u.scope)?.guide ?? null : null;
   const form = `<div class="mv-form">
     <label class="field mv-text" for="mv-text"><span>${esc(T.move)}</span><input id="mv-text" type="search" autocomplete="off" spellcheck="false" placeholder="${esc(T.movePh)}" value="${esc(u.text)}" data-pi="mv-text"></label>
     ${select('mv-type', [['', T.anyType], ...types.map((t) => [t, t])], u.type, { label: T.type, data: { pc: 'mv-set', key: 'type' } })}
@@ -116,11 +118,14 @@ export function screen(P) {
     const dmg = !team.length ? '' : !P.calc ? `<span class="small muted">${esc(T.calculating)}</span>` : chips === null ? `<span class="small muted">${esc(T.calculating)}</span>`
       : w ? `<button type="button" class="mv-dmg${w.ko.num === w.ko.den ? ' ko' : w.ko.num !== '0' ? ' maybe' : ''}" data-pa="mv-wb" data-species="${esc(r.species)}" data-set="${esc(w.target.setId)}" aria-label="${esc(T.dmgAria(P.name('moves', r.best), P.spName(myForme(P.mech, w.target.set)), w.lo, w.pct))}">${esc(T.dmg(P.name('moves', r.best), P.spName(myForme(P.mech, w.target.set)), w.lo, w.pct))}</button>` : '';
     return `<li class="mv-card"><div class="mv-head">${P.pt(r.species, { size: 'sm' })}<span><b>${esc(sp.name)}</b> <span class="small muted">${esc(r.coach ? T.ownedBy(r.coach) : T.undrafted)}${pct !== undefined && pct !== null ? ` · ${esc(T.usage(pct))}` : ` · ${esc(T.noUsage)}`}</span></span></div>
-      <p class="small mv-abs">${ab}</p><p class="mv-moves">${mv}</p>${dmg ? `<p class="small">${dmg}</p>` : ''}</li>`;
+      <p class="small mv-abs">${ab}</p><p class="mv-moves">${mv}</p>${dmg ? `<p class="small">${dmg}</p>` : ''}${guide?.perMon[r.species]?.worstCase ? `<p class="small muted">${Guide.guidePill(guide)} ${esc(C.GUIDE.searchLine(guide.perMon[r.species].worstCase))}</p>` : ''}</li>`;
   };
+  // the guide for this opponent: its calcs with the searched move, as workbench links (matchup-guide.md §8)
+  const strip = guide && active ? guide.calcs.map((c, i) => [c, i]).filter(([c]) => results.some((r) => r.moves.some((m) => m.id === c.move))) : [];
+  const stripHtml = strip.length ? `<p class="small mv-guide">${Guide.guidePill(guide)} ${esc(C.GUIDE.fromGuide)} ${strip.map(([c, i]) => `<button type="button" class="linkish gd-calc" data-pa="guide-calc" data-pov="${guide.pov}" data-opp="${guide.opp}" data-coach="${esc(guide.coach)}" data-i="${i}">${esc(C.GUIDE.calc(P.spName(c.attacker.id), P.name('moves', c.move), P.spName(c.defender.id), c.range, ''))} ›</button>`).join(' ')}</p>` : '';
   const list = !active ? `<p class="small">${esc(T.hint)}</p>` : !results.length ? `<p>${esc(T.none)}</p>`
     : `<p class="small" role="status">${esc(T.count(results.length, pool.length))}${team.length ? ` ${esc(T.dmgNote)}` : ` ${esc(T.noTeam)}`}</p><ul class="mv-list">${shown.map(card).join('')}</ul>${results.length > shown.length ? btn(T.more(results.length - shown.length), 'mv-more') : ''}`;
-  return `<section class="panel prep-moves">${back}${h2(T.head)}<p class="small">${esc(T.intro)}</p>${form}${list}</section>`;
+  return `<section class="panel prep-moves">${back}${h2(T.head)}<p class="small">${esc(T.intro)}</p>${form}${stripHtml}${list}</section>`;
 }
 
 // ---------- actions ----------

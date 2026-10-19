@@ -27,7 +27,7 @@ SPREAD = {'heatwave', 'muddywater', 'rockslide', 'earthquake', 'discharge', 'icy
 
 def line(att, d, mv, ctx=None, label=''):
     ctx = dict(ctx or {})
-    if mv in SPREAD and 'spread' not in ctx:
+    if (mv in SPREAD or MOVES.get(mv, {}).get('target') in ('allAdjacent', 'allAdjacentFoes')) and 'spread' not in ctx:
         ctx['spread'] = True
     hp = stat(d['id'], 'hp', d['sp'].get('hp', 0), d['nature'])
     if mv == 'tripleaxel':  # 20/40/60 BP per hit (data/moves.ts basePowerCallback 20*hit); all three hits assumed to land

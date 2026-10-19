@@ -8,6 +8,7 @@ import { compareSpeed, natureSign, speedRange } from '../lib/calc/stats.mjs';
 import { currentVersion, defaultVariant } from '../lib/prep-model.mjs';
 import { formatRoute } from '../lib/prep-route.mjs';
 import * as Threats from './prep-threats.js';
+import * as Guide from './prep-guide.js';
 import { topPerMon as topPer } from '../lib/threat-scan.mjs';
 import * as C from './prep-copy.js';
 import { esc, btn, chipBtn, h2, select, term } from './prep-ui.js';
@@ -58,8 +59,9 @@ export function savedSpeeds(P, pov, ws) {
 export function modelFor(P, pov, opp, ws, { lens: forced = null } = {}) {
   const st = briefUi(P, pov.name, opp.name);
   const six = sixOf(P, ws).filter((id) => pov.picks.some((p) => p.id === id));
-  const lens = forced === '10' ? '10' : st.lens === '6' && six.length ? '6' : '10';
-  const mineIds = lens === '6' ? six : pov.picks.map((p) => p.id).filter(Boolean);
+  const four = (st.four ?? []).filter((id) => pov.picks.some((p) => p.id === id));
+  const lens = forced === '10' ? '10' : st.lens === '4' && four.length ? '4' : st.lens === '6' && six.length ? '6' : '10';
+  const mineIds = lens === '4' ? four : lens === '6' ? six : pov.picks.map((p) => p.id).filter(Boolean);
   const saved = savedSpeeds(P, pov, ws);
   const L = P.league();
   const available = (L?.board ?? []).filter((b) => !b.taken && b.id).map((b) => ({ id: b.id, cost: b.points }));
@@ -135,6 +137,7 @@ export function brief(P, ctx) {
   if (b.rosterState.theirSlotsLeft > 0) notices.push(b.poolTheirs.length ? C.BRIEF.openPicks(opp.name, b.rosterState.theirSlotsLeft) : C.BRIEF.emptyPool(opp.name));
   return `<div class="brief" data-lens="${lens}">
     ${notices.filter(Boolean).map((n) => `<p class="small notice">${esc(n)}</p>`).join('')}
+    ${safe(() => { const c = Guide.card(P, ctx, briefUi(P, pov.name, opp.name)); return c ? section('gplan', c.title, '', c.body, 'gplan') : ''; })}
     <div class="bcols"><div class="bcol bcol-them">
     ${safe(() => poolSection(P, ctx, b))}
     ${safe(() => threatsSection(P, ctx, b))}
@@ -155,17 +158,17 @@ function poolSection(P, { pov, opp }, b) {
   const ringOf = new Map(b.threats.map((t) => [t.id, t]));
   // §5 (1): no drafted mon reads as harmless without its worst case: the scan's top row per mon, and a badge when it OHKOs
   const rows = pov.name === P.ownSide() ? Threats.scanFor(P, opp.name) : null;
-  const worst = rows ? Threats.wreckers(rows) : new Map();
+  const worst = Threats.wreckers(rows, Guide.guideOf(P, pov.name, opp.name)?.guide);
   const top = rows ? new Map([...topPer(rows)].map(([sp, list]) => [sp, list[0]])) : new Map();
   const order = [...b.threats.map((t) => t.id)];
   const cell = (id) => {
     const t = ringOf.get(id), s = dexSp(P, id);
     const megas = s?.forms.filter((f) => f.mega).length ?? 0;
-    const w = top.get(id), wreck = worst.has(id);
-    const label = [P.spName(id), (s?.forms[0].types ?? []).join(' '), t?.ring === 'look-first' ? C.BRIEF.ringLabel(t.rank) : t?.ring === 'watch' ? C.BRIEF.watchLabel : '', megas ? C.BRIEF.megaLabel : '', wreck ? C.THREATS.wreckBadge : '', w ? Threats.worstLine(P, w) : ''].filter(Boolean).join(', ');
+    const w = top.get(id), wreck = worst.has(id), gdot = Guide.poolDot(P, { pov, opp }, id);
+    const label = [P.spName(id), (s?.forms[0].types ?? []).join(' '), t?.ring === 'look-first' ? C.BRIEF.ringLabel(t.rank) : t?.ring === 'watch' ? C.BRIEF.watchLabel : '', megas ? C.BRIEF.megaLabel : '', wreck ? (worst.get(id)?.combo ? C.THREATS.wreckCombo : C.THREATS.wreckBadge) : '', w ? Threats.worstLine(P, w) : '', gdot?.label ?? ''].filter(Boolean).join(', ');
     return `<li><button type="button" class="pcard${t?.ring ? ` ring-${t.ring}` : ''}" data-pa="brief-open" data-side="their" data-n="${slotOf(opp, id)}" aria-label="${esc(`${label}. Details`)}">
       ${t?.ring === 'look-first' ? `<span class="rank" aria-hidden="true">${t.rank}</span>` : ''}${megas ? `<span class="megad" aria-hidden="true">M${megas > 1 ? `×${megas}` : ''}</span>` : ''}
-      ${wreck ? '<span class="wreckd" aria-hidden="true">!</span>' : ''}${P.pt(id, { size: 'md' })}<span class="pname">${esc(P.spName(id))}</span>${typeBars(s?.forms[0].types ?? [])}${w ? `<span class="pworst small">${esc(Threats.worstLine(P, w))}</span>` : ''}</button></li>`;
+      ${wreck ? '<span class="wreckd" aria-hidden="true">!</span>' : ''}${P.pt(id, { size: 'md' })}<span class="pname">${esc(P.spName(id))}</span>${typeBars(s?.forms[0].types ?? [])}${w ? `<span class="pworst small">${esc(Threats.worstLine(P, w))}</span>` : ''}${gdot?.html ?? ''}</button></li>`;
   };
   const open = Math.max(0, b.rosterState.theirSlotsLeft);
   const openCells = Array.from({ length: Math.min(open, 10) }, () => `<li><span class="pcard open"><span class="pt pt-md noimg" data-ini="?"></span><span class="pname">${esc(C.BRIEF.openSlot(b.rosterState.theirMaxNextPick))}</span></span></li>`).join('');
@@ -352,11 +355,12 @@ function checksSection(P, ctx, b) {
   return section('checks', C.BRIEF.checks, C.BRIEF.checksSub, `<ul class="checks">${out.slice(0, 3).join('')}</ul>`);
 }
 
+const st4 = (P, pov, opp) => briefUi(P, pov.name, opp.name).four ?? [];
 function tray(P, { pov, opp, ws }, six, lens) {
   const rule = P.docs.rules.rules.sixPerMatch?.value;
   return `<div class="tray${six.length ? ' has-six' : ''}" role="group" aria-label="${esc(C.BRIEF.tray)}"><span class="tray-h"><b>${esc(C.BRIEF.tray)}</b> ${six.length}/6</span>
     <span class="tray-slots">${six.length ? six.map((id) => `<span class="tslot" title="${esc(P.spName(id))}">${P.pt(id, { size: 'xs' })}<span class="vh">${esc(P.spName(id))}</span></span>`).join('') : `<span class="small muted">${esc(C.BRIEF.trayEmpty)}</span>`}</span>
-    ${six.length ? `<span class="lens" role="group" aria-label="${esc(C.BRIEF.lens)}">${chipBtn(C.BRIEF.lensTen, 'brief-lens', { lens: '10' }, lens === '10')}${chipBtn(C.BRIEF.lensSix, 'brief-lens', { lens: '6' }, lens === '6')}</span>` : ''}
+    ${six.length || st4(P, pov, opp).length ? `<span class="lens" role="group" aria-label="${esc(C.BRIEF.lens)}">${chipBtn(C.BRIEF.lensTen, 'brief-lens', { lens: '10' }, lens === '10')}${six.length ? chipBtn(C.BRIEF.lensSix, 'brief-lens', { lens: '6' }, lens === '6') : ''}${st4(P, pov, opp).length ? chipBtn(C.BRIEF.lensFour, 'brief-lens', { lens: '4' }, lens === '4') : ''}</span>` : ''}
     ${rule === 'unknown' || !rule ? `<span class="small muted">${esc(C.BRIEF.sixRuleUnknown)}</span>` : ''}</div>`;
 }
 
@@ -393,6 +397,7 @@ function detail(P, ctx, b) {
     const checks = (t?.checks ?? []).filter((k) => k.kind === 'calc');
     return `<section class="sheet them" aria-labelledby="prep-h">${back}${h2(C.BRIEF.sheetThem(P.spName(id)))}
       <div class="sheethead">${P.pt(id, { size: 'lg' })}<div>${forms}${t?.ring === 'look-first' ? `<p class="small">${esc(C.BRIEF.ringLabel(t.rank))}</p>` : ''}</div></div>
+      ${Guide.monBlock(P, pov.name, opp.name, [id, ...s.forms.map((f) => f.id)])}
       ${t?.reasons.length ? `<ul class="rsns">${t.reasons.map((x) => reasonChip(P, x, 'them')).join('')}</ul>` : ''}
       <p class="small rowlab">${esc(C.BRIEF.sheetHits(P.spName(id)))}${t?.pressure?.mega ? ` (${esc(C.BRIEF.asMega(t.pressure.form))})` : ''}</p><div class="minis">${victims.map((v) => mini(P, v.id, multBadge(v.mult))).join('') || `<span class="small muted">${esc(C.BRIEF.none)}</span>`}</div>
       <p class="small rowlab">${esc(C.BRIEF.sheetWalls)}</p><div class="minis">${(t?.pressure?.walls ?? []).map((w) => mini(P, w)).join('') || `<span class="small muted">${esc(C.BRIEF.none)}</span>`}</div>
@@ -410,6 +415,7 @@ function detail(P, ctx, b) {
   const six = sixOf(P, ctx.ws);
   return `<section class="sheet you" aria-labelledby="prep-h">${back}${h2(C.BRIEF.sheetYou(P.spName(id)))}
     <div class="sheethead">${P.pt(id, { size: 'lg' })}<div>${forms}</div></div>
+    ${Guide.monBlock(P, pov.name, opp.name, [id, ...s.forms.map((f) => f.id)])}
     <p class="small rowlab">${esc(C.BRIEF.why)}</p><ul class="rsns">${(m?.pros ?? []).map((x) => reasonChip(P, x, 'pro')).join('') || '<li class="small muted">—</li>'}</ul>
     <p class="small rowlab">${esc(C.BRIEF.costs)}</p><ul class="rsns">${(m?.cons ?? []).map((x) => reasonChip(P, x, 'con')).join('') || `<li class="small muted">${esc(C.BRIEF.noCost)}</li>`}</ul>
     <h3>${esc(C.BRIEF.sheetSets)}</h3>${P.identity() === pov.name ? `<ul class="small">${sets.map((x) => `<li>${btn(`${x.name || 'Set'} v${x.currentV}`, 'open-my-set', { set: x.id }, { cls: 'linkish' })}</li>`).join('') || `<li>${esc(C.BRIEF.noSets)}</li>`}</ul>` : `<p class="small muted">${esc(C.POV.viewingAs(pov.name))}</p>`}
@@ -461,7 +467,7 @@ export const actions = {
     }
   },
   'brief-showall': (t, P) => { const st = stOf(P); if (st) { st.showAll = !st.showAll; P.saveUi(); P.app.rerender(); } },
-  'brief-lens': (t, P) => { const st = stOf(P); if (st) { st.lens = t.dataset.lens === '6' ? '6' : '10'; P.saveUi(); P.app.announce?.(C.BRIEF.lensSaid(st.lens)); P.app.rerender(); } },
+  'brief-lens': (t, P) => { const st = stOf(P); if (st) { st.lens = ['6', '4'].includes(t.dataset.lens) ? t.dataset.lens : '10'; P.saveUi(); P.app.announce?.(C.BRIEF.lensSaid(st.lens)); P.app.rerender(); } },
   'brief-scenario-go': (t, P) => { const st = stOf(P); if (st) { st.scenario = t.dataset.scenario; st.sel = []; P.saveUi(); P.focusOn('bs-speed'); } },
   // + My 6: a shortlist of species saved with this matchup's prep (it starts the prep: an explicit tap)
   'brief-six': (t, P) => {

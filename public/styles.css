@@ -986,3 +986,31 @@ button.st-btn:hover, button.st-btn:focus-visible { border-color: var(--line); }
 @media (max-width: 767px) { .prep .tw-row button.tw-open { min-height: 44px; } }
 .prep .pcard .wreckd { position: absolute; top: 4px; left: 6px; width: 18px; height: 18px; border-radius: 50%; background: var(--bad); color: #fff; font-weight: 700; font-size: 12px; line-height: 18px; }
 .prep .pcard .pworst { color: var(--bad); line-height: 1.2; }
+
+/* matchup guides (public/prep-guide.js; docs/research/ux/matchup-guide.md §9: the app's own components + one muted-amber pill) */
+:root { --guide: #a1741a; --guidebg: #fbf3e2; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --guide: #e0b25a; --guidebg: #33291a; } }
+.gpill { display: inline-block; font-size: 11px; font-weight: 700; line-height: 1.5; padding: 0 6px; border-radius: 999px; color: var(--guide); background: var(--guidebg); border: 1px solid var(--guide); vertical-align: 1px; }
+.prep .gplan h4 { margin: 10px 0 4px; font-size: 14px; }
+.prep .gd-head { margin: 0 0 6px; }
+.prep .gd-list { margin: 4px 0; padding-left: 18px; }
+.prep .gd-remember { margin: 4px 0; padding-left: 20px; }
+.prep .gd-faces { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.prep .gd-face { position: relative; padding: 0; border: 0; background: none; min-height: 44px; }
+.prep .gd-face.bench { opacity: .45; text-decoration: line-through; }
+.prep .gd-face .megad { position: absolute; top: -2px; right: -2px; }
+.prep .gd-preview, .prep .gd-lead { border-left: 3px solid var(--guide); padding: 2px 0 2px 8px; margin: 6px 0; }
+.prep .gd-lead p { margin: 2px 0; }
+.prep .gd-pair { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.prep .gd-gone { text-decoration: line-through; opacity: .7; }
+.prep .gd-fold > summary, .prep .gd-more > summary { cursor: pointer; padding: 6px 0; font-weight: 600; }
+.prep .gd-unchecked { border-bottom: 1px dotted var(--muted); }
+.prep button.gd-calc { text-align: left; color: var(--guide); }
+.prep .gd-mon-block, .prep .tb-guide { border-left: 3px solid var(--guide); padding: 2px 0 2px 8px; margin: 8px 0; }
+.prep .pcard .gdot { position: absolute; top: 4px; right: 6px; width: 18px; height: 18px; border-radius: 50%; background: var(--guide); color: #fff; font-weight: 700; font-size: 11px; line-height: 18px; }
+.prep .gd-fab { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 30; min-height: 44px; border-radius: 999px; background: var(--guidebg); color: var(--guide); border: 1px solid var(--guide); font-weight: 700; box-shadow: 0 4px 14px rgba(0, 0, 0, .2); }
+.prep .gd-sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 31; max-height: 70vh; overflow: auto; background: var(--panel); border-top: 2px solid var(--guide); box-shadow: 0 -8px 24px rgba(0, 0, 0, .25); }
+.prep .gd-sheet-in { max-width: 720px; margin: 0 auto; padding: 8px 16px calc(12px + env(safe-area-inset-bottom)); }
+.prep .gd-sheet-top { display: flex; justify-content: space-between; align-items: center; margin: 0; }
+.gd-check { margin: 0 0 4px; color: var(--warn); } .gd-check.same { color: var(--ok); }
+@media (max-width: 767px) { .prep .gd-fold > summary, .prep .gd-more > summary { min-height: 44px; } .prep button.gd-calc { min-height: 44px; } }

@@ -159,12 +159,14 @@ def rolls(att, dfn, move_id, ctx=None):
     # attack / defense
     if move_id == 'bodypress':
         a_stat, a_from = 'def', att
+    elif move_id == 'foulplay':  # uses the TARGET's Attack and Attack boosts (data/moves.ts foulplay overrideOffensivePokemon)
+        a_stat, a_from = 'atk', dfn
     else:
         a_stat, a_from = ('atk' if phys else 'spa'), att
     d_stat = 'def' if phys else 'spd'
     A = stat(a_from['id'], a_stat, a_from['sp'].get(a_stat, 0), a_from['nature'])
     D = stat(dfn['id'], d_stat, dfn['sp'].get(d_stat, 0), dfn['nature'])
-    ab, db = att.get('boosts', {}).get(a_stat, 0), dfn.get('boosts', {}).get(d_stat, 0)
+    ab, db = a_from.get('boosts', {}).get(a_stat, 0), dfn.get('boosts', {}).get(d_stat, 0)
     if ctx.get('crit'):
         ab, db = max(ab, 0), min(db, 0)
     if dab == 'unaware': ab = 0

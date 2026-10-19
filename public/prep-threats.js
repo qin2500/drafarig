@@ -9,6 +9,8 @@ import { myForme } from '../lib/prep-build.mjs';
 import * as C from './prep-copy.js';
 import { esc } from './prep-ui.js';
 import * as WB from './prep-workbench.js';
+import * as Guide from './prep-guide.js';
+import { mergeWreck, parseRange } from '../lib/guides/index.mjs';
 
 const T = C.THREATS;
 /** Your sets as scan targets: one per species of your 10, Stat Points known. [{key (setId), set}] */
@@ -57,12 +59,18 @@ function conditions(P, r) {
   return `${T.ifCond(parts.join(' + '))}${f ? `, ${f}` : ''}`;
 }
 const oddsText = (r) => (r.sash ? T.sash : r.odds >= 1 ? 'OHKO' : r.odds > 0 ? T.odds(Math.round(r.odds * 100)) : T.noKo);
-function line(P, r, targets, { who = true } = {}) {
+function line(P, r, targets, { who = true, guideNote = null, guide = null } = {}) {
   const label = r.ladderSet ? T.ladder : T.worst;
   const mon = P.spName(r.forme);
   return `<li class="tw-row${r.odds >= 1 ? ' ko' : ''}"><button type="button" class="tw-open linkish" data-pa="tw-wb" data-coach="${esc(r.coach ?? '')}" data-forme="${esc(r.forme)}" data-species="${esc(r.species)}" data-ability="${esc(r.ability)}" data-item="${esc(r.item)}" data-move="${esc(r.move)}" data-target="${esc(r.target)}" data-weather="${esc(r.field.weather)}" data-terrain="${esc(r.field.terrain)}" aria-label="${esc(T.openAria(mon, P.name('moves', r.move), tname(P, targets, r.target)))}">
     ${who ? `<b>${esc(mon)}</b> ` : ''}${esc(P.name('moves', r.move))}${r.spread ? ` <span class="chip">${esc(T.spread)}</span>` : ''}${r.priority ? ` <span class="chip">${esc(T.priority)}</span>` : ''} → ${esc(T.your(tname(P, targets, r.target)))}: <b>${r.lo}–${r.hi}%</b> · ${esc(oddsText(r))}</button>
-    <span class="small muted">${esc(conditions(P, r))} · <span class="tw-src">${esc(label)}</span></span></li>`;
+    <span class="small muted">${esc(conditions(P, r))} · <span class="tw-src">${esc(label)}</span></span>${guideNote ? guideLine(guideNote, r, guide) : ''}</li>`;
+}
+/** A scan row the guide also names: its pill, the guide's answer, and the guide's range when it differs by > 5 points. */
+function guideLine(n, r, g) {
+  const gr = parseRange(n.range);
+  const off = gr && (Math.abs(gr[0] - r.lo) > 5 || Math.abs(gr[1] - r.hi) > 5);
+  return `<br>${Guide.guidePill(g)}${n.answer ? ` <span class="small"><b>${esc(T.answer)} ${esc(n.answer)}</b></span>` : ''}${off ? ` <span class="small muted">${esc(T.guideRange(n.range))}</span>` : ''}`;
 }
 
 /**
@@ -76,9 +84,11 @@ export function scanFor(P, coach) {
   return rowsFor(P, coach, targets);
 }
 /** The mons of theirs whose worst case OHKOs one of yours (plausibility ≥ 0.6): Map species → that row. */
-export function wreckers(rows) {
+export function wreckers(rows, guide = null) {
   const out = new Map();
   for (const r of rows ?? []) if (r.odds >= 0.5 && r.plausibility >= 0.6 && !out.has(r.species)) out.set(r.species, r);
+  // a mon that's only dangerous in one of the guide's double targets still gets "!" (", in a guide combo")
+  for (const c of guide?.combos.theirs ?? []) for (const [a] of c.attackers) if (!out.has(a)) out.set(a, { combo: true });
   return out;
 }
 /** One line for a pool card: "Rock Slide → your Charizard-Mega-Y 153–183%". */
@@ -90,19 +100,25 @@ export function worstLine(P, r) {
 /** The Brief section body for one opponent (their 10 into your sets), or '' when there is nothing to scan into. */
 export function briefBody(P, coach) {
   const targets = myTargets(P);
-  if (!targets.length) return `<p class="small">${esc(T.noSets)}</p>`;
+  const g = Guide.guideOf(P, P.ownSide(), coach)?.guide ?? null;
+  // the guide's double targets first: two-attacker KOs the scan can't make (matchup-guide.md §5)
+  const guideRows = g?.combos.theirs.length ? `<h4>${esc(T.guideHead)}</h4><ul class="tw-list">${Guide.wreckGuideRows(P, g)}</ul>` : '';
+  if (!targets.length) return `${guideRows}<p class="small">${esc(T.noSets)}</p>`;
   P.ensureEngine();
   const rows = rowsFor(P, coach, targets);
-  if (rows === null) return `<p class="small muted">${esc(P.engineState === 'failed' ? T.engineFailed : T.working)}</p>`;
+  if (rows === null) return `${guideRows}<p class="small muted">${esc(P.engineState === 'failed' ? T.engineFailed : T.working)}</p>`;
+  const notes = g ? mergeWreck(rows, g, (r) => targets.find((t) => t.key === r.target)?.set.species ?? '', (id) => P.mech.species[id]?.mega?.from ?? id) : new Map();
+  const lineOf = (r, o = {}) => line(P, r, targets, { ...o, guideNote: notes.get(r) ?? null, guide: g });
   const z = zardKOs(rows).slice(0, 6), d = spreadDoubles(rows).slice(0, 5), pr = priorityKOs(rows).slice(0, 5);
   const per = topPerMon(rows, 3);
   const dl = d.map((x) => `<li class="tw-row ko"><b>${esc(P.spName(x.row.forme))}</b> ${esc(P.name('moves', x.row.move))} <span class="chip">${esc(T.spread)}</span> → ${x.targets.map((t) => `${esc(T.your(tname(P, targets, t.target)))} ${t.lo}–${t.hi}%`).join(' + ')}
     <span class="small muted">${esc(conditions(P, x.row))} · ${esc(x.row.ladderSet ? T.ladder : T.worst)}</span></li>`).join('');
-  const mons = [...per].filter(([, list]) => list.length).map(([sp, list]) => `<li class="tw-mon"><p class="tw-h">${P.pt(sp, { size: 'sm' })} <b>${esc(P.spName(sp))}</b></p><ul>${list.map((r) => line(P, r, targets, { who: r.forme !== sp })).join('')}</ul></li>`).join('');
-  return `<p class="small">${esc(T.intro)}</p>
-    ${z.length ? `<h4>${esc(T.zardHead)}</h4><ul class="tw-list">${z.map((r) => line(P, r, targets)).join('')}</ul>` : ''}
+  const mons = [...per].filter(([, list]) => list.length).map(([sp, list]) => `<li class="tw-mon"><p class="tw-h">${P.pt(sp, { size: 'sm' })} <b>${esc(P.spName(sp))}</b></p><ul>${list.map((r) => lineOf(r, { who: r.forme !== sp })).join('')}</ul></li>`).join('');
+  const ohko = new Set(rows.filter((r) => r.odds >= 0.5).map((r) => `${r.forme}|${r.move}`)).size;
+  return `<p class="small">${esc(T.summary(ohko, g?.combos.theirs.length ?? 0))}</p>${guideRows}<p class="small">${esc(T.intro)}</p>
+    ${z.length ? `<h4>${esc(T.zardHead)}</h4><ul class="tw-list">${z.map((r) => lineOf(r)).join('')}</ul>` : ''}
     ${dl ? `<h4>${esc(T.doubleHead)}</h4><ul class="tw-list">${dl}</ul>` : ''}
-    ${pr.length ? `<h4>${esc(T.priorityHead)}</h4><ul class="tw-list">${pr.map((r) => line(P, r, targets)).join('')}</ul>` : ''}
+    ${pr.length ? `<h4>${esc(T.priorityHead)}</h4><ul class="tw-list">${pr.map((r) => lineOf(r)).join('')}</ul>` : ''}
     <details class="tw-all"><summary>${esc(T.perMon)}</summary><ul class="tw-mons">${mons || `<li class="small">${esc(T.nothing)}</li>`}</ul></details>`;
 }
 
