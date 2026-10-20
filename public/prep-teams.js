@@ -167,7 +167,7 @@ export function bringTeam(P, ws, teamId) {
   P.mutate(`ws:${ws.id}`, (d) => {
     if (team) { d.teamId = team.id; d.my6 = team.slots.map((id) => d.my6.find((m) => m.setId === id) ?? { setId: id }); } else { delete d.teamId; d.my6 = []; }
   });
-  if (team) P.mutate('meta', (m) => { m.lastTeamId = team.id; }, { substantive: false });
+  if (team && !ws.mock) P.mutate('meta', (m) => { m.lastTeamId = team.id; }, { substantive: false }); // a mock's team is never your last team
 }
 /** After an import: what came in, each EV line converted to Stat Points (with a Review link), and each set held back, by name. */
 function report(P) {
@@ -229,8 +229,14 @@ function importText(P, text, team, { reason = 'imported', bringFor = null } = {}
 }
 export const actions = {
   'teams-list': (t, P) => P.go({ view: 'teams' }, { push: false }),
-  'team-open': (t, P) => P.go({ view: 'teams', teamId: t.dataset.team }, { push: true }),
-  'team-slot': (t, P) => P.go({ view: 'teams', teamId: t.dataset.team, slot: Number(t.dataset.slot) }, { push: P.route.view !== 'teams' || !P.route.slot }),
+  // in a mock, its teams are its variants: the set opens in the mock's own workspace, never in your Teams
+  'team-open': (t, P) => { const mc = P.mockCtx?.(); if (mc) P.go({ view: 'ws', wsId: mc.ws.id, tab: 'sets' }, { push: true }); else P.go({ view: 'teams', teamId: t.dataset.team }, { push: true }); },
+  'team-slot': (t, P) => {
+    const mc = P.mockCtx?.();
+    const id = mc ? P.docs.teams.teams.find((x) => x.id === t.dataset.team)?.slots[Number(t.dataset.slot) - 1] : null;
+    if (id) { P.go({ view: 'ws', wsId: mc.ws.id, kind: 'sets', id }, { push: true }); return; }
+    P.go({ view: 'teams', teamId: t.dataset.team, slot: Number(t.dataset.slot) }, { push: P.route.view !== 'teams' || !P.route.slot });
+  },
   'team-new': (t, P) => { const id = P.id('team'); if (writeTeams(P, TM.createTeam(teamsDoc(P), { id, now: P.now() }))) P.go({ view: 'teams', teamId: id }, { push: true }); },
   'team-duplicate': (t, P) => {
     const id = P.id('team');

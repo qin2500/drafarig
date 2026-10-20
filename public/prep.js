@@ -28,10 +28,11 @@ import * as Threats from './prep-threats.js';
 import * as Guide from './prep-guide.js';
 import * as Mocks from './prep-mocks.js';
 import * as WB from './prep-workbench.js';
+import * as MockPov from './prep-mockpov.js';
 
 const SAVE_DELAY = 400;
 const TAB_LABEL = { brief: 'Brief', plan: 'Plan', sets: 'Sets', calcs: 'Calcs', practice: 'Practice' };
-const MODULES = [Sets, Calcs, Plan, Practice, Matchup, Chat, TB, Teams, WB, Moves, Threats, Guide, Mocks];
+const MODULES = [Sets, Calcs, Plan, Practice, Matchup, Chat, TB, Teams, WB, Moves, Threats, Guide, Mocks, MockPov];
 
 /**
  * app: { dex, league(), sheet(), usage(), coresCx(), viewingCoach(), setViewingCoach(name), goMode(mode), toast(msg),
@@ -55,6 +56,14 @@ export function createPrep(app) {
     mech: null, mechState: 'idle', calc: null, engineState: 'idle', ui: { ws: {} }, saveState: 'saved', saveError: null,
     conflicts: new Set(), corrupt: new Map(), newer: new Set(), pendingFocus: false, timer: null, persisted: null, lastRestore: null,
   };
+  // Mock POV (public/prep-mockpov.js): on a mock workspace's screens, "your" library and teams ARE the mock's (every screen
+  // reads P.docs.mysets / P.docs.teams), and writes to them go to the mock's record. R holds your real documents: saving,
+  // backups and the teams setup always use R, so a mock can never be written into your own prep.
+  const R = { mysets: null, teams: null };
+  P.mockCtx = () => MockPov.povCtx(P);
+  for (const k of ['mysets', 'teams']) {
+    Object.defineProperty(P.docs, k, { enumerable: true, get() { const c = P.mockCtx(); return c ? MockPov.povLib(P, c)[k] : R[k]; }, set(d) { R[k] = d; } });
+  }
   P.now = () => app.now();
   P.id = (prefix) => newId(prefix, (a) => app.crypto.getRandomValues(a));
   P.toast = (m) => app.toast(m);
@@ -96,11 +105,12 @@ export function createPrep(app) {
 
   // ---------- save ----------
   const keyOf = (which) => (which.startsWith('ws:') ? wsKey(which.slice(3)) : KEYS[which]);
-  const docFor = (key) => (key === KEYS.meta ? P.docs.meta : key === KEYS.rules ? P.docs.rules : key === KEYS.mysets ? P.docs.mysets : key === KEYS.pilot ? P.docs.pilot : key === KEYS.teams ? P.docs.teams : P.ws.get(key.slice(wsKey('').length)));
-  const setDoc = (key, d) => { if (key === KEYS.meta) P.docs.meta = d; else if (key === KEYS.rules) P.docs.rules = d; else if (key === KEYS.mysets) P.docs.mysets = d; else if (key === KEYS.pilot) P.docs.pilot = d; else if (key === KEYS.teams) P.docs.teams = d; else P.ws.set(d.id, d); };
+  const docFor = (key) => (key === KEYS.meta ? P.docs.meta : key === KEYS.rules ? P.docs.rules : key === KEYS.mysets ? R.mysets : key === KEYS.pilot ? P.docs.pilot : key === KEYS.teams ? R.teams : P.ws.get(key.slice(wsKey('').length)));
+  const setDoc = (key, d) => { if (key === KEYS.meta) P.docs.meta = d; else if (key === KEYS.rules) P.docs.rules = d; else if (key === KEYS.mysets) R.mysets = d; else if (key === KEYS.pilot) P.docs.pilot = d; else if (key === KEYS.teams) R.teams = d; else P.ws.set(d.id, d); };
   /** Apply a change to a document (on a deep copy) and schedule an autosave. which: meta | rules | mysets | pilot | 'ws:<id>'. */
   P.mutate = (which, fn, { substantive = true, render = true, allowUnassigned = false } = {}) => {
     if (P.readOnly()) { P.toast(C.SAVE.newer); return false; }
+    if (which === 'mysets' || which === 'teams') { const mc = P.mockCtx(); if (mc) return MockPov.povWrite(P, mc, which, fn, { render }); }
     // My sets is your own library: viewing as another coach never writes into it (their ideas stay in their prep)
     if ((which === 'mysets' || which === 'teams') && !P.canWriteMine()) { P.toast(P.myCoach() ? C.POV.mineBlocked(P.myCoach()) : C.POV.assignFirst); return false; }
     // A workspace saved before perspectives is read-only until you say whose it is (its own review screen does that)
@@ -266,13 +276,16 @@ export function createPrep(app) {
    * the default perspective offered with "Is this you?" (on the sheet when the sheet is loaded). Never a perspective chosen in
    * the address, a flip, the last one viewed, or Draft's seat fallback.
    */
-  P.ownSide = () => {
+  const ownSideReal = () => {
     const ident = P.identity();
     if (ident) return ident;
     if (!P.coaches()) return P.hint()?.name ?? null;
     const d = P.resolvePov(null);
     return d.name && ['setting', 'default'].includes(d.source) ? d.name : null;
   };
+  /** In a mock, the coach you play (their mock team is "yours" there); else your own side. */
+  P.ownSide = () => P.mockCtx()?.pilot ?? ownSideReal();
+  P.ownSideReal = ownSideReal;
   /**
    * "Your" side on the screen: the open workspace's owner (none for a workspace saved before perspectives: nothing is inferred
    * for it), else the perspective being shown; tools (My sets, rules, backup, pilot) are your own side.
@@ -376,7 +389,10 @@ export function createPrep(app) {
     const pinned = r.wsId ? P.ws.get(r.wsId) : null;
     const keep = pinned && ownerOf(pinned) === names.pov && pinned.coach === names.opp;
     const list = keep ? [] : workspacesFor([...P.ws.values()], names.pov, names.opp);
-    const pick = keep ? pinned : list.find((w) => w.id === P.ui.activeWs?.[`${names.pov}|${names.opp}`]) ?? list[0];
+    // a mock opened from Mocks (this tab): its own workspace for these two coaches, never your view-as prep
+    const mockWs = P.ui.mock?.wsId ? P.ws.get(P.ui.mock.wsId) : null;
+    const mockPick = mockWs?.mock && mockWs.pov === names.pov && mockWs.coach === names.opp ? mockWs : null;
+    const pick = mockPick ?? (keep ? pinned : list.find((w) => w.id === P.ui.activeWs?.[`${names.pov}|${names.opp}`]) ?? list[0]);
     // a pinned coach who is no longer on the sheet: keep the names, offer nothing new (P.match returns null)
     return { ...r, names, wsId: pick?.id ?? null, ...(ps && os && moved ? { pov: ps, opp: os, seatsMoved: true } : {}) };
   };
@@ -461,8 +477,24 @@ export function createPrep(app) {
     const roster = { fetchedAt: app.sheet()?.fetchedAt ?? null, speciesIds: P.coachRoster(opp), points: Object.fromEntries((P.league()?.coaches.find((c) => c.name === opp)?.picks ?? []).filter((p) => p.id).map((p) => [p.id, p.points])) };
     const ws = newWorkspace({ id, coach: opp, roster, now: P.now(), pov });
     // a new matchup brings the team used last (one tap to change, on its Sets tab)
-    const last = teamsStored() && pov === P.ownSide() ? P.docs.teams.teams.find((t) => t.id === P.docs.meta.lastTeamId && t.kind !== 'holding') : null;
+    const last = teamsStored() && pov === ownSideReal() ? R.teams.teams.find((t) => t.id === P.docs.meta.lastTeamId && t.kind !== 'holding') : null;
     if (last) { ws.teamId = last.id; ws.my6 = last.slots.map((setId) => ({ setId })); }
+    P.ws.set(id, ws); P.revs.set(wsKey(id), null);
+    P.dirty.add(wsKey(id));
+    P.docs.meta = { ...P.docs.meta, workspaces: [...P.docs.meta.workspaces, { id, coach: opp, pov, updatedAt: ws.updatedAt, archived: false }] };
+    P.dirty.add(KEYS.meta);
+    flush();
+    return P.ws.get(id);
+  };
+  /** A mock's own workspace (pov: the coach Anthony plays, coach: the friend), tied to its record: an explicit tap in Mocks. */
+  P.ensureMockWorkspace = (pov, opp, recId) => {
+    const have = [...P.ws.values()].find((w) => w.mock === recId);
+    if (have) return have;
+    if (P.readOnly()) { P.toast(C.SAVE.newer); return null; }
+    if (!pov || !opp || pov === opp) return null;
+    const id = P.id('ws');
+    const roster = { fetchedAt: app.sheet()?.fetchedAt ?? null, speciesIds: P.coachRoster(opp), points: Object.fromEntries((P.league()?.coaches.find((c) => c.name === opp)?.picks ?? []).filter((p) => p.id).map((p) => [p.id, p.points])) };
+    const ws = { ...newWorkspace({ id, coach: opp, roster, now: P.now(), pov }), mock: recId };
     P.ws.set(id, ws); P.revs.set(wsKey(id), null);
     P.dirty.add(wsKey(id));
     P.docs.meta = { ...P.docs.meta, workspaces: [...P.docs.meta.workspaces, { id, coach: opp, pov, updatedAt: ws.updatedAt, archived: false }] };
@@ -487,8 +519,8 @@ export function createPrep(app) {
 
   // ---------- backup ----------
   P.allDocs = () => {
-    const out = { [KEYS.meta]: P.docs.meta, [KEYS.rules]: P.docs.rules, [KEYS.mysets]: P.docs.mysets, [KEYS.pilot]: P.docs.pilot };
-    if (teamsStored()) out[KEYS.teams] = P.docs.teams;
+    const out = { [KEYS.meta]: P.docs.meta, [KEYS.rules]: P.docs.rules, [KEYS.mysets]: R.mysets, [KEYS.pilot]: P.docs.pilot };
+    if (teamsStored()) out[KEYS.teams] = R.teams;
     for (const w of P.ws.values()) out[wsKey(w.id)] = w;
     return out;
   };
@@ -534,7 +566,9 @@ export function createPrep(app) {
     // the calc workbench sits over the screen it was opened from (a sheet; the screen stays as it was)
     let wb = '';
     try { wb = WB.render(P); } catch (e) { console.error('Workbench failed:', e && e.message); }
-    return `<div class="prep" data-prep-view="${esc(r.view)}">${banners()}${body}${chat}${wb}</div>`;
+    let mockBar = '';
+    try { mockBar = MockPov.banner(P); } catch (e) { console.error('Mock banner failed:', e && e.message); }
+    return `<div class="prep" data-prep-view="${esc(r.view)}">${banners()}${mockBar}${body}${chat}${wb}</div>`;
   };
 
   /**
@@ -610,7 +644,8 @@ export function createPrep(app) {
     const ident = P.identity();
     const picker = select('prep-pov', [['', 'Prepare as…'], ...coaches.map((c) => [String(c.order), c.name])], '', { data: { pc: 'pov-pick' }, aria: C.POV.choose, cls: 'povpick' });
     if (!povName) return `<div class="povrow" role="group" aria-label="${esc(C.POV.group)}"><p><b>${esc(C.POV.who)}</b></p>${picker}</div>`;
-    const viewing = ident && ident !== povName && P.seatOf(ident);
+    // in a mock, its banner says whose side this is: no second "not your side" line
+    const viewing = ident && ident !== povName && P.seatOf(ident) && !P.mockCtx();
     const source = src === 'identity' || ident === povName ? `<span class="chip ok">${esc(C.POV.you)}</span>` : `<span class="small muted">${esc(C.POV.source[src] ?? C.POV.source.url)}</span>`;
     return `<div class="povrow${viewing ? ' viewing' : ''}" role="group" aria-label="${esc(C.POV.group)}">
       <p class="povline">${esc(C.POV.preparing)} <b>${esc(povName)}</b> ${source}</p>
@@ -675,7 +710,7 @@ export function createPrep(app) {
 
   // ---------- Battle Prep overview (home) ----------
   function savedLists(povName, coaches) {
-    const all = [...P.ws.values()].sort((a, b) => (b.updatedAt ?? '').localeCompare(a.updatedAt ?? ''));
+    const all = [...P.ws.values()].filter((w) => !w.mock).sort((a, b) => (b.updatedAt ?? '').localeCompare(a.updatedAt ?? '')); // mocks open from Mocks
     const onSheet = (n) => coaches.some((c) => c.name === n);
     const unassigned = all.filter((w) => !ownerOf(w));
     const other = all.filter((w) => ownerOf(w) && ownerOf(w) !== povName && onSheet(w.coach));
@@ -829,11 +864,11 @@ export function createPrep(app) {
   /** On every load: Imported sets catch any set no team holds; each matchup's my6 mirrors its team. */
   function teamsOnLoad() {
     if (!teamsStored() || P.readOnly() || P.newer.has(KEYS.teams)) return;
-    const r = TM.reconcileTeams(P.docs.teams, P.docs.mysets, { now: P.now() });
+    const r = TM.reconcileTeams(R.teams, R.mysets, { now: P.now() });
     if (r.changed) mark(KEYS.teams, r.teams);
     if (r.dropped.length) P.teamsDropped = r.dropped;
     for (const w of P.ws.values()) {
-      const { main, alt } = TM.teamsOfWs(P.docs.teams, w);
+      const { main, alt } = TM.teamsOfWs(R.teams, w);
       if (!main || !TM.isOwnedWs(w) || P.newer.has(wsKey(w.id))) continue;
       const how = TM.reconcileSix(w, main, alt);
       if (how === 'adopt') syncTeamOf(w.id); // an older tab changed this 6 after the team: the team takes it
@@ -845,7 +880,7 @@ export function createPrep(app) {
     if (!teamsStored() && !P.dirty.has(KEYS.teams)) return;
     for (const w of P.ws.values()) {
       if (!w.teamId || !TM.isOwnedWs(w)) continue;
-      const { main, alt } = TM.teamsOfWs(P.docs.teams, w);
+      const { main, alt } = TM.teamsOfWs(R.teams, w);
       const m = main && TM.mirrorSix(w, main, alt);
       if (m) mark(wsKey(w.id), m);
     }
@@ -857,15 +892,15 @@ export function createPrep(app) {
     if (!w || !TM.isOwnedWs(w)) return;
     if (!w.teamId) {
       if (!TM.needsTeam(w)) return;
-      const r = TM.migrateTeams({ mysets: P.docs.mysets, teams: P.docs.teams, wss: [w] }, { now: P.now() });
-      if (r.mysets.sets.length !== P.docs.mysets.sets.length) mark(KEYS.mysets, r.mysets);
+      const r = TM.migrateTeams({ mysets: R.mysets, teams: R.teams, wss: [w] }, { now: P.now() });
+      if (r.mysets.sets.length !== R.mysets.sets.length) mark(KEYS.mysets, r.mysets);
       mark(KEYS.teams, r.teams);
       if (r.wss.get(wsId)) mark(wsKey(wsId), r.wss.get(wsId));
       return;
     }
-    const r = TM.syncSix({ teams: P.docs.teams, mysets: P.docs.mysets, ws: w }, { now: P.now(), newId: () => P.id('set') });
-    if (r.mysets !== P.docs.mysets) mark(KEYS.mysets, r.mysets);
-    if (r.teams !== P.docs.teams) mark(KEYS.teams, r.teams);
+    const r = TM.syncSix({ teams: R.teams, mysets: R.mysets, ws: w }, { now: P.now(), newId: () => P.id('set') });
+    if (r.mysets !== R.mysets) mark(KEYS.mysets, r.mysets);
+    if (r.teams !== R.teams) mark(KEYS.teams, r.teams);
     if (r.ws !== w) mark(wsKey(wsId), r.ws);
   }
   /**
@@ -878,7 +913,7 @@ export function createPrep(app) {
     const wss = [...P.ws.values()];
     const stored = teamsStored();
     if (stored && !wss.some(TM.needsTeam)) return;
-    if (!stored && !wss.some(TM.needsTeam) && !(P.docs.mysets.sets ?? []).length) return; // nothing to organise yet
+    if (!stored && !wss.some(TM.needsTeam) && !(R.mysets.sets ?? []).length) return; // nothing to organise yet
     P.teamsBusy = true;
     try {
       if (!stored && !downloaded) {
@@ -890,7 +925,7 @@ export function createPrep(app) {
         }
       }
       if (P.readOnly() || P.conflicts.size) return; // something changed while the backup was made
-      const r = TM.migrateTeams({ mysets: P.docs.mysets, teams: stored ? P.docs.teams : null, wss: [...P.ws.values()] }, { now: P.now() });
+      const r = TM.migrateTeams({ mysets: R.mysets, teams: stored ? R.teams : null, wss: [...P.ws.values()] }, { now: P.now() });
       if (!r.changed) return;
       if (r.copies.length) mark(KEYS.mysets, r.mysets);
       mark(KEYS.teams, { ...r.teams, migration: { ...r.teams.migration, backupKey: downloaded ? null : TM.PREMIGRATION_KEY } });
@@ -901,7 +936,7 @@ export function createPrep(app) {
     } finally { P.teamsBusy = false; }
   };
   /** Undo the teams setup: what would be lost, then (confirmed) the matchups' references back, copies and teams gone. */
-  P.teamsUndoPreview = () => (teamsStored() ? TM.undoTeams({ mysets: P.docs.mysets, teams: P.docs.teams, wss: [...P.ws.values()] }) : null);
+  P.teamsUndoPreview = () => (teamsStored() ? TM.undoTeams({ mysets: R.mysets, teams: R.teams, wss: [...P.ws.values()] }) : null);
   P.teamsUndo = () => {
     const u = P.teamsUndoPreview();
     if (!u || P.readOnly()) return false;
@@ -912,17 +947,17 @@ export function createPrep(app) {
     if (P.saveError) return false;
     const res = P.store.remove(KEYS.teams);
     if (!res.ok) return false;
-    P.docs.teams = TM.emptyTeams(); P.revs.set(KEYS.teams, null); P.dirty.delete(KEYS.teams);
+    R.teams = TM.emptyTeams(); P.revs.set(KEYS.teams, null); P.dirty.delete(KEYS.teams);
     return true;
   };
   P.teamsRedo = () => { P.docs.meta = { ...P.docs.meta, teamsUndone: false }; P.dirty.add(KEYS.meta); flush(); return P.teamsStep(); };
-  P.teamsStored = teamsStored;
+  P.teamsStored = () => !!P.mockCtx() || teamsStored(); // a mock always has its teams (one per variant)
 
   /** Backup screen: whether your sets are in teams, and the way back (what it would lose is said first). */
   function teamsSection() {
     if (P.docs.meta.teamsUndone) return `<h3>${esc(C.TEAMS.head)}</h3><p>${esc(C.TEAMS.offNow)} ${btn(C.TEAMS.redo, 'teams-redo')}</p>`;
     if (!teamsStored()) return '';
-    const t = P.docs.teams, n = t.teams.filter((x) => x.kind === 'team').length;
+    const t = R.teams, n = t.teams.filter((x) => x.kind === 'team').length;
     const ask = P.ui.backup?.teamsUndo;
     const u = ask ? P.teamsUndoPreview() : null;
     return `<h3>${esc(C.TEAMS.head)}</h3><p>${esc(C.TEAMS.status(n, t.migration?.at?.slice(0, 10) ?? '', !!t.migration?.backupKey))}</p>
@@ -969,7 +1004,7 @@ export function createPrep(app) {
     const docs = Object.values(backup.docs);
     const theirs = new Set(docs.filter((d) => d?.coach).map((d) => d.id));
     const gone = [...P.ws.values()].filter((w) => !theirs.has(w.id)).length;
-    const mySetsHere = P.docs.mysets.sets.length, mySetsThere = docs.find((d) => Array.isArray(d?.sets))?.sets.length ?? 0;
+    const mySetsHere = R.mysets.sets.length, mySetsThere = docs.find((d) => Array.isArray(d?.sets))?.sets.length ?? 0;
     return `${gone} opponent${gone === 1 ? '' : 's'} here that the file doesn't have will be removed; your rules and ${mySetsHere} set${mySetsHere === 1 ? '' : 's'} of yours are replaced by the file's (${mySetsThere} set${mySetsThere === 1 ? '' : 's'}).`;
   }
   function restorePreview(ui) {
@@ -1021,7 +1056,7 @@ export function createPrep(app) {
     }
     const pick = P.ui.ownerPick?.[ws.id] ?? (coaches.some((c) => c.name === P.currentPov()) ? P.currentPov() : '');
     const whoHas = (sp) => (P.coaches() ?? []).find((c) => c.picks.some((x) => x.id === sp))?.name ?? null;
-    const ev = legacyEvidence(ws, { pov: pick || null, rosterOf: (n) => P.coachRoster(n), mysets: P.docs.mysets, whoHas });
+    const ev = legacyEvidence(ws, { pov: pick || null, rosterOf: (n) => P.coachRoster(n), mysets: R.mysets, whoHas });
     const nm = (ids) => ids.map((x) => P.spName(x)).join(', ');
     const facts = [
       C.POV.evOpp(ws.coach, ev.snapshotMatches, ev.snapshotSize, ev.oppNowSize),
@@ -1204,7 +1239,7 @@ export function createPrep(app) {
     'ws-export-file': async (t) => {
       const ws = P.ws.get(t.dataset.ws);
       flush();
-      app.download(`drafarig-prep-opponent-${P.now().slice(0, 10)}.json`, await P.backupText(opponentDocs(ws, P.docs.mysets, teamsStored() ? P.docs.teams : null), 'opponent'), 'application/json');
+      app.download(`drafarig-prep-opponent-${P.now().slice(0, 10)}.json`, await P.backupText(opponentDocs(ws, R.mysets, teamsStored() ? R.teams : null), 'opponent'), 'application/json');
     },
     // Archive is two steps: the file first, then removal once the user has seen it downloaded (a blocked download must
     // never cost them the prep).
@@ -1212,7 +1247,7 @@ export function createPrep(app) {
       const ws = P.ws.get(t.dataset.ws);
       flush();
       if (P.conflicts.has(wsKey(ws.id)) || P.dirty.has(wsKey(ws.id))) { P.toast(`vs ${ws.coach} has changes that aren't saved here. Reload it first.`); return; }
-      app.download(`drafarig-prep-opponent-${P.now().slice(0, 10)}.json`, await P.backupText(opponentDocs(ws, P.docs.mysets, teamsStored() ? P.docs.teams : null), 'opponent'), 'application/json');
+      app.download(`drafarig-prep-opponent-${P.now().slice(0, 10)}.json`, await P.backupText(opponentDocs(ws, R.mysets, teamsStored() ? R.teams : null), 'opponent'), 'application/json');
       (P.ui.backup ??= {}).archivePending = ws.id;
       app.rerender();
     },

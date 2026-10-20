@@ -18,7 +18,7 @@ Then open http://localhost:4600. The server binds to 127.0.0.1 only. Change the 
 ## Test
 
 ```sh
-npm test               # builds the Worker artifact, then node --test: 457 tests (calc engine, searches, Prep UI on a stub DOM, Build, chat, Worker)
+npm test               # builds the Worker artifact, then node --test: 458 tests (calc engine, searches, Prep UI on a stub DOM, Build, chat, Worker)
 ```
 
 The tests use a saved copy of the real sheet in `test/fixtures/`, so they run offline.
@@ -85,10 +85,17 @@ Every calc in every guide and curated mock must reproduce in the app's engine wi
 
 ## Mocks (`#prep/mocks`)
 
-Play a friend's next opponent on Showdown (`docs/research/ux/mocks.md`): pick the friend and the week, then "Play X vs Y" shows
-X's team (Team / Notes / Log tabs), Copy for Showdown (the exact export, no header), key calcs as workbench links in pilot mode
-(the "mock" side; nothing saves to your prep), and a running record per (friend, opponent) with a note for the friend that
-never contains your own sets or teams. Storage: optional `mocks` entries on the pilot document (no version bump).
+Play a friend's next opponent on Showdown (`docs/research/ux/mocks.md`): pick the friend and the week, then **Open as X**
+opens the normal matchup workspace from X's side (Jacky vs Calvin = `#prep/4v8`) with a banner ("Mock · playing as Jacky vs
+Calvin · nothing here touches your own prep", Copy for Showdown, Exit). There the mock's team IS "your sets" and "your teams"
+(`public/prep-mockpov.js`: `P.docs.mysets` / `P.docs.teams` read the mock on its screens, one team per variant in Sets ›
+Bring): Brief, Can wreck you, Plan, Sets, the teambuilder, Calcs, the workbench and Practice all work as for your own
+matches. The curated notes render as the Brief's Game plan card (guide renderers; every calc a workbench link); a generated
+mock adds Watch out / Your KOs there. Edits save to the mock's record (labelled "edited"); the workspace carries `mock`
+(its record id) and is never one of your matchups, teams or saved lists. Your own documents are written only through
+`R` in `public/prep.js`, so a mock can't reach them (tested byte-identical). "Record & note for Y" keeps the Team / Notes /
+Log screen with the running record and the note for the friend (never your own sets). Storage: optional `mocks` entries on
+the pilot document and the optional `mock` field on a workspace (no version bump).
 
 - **Curated** (`lib/mocks/<x>v<y>.mjs`, static registry in `lib/mocks/index.mjs`, tolerant validation, stale when either
   roster changes).

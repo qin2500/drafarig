@@ -44,7 +44,8 @@ test('Mocks home: friend, their weeks (W2 Jacky, curated ✓; W3 bye; your week 
   assert.match(h, /W2Jacky next\? ?Curated ✓/);
   assert.match(h, /W3bye/);
   assert.match(h, /W4ZhuZi ?Generated/);
-  assert.match(h, /Play Jacky vs Calvin ›/);
+  assert.match(h, /Open as Jacky ›/);
+  assert.match(h, /Record & note for Calvin ›/);
   const play = btns(app, 'mk-play')[0];
   await app.click({ pa: 'mk-play', ...play });
   assert.equal(app.location.hash, '#prep/mocks/8v4');
@@ -223,4 +224,62 @@ test('the header has a Mocks tab: from Draft, the Prep overview, a matchup Brief
       assert.equal(app.currentApp(), 'prep');
     }
   }
+});
+
+test('mock POV: "Open as Jacky" opens #prep/4v8 as Jacky with a banner; the mock team is "your sets" (Brief, Can wreck you, Sets Bring, teambuilder, workbench); your own prep is untouched', async (t) => {
+  const storage = device();
+  // your own documents (library, teams, rules, your matchups, backups), as stored once the app has loaded; meta and the pilot
+  // document are shared (the mock's record and the workspace index live there), navigation hints aren't prep
+  const own = () => Object.fromEntries([...storage.map].filter(([k, v]) => k !== KEYS.pilot && k !== KEYS.meta && !k.includes('.hint.') && !/"mock":"pilot_/.test(v)));
+  const app = await mocks(t, 'prep/mocks', storage);
+  await flushSaves(app);
+  const before = own();
+  await app.click({ pa: 'mk-open', ...btns(app, 'mk-open')[0] }); await flushSaves(app);
+  assert.equal(app.location.hash, '#prep/4v8');
+  let h = T(app);
+  assert.match(h, /Mock · playing as Jacky vs Calvin · nothing here touches your own prep/);
+  assert.ok(!/Viewing as Jacky: not your side/.test(h), 'the banner replaces the view-as ribbon');
+  // the curated notes as the Brief's Game plan card
+  for (const s of ['Game plan · Jacky (mock) · W2', 'Set Trick Room', 'Farigiraf + Incineroar', 'Read his tells', 'How we lose', 'Team: A: main', 'Record & note for Calvin']) assert.ok(h.includes(s), s);
+  assert.ok(btns(app, 'guide-calc').length >= 10, 'every mock calc is a workbench link');
+  assert.match(h, /Your pool ?Incineroar ?Golisopod ?Farigiraf/);
+  // Can wreck you: their worst case into the mock team
+  await app.waitFor(() => /worst case: [A-Za-z ]+ → (Farigiraf|Torkoal|Incineroar|Golisopod|Rotom-Mow)/.test(T(app)), 'Can wreck you into the mock team', 30000);
+  // Copy for Showdown: the brought team, exactly the curated export
+  await app.click({ pa: 'mkp-copy' });
+  assert.equal(app.clipboard.at(-1), exportTeam(parseTeamQuick(jacky.team, { mech, side: 'theirs' }).sets.map((s) => s.set), mech).text);
+  // storage: the record and a workspace keyed to (Jacky, Calvin), flagged as the mock's
+  const ws = [...storage.map.values()].map((v) => JSON.parse(v)).find((d) => d?.mock);
+  assert.ok(ws && ws.pov === 'Jacky' && ws.coach === 'Calvin' && ws.my6.length === 6 && ws.teamId);
+  assert.deepEqual(validate('ws', ws), []);
+  // Sets: Bring offers the mock's variants
+  await app.click({ pa: 'tab', tab: 'sets' });
+  assert.match(app.html(), /data-pc="ws-bring"/);
+  assert.match(app.html(), new RegExp(`<option value="${ws.teamId}" selected>A: main</option>`));
+  assert.match(T(app), /6 of 6 chosen/);
+  // the teambuilder: a face in Bring opens the mock's set in the mock's workspace; Save goes to the mock record ("edited")
+  await app.click({ pa: 'team-slot', team: ws.teamId, slot: '1' });
+  assert.equal(app.location.hash, `#prep/w/${ws.id}/sets/${ws.my6[0].setId}`);
+  assert.match(T(app), /Mock · playing as Jacky/);
+  await app.changeData({ pc: 'set-field', set: ws.my6[0].setId, field: 'nature' }, { value: 'relaxed' });
+  await app.click({ pa: 'set-save', set: ws.my6[0].setId }); await flushSaves(app);
+  const rec = JSON.parse(storage.getItem(KEYS.pilot)).mocks.find((m) => m.pilot === 'Jacky');
+  assert.equal(rec.variants.find((v) => v.key === 'main').labels[0], 'edited');
+  assert.match(rec.variants.find((v) => v.key === 'main').team, /^Farigiraf @ Sitrus Berry[\s\S]*?Relaxed Nature/);
+  assert.deepEqual(validate('pilot', JSON.parse(storage.getItem(KEYS.pilot))), []);
+  // the workbench: your side is the mock's set
+  await app.click({ pa: 'back' });
+  await app.click({ pa: 'tab', tab: 'brief' });
+  await app.click({ pa: 'guide-calc', ...btns(app, 'guide-calc')[0] });
+  assert.match(app.html(), /Eruption: Torkoal → Calvin&#39;s Staraptor-Mega/);
+  await app.waitFor(() => /Guide: [\d.]+–[\d.]+% · now [\d.]+–[\d.]+% ✓/.test(T(app)), 'the mock calc reproduces with the mock set', 20000);
+  await app.click({ pa: 'wb-close' });
+  // exit: back to your own side; the mock isn't in your saved lists, and your Brief vs Calvin shows nothing of it
+  await app.click({ pa: 'mkp-exit' });
+  assert.ok(!/Mock · playing as/.test(T(app)));
+  assert.ok(!/Jacky vs Calvin/.test(T(app)), 'the mock workspace is not in your saved lists');
+  app.history.pushState(null, '', '#prep/5v8'); app.fire('popstate', {}); await app.settle(20);
+  assert.equal(app.location.hash, '#prep/5v8');
+  assert.ok(!/Game plan · Jacky|Mock · playing/.test(T(app)), 'your own Brief shows nothing of the mock');
+  assert.deepEqual(own(), before, 'your own prep documents are byte-identical');
 });

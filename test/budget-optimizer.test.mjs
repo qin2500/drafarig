@@ -61,9 +61,13 @@ test('topRosters matches brute force (exact count, budget cap, each item once)',
 
 test('plans for Anthony: complete, affordable, available-only, diverse, explained', () => {
   const opponents = L.coaches.filter((c) => c.name !== 'Anthony').map((c) => ({ coach: c.name, ids: c.picks.map((p) => p.id) }));
+  // Speed guard: the optimizer alone, timed after a warm-up run (JIT, caches). ~1–2 s alone; the full parallel suite slows
+  // it to ~6 s, so the bound is 15 s: robust under load, still fails on a real (several-fold) regression.
+  buildPlans(dex, anthony.picks.map((p) => p.id), avail, 6, 29, { opponents });
   const t0 = performance.now();
   const P = buildPlans(dex, anthony.picks.map((p) => p.id), avail, 6, 29, { opponents });
-  assert.ok(performance.now() - t0 < 5000);
+  const ms = performance.now() - t0;
+  assert.ok(ms < 15000, `buildPlans took ${Math.round(ms)} ms`);
   assert.equal(P.plans.length, 3);
   const free = new Set(avail.map((a) => a.id));
   const firsts = new Set();

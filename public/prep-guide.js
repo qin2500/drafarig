@@ -13,17 +13,21 @@ import * as C from './prep-copy.js';
 import { esc, btn, chipBtn } from './prep-ui.js';
 import * as WB from './prep-workbench.js';
 import { importTeamText, bringTeam } from './prep-teams.js';
+import * as MockPov from './prep-mockpov.js';
 
 const G = C.GUIDE;
 const base = (P) => (id) => P.mech?.species[id]?.mega?.from ?? id;
 /** The guide for (your perspective, opponent), validated, with staleness; null unless you view your own side. */
 export function guideOf(P, povName, oppName) {
+  // in a mock (public/prep-mockpov.js) its notes are the game plan, and no real guide applies
+  const mock = MockPov.guideFor(P, povName, oppName);
+  if (mock !== undefined) return mock;
   if (!P.mech || !povName || !oppName || povName !== P.ownSide()) return null;
   const found = guideFor(P.seatOf(povName), P.seatOf(oppName), oppName, { mech: P.mech });
   if (!found) return null;
   return { ...found, ...staleness(found.guide, P.coachRoster(oppName), P.coachRoster(povName), base(P)) };
 }
-const pill = (g) => `<span class="gpill" title="${esc(G.pillTip(g.written ?? ''))}">${esc(G.pill)}</span>`;
+const pill = (g) => `<span class="gpill" title="${esc(G.pillTip(g.written ?? ''))}">${esc(g.pillText ?? G.pill)}</span>`;
 const nm = (P, id) => P.spName(id);
 const list = (items, tag = 'ul', cls = '') => (items.length ? `<${tag} class="gd-list ${cls}">${items.map((x) => `<li>${x}</li>`).join('')}</${tag}>` : '');
 const goneSet = (P, found) => new Set([...found.removed, ...(found.ours?.removed ?? [])].map(base(P)));
@@ -94,7 +98,7 @@ export function card(P, ctx, st) {
   const body = `<p class="gd-head">${head}</p>${staleThem}${staleUs}${rem}${bring}${previews}
     ${fold(G.leads, g.leads.length, leads)}${fold(G.tells, g.tells.length, tells)}${fold(G.lose, g.lose.length, lose)}${fold(G.endgame, 0, list(g.endgame.map((x) => linkify(P, g, x))))}${fold(G.ours, g.combos.ours.length, ours)}
     ${g.combos.theirs.length ? `<p class="small">${esc(G.wreckPointer(g.combos.theirs.length))}</p>` : ''}${found.problems.length ? `<p class="small muted">${esc(G.problems(found.problems.length))}</p>` : ''}`;
-  return { title: G.head(g.coach) + (g.week ? ` · W${g.week}` : ''), body };
+  return { title: found.title ?? G.head(g.coach) + (g.week ? ` · W${g.week}` : ''), body: body + (found.extra ? found.extra() : '') };
 }
 
 /** Pool card: the "G" dot, or null. */

@@ -158,7 +158,8 @@ function home(P) {
   return `<section class="panel prep-mocks">${back}${h2(M.head)}<p class="small">${esc(M.intro)}</p>
     ${select('mk-friend', coaches.map((c) => [c.name, c.name]), friend.name, { label: M.friend, data: { pc: 'mk-friend' } })}
     ${rows.length ? `<p class="small muted">${esc(M.weeksOf(friend.name, w.group))}</p>` : ''}${pick}
-    ${opp ? `<p>${btn(M.play(opp.name, friend.name), 'mk-play', { friend: friend.order, pilot: opp.order, week: sel.week }, { primary: true, cls: 'mk-playbtn' })}</p>` : ''}
+    ${opp ? `<p>${btn(M.openAs(opp.name), 'mk-open', { friend: friend.order, pilot: opp.order }, { primary: true, cls: 'mk-playbtn' })}</p>
+      <p class="small">${btn(M.recordNote(friend.name), 'mk-play', { friend: friend.order, pilot: opp.order, week: sel.week }, { cls: 'linkish' })}</p>` : ''}
     <p class="small">${pasted ? `${btn(M.pasted(pasted), 'mk-paste', {}, { cls: 'linkish' })} · ` : ''}${btn(M.pasteInstead, 'mk-paste', {}, { cls: 'linkish' })}</p></section>`;
 }
 
@@ -266,7 +267,7 @@ function notes(P, mk, v, friend, pilot) {
     ${fold(M.n.etiquette, list(C.ETIQUETTE.map(esc)))}`;
 }
 /** Generated (labelled): the worst-case scan of the friend's 10 into this mock team, top 3, as workbench links. */
-function watchOut(P, v, friend, pilot) {
+export function watchOut(P, v, friend, pilot) {
   if (!P.calc || !P.engine) { P.ensureEngine(); return `<p class="small muted">${esc(M.working)}</p>`; }
   const key = JSON.stringify(['mk-watch', friend.name, P.coachRoster(friend.name), v.sets]);
   P.mockCache ??= new Map();
@@ -285,7 +286,7 @@ function watchOut(P, v, friend, pilot) {
   }))}`;
 }
 /** Generated (labelled): this team's best KOs into the friend's ladder sets, top 3. */
-function yourKOs(P, v, friend, pilot) {
+export function yourKOs(P, v, friend, pilot) {
   if (!P.calc) return `<p class="small muted">${esc(M.working)}</p>`;
   const key = JSON.stringify(['mk-kos', friend.name, P.coachRoster(friend.name), v.sets]);
   P.mockCache ??= new Map();
@@ -378,13 +379,13 @@ const ctxOf = (P, t) => {
   return mk ? { friend, pilot, mk, v: mk.variants.find((x) => x.key === t.dataset.v) ?? mk.variants[0] } : null;
 };
 /** The generated team as stored on the record (Showdown text per variant, labels, notes, rosters), or null. */
-function generatedSnapshot(P, mk) {
+export function generatedSnapshot(P, mk) {
   if (mk?.source !== 'generated') return null;
   return { variants: mk.variants.map((v) => ({ key: v.key, name: v.name, team: exportTeam(v.sets, P.mech).text, labels: v.labels })), archetype: mk.mock.archetype, wins: mk.mock.pilotNotes.wins, leads: mk.mock.pilotNotes.leads, rosters: mk.mock.rosters };
 }
-const keep = (m, snap) => { if (snap && !m.variants?.length) Object.assign(m, snap); };
+export const keep = (m, snap) => { if (snap && !m.variants?.length) Object.assign(m, snap); };
 /** Mutate (or create) the running record for (friend, pilot). */
-function withRecord(P, friendName, pilotName, week, source, fn) {
+export function withRecord(P, friendName, pilotName, week, source, fn) {
   return P.mutate('pilot', (d) => {
     d.mocks ??= [];
     let m = d.mocks.find((x) => x.friend === friendName && x.pilot === pilotName);
