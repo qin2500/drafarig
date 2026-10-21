@@ -1,0 +1,827 @@
+{
+ "version": 1,
+ "written": "2026-10-21",
+ "format": "gen9championsvgc2026regmc",
+ "level": 50,
+ "notes": "Showdown export text per team; Champions Stat Points on the EVs line. weight sums to 1 per side.",
+ "opponent": {
+  "coach": "ZhuZi",
+  "seat": 3,
+  "teams": [
+   {
+    "id": "z01",
+    "label": "Goodstuffs offense (ladder sets)",
+    "weight": 0.0918,
+    "why": "His six most expensive attackers + Fake Out; ladder sets | Toxtricity: Choice Scarf -> Expert Belt (item clause)",
+    "sets": [
+     "meta_mega",
+     "pult",
+     "rotomw",
+     "krook_scarf",
+     "nape",
+     "tox_scarf"
+    ],
+    "notes": {
+     "meta_mega": "L: modal Mega set",
+     "pult": "L",
+     "rotomw": "L",
+     "krook_scarf": "L: Scarf 42%",
+     "nape": "L",
+     "tox_scarf": "L: Scarf 25%"
+    },
+    "team": "Metagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Stomping Tantrum\n- Protect\n\nDragapult @ Life Orb\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Draco Meteor\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n\nRotom-Wash @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 4 Def / 8 SpA / 16 SpD / 6 Spe\nModest Nature\n- Hydro Pump\n- Will-O-Wisp\n- Thunderbolt\n- Protect\n\nKrookodile @ Choice Scarf\nAbility: Intimidate\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- High Horsepower\n- Knock Off\n- Rock Slide\n- Close Combat\n\nInfernape @ Focus Sash\nAbility: Blaze\nLevel: 50\nEVs: 2 Atk / 32 SpA / 32 Spe\nHasty Nature\n- Fake Out\n- Heat Wave\n- Close Combat\n- Protect\n\nToxtricity @ Expert Belt\nAbility: Punk Rock\nLevel: 50\nEVs: 1 HP / 32 SpA / 1 SpD / 32 Spe\nTimid Nature\n- Overdrive\n- Boomburst\n- Sludge Bomb\n- Volt Switch\n"
+   },
+   {
+    "id": "z02",
+    "label": "Goodstuffs, Life Orb Toxtricity",
+    "weight": 0.0714,
+    "why": "Same core, Toxtricity Life Orb (its top ladder item) | Infernape: Focus Sash -> Life Orb (item clause); Toxtricity: Life Orb -> Expert Belt (item clause)",
+    "sets": [
+     "meta_mega",
+     "pult_sash",
+     "rotomw",
+     "krook_scarf",
+     "nape",
+     "tox"
+    ],
+    "notes": {
+     "meta_mega": "L: modal Mega set",
+     "pult_sash": "L: Sash (item clause)",
+     "rotomw": "L",
+     "krook_scarf": "L: Scarf 42%",
+     "nape": "L",
+     "tox": "L"
+    },
+    "team": "Metagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Stomping Tantrum\n- Protect\n\nDragapult @ Focus Sash\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nTimid Nature\n- Draco Meteor\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n\nRotom-Wash @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 4 Def / 8 SpA / 16 SpD / 6 Spe\nModest Nature\n- Hydro Pump\n- Will-O-Wisp\n- Thunderbolt\n- Protect\n\nKrookodile @ Choice Scarf\nAbility: Intimidate\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- High Horsepower\n- Knock Off\n- Rock Slide\n- Close Combat\n\nInfernape @ Life Orb\nAbility: Blaze\nLevel: 50\nEVs: 2 Atk / 32 SpA / 32 Spe\nHasty Nature\n- Fake Out\n- Heat Wave\n- Close Combat\n- Protect\n\nToxtricity @ Expert Belt\nAbility: Punk Rock\nLevel: 50\nEVs: 1 HP / 32 SpA / 1 SpD / 32 Spe\nModest Nature\n- Overdrive\n- Sludge Bomb\n- Boomburst\n- Protect\n"
+   },
+   {
+    "id": "z03",
+    "label": "Anti-Charizard rocks",
+    "weight": 0.0714,
+    "why": "Prep vs Anthony: Rock Slide on Metagross + Life Orb Krookodile | Infernape: Focus Sash -> Expert Belt (item clause)",
+    "sets": [
+     "meta_mega_rock",
+     "pult_sash",
+     "rotomw",
+     "krook_lo",
+     "nape",
+     "tox_scarf"
+    ],
+    "notes": {
+     "meta_mega_rock": "W: Rock Slide for Charizard",
+     "pult_sash": "L: Sash (item clause)",
+     "rotomw": "L",
+     "krook_lo": "W: anti-Charizard",
+     "nape": "L",
+     "tox_scarf": "L: Scarf 25%"
+    },
+    "team": "Metagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Rock Slide\n- Protect\n\nDragapult @ Focus Sash\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nTimid Nature\n- Draco Meteor\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n\nRotom-Wash @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 4 Def / 8 SpA / 16 SpD / 6 Spe\nModest Nature\n- Hydro Pump\n- Will-O-Wisp\n- Thunderbolt\n- Protect\n\nKrookodile @ Life Orb\nAbility: Intimidate\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nAdamant Nature\n- Rock Slide\n- Stone Edge\n- High Horsepower\n- Protect\n\nInfernape @ Expert Belt\nAbility: Blaze\nLevel: 50\nEVs: 2 Atk / 32 SpA / 32 Spe\nHasty Nature\n- Fake Out\n- Heat Wave\n- Close Combat\n- Protect\n\nToxtricity @ Choice Scarf\nAbility: Punk Rock\nLevel: 50\nEVs: 1 HP / 32 SpA / 1 SpD / 32 Spe\nTimid Nature\n- Overdrive\n- Boomburst\n- Sludge Bomb\n- Volt Switch\n"
+   },
+   {
+    "id": "z04",
+    "label": "Trick Room + Instruct",
+    "weight": 0.0714,
+    "why": "Two TR setters drafted; Instruct Overdrive | Rotom-Wash: Sitrus Berry -> Life Orb (item clause)",
+    "sets": [
+     "oran",
+     "tox_tr",
+     "meta_mega",
+     "king",
+     "krook_bulk",
+     "rotomw"
+    ],
+    "notes": {
+     "oran": "L",
+     "tox_tr": "W: Trick Room / Instruct target",
+     "meta_mega": "L: modal Mega set",
+     "king": "L",
+     "krook_bulk": "L: bulky Impish",
+     "rotomw": "L"
+    },
+    "team": "Oranguru @ Mental Herb\nAbility: Inner Focus\nLevel: 50\nEVs: 32 HP / 32 Def / 2 SpD\nRelaxed Nature\n- Trick Room\n- Instruct\n- Psychic\n- Protect\n\nToxtricity @ Sitrus Berry\nAbility: Punk Rock\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Overdrive\n- Boomburst\n- Sludge Bomb\n- Protect\n\nMetagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Stomping Tantrum\n- Protect\n\nSlowking-Galar @ Colbur Berry\nAbility: Regenerator\nLevel: 50\nEVs: 32 HP / 5 Def / 19 SpA / 10 SpD\nSassy Nature\n- Trick Room\n- Chilly Reception\n- Sludge Bomb\n- Protect\n\nKrookodile @ Passho Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 3 Def / 25 SpD / 6 Spe\nImpish Nature\n- Knock Off\n- High Horsepower\n- Rock Slide\n- Protect\n\nRotom-Wash @ Life Orb\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 4 Def / 8 SpA / 16 SpD / 6 Spe\nModest Nature\n- Hydro Pump\n- Will-O-Wisp\n- Thunderbolt\n- Protect\n"
+   },
+   {
+    "id": "z05",
+    "label": "Trick Room + Instruct, Imprison",
+    "weight": 0.0408,
+    "why": "Prep vs Sinistcha TR: Imprison Oranguru | Toxtricity: Sitrus Berry -> Life Orb (item clause)",
+    "sets": [
+     "oran_imp",
+     "tox_tr",
+     "meta_mega_bulk",
+     "king",
+     "krook_bulk",
+     "pult_sash"
+    ],
+    "notes": {
+     "oran_imp": "W: Imprison vs our Trick Room",
+     "tox_tr": "W: Trick Room / Instruct target",
+     "meta_mega_bulk": "L: 2nd ladder spread",
+     "king": "L",
+     "krook_bulk": "L: bulky Impish",
+     "pult_sash": "L: Sash (item clause)"
+    },
+    "team": "Oranguru @ Sitrus Berry\nAbility: Inner Focus\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpD\nSassy Nature\n- Trick Room\n- Instruct\n- Imprison\n- Foul Play\n\nToxtricity @ Life Orb\nAbility: Punk Rock\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Overdrive\n- Boomburst\n- Sludge Bomb\n- Protect\n\nMetagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 24 HP / 15 Atk / 27 Spe\nAdamant Nature\n- Psychic Fangs\n- Iron Head\n- Bullet Punch\n- Protect\n\nSlowking-Galar @ Colbur Berry\nAbility: Regenerator\nLevel: 50\nEVs: 32 HP / 5 Def / 19 SpA / 10 SpD\nSassy Nature\n- Trick Room\n- Chilly Reception\n- Sludge Bomb\n- Protect\n\nKrookodile @ Passho Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 3 Def / 25 SpD / 6 Spe\nImpish Nature\n- Knock Off\n- High Horsepower\n- Rock Slide\n- Protect\n\nDragapult @ Focus Sash\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nTimid Nature\n- Draco Meteor\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "z06",
+    "label": "Hybrid: TR mode + fast mode",
+    "weight": 0.0612,
+    "why": "Brings TR as an option, not a full TR team | Infernape: Focus Sash -> Expert Belt (item clause)",
+    "sets": [
+     "meta_mega",
+     "oran",
+     "tox",
+     "pult_sash",
+     "krook_scarf",
+     "nape"
+    ],
+    "notes": {
+     "meta_mega": "L: modal Mega set",
+     "oran": "L",
+     "tox": "L",
+     "pult_sash": "L: Sash (item clause)",
+     "krook_scarf": "L: Scarf 42%",
+     "nape": "L"
+    },
+    "team": "Metagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Stomping Tantrum\n- Protect\n\nOranguru @ Mental Herb\nAbility: Inner Focus\nLevel: 50\nEVs: 32 HP / 32 Def / 2 SpD\nRelaxed Nature\n- Trick Room\n- Instruct\n- Psychic\n- Protect\n\nToxtricity @ Life Orb\nAbility: Punk Rock\nLevel: 50\nEVs: 1 HP / 32 SpA / 1 SpD / 32 Spe\nModest Nature\n- Overdrive\n- Sludge Bomb\n- Boomburst\n- Protect\n\nDragapult @ Focus Sash\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nTimid Nature\n- Draco Meteor\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n\nKrookodile @ Choice Scarf\nAbility: Intimidate\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- High Horsepower\n- Knock Off\n- Rock Slide\n- Close Combat\n\nInfernape @ Expert Belt\nAbility: Blaze\nLevel: 50\nEVs: 2 Atk / 32 SpA / 32 Spe\nHasty Nature\n- Fake Out\n- Heat Wave\n- Close Combat\n- Protect\n"
+   },
+   {
+    "id": "z07",
+    "label": "Snow / Chilly Reception pivot",
+    "weight": 0.0408,
+    "why": "Chilly Reception vs our sun | Toxtricity: Choice Scarf -> Expert Belt (item clause)",
+    "sets": [
+     "king",
+     "meta_mega",
+     "pult",
+     "rotomw",
+     "krook_scarf",
+     "tox_scarf"
+    ],
+    "notes": {
+     "king": "L",
+     "meta_mega": "L: modal Mega set",
+     "pult": "L",
+     "rotomw": "L",
+     "krook_scarf": "L: Scarf 42%",
+     "tox_scarf": "L: Scarf 25%"
+    },
+    "team": "Slowking-Galar @ Colbur Berry\nAbility: Regenerator\nLevel: 50\nEVs: 32 HP / 5 Def / 19 SpA / 10 SpD\nSassy Nature\n- Trick Room\n- Chilly Reception\n- Sludge Bomb\n- Protect\n\nMetagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Stomping Tantrum\n- Protect\n\nDragapult @ Life Orb\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Draco Meteor\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n\nRotom-Wash @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 4 Def / 8 SpA / 16 SpD / 6 Spe\nModest Nature\n- Hydro Pump\n- Will-O-Wisp\n- Thunderbolt\n- Protect\n\nKrookodile @ Choice Scarf\nAbility: Intimidate\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- High Horsepower\n- Knock Off\n- Rock Slide\n- Close Combat\n\nToxtricity @ Expert Belt\nAbility: Punk Rock\nLevel: 50\nEVs: 1 HP / 32 SpA / 1 SpD / 32 Spe\nTimid Nature\n- Overdrive\n- Boomburst\n- Sludge Bomb\n- Volt Switch\n"
+   },
+   {
+    "id": "z08",
+    "label": "Anti-Anthony full prep",
+    "weight": 0.0612,
+    "why": "Rocks + Power Gem for Charizard, Foul Play for Aegislash / Kangaskhan",
+    "sets": [
+     "meta_mega_rock",
+     "krook_lo",
+     "tox_scarf",
+     "umb",
+     "king_gem",
+     "pult_sash"
+    ],
+    "notes": {
+     "meta_mega_rock": "W: Rock Slide for Charizard",
+     "krook_lo": "W: anti-Charizard",
+     "tox_scarf": "L: Scarf 25%",
+     "umb": "L",
+     "king_gem": "W: Power Gem for Charizard",
+     "pult_sash": "L: Sash (item clause)"
+    },
+    "team": "Metagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Rock Slide\n- Protect\n\nKrookodile @ Life Orb\nAbility: Intimidate\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nAdamant Nature\n- Rock Slide\n- Stone Edge\n- High Horsepower\n- Protect\n\nToxtricity @ Choice Scarf\nAbility: Punk Rock\nLevel: 50\nEVs: 1 HP / 32 SpA / 1 SpD / 32 Spe\nTimid Nature\n- Overdrive\n- Boomburst\n- Sludge Bomb\n- Volt Switch\n\nUmbreon @ Leftovers\nAbility: Inner Focus\nLevel: 50\nEVs: 30 HP / 16 Def / 20 SpD\nBold Nature\n- Foul Play\n- Snarl\n- Moonlight\n- Protect\n\nSlowking-Galar @ Sitrus Berry\nAbility: Regenerator\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpA\nQuiet Nature\n- Trick Room\n- Psychic\n- Sludge Bomb\n- Power Gem\n\nDragapult @ Focus Sash\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nTimid Nature\n- Draco Meteor\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "z09",
+    "label": "Bulky Foul Play balance",
+    "weight": 0.0408,
+    "why": "Umbreon + Florges bulk | Florges: Leftovers -> Expert Belt (item clause)",
+    "sets": [
+     "meta_mega",
+     "umb",
+     "rotomw",
+     "krook_bulk",
+     "tox",
+     "florges"
+    ],
+    "notes": {
+     "meta_mega": "L: modal Mega set",
+     "umb": "L",
+     "rotomw": "L",
+     "krook_bulk": "L: bulky Impish",
+     "tox": "L",
+     "florges": "L"
+    },
+    "team": "Metagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Stomping Tantrum\n- Protect\n\nUmbreon @ Leftovers\nAbility: Inner Focus\nLevel: 50\nEVs: 30 HP / 16 Def / 20 SpD\nBold Nature\n- Foul Play\n- Snarl\n- Moonlight\n- Protect\n\nRotom-Wash @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 4 Def / 8 SpA / 16 SpD / 6 Spe\nModest Nature\n- Hydro Pump\n- Will-O-Wisp\n- Thunderbolt\n- Protect\n\nKrookodile @ Passho Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 3 Def / 25 SpD / 6 Spe\nImpish Nature\n- Knock Off\n- High Horsepower\n- Rock Slide\n- Protect\n\nToxtricity @ Life Orb\nAbility: Punk Rock\nLevel: 50\nEVs: 1 HP / 32 SpA / 1 SpD / 32 Spe\nModest Nature\n- Overdrive\n- Sludge Bomb\n- Boomburst\n- Protect\n\nFlorges @ Expert Belt\nAbility: Flower Veil\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Moonblast\n- Dazzling Gleam\n- Calm Mind\n- Protect\n"
+   },
+   {
+    "id": "z10",
+    "label": "Fairy / Fake Out balance",
+    "weight": 0.0306,
+    "why": "Florges comfort pick | Rotom-Wash: Choice Scarf -> Expert Belt (item clause)",
+    "sets": [
+     "meta_mega",
+     "florges",
+     "nape",
+     "pult",
+     "krook_scarf",
+     "rotomw_scarf"
+    ],
+    "notes": {
+     "meta_mega": "L: modal Mega set",
+     "florges": "L",
+     "nape": "L",
+     "pult": "L",
+     "krook_scarf": "L: Scarf 42%",
+     "rotomw_scarf": "L: Scarf"
+    },
+    "team": "Metagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Stomping Tantrum\n- Protect\n\nFlorges @ Leftovers\nAbility: Flower Veil\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Moonblast\n- Dazzling Gleam\n- Calm Mind\n- Protect\n\nInfernape @ Focus Sash\nAbility: Blaze\nLevel: 50\nEVs: 2 Atk / 32 SpA / 32 Spe\nHasty Nature\n- Fake Out\n- Heat Wave\n- Close Combat\n- Protect\n\nDragapult @ Life Orb\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Draco Meteor\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n\nKrookodile @ Choice Scarf\nAbility: Intimidate\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- High Horsepower\n- Knock Off\n- Rock Slide\n- Close Combat\n\nRotom-Wash @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nTimid Nature\n- Hydro Pump\n- Thunderbolt\n- Volt Switch\n- Electroweb\n"
+   },
+   {
+    "id": "z11",
+    "label": "Human: Scarf Metagross no Mega",
+    "weight": 0.0306,
+    "why": "Suboptimal: skips the Mega | Toxtricity: Choice Scarf -> Expert Belt (item clause)",
+    "sets": [
+     "meta_scarf",
+     "pult",
+     "rotomw",
+     "krook_bulk",
+     "nape",
+     "tox_scarf"
+    ],
+    "notes": {
+     "meta_scarf": "L/H: non-Mega Scarf",
+     "pult": "L",
+     "rotomw": "L",
+     "krook_bulk": "L: bulky Impish",
+     "nape": "L",
+     "tox_scarf": "L: Scarf 25%"
+    },
+    "team": "Metagross @ Choice Scarf\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Explosion\n- Rock Slide\n\nDragapult @ Life Orb\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Draco Meteor\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n\nRotom-Wash @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 4 Def / 8 SpA / 16 SpD / 6 Spe\nModest Nature\n- Hydro Pump\n- Will-O-Wisp\n- Thunderbolt\n- Protect\n\nKrookodile @ Passho Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 3 Def / 25 SpD / 6 Spe\nImpish Nature\n- Knock Off\n- High Horsepower\n- Rock Slide\n- Protect\n\nInfernape @ Focus Sash\nAbility: Blaze\nLevel: 50\nEVs: 2 Atk / 32 SpA / 32 Spe\nHasty Nature\n- Fake Out\n- Heat Wave\n- Close Combat\n- Protect\n\nToxtricity @ Expert Belt\nAbility: Punk Rock\nLevel: 50\nEVs: 1 HP / 32 SpA / 1 SpD / 32 Spe\nTimid Nature\n- Overdrive\n- Boomburst\n- Sludge Bomb\n- Volt Switch\n"
+   },
+   {
+    "id": "z12",
+    "label": "Human: physical Dragapult",
+    "weight": 0.0306,
+    "why": "Comfort physical Dragapult | Toxtricity: Choice Scarf -> Expert Belt (item clause)",
+    "sets": [
+     "meta_mega",
+     "pult_phys",
+     "rotomw",
+     "krook_scarf",
+     "nape",
+     "tox_scarf"
+    ],
+    "notes": {
+     "meta_mega": "L: modal Mega set",
+     "pult_phys": "H: physical (10% ladder Jolly)",
+     "rotomw": "L",
+     "krook_scarf": "L: Scarf 42%",
+     "nape": "L",
+     "tox_scarf": "L: Scarf 25%"
+    },
+    "team": "Metagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Stomping Tantrum\n- Protect\n\nDragapult @ Life Orb\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Dragon Darts\n- Phantom Force\n- Will-O-Wisp\n- Protect\n\nRotom-Wash @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 4 Def / 8 SpA / 16 SpD / 6 Spe\nModest Nature\n- Hydro Pump\n- Will-O-Wisp\n- Thunderbolt\n- Protect\n\nKrookodile @ Choice Scarf\nAbility: Intimidate\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- High Horsepower\n- Knock Off\n- Rock Slide\n- Close Combat\n\nInfernape @ Focus Sash\nAbility: Blaze\nLevel: 50\nEVs: 2 Atk / 32 SpA / 32 Spe\nHasty Nature\n- Fake Out\n- Heat Wave\n- Close Combat\n- Protect\n\nToxtricity @ Expert Belt\nAbility: Punk Rock\nLevel: 50\nEVs: 1 HP / 32 SpA / 1 SpD / 32 Spe\nTimid Nature\n- Overdrive\n- Boomburst\n- Sludge Bomb\n- Volt Switch\n"
+   },
+   {
+    "id": "z13",
+    "label": "Offense, Life Orb Infernape",
+    "weight": 0.0408,
+    "why": "Overheat / Aura Sphere Infernape | Toxtricity: Choice Scarf -> Expert Belt (item clause)",
+    "sets": [
+     "meta_mega",
+     "pult_sash",
+     "rotomw",
+     "krook_scarf",
+     "nape_lo",
+     "tox_scarf"
+    ],
+    "notes": {
+     "meta_mega": "L: modal Mega set",
+     "pult_sash": "L: Sash (item clause)",
+     "rotomw": "L",
+     "krook_scarf": "L: Scarf 42%",
+     "nape_lo": "L: Life Orb",
+     "tox_scarf": "L: Scarf 25%"
+    },
+    "team": "Metagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Stomping Tantrum\n- Protect\n\nDragapult @ Focus Sash\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nTimid Nature\n- Draco Meteor\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n\nRotom-Wash @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 4 Def / 8 SpA / 16 SpD / 6 Spe\nModest Nature\n- Hydro Pump\n- Will-O-Wisp\n- Thunderbolt\n- Protect\n\nKrookodile @ Choice Scarf\nAbility: Intimidate\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- High Horsepower\n- Knock Off\n- Rock Slide\n- Close Combat\n\nInfernape @ Life Orb\nAbility: Blaze\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nTimid Nature\n- Fake Out\n- Overheat\n- Aura Sphere\n- Protect\n\nToxtricity @ Expert Belt\nAbility: Punk Rock\nLevel: 50\nEVs: 1 HP / 32 SpA / 1 SpD / 32 Spe\nTimid Nature\n- Overdrive\n- Boomburst\n- Sludge Bomb\n- Volt Switch\n"
+   },
+   {
+    "id": "z14",
+    "label": "Scarf Rotom-Wash offense",
+    "weight": 0.0306,
+    "why": "Scarf Rotom-Wash",
+    "sets": [
+     "meta_mega",
+     "pult",
+     "rotomw_scarf",
+     "krook_bulk",
+     "nape",
+     "tox_tr"
+    ],
+    "notes": {
+     "meta_mega": "L: modal Mega set",
+     "pult": "L",
+     "rotomw_scarf": "L: Scarf",
+     "krook_bulk": "L: bulky Impish",
+     "nape": "L",
+     "tox_tr": "W: Trick Room / Instruct target"
+    },
+    "team": "Metagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Stomping Tantrum\n- Protect\n\nDragapult @ Life Orb\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Draco Meteor\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n\nRotom-Wash @ Choice Scarf\nAbility: Levitate\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nTimid Nature\n- Hydro Pump\n- Thunderbolt\n- Volt Switch\n- Electroweb\n\nKrookodile @ Passho Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 3 Def / 25 SpD / 6 Spe\nImpish Nature\n- Knock Off\n- High Horsepower\n- Rock Slide\n- Protect\n\nInfernape @ Focus Sash\nAbility: Blaze\nLevel: 50\nEVs: 2 Atk / 32 SpA / 32 Spe\nHasty Nature\n- Fake Out\n- Heat Wave\n- Close Combat\n- Protect\n\nToxtricity @ Sitrus Berry\nAbility: Punk Rock\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Overdrive\n- Boomburst\n- Sludge Bomb\n- Protect\n"
+   },
+   {
+    "id": "z15",
+    "label": "TR + Fake Out",
+    "weight": 0.0408,
+    "why": "Infernape Fake Out protects the TR turn",
+    "sets": [
+     "oran",
+     "nape",
+     "meta_mega_bulk",
+     "tox_tr",
+     "king",
+     "krook_bulk"
+    ],
+    "notes": {
+     "oran": "L",
+     "nape": "L",
+     "meta_mega_bulk": "L: 2nd ladder spread",
+     "tox_tr": "W: Trick Room / Instruct target",
+     "king": "L",
+     "krook_bulk": "L: bulky Impish"
+    },
+    "team": "Oranguru @ Mental Herb\nAbility: Inner Focus\nLevel: 50\nEVs: 32 HP / 32 Def / 2 SpD\nRelaxed Nature\n- Trick Room\n- Instruct\n- Psychic\n- Protect\n\nInfernape @ Focus Sash\nAbility: Blaze\nLevel: 50\nEVs: 2 Atk / 32 SpA / 32 Spe\nHasty Nature\n- Fake Out\n- Heat Wave\n- Close Combat\n- Protect\n\nMetagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 24 HP / 15 Atk / 27 Spe\nAdamant Nature\n- Psychic Fangs\n- Iron Head\n- Bullet Punch\n- Protect\n\nToxtricity @ Sitrus Berry\nAbility: Punk Rock\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Overdrive\n- Boomburst\n- Sludge Bomb\n- Protect\n\nSlowking-Galar @ Colbur Berry\nAbility: Regenerator\nLevel: 50\nEVs: 32 HP / 5 Def / 19 SpA / 10 SpD\nSassy Nature\n- Trick Room\n- Chilly Reception\n- Sludge Bomb\n- Protect\n\nKrookodile @ Passho Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 3 Def / 25 SpD / 6 Spe\nImpish Nature\n- Knock Off\n- High Horsepower\n- Rock Slide\n- Protect\n"
+   },
+   {
+    "id": "z16",
+    "label": "Oranguru + Florges support",
+    "weight": 0.0306,
+    "why": "Two supports, Pollen Puff / Helping Hand | Toxtricity: Sitrus Berry -> Life Orb (item clause); Rotom-Wash: Sitrus Berry -> Expert Belt (item clause)",
+    "sets": [
+     "oran",
+     "florges_supp",
+     "meta_mega",
+     "tox_tr",
+     "krook_bulk",
+     "rotomw"
+    ],
+    "notes": {
+     "oran": "L",
+     "florges_supp": "H: support",
+     "meta_mega": "L: modal Mega set",
+     "tox_tr": "W: Trick Room / Instruct target",
+     "krook_bulk": "L: bulky Impish",
+     "rotomw": "L"
+    },
+    "team": "Oranguru @ Mental Herb\nAbility: Inner Focus\nLevel: 50\nEVs: 32 HP / 32 Def / 2 SpD\nRelaxed Nature\n- Trick Room\n- Instruct\n- Psychic\n- Protect\n\nFlorges @ Sitrus Berry\nAbility: Flower Veil\nLevel: 50\nEVs: 32 HP / 16 Def / 18 SpD\nBold Nature\n- Moonblast\n- Helping Hand\n- Pollen Puff\n- Protect\n\nMetagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Stomping Tantrum\n- Protect\n\nToxtricity @ Life Orb\nAbility: Punk Rock\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Overdrive\n- Boomburst\n- Sludge Bomb\n- Protect\n\nKrookodile @ Passho Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 3 Def / 25 SpD / 6 Spe\nImpish Nature\n- Knock Off\n- High Horsepower\n- Rock Slide\n- Protect\n\nRotom-Wash @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 4 Def / 8 SpA / 16 SpD / 6 Spe\nModest Nature\n- Hydro Pump\n- Will-O-Wisp\n- Thunderbolt\n- Protect\n"
+   },
+   {
+    "id": "z17",
+    "label": "Anti-Sinistcha: Taunt + Imprison",
+    "weight": 0.0306,
+    "why": "Prep vs our TR | Oranguru: Sitrus Berry -> Life Orb (item clause); Toxtricity: Life Orb -> Expert Belt (item clause)",
+    "sets": [
+     "umb_supp",
+     "oran_imp",
+     "meta_mega",
+     "tox",
+     "krook_scarf",
+     "pult_sash"
+    ],
+    "notes": {
+     "umb_supp": "H/W: Taunt our Trick Room",
+     "oran_imp": "W: Imprison vs our Trick Room",
+     "meta_mega": "L: modal Mega set",
+     "tox": "L",
+     "krook_scarf": "L: Scarf 42%",
+     "pult_sash": "L: Sash (item clause)"
+    },
+    "team": "Umbreon @ Sitrus Berry\nAbility: Inner Focus\nLevel: 50\nEVs: 32 HP / 24 Def / 10 SpD\nCareful Nature\n- Foul Play\n- Taunt\n- Helping Hand\n- Protect\n\nOranguru @ Life Orb\nAbility: Inner Focus\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpD\nSassy Nature\n- Trick Room\n- Instruct\n- Imprison\n- Foul Play\n\nMetagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Stomping Tantrum\n- Protect\n\nToxtricity @ Expert Belt\nAbility: Punk Rock\nLevel: 50\nEVs: 1 HP / 32 SpA / 1 SpD / 32 Spe\nModest Nature\n- Overdrive\n- Sludge Bomb\n- Boomburst\n- Protect\n\nKrookodile @ Choice Scarf\nAbility: Intimidate\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- High Horsepower\n- Knock Off\n- Rock Slide\n- Close Combat\n\nDragapult @ Focus Sash\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nTimid Nature\n- Draco Meteor\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "z18",
+    "label": "Rock spam",
+    "weight": 0.0306,
+    "why": "Every Rock option vs Charizard | Toxtricity: Choice Scarf -> Expert Belt (item clause)",
+    "sets": [
+     "meta_mega_rock",
+     "krook_scarf",
+     "nape",
+     "pult",
+     "king_gem",
+     "tox_scarf"
+    ],
+    "notes": {
+     "meta_mega_rock": "W: Rock Slide for Charizard",
+     "krook_scarf": "L: Scarf 42%",
+     "nape": "L",
+     "pult": "L",
+     "king_gem": "W: Power Gem for Charizard",
+     "tox_scarf": "L: Scarf 25%"
+    },
+    "team": "Metagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Rock Slide\n- Protect\n\nKrookodile @ Choice Scarf\nAbility: Intimidate\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- High Horsepower\n- Knock Off\n- Rock Slide\n- Close Combat\n\nInfernape @ Focus Sash\nAbility: Blaze\nLevel: 50\nEVs: 2 Atk / 32 SpA / 32 Spe\nHasty Nature\n- Fake Out\n- Heat Wave\n- Close Combat\n- Protect\n\nDragapult @ Life Orb\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Draco Meteor\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n\nSlowking-Galar @ Sitrus Berry\nAbility: Regenerator\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpA\nQuiet Nature\n- Trick Room\n- Psychic\n- Sludge Bomb\n- Power Gem\n\nToxtricity @ Expert Belt\nAbility: Punk Rock\nLevel: 50\nEVs: 1 HP / 32 SpA / 1 SpD / 32 Spe\nTimid Nature\n- Overdrive\n- Boomburst\n- Sludge Bomb\n- Volt Switch\n"
+   },
+   {
+    "id": "z19",
+    "label": "Slowking + Dragapult special",
+    "weight": 0.0306,
+    "why": "Special-heavy with TR backup | Toxtricity: Life Orb -> Expert Belt (item clause)",
+    "sets": [
+     "king",
+     "pult",
+     "tox",
+     "meta_mega",
+     "krook_scarf",
+     "florges"
+    ],
+    "notes": {
+     "king": "L",
+     "pult": "L",
+     "tox": "L",
+     "meta_mega": "L: modal Mega set",
+     "krook_scarf": "L: Scarf 42%",
+     "florges": "L"
+    },
+    "team": "Slowking-Galar @ Colbur Berry\nAbility: Regenerator\nLevel: 50\nEVs: 32 HP / 5 Def / 19 SpA / 10 SpD\nSassy Nature\n- Trick Room\n- Chilly Reception\n- Sludge Bomb\n- Protect\n\nDragapult @ Life Orb\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Draco Meteor\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n\nToxtricity @ Expert Belt\nAbility: Punk Rock\nLevel: 50\nEVs: 1 HP / 32 SpA / 1 SpD / 32 Spe\nModest Nature\n- Overdrive\n- Sludge Bomb\n- Boomburst\n- Protect\n\nMetagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Stomping Tantrum\n- Protect\n\nKrookodile @ Choice Scarf\nAbility: Intimidate\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- High Horsepower\n- Knock Off\n- Rock Slide\n- Close Combat\n\nFlorges @ Leftovers\nAbility: Flower Veil\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Moonblast\n- Dazzling Gleam\n- Calm Mind\n- Protect\n"
+   },
+   {
+    "id": "z20",
+    "label": "Balance with Umbreon Taunt",
+    "weight": 0.0306,
+    "why": "Taunt Umbreon + anti-Charizard Krookodile | Rotom-Wash: Sitrus Berry -> Life Orb (item clause); Krookodile: Life Orb -> Expert Belt (item clause)",
+    "sets": [
+     "umb_supp",
+     "meta_mega",
+     "rotomw",
+     "pult_sash",
+     "krook_lo",
+     "tox_scarf"
+    ],
+    "notes": {
+     "umb_supp": "H/W: Taunt our Trick Room",
+     "meta_mega": "L: modal Mega set",
+     "rotomw": "L",
+     "pult_sash": "L: Sash (item clause)",
+     "krook_lo": "W: anti-Charizard",
+     "tox_scarf": "L: Scarf 25%"
+    },
+    "team": "Umbreon @ Sitrus Berry\nAbility: Inner Focus\nLevel: 50\nEVs: 32 HP / 24 Def / 10 SpD\nCareful Nature\n- Foul Play\n- Taunt\n- Helping Hand\n- Protect\n\nMetagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Stomping Tantrum\n- Protect\n\nRotom-Wash @ Life Orb\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 4 Def / 8 SpA / 16 SpD / 6 Spe\nModest Nature\n- Hydro Pump\n- Will-O-Wisp\n- Thunderbolt\n- Protect\n\nDragapult @ Focus Sash\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nTimid Nature\n- Draco Meteor\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n\nKrookodile @ Expert Belt\nAbility: Intimidate\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nAdamant Nature\n- Rock Slide\n- Stone Edge\n- High Horsepower\n- Protect\n\nToxtricity @ Choice Scarf\nAbility: Punk Rock\nLevel: 50\nEVs: 1 HP / 32 SpA / 1 SpD / 32 Spe\nTimid Nature\n- Overdrive\n- Boomburst\n- Sludge Bomb\n- Volt Switch\n"
+   },
+   {
+    "id": "z21",
+    "label": "Human: no Krookodile",
+    "weight": 0.0204,
+    "why": "Forgets the Rock answer",
+    "sets": [
+     "meta_mega",
+     "pult",
+     "rotomw",
+     "nape",
+     "tox_scarf",
+     "florges"
+    ],
+    "notes": {
+     "meta_mega": "L: modal Mega set",
+     "pult": "L",
+     "rotomw": "L",
+     "nape": "L",
+     "tox_scarf": "L: Scarf 25%",
+     "florges": "L"
+    },
+    "team": "Metagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Stomping Tantrum\n- Protect\n\nDragapult @ Life Orb\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Draco Meteor\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n\nRotom-Wash @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 4 Def / 8 SpA / 16 SpD / 6 Spe\nModest Nature\n- Hydro Pump\n- Will-O-Wisp\n- Thunderbolt\n- Protect\n\nInfernape @ Focus Sash\nAbility: Blaze\nLevel: 50\nEVs: 2 Atk / 32 SpA / 32 Spe\nHasty Nature\n- Fake Out\n- Heat Wave\n- Close Combat\n- Protect\n\nToxtricity @ Choice Scarf\nAbility: Punk Rock\nLevel: 50\nEVs: 1 HP / 32 SpA / 1 SpD / 32 Spe\nTimid Nature\n- Overdrive\n- Boomburst\n- Sludge Bomb\n- Volt Switch\n\nFlorges @ Leftovers\nAbility: Flower Veil\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Moonblast\n- Dazzling Gleam\n- Calm Mind\n- Protect\n"
+   },
+   {
+    "id": "z22",
+    "label": "Human: no Toxtricity",
+    "weight": 0.0204,
+    "why": "Leaves Toxtricity home",
+    "sets": [
+     "meta_mega",
+     "pult",
+     "rotomw",
+     "krook_scarf",
+     "nape",
+     "umb"
+    ],
+    "notes": {
+     "meta_mega": "L: modal Mega set",
+     "pult": "L",
+     "rotomw": "L",
+     "krook_scarf": "L: Scarf 42%",
+     "nape": "L",
+     "umb": "L"
+    },
+    "team": "Metagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Stomping Tantrum\n- Protect\n\nDragapult @ Life Orb\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Draco Meteor\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n\nRotom-Wash @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 4 Def / 8 SpA / 16 SpD / 6 Spe\nModest Nature\n- Hydro Pump\n- Will-O-Wisp\n- Thunderbolt\n- Protect\n\nKrookodile @ Choice Scarf\nAbility: Intimidate\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- High Horsepower\n- Knock Off\n- Rock Slide\n- Close Combat\n\nInfernape @ Focus Sash\nAbility: Blaze\nLevel: 50\nEVs: 2 Atk / 32 SpA / 32 Spe\nHasty Nature\n- Fake Out\n- Heat Wave\n- Close Combat\n- Protect\n\nUmbreon @ Leftovers\nAbility: Inner Focus\nLevel: 50\nEVs: 30 HP / 16 Def / 20 SpD\nBold Nature\n- Foul Play\n- Snarl\n- Moonlight\n- Protect\n"
+   },
+   {
+    "id": "z23",
+    "label": "TR heavy, both setters",
+    "weight": 0.0306,
+    "why": "Full TR",
+    "sets": [
+     "oran",
+     "king",
+     "tox_tr",
+     "meta_mega_bulk",
+     "krook_bulk",
+     "umb"
+    ],
+    "notes": {
+     "oran": "L",
+     "king": "L",
+     "tox_tr": "W: Trick Room / Instruct target",
+     "meta_mega_bulk": "L: 2nd ladder spread",
+     "krook_bulk": "L: bulky Impish",
+     "umb": "L"
+    },
+    "team": "Oranguru @ Mental Herb\nAbility: Inner Focus\nLevel: 50\nEVs: 32 HP / 32 Def / 2 SpD\nRelaxed Nature\n- Trick Room\n- Instruct\n- Psychic\n- Protect\n\nSlowking-Galar @ Colbur Berry\nAbility: Regenerator\nLevel: 50\nEVs: 32 HP / 5 Def / 19 SpA / 10 SpD\nSassy Nature\n- Trick Room\n- Chilly Reception\n- Sludge Bomb\n- Protect\n\nToxtricity @ Sitrus Berry\nAbility: Punk Rock\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Overdrive\n- Boomburst\n- Sludge Bomb\n- Protect\n\nMetagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 24 HP / 15 Atk / 27 Spe\nAdamant Nature\n- Psychic Fangs\n- Iron Head\n- Bullet Punch\n- Protect\n\nKrookodile @ Passho Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 3 Def / 25 SpD / 6 Spe\nImpish Nature\n- Knock Off\n- High Horsepower\n- Rock Slide\n- Protect\n\nUmbreon @ Leftovers\nAbility: Inner Focus\nLevel: 50\nEVs: 30 HP / 16 Def / 20 SpD\nBold Nature\n- Foul Play\n- Snarl\n- Moonlight\n- Protect\n"
+   },
+   {
+    "id": "z24",
+    "label": "Fast pressure",
+    "weight": 0.0204,
+    "why": "Scarf Krookodile + fast attackers | Rotom-Wash: Choice Scarf -> Life Orb (item clause); Toxtricity: Life Orb -> Expert Belt (item clause); Dragapult: Focus Sash -> Sitrus Berry (item clause)",
+    "sets": [
+     "meta_mega",
+     "krook_scarf",
+     "rotomw_scarf",
+     "tox",
+     "nape",
+     "pult_sash"
+    ],
+    "notes": {
+     "meta_mega": "L: modal Mega set",
+     "krook_scarf": "L: Scarf 42%",
+     "rotomw_scarf": "L: Scarf",
+     "tox": "L",
+     "nape": "L",
+     "pult_sash": "L: Sash (item clause)"
+    },
+    "team": "Metagross @ Metagrossite\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Psychic Fangs\n- Iron Head\n- Stomping Tantrum\n- Protect\n\nKrookodile @ Choice Scarf\nAbility: Intimidate\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- High Horsepower\n- Knock Off\n- Rock Slide\n- Close Combat\n\nRotom-Wash @ Life Orb\nAbility: Levitate\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nTimid Nature\n- Hydro Pump\n- Thunderbolt\n- Volt Switch\n- Electroweb\n\nToxtricity @ Expert Belt\nAbility: Punk Rock\nLevel: 50\nEVs: 1 HP / 32 SpA / 1 SpD / 32 Spe\nModest Nature\n- Overdrive\n- Sludge Bomb\n- Boomburst\n- Protect\n\nInfernape @ Focus Sash\nAbility: Blaze\nLevel: 50\nEVs: 2 Atk / 32 SpA / 32 Spe\nHasty Nature\n- Fake Out\n- Heat Wave\n- Close Combat\n- Protect\n\nDragapult @ Sitrus Berry\nAbility: Clear Body\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nTimid Nature\n- Draco Meteor\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n"
+   }
+  ]
+ },
+ "ours": {
+  "coach": "Anthony",
+  "seat": 5,
+  "teams": [
+   {
+    "id": "a01",
+    "label": "Guide / Week 1 six",
+    "weight": 0.16,
+    "why": "Baseline (match-zhuzi.md)",
+    "sets": [
+     "zardM",
+     "aegis",
+     "kanga",
+     "morpeko",
+     "sinis",
+     "rotom"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 6 HP / 32 SpA / 2 SpD / 26 Spe\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Metal Coat\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Iron Head\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Life Orb\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk\nAdamant Nature\n- Fake Out\n- Last Resort\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Coba Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpD\nCalm Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Protect\n\nRotom-Fan @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "a02",
+    "label": "Stunfisk-Galar for Rotom-Fan",
+    "weight": 0.08,
+    "why": "Electric immunity vs Toxtricity / Rotom-Wash",
+    "sets": [
+     "zardM",
+     "aegis",
+     "kanga",
+     "morpeko",
+     "sinis",
+     "stunfisk"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 6 HP / 32 SpA / 2 SpD / 26 Spe\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Metal Coat\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Iron Head\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Life Orb\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk\nAdamant Nature\n- Fake Out\n- Last Resort\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Coba Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpD\nCalm Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n"
+   },
+   {
+    "id": "a03",
+    "label": "Timid Charizard",
+    "weight": 0.07,
+    "why": "Speed 167 vs Modest power",
+    "sets": [
+     "zardT",
+     "aegis",
+     "kanga",
+     "morpeko",
+     "sinis",
+     "rotom"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nTimid Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Metal Coat\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Iron Head\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Life Orb\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk\nAdamant Nature\n- Fake Out\n- Last Resort\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Coba Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpD\nCalm Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Protect\n\nRotom-Fan @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "a04",
+    "label": "Bulky Modest Charizard",
+    "weight": 0.06,
+    "why": "20 HP / 14 Spe: survive Overdrive more often",
+    "sets": [
+     "zardB",
+     "aegis",
+     "kanga",
+     "morpeko",
+     "sinis",
+     "rotom"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 20 HP / 32 SpA / 14 Spe\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Metal Coat\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Iron Head\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Life Orb\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk\nAdamant Nature\n- Fake Out\n- Last Resort\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Coba Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpD\nCalm Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Protect\n\nRotom-Fan @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "a05",
+    "label": "Kangaskhan Double-Edge set",
+    "weight": 0.07,
+    "why": "Protect + Sucker Punch vs Last Resort",
+    "sets": [
+     "zardM",
+     "aegis",
+     "kangaDE",
+     "morpeko",
+     "sinis",
+     "rotom"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 6 HP / 32 SpA / 2 SpD / 26 Spe\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Metal Coat\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Iron Head\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Silk Scarf\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Coba Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpD\nCalm Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Protect\n\nRotom-Fan @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "a06",
+    "label": "Aegislash Shadow Sneak + Kasib",
+    "weight": 0.06,
+    "why": "Priority + Ghost resist berry",
+    "sets": [
+     "zardM",
+     "aegisSS",
+     "kanga",
+     "morpeko",
+     "sinis",
+     "rotom"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 6 HP / 32 SpA / 2 SpD / 26 Spe\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Life Orb\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk\nAdamant Nature\n- Fake Out\n- Last Resort\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Coba Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpD\nCalm Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Protect\n\nRotom-Fan @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "a07",
+    "label": "Morpeko Parting Shot",
+    "weight": 0.05,
+    "why": "Parting Shot vs Taunt",
+    "sets": [
+     "zardM",
+     "aegis",
+     "kanga",
+     "morpekoPS",
+     "sinis",
+     "rotom"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 6 HP / 32 SpA / 2 SpD / 26 Spe\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Metal Coat\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Iron Head\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Life Orb\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk\nAdamant Nature\n- Fake Out\n- Last Resort\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Parting Shot\n- Protect\n\nSinistcha @ Coba Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpD\nCalm Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Protect\n\nRotom-Fan @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "a08",
+    "label": "Bold Sitrus Sinistcha",
+    "weight": 0.05,
+    "why": "Physical bulk (Krookodile / Metagross) | Rotom-Fan: Sitrus Berry -> Expert Belt (item clause)",
+    "sets": [
+     "zardM",
+     "aegis",
+     "kanga",
+     "morpeko",
+     "sinisB",
+     "rotom"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 6 HP / 32 SpA / 2 SpD / 26 Spe\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Metal Coat\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Iron Head\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Life Orb\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk\nAdamant Nature\n- Fake Out\n- Last Resort\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "a09",
+    "label": "Conkeldurr for Sinistcha",
+    "weight": 0.06,
+    "why": "No TR; Drain Punch Krookodile / Infernape | Conkeldurr: Life Orb -> Expert Belt (item clause)",
+    "sets": [
+     "zardM",
+     "aegis",
+     "kanga",
+     "morpeko",
+     "conk",
+     "rotom"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 6 HP / 32 SpA / 2 SpD / 26 Spe\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Metal Coat\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Iron Head\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Life Orb\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk\nAdamant Nature\n- Fake Out\n- Last Resort\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nConkeldurr @ Expert Belt\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nRotom-Fan @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "a10",
+    "label": "Conkeldurr for Rotom-Fan",
+    "weight": 0.05,
+    "why": "TR abuser | Conkeldurr: Life Orb -> Expert Belt (item clause)",
+    "sets": [
+     "zardM",
+     "aegis",
+     "kanga",
+     "morpeko",
+     "sinis",
+     "conk"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 6 HP / 32 SpA / 2 SpD / 26 Spe\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Metal Coat\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Iron Head\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Life Orb\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk\nAdamant Nature\n- Fake Out\n- Last Resort\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Coba Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpD\nCalm Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Protect\n\nConkeldurr @ Expert Belt\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n"
+   },
+   {
+    "id": "a11",
+    "label": "Pelipper Tailwind / Wide Guard",
+    "weight": 0.05,
+    "why": "Second Wide Guard + Tailwind (weather conflict) | Pelipper: Focus Sash -> Expert Belt (item clause)",
+    "sets": [
+     "zardM",
+     "aegis",
+     "kanga",
+     "morpeko",
+     "pelipper",
+     "rotom"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 6 HP / 32 SpA / 2 SpD / 26 Spe\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Metal Coat\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Iron Head\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Life Orb\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk\nAdamant Nature\n- Fake Out\n- Last Resort\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nPelipper @ Expert Belt\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n\nRotom-Fan @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "a12",
+    "label": "Simipour Fake Out",
+    "weight": 0.04,
+    "why": "Comfort: second Fake Out, Water coverage",
+    "sets": [
+     "zardM",
+     "aegis",
+     "kanga",
+     "simipour",
+     "sinis",
+     "rotom"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 6 HP / 32 SpA / 2 SpD / 26 Spe\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Metal Coat\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Iron Head\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Life Orb\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk\nAdamant Nature\n- Fake Out\n- Last Resort\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n\nSinistcha @ Coba Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpD\nCalm Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Protect\n\nRotom-Fan @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "a13",
+    "label": "Stunfisk + Conkeldurr TR",
+    "weight": 0.05,
+    "why": "Full TR-abuser back line | Conkeldurr: Life Orb -> Expert Belt (item clause)",
+    "sets": [
+     "zardM",
+     "aegis",
+     "kanga",
+     "stunfisk",
+     "sinis",
+     "conk"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 6 HP / 32 SpA / 2 SpD / 26 Spe\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Metal Coat\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Iron Head\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Life Orb\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk\nAdamant Nature\n- Fake Out\n- Last Resort\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nSinistcha @ Coba Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpD\nCalm Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Protect\n\nConkeldurr @ Expert Belt\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n"
+   },
+   {
+    "id": "a14",
+    "label": "No Kangaskhan",
+    "weight": 0.05,
+    "why": "Ablation: Kangaskhan value",
+    "sets": [
+     "zardM",
+     "aegis",
+     "morpeko",
+     "sinis",
+     "rotom",
+     "stunfisk"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 6 HP / 32 SpA / 2 SpD / 26 Spe\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Metal Coat\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Iron Head\n- King's Shield\n- Wide Guard\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Coba Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpD\nCalm Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Protect\n\nRotom-Fan @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n"
+   },
+   {
+    "id": "a15",
+    "label": "No Morpeko",
+    "weight": 0.05,
+    "why": "Ablation: Morpeko value",
+    "sets": [
+     "zardM",
+     "aegis",
+     "kanga",
+     "sinis",
+     "rotom",
+     "stunfisk"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 6 HP / 32 SpA / 2 SpD / 26 Spe\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Metal Coat\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Iron Head\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Life Orb\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk\nAdamant Nature\n- Fake Out\n- Last Resort\n\nSinistcha @ Coba Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpD\nCalm Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Protect\n\nRotom-Fan @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n"
+   },
+   {
+    "id": "a16",
+    "label": "Timid Charizard + Stunfisk",
+    "weight": 0.05,
+    "why": "Combine two variants",
+    "sets": [
+     "zardT",
+     "aegis",
+     "kanga",
+     "morpeko",
+     "sinis",
+     "stunfisk"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nTimid Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Metal Coat\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Iron Head\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Life Orb\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk\nAdamant Nature\n- Fake Out\n- Last Resort\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Coba Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpD\nCalm Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n"
+   }
+  ]
+ }
+}
