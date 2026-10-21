@@ -119,3 +119,39 @@ equilibrium mix / prediction / choice / own model, and the protocol lines.
 - The resolver is expected-value, one turn deep (plus the threat term); no switching prediction beyond the matrix game.
 - Open team sheets: each AI knows the other's exact sets (incl. Stat Points). An "OTS only" mode (guess SP) is not built.
 - Two-turn moves other than Solar Beam, Encore / Taunt / Yawn effects and Imprison are modelled only roughly.
+
+## Step 2b: VGC Strategy's review fixes (docs/research/strategy/sim/ai-review.md), 2026-10-21
+1. Double Protect: a joint where both actives Protect / Wide Guard / King's Shield is only a candidate when both face a
+   likely KO (≥ 50% from one foe hit); otherwise removed (both sides). Measured: 1–6% of two-mover turns.
+2. Preconditions: Last Resort only after every other move since entry (also in the resolver), Fake Out / First
+   Impression only on the first turn, Poltergeist not into an item-less target, Dream Eater only into sleep, Steel Roller
+   only on terrain; a forced failing move (Kangaskhan after a flinched Fake Out with no switch) is modelled as nothing.
+   Measured failed moves: 0.1–0.4% of moves.
+3. Preview: the best three 4-sets, every lead pair in them scored by the solved turn-1 game against their two likeliest
+   leads, plus the 4-set score; hard rule (no 4×-Rock-weak lead into a visible spread Rock user without Wide Guard or Fake
+   Out beside it); `--preview guide` uses `lib/guides/5v3.mjs` previews (first row whose species are all in their six;
+   the AI otherwise). Measured: Charizard into spread Rock uncovered 0.
+4. Aegislash: Blade/Shield from the tracker (Blade after attacking until King's Shield), King's Shield drops a contact
+   attacker's Attack, Wide Guard offered only against a real spread threat (≥ 25% into one of ours).
+5. Personas (`run.mjs` PERSONAS, per game by seed): tr 60% on z04/z05/z15/z16/z23, 30% on z06 (lead setter + abuser,
+   TR p 0.8 on the first chance, 0.5 to re-set, never on its own, partner Protect / Fake Out); rock 60% on z03/z08/z18
+   (lead the Rock Slide user); chilly 60% on z07 (bring Slowking-G; Chilly Reception p 0.8 while the opponent's sun is up).
+   `--persona none|all` overrides. Results print per persona.
+6. Noise: second-best joint, one slot to Protect, or a target swap; a switch 2% of noise draws, never the un-Mega'd holder.
+7. Instruct: the partner's last move (this turn's if it moved, else last turn's), best target by damage.
+8. Tests: `tools/sim/test/review.test.mjs` (11), all 27 sim tests pass.
+Metrics printed with every batch (run.mjs / validate.mjs): double-Protect, failed moves, Wide Guard uses vs turns with a
+spread threat, Charizard leads into spread Rock (covered / uncovered), Mega count and turn, TR set rate by persona, Chilly
+Reception use (chilly persona), win rate by persona.
+
+### Validation after the fixes (`sh tools/sim/validate.sh pilot`)
+- vs RandomPlayerAI 394/400 = 98.5% (96.8–99.3%). Mirrors: a01 280/600 = 46.7% (42.7–50.7%); z01 205/400 = 51.3% (46.4–56.1%).
+- TR teams vs a01: persona tr sets TR 174/177 = 98.3%, calc 98/117 = 83.8%; vs the fast z24 (calc) 260/300 = 86.7%.
+- Chilly persona (z07, all games): Slowking-G brought 100/100, Chilly Reception used in 34/100 (needs Slowking on the field
+  while our sun is up).
+- Pilot a01 vs z01..z24, 960 games each, paired seeds: AI preview 510/960 = 53.1% (50.0–56.3%); guide preview
+  437/960 = 45.5% (42.4–48.7%); AI − guide +7.6 points (±4.2). The guide's first row (vs Metagross + Krookodile + Infernape:
+  lead Aegislash + Kangaskhan, bring Charizard / Aegislash / Kangaskhan / Rotom-Fan) does worst (z01 15%, z10 15%, z13 17.5%,
+  z22 15%, z24 17.5% vs 35–55% with the AI preview). Per-persona: tr 67%, calc 51%/42%, rock 41%/27% (AI/guide).
+  (The pilot ran before the chilly persona brought Slowking; 24 chilly games in it.)
+- ~2 s/game per worker with the lead lookahead; 960 games ≈ 2.5 minutes on 14 workers.

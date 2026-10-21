@@ -3,6 +3,7 @@
 //   node tools/sim/logs.mjs [ours=a01] [theirs=z01,z04,z07,z03,z09] [seed=1]  → tools/sim/logs/<ours>-vs-<theirs>-s<seed>.md
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { playGame } from './game.mjs';
+import { PERSONAS } from './run.mjs';
 
 const CAND = JSON.parse(readFileSync(new URL('./candidates/zhuzi.json', import.meta.url), 'utf8'));
 const byId = (id) => [...CAND.ours.teams, ...CAND.opponent.teams].find((t) => t.id === id);
@@ -19,7 +20,7 @@ function render(t, ours, theirs, seed, r) {
       `- **Equilibrium mix**: ${n.mix.join(' · ')}`, `- **Their predicted mix**: ${n.expect.join(' · ')}`,
       `- **Chose**: ${n.chose}`, `- **Own model of the turn** (vs their likeliest play): ${n.model.join(' · ') || '—'}`].join('\n');
   };
-  let md = `# ${t} · seed ${seed}\n\nOurs (p1, ${ours.id} "${ours.label}") vs theirs (p2, ${theirs.id} "${theirs.label}"). Both heuristic (skill 0.85, noise 0.07, balanced).\n` +
+  let md = `# ${t} · seed ${seed}\n\nOurs (p1, ${ours.id} "${ours.label}") vs theirs (p2, ${theirs.id} "${theirs.label}"). Both heuristic (skill 0.85, noise 0.07, balanced; AI preview); opponent persona: ${PERSONAS[theirs.id]?.[0] ?? 'none (calc)'}.\n` +
     `**Winner: ${r.winner === 'p1' ? 'ours' : r.winner === 'p2' ? 'theirs' : 'tie'}** in ${r.turns} turns. Brought: ours ${r.summary.p1.brought.join(', ')}; theirs ${r.summary.p2.brought.join(', ')}.\n\n` +
     `Reasoning lines are the AI's own (values are its position estimate: + good for that side). The "own model" is its approximate one-turn resolver, not Showdown.\n`;
   for (const chunk of turns) {
@@ -36,7 +37,9 @@ const [oursId = 'a01', theirsList = 'z01,z04,z07,z03,z09', seed0 = '1'] = proces
 mkdirSync(new URL('./logs/', import.meta.url), { recursive: true });
 for (const [k, theirsId] of theirsList.split(',').entries()) {
   const ours = byId(oursId), theirs = byId(theirsId), seed = Number(seed0) + k;
-  const r = await playGame({ text: ours.team, ai: 'heuristic', name: 'Ours' }, { text: theirs.team, ai: 'heuristic', name: 'Theirs' }, seed, { keepLog: true, notes: true });
+  // the opponent plays its team's plan persona when it has one (tr / rock / chilly), so the logs show those lines too
+  const persona = PERSONAS[theirsId]?.[0] ?? null;
+  const r = await playGame({ text: ours.team, ai: 'heuristic', name: 'Ours' }, { text: theirs.team, ai: 'heuristic', name: 'Theirs', persona }, seed, { keepLog: true, notes: true });
   const file = new URL(`./logs/${oursId}-vs-${theirsId}-s${seed}.md`, import.meta.url);
   writeFileSync(file, render(`${oursId} vs ${theirsId}`, ours, theirs, seed, r));
   console.log(file.pathname, r.winner, r.turns, 'errors', r.errors);

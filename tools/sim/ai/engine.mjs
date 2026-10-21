@@ -103,13 +103,14 @@ export function optionsFor(S, side, pos, legal = null) {
     if ((PROTECTS.has(id) || id === 'wideguard' || id === 'quickguard') && m.protectStreak > 0) continue;
     if (id === 'trickroom' && S.field.tr > 0 && S.field.trBy === side) continue;
     if (id === 'tailwind' && (S.field.tr > 0 || S.side[side].tailwind > 0)) continue;
-    if (id === 'wideguard' && !S.active[foe(side)].some((k) => k && S.mons[k].set.moves.some((x) => SPREAD.has(moveOf(x).target) && moveOf(x).category !== 'Status'))) continue;
+    if (id === 'wideguard' && spreadThreat(S, side) < 0.25) continue; // only against a real spread threat (≥ 25% into one of ours)
     if (['followme', 'ragepowder', 'helpinghand', 'instruct', 'allyswitch'].includes(id) && !ally) continue;
     // partner-only uses of 'normal'-target moves (Instruct: repeat the partner's move)
     if (id === 'instruct') { if (ally) out.push({ kind: 'move', side, pos, move: id, target: 'ally', mega }); continue; }
     if (SINGLE.has(mv.target) && mv.category !== 'Status' || ['normal', 'any', 'adjacentFoe'].includes(mv.target)) {
       for (const t of foes) {
         const d = S.mons[S.active[foe(side)][t]];
+        if (failsInto(S, m, d, id)) continue;
         if (id === 'fakeout' && (NO_FLINCH.has(abilityOf(d.set, d.mega)) || (isGhost(d) && abilityOf(m.set, m.mega) !== 'scrappy') || S.active[foe(side)].some((k) => k && PRIORITY_BLOCK.has(abilityOf(S.mons[k].set, S.mons[k].mega))) || (S.field.terrain === 'Psychic' && !typesOf(d.set, d.mega).includes('Flying')))) continue;
         out.push({ kind: 'move', side, pos, move: id, target: t, mega });
       }
@@ -119,10 +120,35 @@ export function optionsFor(S, side, pos, legal = null) {
     } else out.push({ kind: 'move', side, pos, move: id, target: null, mega });
   }
   // every move filtered out (Kangaskhan with only Fake Out / Last Resort after a switch): Showdown still needs a move
-  if (!out.length && moves.length) { const id = moves[0], t = ['normal', 'any', 'adjacentFoe'].includes(moveOf(id).target) ? foes[0] ?? 0 : null; out.push({ kind: 'move', side, pos, move: id, target: t, mega }); }
   const bench = legal ? legal.switches : Object.values(S.mons).filter((x) => x.side === side && x.alive > 0 && !S.active[side].includes(x.key) && (x.brought || side === legal?.side)).map((x) => x.key);
   if (!legal?.trapped) for (const k of bench) out.push({ kind: 'switch', side, pos, to: k });
+  // every move fails (Kangaskhan after a flinched Fake Out: Fake Out disabled, Last Resort fails) and no switch: Showdown
+  // still needs a move; it's marked as failing so the model gives it no effect
+  if (!out.length && moves.length) { const id = moves[0], t = ['normal', 'any', 'adjacentFoe'].includes(moveOf(id).target) ? foes[0] ?? 0 : null; out.push({ kind: 'move', side, pos, move: id, target: t, mega, fails: true }); }
   return out.length ? out : [{ kind: 'pass', side, pos }];
+}
+
+/** Moves that fail on a target-side precondition the sim can see: Poltergeist into no item, Dream Eater into a waker. */
+function failsInto(S, m, d, id) {
+  if (id === 'poltergeist') return !d.set.item || d.itemGone;
+  if (id === 'dreameater') return d.status !== 'slp';
+  if (id === 'steelroller') return !S.field.terrain;
+  if (id === 'belch') return true; // needs a berry eaten this battle; not tracked
+  return false;
+}
+/** The worst spread hit the opponent's actives can throw into one of `side`'s actives (fraction of its HP). */
+export function spreadThreat(S, side) {
+  let w = 0;
+  for (const k of S.active[foe(side)]) {
+    if (!k) continue;
+    const a = S.mons[k];
+    for (const id of a.set.moves) {
+      const mv = moveOf(id);
+      if (!SPREAD.has(mv.target) || mv.category === 'Status') continue;
+      for (const tk of S.active[side]) if (tk) { const r = damage(S, a, S.mons[tk], id, { spread: true }); w = Math.max(w, (r.min + r.max) / 2 / Math.max(0.05, S.mons[tk].hp)); }
+    }
+  }
+  return w;
 }
 
 // ---------- resolve one turn ----------
@@ -147,7 +173,7 @@ function enter(S, side, pos, key) {
 }
 const accOf = (mv, a) => (mv.accuracy === true ? 1 : (mv.accuracy / 100) * (abilityOf(a.set, a.mega) === 'compoundeyes' ? 1.3 : 1));
 /** Probability that `amount` (min..max uniform) is at least `hp`. */
-const pAtLeast = (min, max, hp) => (min >= hp ? 1 : max < hp ? 0 : max === min ? 1 : (max - hp) / (max - min));
+export const pAtLeast = (min, max, hp) => (min >= hp ? 1 : max < hp ? 0 : max === min ? 1 : (max - hp) / (max - min));
 
 /**
  * One turn, both sides' actions at once: returns the expected next state plus `log` (what happened, for reasoning).
@@ -179,6 +205,7 @@ export function resolve(S0, acts) {
     if (a.kind === 'switch') { S.switches ??= { p1: 0, p2: 0 }; S.switches[a.side]++; enter(S, a.side, a.pos, a.to); m.movesUsed = []; m.protectStreak = 0; log.push(`${name(m)} → ${name(S.mons[a.to])}`); continue; }
     if (S.active[a.side][a.pos] !== key) continue;
     turnFx.moved[key] = true; turnFx.act[key] = act;
+    if (a.fails || (a.move === 'lastresort' && m.set.moves.some((x) => x !== 'lastresort' && !m.movesUsed.includes(x))) || ((a.move === 'fakeout' || a.move === 'firstimpression') && !m.firstTurn)) { log.push(`${name(m)} ${a.move} fails`); m.protectStreak = 0; continue; }
     useMove(S, m, a, act, turnFx, log, acts);
   }
   // end of turn: Sitrus already applied on hit; weather / field countdowns are the tracker's job (next turn)
@@ -187,6 +214,13 @@ export function resolve(S0, acts) {
   return S;
 }
 const name = (m) => m.set.name ?? m.set.species;
+/** The foe slot a single-target move would do most to (for a repeated move with no recorded target). */
+function bestTarget(S, m, id) {
+  if (!['normal', 'any', 'adjacentFoe'].includes(moveOf(id).target)) return null;
+  let best = 0, bv = -1;
+  S.active[foe(m.side)].forEach((k, i) => { if (!k) return; const r = damage(S, m, S.mons[k], id); const v = Math.min(S.mons[k].hp, (r.min + r.max) / 2); if (v > bv) { bv = v; best = i; } });
+  return best;
+}
 function targetsOf(S, m, a) {
   const mv = moveOf(a.move);
   const fs = foe(m.side);
@@ -209,7 +243,7 @@ function useMove(S, m, a, act, fx, log, acts) {
   const isProt = PROTECTS.has(id);
   m.protectStreak = isProt || id === 'wideguard' ? m.protectStreak + 1 : 0;
   if (m.set.species === 'aegislash') m.form = mv.category === 'Status' ? (id === 'kingsshield' ? 'shield' : m.form) : 'blade';
-  if (isProt) { fx.protect[m.key] = act * (m.protectStreak > 1 ? 1 / 3 : 1); S.protects ??= { p1: 0, p2: 0 }; S.protects[m.side] += act; log.push(`${name(m)} protects`); return; }
+  if (isProt) { if (id === 'kingsshield') fx.kingsShield = { ...(fx.kingsShield ?? {}), [m.key]: act }; fx.protect[m.key] = act * (m.protectStreak > 1 ? 1 / 3 : 1); S.protects ??= { p1: 0, p2: 0 }; S.protects[m.side] += act; log.push(`${name(m)} protects`); return; }
   if (id === 'wideguard') { fx.wideGuard[m.side] = Math.max(fx.wideGuard[m.side], act); log.push(`${name(m)} Wide Guard`); return; }
   if (id === 'followme' || id === 'ragepowder') { fx.redirect[m.side] = m.key; fx.rp[m.side] = id === 'ragepowder'; log.push(`${name(m)} redirects`); return; }
   if (id === 'helpinghand') { const al = S.active[m.side][1 - a.pos]; if (al) fx.hh[al] = act; return; }
@@ -225,8 +259,13 @@ function useMove(S, m, a, act, fx, log, acts) {
   }
   if (id === 'instruct') {
     const al = S.active[m.side][1 - a.pos];
-    const prev = al && fx.moved[al] && acts.find((x) => x.kind === 'move' && S.active[x.side][x.pos] === al);
-    if (prev && moveOf(prev.move).category !== 'Status') { log.push(`${name(m)} Instructs ${name(S.mons[al])}`); useMove(S, S.mons[al], prev, act * (fx.act[al] ?? 1), fx, log, acts); }
+    // Instruct repeats the partner's LAST move: this turn's if it already moved, else the one it used last turn
+    const thisTurn = al && fx.moved[al] && acts.find((x) => x.kind === 'move' && S.active[x.side][x.pos] === al);
+    const lastId = thisTurn ? thisTurn.move : al ? S.mons[al].lastMove : '';
+    if (!lastId || moveOf(lastId).category === 'Status' || ['instruct', 'fakeout', 'lastresort'].includes(lastId)) return;
+    const again = thisTurn ?? { kind: 'move', side: m.side, pos: 1 - a.pos, move: lastId, target: bestTarget(S, S.mons[al], lastId) };
+    log.push(`${name(m)} Instructs ${name(S.mons[al])} (${moveOf(lastId).name})`);
+    useMove(S, S.mons[al], again, act * (fx.act[al] ?? S.mons[al].alive), fx, log, acts);
     return;
   }
   const { list, spread } = targetsOf(S, m, a);
@@ -248,7 +287,10 @@ function useMove(S, m, a, act, fx, log, acts) {
     if (t.alive <= 0) continue;
     if (blockPri && t.side === fs) continue;
     let p = act * accOf(mv, m);
-    p *= 1 - (fx.protect[tk] ?? 0);
+    const blocked = fx.protect[tk] ?? 0;
+    // King's Shield: a contact move that hits it drops the attacker's Attack by 1
+    if (blocked && fx.kingsShield?.[tk] && mv.flags?.contact) m.boosts.atk = Math.max(-6, (m.boosts.atk ?? 0) - blocked * act);
+    p *= 1 - blocked;
     if (spread) p *= 1 - (fx.wideGuard[t.side] ?? 0);
     if (p <= 0) continue;
     const r = damage(S, m, t, id, { spread, hh: !!fx.hh[m.key] });

@@ -1,9 +1,13 @@
 // The heuristic player (tools/sim/NOTES.md "Step 2"): a Showdown BattlePlayer that reads the protocol into a Tracker,
 // scores options with the turn model in engine.mjs (lib/calc damage), looks one ply ahead against the opponent's top
 // replies, and picks with skill / temperature / noise. Deterministic per seed. Open team sheets: it knows both teams' sets.
-import { BattlePlayer, setsFromText, toID, statsOf, abilityOf, moveOf, typesOf, mech, PROTECTS } from './data.mjs';
+import { BattlePlayer, setsFromText, toID, statsOf, abilityOf, moveOf, typesOf, mech, PROTECTS, SPREAD } from './data.mjs';
 import { Tracker } from './tracker.mjs';
-import { snapshot, optionsFor, resolve, value, damage, STYLES, foe, speed } from './engine.mjs';
+import guide5v3 from '../../../lib/guides/5v3.mjs';
+
+// the guide's preview table (Anthony vs ZhuZi), for --preview guide
+const GUIDE_PREVIEWS = guide5v3.previews ?? [];
+import { snapshot, optionsFor, resolve, value, damage, STYLES, foe, speed, pAtLeast } from './engine.mjs';
 
 
 /** mulberry32: a small seeded PRNG (deterministic per game seed). */
@@ -36,7 +40,7 @@ export function solveGame(M, iters = 400) {
   return { p: sR.map((x) => x / tot(sR)), q: sC.map((x) => x / tot(sC)) };
 }
 const sampleBy = (items, w, r) => { let u = r() * items.reduce((t, x) => t + w(x), 0); for (const x of items) { u -= w(x); if (u <= 0) return x; } return items[0]; };
-export const DEFAULTS = { skill: 0.85, temperature: 0.04, noise: 0.07, style: 'balanced', topM: 4, topN: 8, topK: 3, usualBring: 0, previewTemp: 0.05 };
+export const DEFAULTS = { preview: 'ai', persona: null, skill: 0.85, temperature: 0.04, noise: 0.07, style: 'balanced', topM: 4, topN: 8, topK: 3, usualBring: 0, previewTemp: 0.05 };
 
 export class HeuristicPlayer extends BattlePlayer {
   /** opts: { mine: text, theirs: text, seed, skill, temperature, noise, style, usualBring, notes: bool } */
@@ -98,51 +102,137 @@ export class HeuristicPlayer extends BattlePlayer {
     if (a.moves.includes('lastresort')) { const d = damage(S, A, B, 'lastresort'); best = Math.max(best, (d.min + d.max) / 2 * 0.8); }
     return Math.min(1.2, best);
   }
-  preview(request) {
-    const mine = request.side.pokemon.map((p) => this.mine.find((s) => s.species === toID(p.details.split(',')[0])) ?? this.mine.find((s) => toID(p.ident.split(': ')[1]) === toID(s.name)));
-    const opp = this.theirs;
+  /** 4-mon sets of `mine` scored against `opp`'s six: offence − 0.8 × defence + role bonuses. */
+  fours(mine, opp) {
     const avgSpe = (ss) => ss.reduce((t, s) => t + statsOf(s, !!mech.items[s.item]?.megaStone).spe, 0) / ss.length;
-    const sunUsers = (ss) => ss.filter((s) => s.moves.some((x) => ['weatherball', 'solarbeam'].includes(x) || (moveOf(x).type === 'Fire' && moveOf(x).category !== 'Status'))).length;
-    const subsets = [];
+    const out = [];
     const n = mine.length;
-    for (let a = 0; a < n; a++) for (let b = a + 1; b < n; b++) for (let c = b + 1; c < n; c++) for (let d = c + 1; d < n; d++) subsets.push([a, b, c, d]);
-    const scored = subsets.map((ix) => {
-      const ss = ix.map((i) => mine[i]);
+    for (let a = 0; a < n; a++) for (let b = a + 1; b < n; b++) for (let c = b + 1; c < n; c++) for (let d = c + 1; d < n; d++) {
+      const ix = [a, b, c, d], ss = ix.map((i) => mine[i]);
       const off = opp.reduce((t, o) => t + Math.max(...ss.map((s) => this.pairHit(s, o))), 0) / opp.length;
       const def = ss.reduce((t, s) => t + Math.max(...opp.map((o) => this.pairHit(o, s))), 0) / ss.length;
-      const slower = avgSpe(ss) < avgSpe(opp);
       let bonus = 0;
       if (ss.some((s) => s.moves.includes('fakeout'))) bonus += 0.05;
-      if (ss.some((s) => s.moves.includes('trickroom')) && slower) bonus += 0.06;
+      if (ss.some((s) => s.moves.includes('trickroom')) && avgSpe(ss) < avgSpe(opp)) bonus += 0.06;
       if (ss.some((s) => s.moves.includes('ragepowder') || s.moves.includes('followme'))) bonus += 0.03;
       if (ss.some((s) => s.ability === 'intimidate')) bonus += 0.03;
       if (ss.some((s) => mech.items[s.item]?.megaStone)) bonus += 0.05;
       if (ss.filter((s) => mech.items[s.item]?.megaStone).length > 1) bonus -= 0.05;
-      return { ix, score: off - 0.8 * def + bonus, off, def };
-    }).sort((x, y) => y.score - x.score);
-    let pick, why;
-    if (this.o.usualBring > 0 && this.r() < this.o.usualBring) { pick = { ix: [0, 1, 2, 3] }; why = 'usual 4 (habit)'; }
-    else if (this.r() < this.o.skill) { pick = scored[0]; why = 'best 4'; }
-    else { pick = softmaxPick(scored, (x) => x.score, this.o.previewTemp, this.r); why = 'softmax'; }
-    // leads: the pair with the best offence into their six plus lead roles
-    const ss = pick.ix.map((i) => mine[i]);
-    const sunTeam = sunUsers(ss) >= 2;
-    const pairs = [];
-    for (let a = 0; a < 4; a++) for (let b = a + 1; b < 4; b++) {
-      const pr = [ss[a], ss[b]];
-      let sc = opp.reduce((t, o) => t + Math.max(...pr.map((s) => this.pairHit(s, o))), 0) / opp.length;
-      if (pr.some((s) => s.moves.includes('fakeout'))) sc += 0.12;
-      if (pr.some((s) => s.ability === 'drought' || abilityOf(s, true) === 'drought') && sunTeam) sc += 0.1;
-      if (pr.some((s) => s.moves.includes('trickroom')) && avgSpe(ss) < avgSpe(opp)) sc += 0.1;
-      if (pr.some((s) => s.ability === 'intimidate')) sc += 0.05;
-      if (pr.some((s) => mech.items[s.item]?.megaStone)) sc += 0.05;
-      if (pr.every((s) => s.moves.includes('fakeout'))) sc -= 0.05;
-      pairs.push({ ab: [a, b], sc });
+      out.push({ ix, score: off - 0.8 * def + bonus });
     }
-    pairs.sort((x, y) => y.sc - x.sc);
-    const lead = why === 'usual 4 (habit)' ? { ab: [0, 1] } : this.r() < this.o.skill ? pairs[0] : softmaxPick(pairs, (x) => x.sc, this.o.previewTemp, this.r);
-    const order = [...lead.ab, ...[0, 1, 2, 3].filter((i) => !lead.ab.includes(i))].map((i) => pick.ix[i] + 1);
-    this.note({ preview: { bring: pick.ix.map((i) => mine[i].species), leads: lead.ab.map((i) => ss[i].species), why, top: scored.slice(0, 3).map((x) => ({ four: x.ix.map((i) => mine[i].species), score: +x.score.toFixed(3) })) } });
+    return out.sort((x, y) => y.score - x.score);
+  }
+  /** Quick lead-pair score (no battle state): offence into their six plus lead roles. */
+  pairScore(pr, opp) {
+    let sc = opp.reduce((t, o) => t + Math.max(...pr.map((s) => this.pairHit(s, o))), 0) / opp.length;
+    if (pr.some((s) => s.moves.includes('fakeout'))) sc += 0.12;
+    if (pr.some((s) => abilityOf(s, true) === 'drought')) sc += 0.08;
+    if (pr.some((s) => s.ability === 'intimidate')) sc += 0.05;
+    if (pr.some((s) => mech.items[s.item]?.megaStone)) sc += 0.05;
+    if (pr.every((s) => s.moves.includes('fakeout'))) sc -= 0.05;
+    return sc;
+  }
+  /**
+   * The hard lead rule (ai-review.md #3): a lead that takes 4× from Rock (Mega Charizard Y) never goes in front of a visible
+   * spread Rock move (Rock Slide) unless its partner has Wide Guard or Fake Out.
+   */
+  leadAllowed(pr, opp) {
+    const rockUser = opp.some((o) => o.moves.some((id) => moveOf(id).type === 'Rock' && SPREAD.has(moveOf(id).target) && moveOf(id).category !== 'Status'));
+    if (!rockUser) return true;
+    return pr.every((s, i) => {
+      const types = typesOf(s, !!mech.items[s.item]?.megaStone);
+      const rock4x = types.filter((t) => ['Fire', 'Flying', 'Bug', 'Ice'].includes(t)).length >= 2;
+      return !rock4x || pr[1 - i].moves.includes('wideguard') || pr[1 - i].moves.includes('fakeout');
+    });
+  }
+  /** The battle at turn 1 with these leads (indices into the six), our other two in the back: a snapshot for solve(). */
+  leadState(mine, ourLead, ourBack, theirs, theirLead) {
+    const me = this.me, them = foe(me);
+    const T = new Tracker(me === 'p1' ? { p1: mine, p2: theirs } : { p1: theirs, p2: mine });
+    T.turn = 1;
+    const put = (side, i, pos) => { const m = T.mons[side][i]; m.pos = pos; m.brought = m.seen = true; m.entered = 0; T.active[side][pos] = m; };
+    ourLead.forEach((i, pos) => put(me, i, pos));
+    theirLead.forEach((i, pos) => put(them, i, pos));
+    for (const i of ourBack) T.mons[me][i].brought = true;
+    return snapshot(T);
+  }
+  /** Turn-1 value of a lead pair: the solved turn-1 game against their likely leads (weighted). */
+  leadValue(mine, ourLead, ourBack, theirs, theirLeads) {
+    let v = 0;
+    for (const { pair, w } of theirLeads) {
+      const S = this.leadState(mine, ourLead, ourBack, theirs, pair);
+      const ours = [0, 1].map((pos) => optionsFor(S, this.me, pos));
+      const theirOpts = [0, 1].map((pos) => optionsFor(S, foe(this.me), pos));
+      v += w * this.solve(S, this.me, ours, theirOpts, { topM: 3, topN: 4, topK: 2, iters: 1 }).value;
+    }
+    return v;
+  }
+  /** The guide's preview table (lib/guides/5v3.mjs `previews`): the first row whose species are all in their six. */
+  guidePreview(mine, opp) {
+    const base = (name) => { const n = String(name).trim(); const g = /^Galarian /i.test(n); const id = toID(n.replace(/^(Mega|Galarian) /i, '')); return g ? `${id}galar` : id; };
+    const theirs = new Set(opp.map((s) => s.species));
+    for (const row of GUIDE_PREVIEWS) {
+      const need = row.if.replace(/^their 6 includes /i, '').split('+').map(base);
+      if (!need.every((id) => theirs.has(id))) continue;
+      const ix = row.bring4.map((id) => mine.findIndex((s) => s.species === id));
+      const lead = row.lead.map((id) => mine.findIndex((s) => s.species === id));
+      if (ix.some((i) => i < 0) || lead.some((i) => i < 0 || !ix.includes(i))) continue;
+      return { ix, lead, why: `guide preview: ${row.if}` };
+    }
+    return null;
+  }
+  preview(request) {
+    const mine = request.side.pokemon.map((p) => this.mine.find((s) => s.species === toID(p.details.split(',')[0])) ?? this.mine.find((s) => toID(p.ident.split(': ')[1]) === toID(s.name)));
+    const opp = this.theirs;
+    const P = this.o.persona;
+    let pick = null;
+    // policy: the guide's preview table (when it covers this six), else the AI's
+    if (this.o.preview === 'guide') { const g = this.guidePreview(mine, opp); if (g) pick = g; }
+    const fours = this.fours(mine, opp);
+    const has = (i, move) => mine[i].moves.includes(move);
+    if (!pick && this.o.usualBring > 0 && this.r() < this.o.usualBring) pick = { ix: [0, 1, 2, 3], lead: [0, 1], why: 'usual 4 (habit)' };
+    // personas: TR leads its setter + its best abuser; rock leads its Rock Slide user
+    if (!pick && P === 'tr') {
+      const setter = mine.findIndex((s, i) => has(i, 'trickroom'));
+      const abuser = mine.map((s, i) => ({ i, off: opp.reduce((t, o) => t + this.pairHit(s, o), 0) / opp.length, spe: statsOf(s, !!mech.items[s.item]?.megaStone).spe })).filter((x) => x.i !== setter).sort((a, b) => (a.spe < 100 ? 0 : 1) - (b.spe < 100 ? 0 : 1) || b.off - a.off)[0]?.i;
+      const four = fours.find((f) => f.ix.includes(setter) && f.ix.includes(abuser));
+      if (setter >= 0 && four) pick = { ix: four.ix, lead: [setter, abuser], why: 'persona tr: setter + abuser lead' };
+    }
+    if (!pick && P === 'rock') {
+      const rock = mine.findIndex((s) => s.moves.includes('rockslide'));
+      const four = fours.find((f) => f.ix.includes(rock));
+      if (rock >= 0 && four) { const partner = four.ix.filter((i) => i !== rock).map((i) => ({ i, sc: this.pairScore([mine[rock], mine[i]], opp) })).sort((a, b) => b.sc - a.sc)[0].i; pick = { ix: four.ix, lead: [rock, partner], why: 'persona rock: Rock Slide user leads' }; }
+    }
+    let leadRank = [];
+    if (!pick) {
+      // the AI: the best few fours, each lead pair in them scored by its turn-1 outcome against their likely leads
+      const theirPairs = [];
+      for (let a = 0; a < opp.length; a++) for (let b = a + 1; b < opp.length; b++) theirPairs.push({ pair: [a, b], sc: this.pairScore([opp[a], opp[b]], mine) });
+      theirPairs.sort((x, y) => y.sc - x.sc);
+      const top2 = theirPairs.slice(0, 2), tw = top2.map((x) => Math.exp(x.sc / 0.05)), tws = tw.reduce((s, x) => s + x, 0);
+      const theirLeads = top2.map((x, k) => ({ pair: x.pair, w: tw[k] / tws }));
+      const cand = [];
+      const seen = new Map();
+      // persona chilly brings its Chilly Reception user (the lookahead picks the leads)
+      const chillyUser = P === 'chilly' ? mine.findIndex((s) => s.moves.includes('chillyreception')) : -1;
+      const pool = chillyUser >= 0 ? fours.filter((f) => f.ix.includes(chillyUser)) : fours;
+      for (const f of pool.slice(0, 3)) {
+        for (let a = 0; a < 4; a++) for (let b = a + 1; b < 4; b++) {
+          const lead = [f.ix[a], f.ix[b]], back = f.ix.filter((i) => !lead.includes(i));
+          if (!this.leadAllowed(lead.map((i) => mine[i]), opp)) continue;
+          const k = `${lead.join()}|${back.join()}`;
+          if (!seen.has(k)) seen.set(k, this.leadValue(mine, lead, back, opp, theirLeads));
+          cand.push({ ix: f.ix, lead, score: f.score + seen.get(k) });
+        }
+      }
+      cand.sort((x, y) => y.score - x.score);
+      leadRank = cand;
+      if (cand.length) pick = this.r() < this.o.skill ? { ...cand[0], why: 'best lead (turn-1 lookahead)' } : { ...softmaxPick(cand, (x) => x.score, this.o.previewTemp, this.r), why: 'softmax' };
+      else pick = { ix: fours[0].ix, lead: fours[0].ix.slice(0, 2), why: 'fallback' };
+    }
+    const order = [...pick.lead, ...pick.ix.filter((i) => !pick.lead.includes(i))].map((i) => i + 1);
+    this.note({ preview: { bring: pick.ix.map((i) => mine[i].species), leads: pick.lead.map((i) => mine[i].species), why: pick.why,
+      top: (leadRank.length ? leadRank : fours).slice(0, 3).map((x) => ({ four: x.ix.map((i) => mine[i].species), lead: x.lead?.map((i) => mine[i].species), score: +x.score.toFixed(3) })) } });
     return `team ${order.join('')}`;
   }
 
@@ -165,6 +255,35 @@ export class HeuristicPlayer extends BattlePlayer {
     });
     while (ours.length < 2) ours.push([{ kind: 'pass', side: me, pos: ours.length }]);
     const theirs = [0, 1].map((pos) => optionsFor(S, them, pos));
+    if (T.field.trBy === me) this.setTR = true;
+    const sol = this.solve(S, me, ours, theirs);
+    const { final, qs, joints } = sol;
+    let pick, why;
+    const plan = this.planMove(S, ours, sol);
+    if (plan) { pick = plan.pick; why = plan.why; }
+    else if (this.r() < this.o.noise) { pick = this.humanNoise(S, ours, final, joints); why = 'noise (human-like)'; }
+    else if (this.r() < this.o.skill) { pick = sampleBy(final, (x) => x.p, this.r); why = 'equilibrium mix'; }
+    else { pick = softmaxPick([...final].sort((a, b) => b.v - a.v), (x) => x.v, this.o.temperature, this.r); why = 'softmax'; }
+    this.last = { final, expect: qs };
+    if (this.o.notes) {
+      const desc = (j) => j.map((a) => this.describe(S, a)).join(' + ');
+      const sim = resolve(S, [...pick.j, ...qs[0].j]);
+      this.note({ turn: T.turn, field: { weather: S.field.weather, terrain: S.field.terrain, tr: S.field.tr, tailwind: [S.side.p1.tailwind, S.side.p2.tailwind] },
+        guess: sol.R0.map((r) => `${desc(r.j)} (w ${r.w.toFixed(2)})`), singles: sol.singles.map((l) => l.slice(0, 5).map((x) => `${this.describe(S, x.o)} ${x.v.toFixed(3)}`)),
+        mix: final.filter((x) => x.p > 0.02).map((x) => `${desc(x.j)} (p ${x.p.toFixed(2)}, ev ${x.v.toFixed(3)})`), expect: qs.filter((x) => x.q > 0.02).map((x) => `${desc(x.j)} (q ${x.q.toFixed(2)})`),
+        chose: `${desc(pick.j)} [${why}]`, model: sim.log });
+    }
+    return pick.j.map((a, pos) => this.choiceOf(request, L, a, pos)).join(', ');
+  }
+
+  /**
+   * One turn as a simultaneous-move game for `me` (options per slot for both sides): their plausible plans, our top
+   * options, both sides' candidate joints, solved by regret matching with double-oracle expansion. cfg trims it (preview).
+   * Returns { final: [{ j, v (ev vs their mix), p (our mix) }], qs: [{ j, q }], value, R0, singles, joints, ev(j) }.
+   */
+  solve(S, me, ours, theirs, cfg = {}) {
+    const them = foe(me);
+    const topM = cfg.topM ?? this.o.topM, topN = cfg.topN ?? this.o.topN, topK = cfg.topK ?? this.o.topK, iters = cfg.iters ?? 4;
     const V = (acts, side) => value(resolve(S, acts), side, side === me ? this.style : STYLES.balanced);
     const pass = (side, pos) => ({ kind: 'pass', side, pos });
     // a spread move that also hits the partner (Earthquake, Boomburst, Discharge) only when the partner is immune or protects
@@ -174,36 +293,61 @@ export class HeuristicPlayer extends BattlePlayer {
       if (!ak || !bk || (y.kind === 'move' && PROTECTS.has(y.move)) || y.kind === 'switch') return false;
       return damage(S, S.mons[ak], S.mons[bk], x.move, { spread: true }).max > 0;
     };
-    const joints = (a, b) => { const out = []; for (const x of a) for (const y of b) { if (x.kind === 'switch' && y.kind === 'switch' && x.to === y.to) continue; if (hitsAlly(x, y) || hitsAlly(y, x)) continue; out.push(x.mega && y.mega ? [x, { ...y, mega: false }] : [x, y]); } return out; };
+    // double Protect (both actives Protect / Wide Guard / King's Shield) only when both face a likely KO
+    const koRisk = new Map();
+    const facesKO = (k) => {
+      if (!k) return false;
+      if (!koRisk.has(k)) {
+        const d = S.mons[k];
+        let p = 0;
+        for (const fk of S.active[foe(d.side)]) {
+          if (!fk) continue;
+          const a = S.mons[fk];
+          for (const id of a.set.moves) { const mv = moveOf(id); if (mv.category === 'Status') continue; const r = damage(S, a, d, id, { spread: SPREAD.has(mv.target) }); p = Math.max(p, pAtLeast(r.min, r.max, d.hp)); }
+        }
+        koRisk.set(k, p);
+      }
+      return koRisk.get(k) >= 0.5;
+    };
+    const guards = (x) => x.kind === 'move' && (PROTECTS.has(x.move) || x.move === 'wideguard');
+    const doubleProtect = (x, y) => guards(x) && guards(y) && !(facesKO(S.active[x.side][x.pos]) && facesKO(S.active[y.side][y.pos]));
+    const joints = (a, b) => {
+      const out = [];
+      for (const x of a) for (const y of b) {
+        if (x.kind === 'switch' && y.kind === 'switch' && x.to === y.to) continue;
+        if (hitsAlly(x, y) || hitsAlly(y, x) || doubleProtect(x, y)) continue;
+        out.push(x.mega && y.mega ? [x, { ...y, mega: false }] : [x, y]);
+      }
+      if (!out.length) for (const x of a) for (const y of b) if (!(x.kind === 'switch' && y.kind === 'switch' && x.to === y.to)) out.push(x.mega && y.mega ? [x, { ...y, mega: false }] : [x, y]);
+      return out;
+    };
     const mix = (plans, w) => { const top = Math.max(...plans.map((x) => x.v)); const e = plans.map((x) => Math.exp((x.v - top) / w)); const t = e.reduce((a, b) => a + b, 0); return plans.map((x, k) => ({ ...x, w: e[k] / t })); };
-    // 1. their likely plays if we did nothing (a few distinct plans, not one: e.g. "double the setter" and "spread"),
-    // weighted by how good each is for them
-    const tSingles = theirs.map((opts, pos) => opts.map((o) => ({ o, v: V([o, pass(them, 1 - pos)], them) })).sort((a, b) => b.v - a.v).slice(0, this.o.topM).map((x) => x.o));
-    const R0 = mix(joints(tSingles[0], tSingles[1]).map((j) => ({ j, v: V(j, them) })).sort((a, b) => b.v - a.v).slice(0, this.o.topK), 0.08);
+    // 1. their likely plays if we did nothing (a few distinct plans), weighted by how good each is for them
+    const tSingles = theirs.map((opts, pos) => opts.map((o) => ({ o, v: V([o, pass(them, 1 - pos)], them) })).sort((a, b) => b.v - a.v).slice(0, topM).map((x) => x.o));
+    const R0 = mix(joints(tSingles[0], tSingles[1]).map((j) => ({ j, v: V(j, them) })).sort((a, b) => b.v - a.v).slice(0, topK), 0.08);
     const guessT = R0[0].j;
     const vsR0 = (acts) => R0.reduce((t, r) => t + r.w * V([...acts, ...r.j], me), 0);
     // 2. our top options per slot (against that mix), then the joint ones
     const singles = ours.map((opts, pos) => opts.map((o) => ({ o, v: vsR0([o, pass(me, 1 - pos)]) })).sort((a, b) => b.v - a.v));
-    const topOurs = singles.map((l) => l.slice(0, this.o.topM).map((x) => x.o));
-    const ourJ = joints(topOurs[0], topOurs[1]).map((j) => ({ j, v: vsR0(j) })).sort((a, b) => b.v - a.v).slice(0, this.o.topN);
+    const topOurs = singles.map((l) => l.slice(0, topM).map((x) => x.o));
+    const ourJ = joints(topOurs[0], topOurs[1]).map((j) => ({ j, v: vsR0(j) })).sort((a, b) => b.v - a.v).slice(0, topN);
     // 3. their candidate plays: the plans above plus their best replies to our few best candidates
     const ourTop = ourJ.slice(0, 3).map((x) => x.j);
-    const topTheirs = theirs.map((opts, pos) => opts.map((o) => ({ o, v: ourTop.reduce((t, oj) => t + V([...oj, o, guessT[1 - pos]], them), 0) })).sort((a, b) => b.v - a.v).slice(0, this.o.topM).map((x) => x.o));
+    const topTheirs = theirs.map((opts, pos) => opts.map((o) => ({ o, v: ourTop.reduce((t, oj) => t + V([...oj, o, guessT[1 - pos]], them), 0) })).sort((a, b) => b.v - a.v).slice(0, topM).map((x) => x.o));
     const key = (j) => JSON.stringify(j);
     const A = ourJ.map((x) => x.j), B = R0.map((r) => r.j);
     const seenA = new Set(A.map(key)), seenB = new Set(B.map(key));
-    for (const r of joints(topTheirs[0], topTheirs[1]).map((j) => ({ j, v: ourTop.reduce((t, oj) => t + V([...oj, ...j], them), 0) })).sort((a, b) => b.v - a.v).slice(0, this.o.topN)) if (!seenB.has(key(r.j))) { seenB.add(key(r.j)); B.push(r.j); }
-    // 4. the turn as a simultaneous-move game (double oracle): solve our candidates × theirs for both sides' mixed
-    // strategies (regret matching), add each side's best response to the other's mix, repeat until nothing new
+    for (const r of joints(topTheirs[0], topTheirs[1]).map((j) => ({ j, v: ourTop.reduce((t, oj) => t + V([...oj, ...j], them), 0) })).sort((a, b) => b.v - a.v).slice(0, topN)) if (!seenB.has(key(r.j))) { seenB.add(key(r.j)); B.push(r.j); }
+    // 4. double oracle: solve, add each side's best response to the other's mix, repeat until nothing new
     const cell = new Map();
     const Vc = (a, b) => { const k = `${key(a)}|${key(b)}`; if (!cell.has(k)) cell.set(k, V([...a, ...b], me)); return cell.get(k); };
     const bestResponse = (side, optsBySlot, others, w, top) => {
       const sideV = (j) => others.reduce((t, o, k) => (w[k] > 0.01 ? t + w[k] * (side === me ? Vc(j, o) : -Vc(o, j)) : t), 0);
-      const sl = optsBySlot.map((opts, pos) => opts.map((o) => ({ o, v: sideV(pos === 0 ? [o, top[1]] : [top[0], o]) })).sort((a, b) => b.v - a.v).slice(0, this.o.topM).map((x) => x.o));
+      const sl = optsBySlot.map((opts, pos) => opts.map((o) => ({ o, v: sideV(pos === 0 ? [o, top[1]] : [top[0], o]) })).sort((a, b) => b.v - a.v).slice(0, topM).map((x) => x.o));
       return joints(sl[0], sl[1]).map((j) => ({ j, v: sideV(j) })).sort((a, b) => b.v - a.v)[0]?.j;
     };
     let p, q, M;
-    for (let it = 0; it < 4; it++) {
+    for (let it = 0; it < iters; it++) {
       M = A.map((a) => B.map((b) => Vc(a, b)));
       ({ p, q } = solveGame(M));
       const topA = A[p.indexOf(Math.max(...p))], topB = B[q.indexOf(Math.max(...q))];
@@ -215,24 +359,64 @@ export class HeuristicPlayer extends BattlePlayer {
     }
     M = A.map((a) => B.map((b) => Vc(a, b)));
     ({ p, q } = solveGame(M));
-    const ourJ2 = A.map((j) => ({ j })), theirJ = B;
-    const ev = M.map((row) => row.reduce((t, x, k) => t + x * q[k], 0));
-    const final = ourJ2.map((x, i) => ({ j: x.j, v: ev[i], p: p[i] })).sort((a, b) => b.p - a.p || b.v - a.v);
-    let pick, why;
-    if (this.r() < this.o.noise) { const all = joints(ours[0], ours[1]); pick = { j: all[Math.floor(this.r() * all.length)], v: NaN }; why = 'noise'; }
-    else if (this.r() < this.o.skill) { pick = sampleBy(final, (x) => x.p, this.r); why = 'equilibrium mix'; }
-    else { pick = softmaxPick([...final].sort((a, b) => b.v - a.v), (x) => x.v, this.o.temperature, this.r); why = 'softmax'; }
-    const qs = theirJ.map((j, k) => ({ j, q: q[k] })).sort((a, b) => b.q - a.q);
-    this.last = { final, expect: qs };
-    if (this.o.notes) {
-      const desc = (j) => j.map((a) => this.describe(S, a)).join(' + ');
-      const sim = resolve(S, [...pick.j, ...qs[0].j]);
-      this.note({ turn: T.turn, field: { weather: S.field.weather, terrain: S.field.terrain, tr: S.field.tr, tailwind: [S.side.p1.tailwind, S.side.p2.tailwind] },
-        guess: R0.map((r) => `${desc(r.j)} (w ${r.w.toFixed(2)})`), singles: singles.map((l) => l.slice(0, 5).map((x) => `${this.describe(S, x.o)} ${x.v.toFixed(3)}`)),
-        mix: final.filter((x) => x.p > 0.02).map((x) => `${desc(x.j)} (p ${x.p.toFixed(2)}, ev ${x.v.toFixed(3)})`), expect: qs.filter((x) => x.q > 0.02).map((x) => `${desc(x.j)} (q ${x.q.toFixed(2)})`),
-        chose: `${desc(pick.j)} [${why}]`, model: sim.log });
+    const evs = M.map((row) => row.reduce((t, x, k) => t + x * q[k], 0));
+    const final = A.map((j, i) => ({ j, v: evs[i], p: p[i] })).sort((a, b) => b.p - a.p || b.v - a.v);
+    const qs = B.map((j, k) => ({ j, q: q[k] })).sort((a, b) => b.q - a.q);
+    const value0 = final.reduce((t, x) => t + x.p * x.v, 0);
+    const ev = (j) => B.reduce((t, b, k) => (q[k] > 0.005 ? t + q[k] * Vc(j, b) : t), 0);
+    return { final, qs, value: value0, R0, singles, joints, ev };
+  }
+
+  /**
+   * Plan-commitment personas (VGC Strategy, ai-review.md): 'tr' sets Trick Room on the first turn its setter can (p 0.8)
+   * and re-sets it after it ends (p 0.5), never on top of its own, partner Protecting or Faking Out; 'chilly' uses
+   * Chilly Reception while the opponent's sun is up (p 0.8). Returns { pick, why } or null (play the normal policy).
+   */
+  planMove(S, ours, sol) {
+    const P = this.o.persona;
+    let move, prob;
+    if (P === 'tr' && S.field.tr === 0) { move = 'trickroom'; prob = this.setTR ? 0.5 : 0.8; }
+    if (P === 'chilly' && S.field.weather === 'Sun') { move = 'chillyreception'; prob = 0.8; }
+    if (!move) return null;
+    const pos = [0, 1].find((x) => ours[x].some((o) => o.kind === 'move' && o.move === move));
+    if (pos === undefined || this.r() >= prob) return null;
+    const mine = ours[pos].filter((o) => o.kind === 'move' && o.move === move);
+    const support = ours[1 - pos].filter((o) => o.kind === 'pass' || (o.kind === 'move' && (PROTECTS.has(o.move) || o.move === 'fakeout')));
+    const pool = support.length ? support : ours[1 - pos];
+    const cands = [];
+    for (const a of mine) for (const b of pool) cands.push(pos === 0 ? [a, b] : [b, a]);
+    const best = cands.map((j) => ({ j, v: sol.ev(j) })).sort((x, y) => y.v - x.v)[0];
+    if (!best) return null;
+    if (move === 'trickroom') this.setTR = true;
+    return { pick: best, why: `persona ${P}: ${move}` };
+  }
+
+  /**
+   * Human-like noise: a plausible alternative, not a random action. The second-best joint, one slot swapped to Protect,
+   * or one slot's target swapped; a switch only 2% of the time, and never the Mega holder before it Mega Evolves.
+   */
+  humanNoise(S, ours, final, joints) {
+    const base = final[0].j;
+    const options = [];
+    if (final[1]) options.push(final[1].j);
+    for (const pos of [0, 1]) {
+      const a = base[pos];
+      const prot = ours[pos].find((o) => o.kind === 'move' && PROTECTS.has(o.move));
+      if (prot && a.kind === 'move' && !PROTECTS.has(a.move)) options.push(pos === 0 ? [prot, base[1]] : [base[0], prot]);
+      if (a.kind === 'move' && typeof a.target === 'number') {
+        const swap = ours[pos].find((o) => o.kind === 'move' && o.move === a.move && o.target === 1 - a.target);
+        if (swap) options.push(pos === 0 ? [swap, base[1]] : [base[0], swap]);
+      }
     }
-    return pick.j.map((a, pos) => this.choiceOf(request, L, a, pos)).join(', ');
+    if (this.r() < 0.02) {
+      const pos = this.r() < 0.5 ? 0 : 1;
+      const k = S.active[this.me][pos];
+      const holdsStone = k && !S.mons[k].mega && mech.items[S.mons[k].set.item]?.megaStone;
+      const sw = ours[pos].filter((o) => o.kind === 'switch');
+      if (sw.length && !holdsStone) { const o = sw[Math.floor(this.r() * sw.length)]; return { j: pos === 0 ? [o, base[1]] : [base[0], o] }; }
+    }
+    const ok = options.filter((j) => j.every((x) => x.kind !== 'switch') && joints([j[0]], [j[1]]).length);
+    return { j: ok.length ? ok[Math.floor(this.r() * ok.length)] : base };
   }
   describe(S, a) {
     const m = S.mons[S.active[a.side][a.pos]];
