@@ -10,7 +10,9 @@ in §5 as history only: they ran with the cache bug.*
 - **Bring this six ("c1"):** Charizard (32 HP / 0 Speed), Aegislash (Kasib Berry, Shadow Sneak), Kangaskhan (Silk Scarf:
   Fake Out / Double-Edge / Sucker Punch / Protect), Morpeko, Sinistcha (Bold, Sitrus), and **Conkeldurr in place of
   Rotom-Fan**. Sets in §1.
-- **Play it with the guide's preview table** (§6). The sim's estimate with that table, on 2,880 fresh games:
+- **Closed team sheets (our league, best of 3) don't change the answer** (§6a). With species-only knowledge on both
+  sides, c1 wins **78.5%** and beats a17 by **+8.6 ± 2.2**, a wider margin than with full information.
+- **Play it with the guide's preview table** (§6). The sim's estimate with that table and full information, on 2,880 fresh games:
   - **76.9% ± 1.6 weighted win rate** against 24 plausible ZhuZi teams.
   - **+5.6 ± 2.3 points** over the best round-3 six (a17, with Rotom-Fan and the fast Charizard), each six with its own
     best preview.
@@ -21,12 +23,14 @@ in §5 as history only: they ran with the cache bug.*
   - Against his Mega Metagross + Krookodile + Infernape core: **Trick Room first.** Lead Kangaskhan + Sinistcha, with
     Charizard + Conkeldurr in the back (78%).
   - Against Oranguru + Toxtricity, or Slowking-G: lead Charizard + Kangaskhan.
-  - Against his anti-Charizard six (Slowking-G + Umbreon + rocks): **leave Charizard home.** Lead Aegislash + Kangaskhan,
-    with Conkeldurr + Sinistcha in the back (70% vs 52% for the old row).
+  - Against his anti-Charizard six (Slowking-G + Umbreon + rocks), the lead depends on what he knows:
+    - **Game 1** (closed sheets): lead Aegislash + Sinistcha, with Charizard + Kangaskhan in the back (81% vs 62%).
+    - **Games 2–3** (he has seen our sets): lead Aegislash + Kangaskhan, with Conkeldurr + Sinistcha in the back, and
+      leave Charizard home (70% vs 52% with full information).
 - **Where we are weakest:** Umbreon sixes with Toxtricity or Taunt + Imprison (z09 and z17, 53% each), and the fast
   goodstuffs sixes, where a17 did better (z02 70% vs 82%, z06 73% vs 93%).
 - **How much to trust it:**
-  - These are heuristic AIs on open team sheets, playing against teams we built for ZhuZi, not his real six.
+  - These are heuristic AIs playing against teams we built for ZhuZi, not his real six.
   - Treat differences under ~3 points as ties.
 
 ## 1. The final six (c1)
@@ -199,6 +203,45 @@ same preview still moved by about 2 points between the two runs: that is the noi
 Leads used with the table (validation): Kangaskhan + Sinistcha 78% (n = 1,562), Charizard + Kangaskhan 75% (1,080),
 Aegislash + Kangaskhan 70% (120), Aegislash + Sinistcha 85% (114: the AI's choice against z09 and z21).
 
+## 6a. Hidden information: closed team sheets (round 9)
+
+Rounds 1–8 gave both AIs the other side's full sets (species, items, abilities, moves, SP spreads, natures). Anthony's
+league is **closed team sheet, best of 3**, so round 9 re-ran the deciding comparison with less knowledge
+(`--sheets`, `tools/sim/sheets.mjs`). The battle always uses the real sets; only each AI's model of the opponent changes:
+- **ots:** species, items, abilities and moves known; a generic spread and nature assumed (two or more attacks: 32 in
+  the attacking stat + 32 Speed, boosting nature; otherwise 32 HP / 17 Def / 17 SpD, Bold or Impish).
+- **closed:** species only. His Pokémon get his most likely candidate set (summed team weight). Ours get the Week 1 six's
+  sets (a01, which he could have scouted: Life Orb Last Resort Kangaskhan, fast Charizard, Calm Coba Sinistcha), and
+  Conkeldurr, which isn't in that six, gets the generic guess on its real moves. Beliefs don't update when a move is
+  revealed mid-game, which is harsher than a human.
+
+c1 and a17, each with its own fitted table, on the validation seeds (500000, 2,880 games, paired):
+
+| What the AIs know | c1 | a17 | c1 − a17 |
+|---|---|---|---|
+| Everything (round 7) | 76.9% | 71.6% | +5.6 ± 2.3 |
+| ots (no spreads) | 68.2% | 63.8% | +3.3 ± 2.3 |
+| **closed (species only)** | **78.5%** | 68.8% | **+8.6 ± 2.2** |
+
+**c1 is the better six in every setting.** In best of 3, game 1 is closed, and games 2–3 sit between ots and closed:
+c1 leads in both.
+
+**The preview table under closed sheets.** c1's table was re-fitted on closed-sheet games (explore seeds 600000) and
+tested against the current table on fresh closed-sheet games (seeds 700000): 78.7% vs 77.9%, +0.2 ± 1.5, a tie overall.
+One row differed clearly:
+- **z08 (Slowking-G + Umbreon):** lead Aegislash + Sinistcha, with Charizard + Kangaskhan in the back, won **81%**
+  against 62% for Aegislash + Kangaskhan with Charizard home.
+- With full information, the same two rows went the other way: 52% vs **70%** (§6).
+- So the guide gives both: Aegislash + Sinistcha in game 1, Aegislash + Kangaskhan once he has seen our sets.
+
+The other rows were equal or slightly better as they are, so they stay.
+
+**Per team, closed (c1 / a17):**
+- His likeliest teams went up for c1: z01 85/88, z02 97/81, z03 88/75, z04 91/46.
+- Two dropped:
+  - z05 (Trick Room + Imprison): 59/57.
+  - z08 with the old row: 48/29. With the game-1 row above it is 81%.
+
 ## 7. Per-choice reasoning (c1)
 
 Each line gives:
@@ -310,7 +353,9 @@ Most single set choices measure as **ties** (within ±4 at n = 960). For those, 
 ## 8. Limits
 
 - **Teams:** his teams are our candidates, not his real six. A team we didn't imagine is not covered.
-- **Information:** both AIs see open team sheets. ZhuZi will know our sets the same way.
+- **Information:** rounds 1–8 used full open sheets. Round 9 (§6a) checked the deciding comparison and the preview
+  table under closed sheets, but the per-choice ablations (§7) were measured with full information only. A choice whose
+  value is surprise (for example the bulky Charizard he won't expect) may be worth more than §7 shows.
 - **The AI is a heuristic:** it looks one turn deep, plus a threat term. Two-turn plans, Encore, Taunt and Yawn are modelled only roughly. Humans make different mistakes.
 - **The preview matters as much as the six** (§3 #8). The 76.9% assumes the guide's table is followed. With the AI's own preview, c1 dropped to 59%.
 - **Fitting:** the table was fitted on one set of games and measured on another, but its rows were fitted on the AI's top 8 options only. A better bring the AI never considers would be missed.

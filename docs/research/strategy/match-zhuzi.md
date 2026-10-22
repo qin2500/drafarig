@@ -11,7 +11,8 @@
 >
 > `lib/guides/5v3.mjs` (what the app shows) is updated to that six, with recomputed calcs and the sim's preview table
 > (vs Metagross + Krookodile + Infernape: lead Kangaskhan + Sinistcha, Charizard + Conkeldurr behind; vs Slowking-G +
-> Umbreon: leave Charizard home). Sections 5–7 below still
+> Umbreon: Aegislash + Sinistcha lead in game 1, Aegislash + Kangaskhan with Charizard home once he has seen our sets).
+> Re-checked with closed team sheets (our league's format): c1 still wins, 78.5%, +8.6 over the best alternative. Sections 5–7 below still
 > describe the Week 1 sets: where a number differs, the guide and the report are current.
 
 2026-10-19.
