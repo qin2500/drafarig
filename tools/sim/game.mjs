@@ -1,6 +1,7 @@
 // One headless Champions Reg M-C doubles game between two players (heuristic or Showdown's random), deterministic per seed.
 import { PS, RandomPlayerAI, packTeam, FORMAT, toID, setsFromText, moveOf, PROTECTS, SPREAD } from './ai/data.mjs';
 import { HeuristicPlayer } from './ai/player.mjs';
+import { EnginePlayer } from './engine/player.mjs';
 import { calcStats, clearDamageCache } from './ai/engine.mjs';
 
 const spreadUsers = (sets) => new Set(sets.filter((s) => s.moves.some((id) => SPREAD.has(moveOf(id).target) && moveOf(id).category !== 'Status')).map((s) => s.species));
@@ -16,10 +17,13 @@ const rockUsers = (sets) => sets.some((s) => s.moves.some((id) => moveOf(id).typ
 export async function playGame(p1, p2, seed, { keepLog = false, notes = false, maxTurns = 60 } = {}) {
   const refusals0 = { ...calcStats.refusals }; // games run one at a time per worker, so the difference is this game's
   clearDamageCache(); // no cached damage may leak between games (different teams reuse the same slot keys)
-  const streams = PS.getPlayerStreams(new PS.BattleStream());
+  const bs = new PS.BattleStream();
+  const streams = PS.getPlayerStreams(bs);
   const mk = (side, other, stream, k) => (side.ai === 'random'
     ? new RandomPlayerAI(stream, { seed: [seed, k, 7, 11], mega: 0.8 })
-    : new HeuristicPlayer(stream, { ...side, mine: side.text, theirs: side.belief ?? other.text, seed: [seed, k, 13, 17], notes }));
+    : side.ai === 'engine'
+      ? new EnginePlayer(stream, { ...side, mine: side.text, theirs: side.belief ?? other.text, seed: [seed, k, 13, 17], notes, battle: () => bs.battle })
+      : new HeuristicPlayer(stream, { ...side, mine: side.text, theirs: side.belief ?? other.text, seed: [seed, k, 13, 17], notes }));
   const a = mk(p1, p2, streams.p1, 1), b = mk(p2, p1, streams.p2, 2);
   void a.start().catch(() => {}); void b.start().catch(() => {});
   const sets = { p1: setsFromText(p1.text), p2: setsFromText(p2.text) };
@@ -75,5 +79,7 @@ export async function playGame(p1, p2, seed, { keepLog = false, notes = false, m
   sum.p1.pick = a.previewPick ?? null; sum.p2.pick = b.previewPick ?? null; // the team-preview choice (bring 4, leads)
   const errors = (a.crashes ?? 0) + (b.crashes ?? 0);
   const refusals = Object.fromEntries(Object.entries(calcStats.refusals).map(([k, n]) => [k, n - (refusals0[k] ?? 0)]).filter(([, n]) => n > 0));
-  return { winner: winner ?? 'tie', turns, summary: sum, errors, refusals, ...(keepLog ? { log } : {}), ...(notes ? { notes: { p1: a.notes ?? [], p2: b.notes ?? [] } } : {}) };
+  // the engine players' search statistics and (with record) the features of every decision, for value learning
+  const engine = Object.fromEntries([['p1', a], ['p2', b]].filter(([, x]) => x.stats).map(([s, x]) => [s, { ...x.stats, ...(x.record ? { record: x.record } : {}) }]));
+  return { winner: winner ?? 'tie', turns, summary: sum, errors, refusals, ...(Object.keys(engine).length ? { engine } : {}), ...(keepLog ? { log } : {}), ...(notes ? { notes: { p1: a.notes ?? [], p2: b.notes ?? [] } } : {}) };
 }

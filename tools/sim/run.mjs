@@ -1,6 +1,6 @@
 // Run many games in a worker pool and append one JSON line per game (resumable).
 //
-//   node tools/sim/run.mjs --ours a01 --theirs z01 --games 200 [--ours-ai heuristic|random] [--theirs-ai …]
+//   node tools/sim/run.mjs --ours a01 --theirs z01 --games 200 [--ours-ai heuristic|random|engine] [--theirs-ai …]
 //     [--skill 0.85] [--opp-skill 0.85] [--style balanced|aggressive|safe|setup] [--opp-style …] [--noise 0.07]
 //     [--opp-noise 0.07] [--usual 0] [--opp-usual 0] [--seed 1] [--workers N] [--out tools/sim/results/<name>.jsonl]
 //     [--swap]  (alternate which side is p1)  [--preview ai|guide|explore|<rows.json>] (ours: the AI's lead lookahead, the guide's
@@ -58,7 +58,8 @@ export function taskList(a) {
   const n = Number(a.games ?? 100), base = Number(a.seed ?? 1);
   const persona = (ref, seed) => { const pp = a.persona === 'none' ? null : PERSONAS[ref]; return pp && unit(seed, 77) < (a.persona === 'all' ? 1 : pp[1]) ? pp[0] : null; };
   const side = (ref, ai, pre, seed, opp) => ({ ref, text: teamText(ref), ai, skill: Number(a[`${pre}skill`] ?? 0.85), style: a[`${pre}style`] ?? 'balanced', noise: Number(a[`${pre}noise`] ?? 0.07),
-    usualBring: Number(a[`${pre}usual`] ?? 0), preview: opp ? 'ai' : a.preview ?? 'ai', persona: opp ? persona(ref, seed) : null });
+    usualBring: Number(a[`${pre}usual`] ?? 0), preview: opp ? 'ai' : a.preview ?? 'ai', persona: opp ? persona(ref, seed) : null,
+    sheets: a.sheets ?? 'open', samples: a.samples != null ? Number(a.samples) : null, weights: a[`${pre}weights`] ?? null, wide: !!a[`${pre}wide`], record: !!a.record });
   // --sheets: what each AI believes about the other's sets (sheets.mjs); the battle itself always uses the real sets
   const sheets = a.sheets ?? 'open';
   const libs = sheets === 'closed' ? { theirs: library(CAND.opponent.teams.map((t) => ({ text: t.team, weight: t.weight }))), ours: library([{ text: teamText('a01') }]) } : {};
@@ -100,7 +101,8 @@ async function play(t) {
   const r = await playGame(p1, p2, t.seed);
   const ourSide = t.swap ? 'p2' : 'p1', theirSide = t.swap ? 'p1' : 'p2';
   return { i: t.i, seed: t.seed, ours: t.ours.ref, theirs: t.theirs.ref, oursAs: ourSide, preview: t.ours.preview, sheets: t.sheets, persona: t.theirs.persona, winner: r.winner === 'tie' ? 'tie' : r.winner === ourSide ? 'ours' : 'theirs', turns: r.turns,
-    our: r.summary[ourSide], their: r.summary[theirSide], errors: r.errors, refusals: r.refusals, ms: Math.round(performance.now() - t0) };
+    our: r.summary[ourSide], their: r.summary[theirSide], errors: r.errors, refusals: r.refusals, ms: Math.round(performance.now() - t0),
+    ...(r.engine ? { engine: { ours: r.engine[ourSide], theirs: r.engine[theirSide] } } : {}) };
 }
 
 if (!isMainThread) {

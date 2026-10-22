@@ -1,0 +1,53 @@
+{
+ "written": "2026-10-22T19:53:47.722Z",
+ "files": [
+  "tools/sim/results/e2/a17.jsonl",
+  "tools/sim/results/e2/c1.jsonl",
+  "tools/sim/results/e2/c2.jsonl",
+  "tools/sim/results/e2/c7.jsonl"
+ ],
+ "n": {
+  "train": 11752,
+  "test": 11891
+ },
+ "parts": {
+  "own": 3.0706,
+  "opp": -3.0992,
+  "trickRoom": 1.926,
+  "tailwind": 0,
+  "screens": 0,
+  "sun": 2.36,
+  "threat": 0.9337
+ },
+ "ps": {
+  "alive": -0.4412,
+  "hp": -0.7894,
+  "activeHp": 0.3611,
+  "status": 0.3611,
+  "boosts": 0.8701,
+  "tailwind": 0,
+  "screens": 0,
+  "speedEdge": 0.0448,
+  "trickRoom": -0.0934,
+  "weather": 0.0099,
+  "mega": 0.4835,
+  "items": -0.145
+ },
+ "actionScale": 1.7911,
+ "test": {
+  "learned": {
+   "logloss": 0.5071,
+   "accuracy": 0.7232
+  },
+  "heuristic": {
+   "logloss": 0.5147,
+   "accuracy": 0.7163
+  }
+ },
+ "train": {
+  "learned": {
+   "logloss": 0.4803,
+   "accuracy": 0.7497
+  }
+ }
+}

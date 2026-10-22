@@ -395,9 +395,16 @@ const megaAbility = (m) => abilityOf(m.set, true);
  * opponent's, plus field terms (speed control for the slower team, Tailwind, screens, sun for sun users, status, boosts).
  */
 export function value(S, side, style = STYLES.balanced, brought = 4) {
-  let v = 0;
+  const P = valueParts(S, side, brought);
+  const f = style.field;
+  return style.own * P.own - style.opp * P.opp + f * (P.trickRoom + P.tailwind + P.screens + P.sun + P.threat)
+    + P.protects * (style === STYLES.safe ? 0.5 : 1) + P.protectsFoe + P.switchIns + P.megaOut + P.switches;
+}
+/** The terms of value() for `side` (balanced style), separately: what the search engine's learned leaf re-weights. */
+export const VALUE_PARTS = ['own', 'opp', 'trickRoom', 'tailwind', 'screens', 'sun', 'threat', 'protects', 'protectsFoe', 'switchIns', 'megaOut', 'switches'];
+export function valueParts(S, side, brought = 4) {
+  const P = Object.fromEntries(VALUE_PARTS.map((k) => [k, 0]));
   for (const s of SIDES) {
-    const sign = s === side ? style.own : -style.opp;
     const ms = Object.values(S.mons).filter((m) => m.side === s && (m.brought || m.pos >= 0));
     let total = 0;
     for (const m of ms) {
@@ -417,27 +424,24 @@ export function value(S, side, style = STYLES.balanced, brought = 4) {
       total += w;
     }
     // unseen members of a 4 (opponent's back) count as healthy
-    const unseen = Math.max(0, brought - ms.length);
-    total += unseen;
-    v += sign * total;
+    total += Math.max(0, brought - ms.length);
+    if (s === side) P.own = total; else P.opp = total;
   }
-  // field: Trick Room favours the slower side (by its live Pokémon's average Speed), Tailwind its side, screens their side
-  // Trick Room: by how much of the field it flips in this side's favour (share of live pairings where this side is slower,
-  // −1..1), per remaining turn
+  // field: Trick Room favours the slower side (share of live pairings where this side is slower, -1..1, weighted by how
+  // hard they hit each other) per remaining turn; Tailwind its side; screens their side; sun its users
   const live = (s) => Object.values(S.mons).filter((m) => m.side === s && m.alive > 0 && (m.brought || m.pos >= 0));
-  const f = style.field;
-  if (S.field.tr > 0) v += f * trShare(S, live(side), live(foe(side))) * 0.15 * Math.min(4, S.field.tr);
+  if (S.field.tr > 0) P.trickRoom = trShare(S, live(side), live(foe(side))) * 0.15 * Math.min(4, S.field.tr);
   for (const s of SIDES) {
     const sign = s === side ? 1 : -1;
-    v += f * sign * 0.08 * Math.min(3, S.side[s].tailwind) * (S.field.tr > 0 ? 0 : 1);
-    v += f * sign * 0.04 * (Math.min(4, S.side[s].reflect) + Math.min(4, S.side[s].lightScreen) + Math.min(4, S.side[s].auroraVeil));
-    if (S.field.weather === 'Sun') v += f * sign * 0.035 * Object.values(S.mons).filter((m) => m.side === s && m.alive > 0 && (m.brought || m.pos >= 0) && SUN_USERS(m)).length;
+    P.tailwind += sign * 0.08 * Math.min(3, S.side[s].tailwind) * (S.field.tr > 0 ? 0 : 1);
+    P.screens += sign * 0.04 * (Math.min(4, S.side[s].reflect) + Math.min(4, S.side[s].lightScreen) + Math.min(4, S.side[s].auroraVeil));
+    if (S.field.weather === 'Sun') P.sun += sign * 0.035 * Object.values(S.mons).filter((m) => m.side === s && m.alive > 0 && (m.brought || m.pos >= 0) && SUN_USERS(m)).length;
   }
   // next turn's initiative: what each side's actives threaten (expected damage, KO chances, who moves first), so a
   // turn that only delays (double Protect) isn't free and speed control pays now
-  v += f * 0.35 * (threat(S, side) - threat(S, foe(side)));
-  v -= 0.15 * (S.protects?.[side] ?? 0) * (style === STYLES.safe ? 0.5 : 1);
-  v += 0.15 * (S.protects?.[foe(side)] ?? 0);
+  P.threat = 0.35 * (threat(S, side) - threat(S, foe(side)));
+  P.protects = -0.15 * (S.protects?.[side] ?? 0);
+  P.protectsFoe = 0.15 * (S.protects?.[foe(side)] ?? 0);
   // a Pokémon switched in pays for the worst single hit the foes it came in on can throw at it (relative to its HP), so
   // it doesn't come in on a predicted double target by luck of the prediction; an evolved Mega switched out costs extra
   for (const si of S.switchIns ?? []) {
@@ -445,14 +449,12 @@ export function value(S, side, style = STYLES.balanced, brought = 4) {
     if (!d || d.alive <= 0) continue;
     let worst = 0;
     for (const fk of si.faced) { const a = S.mons[fk]; if (!a || a.alive <= 0) continue; for (const id of a.set.moves) { const mv = moveOf(id); if (mv.category === 'Status' || id === 'fakeout') continue; const r = damage(S, a, d, id); worst = Math.max(worst, (r.min + r.max) / 2); } }
-    v -= (si.side === side ? 1 : -1) * 0.25 * Math.min(1, worst / Math.max(0.05, d.hp));
+    P.switchIns -= (si.side === side ? 1 : -1) * 0.25 * Math.min(1, worst / Math.max(0.05, d.hp));
   }
-  v -= 0.1 * (S.megaOut?.[side] ?? 0);
-  v += 0.1 * (S.megaOut?.[foe(side)] ?? 0);
+  P.megaOut = -0.1 * (S.megaOut?.[side] ?? 0) + 0.1 * (S.megaOut?.[foe(side)] ?? 0)
   // a switch gives up the turn's action (the new Pokémon's matchup is already in the value)
-  v -= 0.06 * (S.switches?.[side] ?? 0);
-  v += 0.06 * (S.switches?.[foe(side)] ?? 0);
-  return v;
+  P.switches = -0.06 * (S.switches?.[side] ?? 0) + 0.06 * (S.switches?.[foe(side)] ?? 0);
+  return P;
 }
 /**
  * How much Trick Room favours `mine` over `theirs` (−1..1): over every pairing, +1 where mine is slower, −1 where faster,
