@@ -3,7 +3,8 @@
 //   node tools/sim/run.mjs --ours a01 --theirs z01 --games 200 [--ours-ai heuristic|random] [--theirs-ai …]
 //     [--skill 0.85] [--opp-skill 0.85] [--style balanced|aggressive|safe|setup] [--opp-style …] [--noise 0.07]
 //     [--opp-noise 0.07] [--usual 0] [--opp-usual 0] [--seed 1] [--workers N] [--out tools/sim/results/<name>.jsonl]
-//     [--swap]  (alternate which side is p1)  [--preview ai|guide] (ours: the AI's lead lookahead, or the guide's table)
+//     [--swap]  (alternate which side is p1)  [--preview ai|guide|explore|<rows.json>] (ours: the AI's lead lookahead, the guide's
+//     table, uniform over the AI's top 8 previews, or a fitted table of guide-shaped rows)
 //     [--persona default|none|all] (opponent plan-commitment personas: the PERSONAS shares, none, or every game)
 //     --theirs z01..z24 expands to the 24 ids (round-robin per game)
 //

@@ -72,6 +72,7 @@ export async function playGame(p1, p2, seed, { keepLog = false, notes = false, m
     sum[s].zardIntoRock = into;
     sum[s].zardIntoRockUncovered = into && !(partner?.moves.includes('wideguard') || partner?.moves.includes('fakeout'));
   }
+  sum.p1.pick = a.previewPick ?? null; sum.p2.pick = b.previewPick ?? null; // the team-preview choice (bring 4, leads)
   const errors = (a.crashes ?? 0) + (b.crashes ?? 0);
   const refusals = Object.fromEntries(Object.entries(calcStats.refusals).map(([k, n]) => [k, n - (refusals0[k] ?? 0)]).filter(([, n]) => n > 0));
   return { winner: winner ?? 'tie', turns, summary: sum, errors, refusals, ...(keepLog ? { log } : {}), ...(notes ? { notes: { p1: a.notes ?? [], p2: b.notes ?? [] } } : {}) };

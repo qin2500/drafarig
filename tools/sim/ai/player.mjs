@@ -3,10 +3,13 @@
 // replies, and picks with skill / temperature / noise. Deterministic per seed. Open team sheets: it knows both teams' sets.
 import { BattlePlayer, setsFromText, toID, statsOf, abilityOf, moveOf, typesOf, mech, PROTECTS, SPREAD } from './data.mjs';
 import { Tracker } from './tracker.mjs';
+import { readFileSync } from 'node:fs';
 import guide5v3 from '../../../lib/guides/5v3.mjs';
 
-// the guide's preview table (Anthony vs ZhuZi), for --preview guide
+// the guide's preview table (Anthony vs ZhuZi), for --preview guide; --preview <file.json> reads rows of the same shape
 const GUIDE_PREVIEWS = guide5v3.previews ?? [];
+const tables = new Map();
+const previewRows = (p) => p === 'guide' ? GUIDE_PREVIEWS : /\.json$/.test(p ?? '') ? (tables.get(p) ?? tables.set(p, JSON.parse(readFileSync(p, 'utf8'))).get(p)) : null;
 import { snapshot, optionsFor, resolve, value, damage, STYLES, foe, speed, pAtLeast } from './engine.mjs';
 
 
@@ -168,10 +171,10 @@ export class HeuristicPlayer extends BattlePlayer {
     return v;
   }
   /** The guide's preview table (lib/guides/5v3.mjs `previews`): the first row whose species are all in their six. */
-  guidePreview(mine, opp) {
+  guidePreview(mine, opp, rows = GUIDE_PREVIEWS) {
     const base = (name) => { const n = String(name).trim(); const g = /^Galarian /i.test(n); const id = toID(n.replace(/^(Mega|Galarian) /i, '')); return g ? `${id}galar` : id; };
     const theirs = new Set(opp.map((s) => s.species));
-    for (const row of GUIDE_PREVIEWS) {
+    for (const row of rows) {
       const need = row.if.replace(/^their 6 includes /i, '').split('+').map(base);
       if (!need.every((id) => theirs.has(id))) continue;
       const ix = row.bring4.map((id) => mine.findIndex((s) => s.species === id));
@@ -186,8 +189,9 @@ export class HeuristicPlayer extends BattlePlayer {
     const opp = this.theirs;
     const P = this.o.persona;
     let pick = null;
-    // policy: the guide's preview table (when it covers this six), else the AI's
-    if (this.o.preview === 'guide') { const g = this.guidePreview(mine, opp); if (g) pick = g; }
+    // policy: the guide's (or a fitted) preview table when it covers this six, else the AI's
+    const rows = previewRows(this.o.preview);
+    if (rows) { const g = this.guidePreview(mine, opp, rows); if (g) pick = g; }
     const fours = this.fours(mine, opp);
     const has = (i, move) => mine[i].moves.includes(move);
     if (!pick && this.o.usualBring > 0 && this.r() < this.o.usualBring) pick = { ix: [0, 1, 2, 3], lead: [0, 1], why: 'usual 4 (habit)' };
@@ -227,10 +231,14 @@ export class HeuristicPlayer extends BattlePlayer {
       }
       cand.sort((x, y) => y.score - x.score);
       leadRank = cand;
-      if (cand.length) pick = this.r() < this.o.skill ? { ...cand[0], why: 'best lead (turn-1 lookahead)' } : { ...softmaxPick(cand, (x) => x.score, this.o.previewTemp, this.r), why: 'softmax' };
+      // --preview explore: uniform over the AI's 8 best distinct (four, leads), to fit a preview table from the results
+      const top8 = this.o.preview === 'explore' ? [...new Map(cand.map((c) => [`${[...c.ix].sort()}|${[...c.lead].sort()}`, c])).values()].slice(0, 8) : [];
+      if (top8.length) pick = { ...top8[Math.floor(this.r() * top8.length)], why: 'explore' };
+      else if (cand.length) pick = this.r() < this.o.skill ? { ...cand[0], why: 'best lead (turn-1 lookahead)' } : { ...softmaxPick(cand, (x) => x.score, this.o.previewTemp, this.r), why: 'softmax' };
       else pick = { ix: fours[0].ix, lead: fours[0].ix.slice(0, 2), why: 'fallback' };
     }
     const order = [...pick.lead, ...pick.ix.filter((i) => !pick.lead.includes(i))].map((i) => i + 1);
+    this.previewPick = { bring: pick.ix.map((i) => mine[i].species), leads: pick.lead.map((i) => mine[i].species) };
     this.note({ preview: { bring: pick.ix.map((i) => mine[i].species), leads: pick.lead.map((i) => mine[i].species), why: pick.why,
       top: (leadRank.length ? leadRank : fours).slice(0, 3).map((x) => ({ four: x.ix.map((i) => mine[i].species), lead: x.lead?.map((i) => mine[i].species), score: +x.score.toFixed(3) })) } });
     return `team ${order.join('')}`;
