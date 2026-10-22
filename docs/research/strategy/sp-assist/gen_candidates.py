@@ -156,6 +156,66 @@ AT = [
 ]
 
 
+# ---------------- Round 4 (2026-10-21): one-change ablations of a17, run paired against a17 ----------------
+# a17 = zardM / aegisSS / kangaDE / morpeko / sinisB / rotomEB. Items in a17: Charizardite Y, Kasib, Silk Scarf, Focus Sash,
+# Sitrus (Sinistcha), Expert Belt (Rotom-Fan). Every variant below changes exactly one member, move, item, ability, nature or
+# SP spread, and must need no item-clause swap (checked in __main__).
+A17 = ['zardM', 'aegisSS', 'kangaDE', 'morpeko', 'sinisB', 'rotomEB']
+
+
+def _var(base, moves=None, **kw):
+    s = dict(A[base])
+    if moves:
+        s['moves'] = [moves.get(m, m) for m in s['moves']]
+    s.update(kw)
+    return s
+
+
+R4 = [  # (suffix, slot key in a17, new set or bench key, label, hypothesis)
+    # members
+    ('01', 'morpeko', 'conk', 'Morpeko -> Conkeldurr', 'Morpeko is rarely brought; Conkeldurr is a Trick Room abuser that hits Krookodile / Umbreon'),
+    ('02', 'morpeko', 'pelipper', 'Morpeko -> Pelipper', 'Second Wide Guard + Tailwind vs Rock Slide; Drizzle clashes with our sun'),
+    ('03', 'morpeko', 'simipour', 'Morpeko -> Simipour', 'Second Fake Out with Water coverage into Krookodile / Infernape'),
+    ('04', 'morpeko', 'stunfisk', 'Morpeko -> Stunfisk-Galar', 'Electric immunity vs Toxtricity / Rotom-Wash; slow TR abuser (sim Mimicry fix in)'),
+    ('05', 'rotomEB', 'stunfisk', 'Rotom-Fan -> Stunfisk-Galar', 'Ground/Steel answer to Toxtricity in Rotom-Fan\'s rarely-brought slot'),
+    ('06', 'rotomEB', 'conk', 'Rotom-Fan -> Conkeldurr', 'Physical TR abuser instead of a fast special pivot'),
+    ('07', 'sinisB', 'conk', 'Sinistcha -> Conkeldurr', 'Measures the value of our Trick Room / Rage Powder (Sinistcha leads the new guide row)'),
+    # moves
+    ('08', 'kangaDE', _var('kangaDE', {'Sucker Punch': 'Low Kick'}), 'Kangaskhan Sucker Punch -> Low Kick', 'Fighting coverage (Krookodile, Umbreon, Metagross 120 BP) over priority that often fails'),
+    ('09', 'kangaDE', _var('kangaDE', {'Protect': 'Low Kick'}), 'Kangaskhan Protect -> Low Kick', 'Four attacks; Protect may matter less than coverage'),
+    ('10', 'kangaDE', _var('kangaDE', {'Double-Edge': 'Body Slam'}), 'Kangaskhan Double-Edge -> Body Slam', 'No recoil and 30% paralysis vs 120 BP'),
+    ('11', 'aegisSS', _var('aegisSS', {'Shadow Sneak': 'Iron Head'}), 'Aegislash Shadow Sneak -> Iron Head', 'Fairy / Florges coverage vs priority finishing'),
+    ('12', 'aegisSS', _var('aegisSS', {'Wide Guard': 'Close Combat'}), 'Aegislash Wide Guard -> Close Combat', 'Measures Wide Guard (vs Rock Slide / Overdrive) against Krookodile / Umbreon coverage'),
+    ('13', 'rotomEB', _var('rotomEB', {'Will-O-Wisp': 'Electroweb'}), 'Rotom-Fan Will-O-Wisp -> Electroweb', 'Speed control for our slow side vs burning Krookodile / Metagross'),
+    ('14', 'rotomEB', _var('rotomEB', {'Protect': 'Volt Switch'}), 'Rotom-Fan Protect -> Volt Switch', 'Pivot to bring Charizard / Kangaskhan in safely'),
+    ('15', 'sinisB', _var('sinisB', {'Life Dew': 'Protect'}), 'Sinistcha Life Dew -> Protect', 'Protect scouts double targets on the TR setter'),
+    ('16', 'sinisB', _var('sinisB', {'Life Dew': 'Strength Sap'}), 'Sinistcha Life Dew -> Strength Sap', 'Heals and drops Krookodile / Metagross Attack'),
+    ('17', 'morpeko', _var('morpeko', {'Taunt': 'Parting Shot'}), 'Morpeko Taunt -> Parting Shot', 'Pivot + Attack/SpA drop vs stopping Trick Room'),
+    ('18', 'zardM', _var('zardM', {'Weather Ball': 'Overheat'}), 'Charizard Weather Ball -> Overheat', 'More single-target damage, but -2 SpA'),
+    ('19', 'zardM', _var('zardM', {'Solar Beam': 'Scorching Sands'}), 'Charizard Solar Beam -> Scorching Sands', 'Ground coverage (Toxtricity 4x, Metagross, Infernape) vs Rotom-Wash / Krookodile'),
+    # items (each into an item a17 does not use)
+    ('20', 'aegisSS', _var('aegisSS', item='Metal Coat'), 'Aegislash Kasib -> Metal Coat', 'Raw Steel power vs a Ghost-resist berry'),
+    ('21', 'aegisSS', _var('aegisSS', item='Colbur Berry'), 'Aegislash Kasib -> Colbur Berry', 'Halves Krookodile Knock Off / Foul Play, the hits that actually KO it'),
+    ('22', 'kangaDE', _var('kangaDE', item='Life Orb'), 'Kangaskhan Silk Scarf -> Life Orb', 'Boosts Sucker Punch too, at a recoil cost'),
+    ('23', 'rotomEB', _var('rotomEB', item='Leftovers'), 'Rotom-Fan Expert Belt -> Leftovers', 'Bulk over damage (Sitrus is held by Sinistcha)'),
+    ('24', 'sinisB', _var('sinisB', item='Coba Berry'), 'Sinistcha Sitrus -> Coba Berry', 'Flying-resist berry (a01 item) vs Sitrus'),
+    ('25', 'sinisB', _var('sinisB', item='Mental Herb'), 'Sinistcha Sitrus -> Mental Herb', 'Trick Room through Taunt / Imprison'),
+    # ability
+    ('26', 'kangaDE', _var('kangaDE', ability='Inner Focus'), 'Kangaskhan Scrappy -> Inner Focus', 'No flinch from Infernape Fake Out (still blocks Intimidate); loses Normal into Ghosts'),
+    # natures / SP
+    ('27', 'zardM', _var('zardM', sp=[32, 0, 0, 32, 2, 0]), 'Charizard 0 Speed (HP instead)', 'Bulkier and slow under our Trick Room'),
+    ('28', 'zardM', _var('zardM', sp=[2, 0, 0, 32, 0, 32]), 'Charizard Modest 32 Speed', '167 Speed (from 146) outspeeds non-Scarf Jolly Krookodile (158); costs 4 HP'),
+    ('29', 'sinisB', _var('sinisB', nature='Calm', sp=[32, 0, 2, 0, 32, 0]), 'Sinistcha Calm 32 SpD', 'Special bulk (Infernape Heat Wave / Overheat) vs physical'),
+    ('30', 'kangaDE', _var('kangaDE', nature='Brave'), 'Kangaskhan Brave', 'Speed 99 instead of 110: moves earlier under Trick Room, later outside it'),
+    ('31', 'rotomEB', _var('rotomEB', nature='Timid', sp=[2, 0, 0, 32, 0, 32]), 'Rotom-Fan Timid 32 Speed', 'Outspeed Rotom-Wash / Toxtricity instead of HP bulk'),
+    ('32', 'aegisSS', _var('aegisSS', nature='Adamant'), 'Aegislash Adamant', 'Speed 80 instead of 72: faster outside Trick Room, slower inside it'),
+]
+for suf, slot, new, label, why in R4:
+    key = f'a17x{suf}'
+    A[key] = A[new] if isinstance(new, str) else new
+    AT.append((key, label, 0.0, [key if k == slot else k for k in A17], why))
+
+
 FALLBACK = ['Life Orb', 'Expert Belt', 'Focus Sash', 'Sitrus Berry', 'Leftovers', 'Rocky Helmet', 'Mental Herb', 'Wide Lens']
 
 
