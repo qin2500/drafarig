@@ -91,21 +91,34 @@ Mega Metagross, Dragapult, Rotom-Wash, Krookodile, Toxtricity + Oranguru *or* In
 
 | His 6 includes… | Bring | Lead |
 |---|---|---|
-| Mega Metagross + Krookodile + Infernape (offense) | Charizard, Aegislash, Kangaskhan, Rotom-Fan | **Aegislash + Kangaskhan** (Wide Guard + Fake Out), Charizard in back |
+| Mega Metagross + Krookodile + Infernape (offense) | Kangaskhan, Sinistcha, Charizard, Aegislash | **Kangaskhan + Sinistcha** (Trick Room), Charizard and Aegislash in back. *Revised 2026-10-21: the old row (lead Aegislash + Kangaskhan, Rotom-Fan 4th) won 14% in the sim vs 57% for this one; see §8.* |
 | Oranguru + Toxtricity (Trick Room / Instruct) | Charizard, Morpeko, Kangaskhan, Aegislash | **Morpeko + Charizard**: Morpeko Fake Out on Toxtricity (not Oranguru: Inner Focus) or Taunt Oranguru (unless Mental Herb), Charizard Heat Wave |
 | Galarian Slowking (snow / Trick Room) | Add Morpeko (Taunt) + Sinistcha (our Trick Room cancels his) | — |
 | Dragapult + Umbreon (Will-O-Wisp / Foul Play) | Charizard, Kangaskhan, Morpeko, Sinistcha | Charizard + Kangaskhan |
 
 ## 4. Leads (turn by turn)
 
-**A. Aegislash + Kangaskhan vs Mega Metagross + Krookodile**
-- **T1:** Kangaskhan **Fake Out Krookodile** (stops Rock Slide; Scrappy ignores the Intimidate). Aegislash **Poltergeist Metagross** (99–119%, 94% OHKO).
-  - If Metagross Protects → Poltergeist is wasted; T2 repeat.
-- **T2:** Kangaskhan **Last Resort Krookodile** (96–114% vs the Adamant set; 72–86% vs Impish), Aegislash **King's Shield** (High Horsepower is incoming).
-- **T3:** Bring Charizard in on a free switch; Heat Wave cleans Metagross / Toxtricity.
+**A. Kangaskhan + Sinistcha vs Krookodile + Infernape (his usual lead from that core)** *(revised 2026-10-21; replaces Aegislash + Kangaskhan)*
+
+Why the old lead failed:
+- Infernape (176) outspeeds Kangaskhan (110) and Fake Outs it on turn 1. Last Resort then stays locked, because it needs Fake Out used first.
+- Krookodile's Intimidate drops Aegislash. Scrappy protects only Kangaskhan. At −1, Poltergeist does 65–78% to Mega Metagross, so no OHKO.
+- Scarf Knock Off does 70–83% to Shield Aegislash and removes Metal Coat.
+
+The new line:
+- **T1:** Sinistcha **Trick Room**.
+  - Sinistcha is a Ghost, so it takes no Fake Out and no Close Combat.
+  - It survives Scarf Knock Off (82–98%).
+- **T1:** Kangaskhan **Fake Out Krookodile**. Infernape usually Fake Outs Kangaskhan first. That is fine: Trick Room is the point.
+- **T2:** Under Trick Room, everything of ours moves before his core: Infernape 176, Mega Metagross 178, Scarf Krookodile 237. Charizard (146) moves first too.
+  - Kangaskhan switches out to Charizard, or to Aegislash if Mega Metagross is in.
+  - Sinistcha uses **Matcha Gotcha** (Krookodile 63–74%, heals) or Protect.
+- **T3:** Charizard Megas and Heat Wave goes first (Mega Metagross 138–162%).
+  - Kangaskhan comes back later with a fresh Fake Out, then Last Resort (Infernape 135–160%, Krookodile 96–114%).
 - **Ifs:**
-  - Krookodile is Scarf (moves before Charizard 146) → it's locked; Shield the target.
-  - Infernape comes in → its Fake Out can't touch Aegislash (Ghost), so expect it on Kangaskhan.
+  - Krookodile is locked into Knock Off on Sinistcha → Protect Sinistcha on T2; Trick Room is already up.
+  - Mega Metagross is out and Krookodile isn't → Aegislash Poltergeist (99–119%).
+  - Charizard stays in the back until Krookodile is down or Trick Room is up: Scarf Rock Slide does 91–108%.
 
 **B. Morpeko + Charizard vs Oranguru + Toxtricity**
 - **T1:** Morpeko **Fake Out Toxtricity** (Inner Focus stops Fake Out on Oranguru). Charizard Megas + **Heat Wave**: Toxtricity OHKO, Oranguru 54–64%.
@@ -213,6 +226,7 @@ Modest Nature
 | Infernape Overheat (Sash Hasty), sun / no sun | Aegislash Shield | 129–152% / 86–102% | Our sun hurts us here |
 | Infernape Overheat, sun | Sinistcha / Rotom-Fan | 133–158% / 86–101% | — |
 | Krookodile High Horsepower (Adamant Life Orb) | Aegislash Shield / Kangaskhan | 95–114% (69%) / 61–72% | — |
+| Krookodile Knock Off (Scarf Jolly) | Aegislash Shield / Sinistcha | 69.5–82.6% / 82.0–97.8% | Survive (Sinistcha sets Trick Room through it) |
 | Umbreon / Oranguru Foul Play | Aegislash Blade | 188–223% / 126–149% | Dies (uses our Atk) |
 | Rotom-Wash Hydro Pump, sun / no sun | Charizard | 42–49% / 84–99% | — |
 
@@ -222,6 +236,8 @@ Modest Nature
 |---|---|---|---|
 | Charizard Heat Wave (sun, spread) | Mega Metagross / Metagross / Toxtricity | 138–162% / 162–191% / 101–120% | **OHKO** |
 | Charizard Heat Wave through Light Screen | Mega Metagross | 92–108% | 50% |
+| Aegislash Poltergeist at −1 (Krookodile Intimidate) | Mega Metagross | 65.0–77.7% | No OHKO (99–119% at +0) |
+| Sinistcha Matcha Gotcha (spread) | Krookodile (Scarf Jolly) | 62.8–74.4% | 2HKO, heals |
 | Charizard Weather Ball (sun) | Krookodile Adamant / Impish | 127–150% / 85–100% | — |
 | Charizard Solar Beam (sun) | Rotom-Wash / Krookodile Impish | 93–111% (63%) / 90–107% (44%) | — |
 | Aegislash Poltergeist (Metal Coat) | Mega Metagross / Dragapult / Galarian Slowking / Infernape / Toxtricity | 99–119% / 167–198% / 125–147% / 107–127% / 96–114% | OHKO (Metagross 94%) |
@@ -319,10 +335,47 @@ Modest Nature
 - Last Resort → Infernape: 204–242.
 
 `lib/guides/5v3.mjs` passes the app's `validateGuide` with 0 problems, and isn't stale against the live rosters.
-All 30 of its calcs reproduce in the app engine (`sp-assist/verify_curated.mjs`). The Stunfisk-Galar Stomping Tantrum calc
+All 34 of its calcs reproduce in the app engine (`sp-assist/verify_curated.mjs`; 4 added on 2026-10-21 for the revised lead A,
+the −1 Poltergeist one with the workbench's Intimidate setting). The Stunfisk-Galar Stomping Tantrum calc
 was dropped from the guide: the engine refuses Mimicry ("type-change unsupported"). It stays in this doc (spcalc).
 
 **Uncertainty:**
 - ZhuZi's real sets are unknown (ladder vs worst case shown).
 - Abilities verified in `data/mechanics.json`: Oranguru Inner Focus / Telepathy / Symbiosis; Slowking-G Curious Medicine / Own Tempo / Regenerator; Umbreon Inner Focus / Synchronize; Florges Flower Veil / Symbiosis; Toxtricity Plus / Punk Rock / Technician; Krookodile Anger Point / Intimidate / Moxie; Infernape Blaze / Iron Fist.
 - Crits and accuracy aren't modelled (Stone Edge 80%, Power Gem 100%, Draco 90%, Hydro Pump 80%).
+
+## 8. Simulation check of the first preview row (2026-10-21)
+
+The Showdown sim (`tools/sim`, heuristic AIs on both sides) found the original first row weak.
+
+**Setup:**
+- Our team is the guide six (a01).
+- The opponents are the six candidate ZhuZi teams whose six include Mega Metagross + Krookodile + Infernape: z01, z10, z13, z18, z22, z24.
+- 240 games per row, all on the same seeds, so the comparison is game by game.
+
+| Row | Bring | Lead | Win % (n = 240) |
+|---|---|---|---|
+| Old guide row | Charizard / Aegislash / Kangaskhan / Rotom-Fan | Aegislash + Kangaskhan | **14.2%** |
+| AI's own preview | varies (mostly Aegislash / Charizard / Kangaskhan / Sinistcha) | varies | 51.7% |
+| **New row** | **Kangaskhan / Sinistcha / Charizard / Aegislash** | **Kangaskhan + Sinistcha** | **57.1%** |
+| Morpeko + Sinistcha lead | Morpeko / Sinistcha / Charizard / Kangaskhan | Morpeko + Sinistcha | 49.2% |
+| Kangaskhan + Sinistcha, Rotom-Fan 4th | Kangaskhan / Sinistcha / Charizard / Rotom-Fan | Kangaskhan + Sinistcha | 44.6% |
+| Aegislash + Sinistcha lead | Aegislash / Sinistcha / Charizard / Kangaskhan | Aegislash + Sinistcha | 37.9% |
+| Sinistcha + Rotom-Fan lead | Sinistcha / Rotom-Fan / Charizard / Kangaskhan | Sinistcha + Rotom-Fan | 27.1% |
+| Kangaskhan + Rotom-Fan lead | Kangaskhan / Rotom-Fan / Charizard / Aegislash | Kangaskhan + Rotom-Fan | 18.8% |
+
+**Paired differences:**
+- New row − old row: +42.9 ± 7.2 points.
+- New row − AI preview: +5.4 ± 8.3 points (not significant).
+- The new row beats the old one against every team (wins out of 40): z01 5→25, z10 3→22, z13 11→28, z18 4→21, z22 7→13, z24 4→28.
+- Against the rock persona (Rock Slide user leads): 4/28 → 14/28.
+
+**What the logs show:**
+- Under the old row, Infernape Fake Outs Kangaskhan on T1.
+- Scarf Krookodile's Knock Off leaves Aegislash at about 25% and takes Metal Coat.
+- Charizard then comes in against a locked Krookodile and a fast Infernape.
+- Under the new row, the AI sets Trick Room with Sinistcha on T1 in all 6 logs it played. It then rotates Kangaskhan out for Charizard or Aegislash, which now move first.
+
+**Caveats:**
+- These are sim results: heuristic AIs, open team sheets, and candidate ZhuZi teams, not his real sets.
+- The sim's Stunfisk-Galar bug (the app calc refuses Mimicry, which the sim read as 0 damage) doesn't touch this test: neither side brings Stunfisk-Galar.

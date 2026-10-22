@@ -13,9 +13,8 @@ import { GUIDES, validateGuide, parseRange } from '../lib/guides/index.mjs';
 import { MOCKS, validateMock } from '../lib/mocks/index.mjs';
 
 // Known pending (each with its reason). Remove each line when its fix lands: this test fails while a pending calc still differs, AND once it starts matching (so the marker can't go stale).
-const PENDING = new Set([
-  'guide 5v3 #30', // Stunfisk-Galar's Mimicry: the app's calc refuses it (type change); spcalc ignores it
-]);
+// (The Stunfisk-Galar Mimicry calc that was 'guide 5v3 #30' was removed from the guide; the app's calc refuses Mimicry.)
+const PENDING = new Set([]);
 
 const calc = newCalc();
 const raw = JSON.parse(readFileSync(new URL('../docs/research/strategy/sp-assist/usage-regmc-2026-09-league.json', import.meta.url), 'utf8')).species;

@@ -24,6 +24,8 @@ for (const dir of ['lib/guides', 'lib/mocks']) {
       const a = side(c.attacker), d = side(c.defender);
       a.set.moves = [c.move];
       d.set.moves = ['protect'];
+      // field.intimidate: the workbench seeds it as the attacker's state.intimidated (public/prep-guide.js, prep-workbench.js)
+      if (c.field?.intimidate) a.state.intimidated = Number(c.field.intimidate);
       const field = { weather: c.field?.weather ?? '' };
       const r = calc.run({ attacker: a, defender: d, move: { id: c.move }, field });
       n++;
