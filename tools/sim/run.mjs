@@ -5,7 +5,8 @@
 //     [--opp-noise 0.07] [--usual 0] [--opp-usual 0] [--seed 1] [--workers N] [--out tools/sim/results/<name>.jsonl]
 //     [--swap]  (alternate which side is p1)  [--preview ai|guide|explore|<rows.json>] (ours: the AI's lead lookahead, the guide's
 //     table, uniform over the AI's top 8 previews, or a fitted table of guide-shaped rows)
-//     [--persona default|none|all] (opponent plan-commitment personas: the PERSONAS shares, none, or every game)
+//     [--sheets open|ots|closed] (what each AI knows of the other's sets: all, open team sheets without SP / nature,
+//     species only; sheets.mjs)  [--persona default|none|all] (opponent plan-commitment personas: the PERSONAS shares, none, or every game)
 //     --theirs z01..z24 expands to the 24 ids (round-robin per game)
 //
 // --ours / --theirs: a candidate id (tools/sim/candidates/zhuzi.json: a01…, z01…), a comma list (round-robin per game),
@@ -16,6 +17,7 @@ import { Worker, isMainThread, parentPort } from 'node:worker_threads';
 import { cpus } from 'node:os';
 import { readFileSync, existsSync, appendFileSync, mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
+import { beliefText, library } from './sheets.mjs';
 
 const CAND = JSON.parse(readFileSync(new URL('./candidates/zhuzi.json', import.meta.url), 'utf8'));
 const teamText = (ref) => {
@@ -57,8 +59,14 @@ export function taskList(a) {
   const persona = (ref, seed) => { const pp = a.persona === 'none' ? null : PERSONAS[ref]; return pp && unit(seed, 77) < (a.persona === 'all' ? 1 : pp[1]) ? pp[0] : null; };
   const side = (ref, ai, pre, seed, opp) => ({ ref, text: teamText(ref), ai, skill: Number(a[`${pre}skill`] ?? 0.85), style: a[`${pre}style`] ?? 'balanced', noise: Number(a[`${pre}noise`] ?? 0.07),
     usualBring: Number(a[`${pre}usual`] ?? 0), preview: opp ? 'ai' : a.preview ?? 'ai', persona: opp ? persona(ref, seed) : null });
-  return Array.from({ length: n }, (_, i) => ({ i, seed: base + i, swap: !!a.swap && i % 2 === 1,
-    ours: side(ours[i % ours.length], a['ours-ai'] ?? 'heuristic', '', base + i, false), theirs: side(theirs[i % theirs.length], a['theirs-ai'] ?? 'heuristic', 'opp-', base + i, true) }));
+  // --sheets: what each AI believes about the other's sets (sheets.mjs); the battle itself always uses the real sets
+  const sheets = a.sheets ?? 'open';
+  const libs = sheets === 'closed' ? { theirs: library(CAND.opponent.teams.map((t) => ({ text: t.team, weight: t.weight }))), ours: library([{ text: teamText('a01') }]) } : {};
+  return Array.from({ length: n }, (_, i) => {
+    const us = side(ours[i % ours.length], a['ours-ai'] ?? 'heuristic', '', base + i, false), them = side(theirs[i % theirs.length], a['theirs-ai'] ?? 'heuristic', 'opp-', base + i, true);
+    if (sheets !== 'open') { us.belief = beliefText(them.text, sheets, libs.theirs); them.belief = beliefText(us.text, sheets, libs.ours); }
+    return { i, seed: base + i, swap: !!a.swap && i % 2 === 1, sheets, ours: us, theirs: them };
+  });
 }
 const pc = (k, n) => (n ? `${(100 * k / n).toFixed(1)}%` : '—');
 /** The review metrics (ai-review.md) for a batch: per side, plus TR set rate by persona. */
@@ -91,7 +99,7 @@ async function play(t) {
   const t0 = performance.now();
   const r = await playGame(p1, p2, t.seed);
   const ourSide = t.swap ? 'p2' : 'p1', theirSide = t.swap ? 'p1' : 'p2';
-  return { i: t.i, seed: t.seed, ours: t.ours.ref, theirs: t.theirs.ref, oursAs: ourSide, preview: t.ours.preview, persona: t.theirs.persona, winner: r.winner === 'tie' ? 'tie' : r.winner === ourSide ? 'ours' : 'theirs', turns: r.turns,
+  return { i: t.i, seed: t.seed, ours: t.ours.ref, theirs: t.theirs.ref, oursAs: ourSide, preview: t.ours.preview, sheets: t.sheets, persona: t.theirs.persona, winner: r.winner === 'tie' ? 'tie' : r.winner === ourSide ? 'ours' : 'theirs', turns: r.turns,
     our: r.summary[ourSide], their: r.summary[theirSide], errors: r.errors, refusals: r.refusals, ms: Math.round(performance.now() - t0) };
 }
 

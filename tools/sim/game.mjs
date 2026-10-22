@@ -19,7 +19,7 @@ export async function playGame(p1, p2, seed, { keepLog = false, notes = false, m
   const streams = PS.getPlayerStreams(new PS.BattleStream());
   const mk = (side, other, stream, k) => (side.ai === 'random'
     ? new RandomPlayerAI(stream, { seed: [seed, k, 7, 11], mega: 0.8 })
-    : new HeuristicPlayer(stream, { ...side, mine: side.text, theirs: other.text, seed: [seed, k, 13, 17], notes }));
+    : new HeuristicPlayer(stream, { ...side, mine: side.text, theirs: side.belief ?? other.text, seed: [seed, k, 13, 17], notes }));
   const a = mk(p1, p2, streams.p1, 1), b = mk(p2, p1, streams.p2, 2);
   void a.start().catch(() => {}); void b.start().catch(() => {});
   const sets = { p1: setsFromText(p1.text), p2: setsFromText(p2.text) };
