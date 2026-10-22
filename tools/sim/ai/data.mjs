@@ -1,8 +1,9 @@
 // Shared data for the sim AI: the pinned Showdown build (move semantics, team import, PRNG) and the app's own calc engine
 // (lib/calc: damage and stats, parity-checked against Showdown in tools/sim/NOTES.md).
 import { createRequire } from 'node:module';
-import { mech, newCalc } from '../../../test/calc-helpers.mjs';
-import { setStats } from '../../../lib/calc/mech.mjs';
+import { mech, mechRaw, engine, newCalc } from '../../../test/calc-helpers.mjs';
+import { setStats, loadMechanics } from '../../../lib/calc/mech.mjs';
+import { createCalc } from '../../../lib/calc/wrapper.mjs';
 
 const require = createRequire(import.meta.url);
 export const PS_DIR = new URL('../vendor/pokemon-showdown/dist/sim/', import.meta.url).pathname;
@@ -14,6 +15,12 @@ export const FORMAT = 'gen9championsvgc2026regmc';
 export const toID = (s) => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
 export { mech };
 export const calc = newCalc();
+// A fallback calc for abilities lib/calc refuses (type changes: Mimicry, Protean…): the same engine, with Run Away (no
+// effect on damage) also legal for every species, so the refused side can be retried with it. With no terrain Mimicry
+// leaves the user's own types, so the retry is exact there.
+const looseRaw = structuredClone(mechRaw);
+for (const sp of Object.values(looseRaw.species ?? {})) if (Array.isArray(sp.abilities) && !sp.abilities.includes('Run Away')) sp.abilities = [...sp.abilities, 'Run Away'];
+export const calcLoose = createCalc(engine, loadMechanics(looseRaw));
 
 const STATS = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
 /** Showdown export text → calc sets ({ name, species, item, ability, nature, moves, sp }) in team order. */

@@ -72,6 +72,10 @@ export function metrics(recs) {
   const by = new Map();
   for (const r of recs) { if (!r.their.brought.some((s) => SETTERS.includes(s))) continue; const k = r.persona ?? 'calc'; const e = by.get(k) ?? [0, 0]; e[0] += r.their.tr > 0 ? 1 : 0; e[1]++; by.set(k, e); }
   if (by.size) lines.push(`their Trick Room set rate (games with a setter brought), by persona: ${[...by].map(([k, [x, n]]) => `${k} ${x}/${n} = ${pc(x, n)}`).join(' · ')}`);
+  // calc refusals (retried with a damage-neutral ability, or estimated): visible so a gap in lib/calc can't hide
+  const ref = {};
+  for (const r of recs) for (const [k, n] of Object.entries(r.refusals ?? {})) ref[k] = (ref[k] ?? 0) + n;
+  lines.push(`calc refusals: ${Object.values(ref).reduce((t, n) => t + n, 0)}${Object.keys(ref).length ? ` (${Object.entries(ref).map(([k, n]) => `${k} ${n}`).join(', ')}; retried with a neutral ability)` : ''}`);
   const ch = recs.filter((r) => r.persona === 'chilly');
   if (ch.length) lines.push(`their Chilly Reception (chilly persona): used in ${ch.filter((r) => r.their.chilly > 0).length}/${ch.length} games (${ch.filter((r) => r.their.brought.includes('slowkinggalar')).length} brought Slowking-G)`);
   const wr = new Map();
@@ -87,7 +91,7 @@ async function play(t) {
   const r = await playGame(p1, p2, t.seed);
   const ourSide = t.swap ? 'p2' : 'p1', theirSide = t.swap ? 'p1' : 'p2';
   return { i: t.i, seed: t.seed, ours: t.ours.ref, theirs: t.theirs.ref, oursAs: ourSide, preview: t.ours.preview, persona: t.theirs.persona, winner: r.winner === 'tie' ? 'tie' : r.winner === ourSide ? 'ours' : 'theirs', turns: r.turns,
-    our: r.summary[ourSide], their: r.summary[theirSide], errors: r.errors, ms: Math.round(performance.now() - t0) };
+    our: r.summary[ourSide], their: r.summary[theirSide], errors: r.errors, refusals: r.refusals, ms: Math.round(performance.now() - t0) };
 }
 
 if (!isMainThread) {

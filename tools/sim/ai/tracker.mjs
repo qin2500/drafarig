@@ -60,6 +60,7 @@ export class Tracker {
   on_drag(p) { this.on_switch(p); }
   on_replace(p) { this.on_switch(p); }
   leave(m) {
+    m.charging = '';
     m.pos = -1; m.boosts = {}; m.locked = ''; m.protectStreak = 0; m.movesUsed = []; m.lastMove = ''; m.taunt = 0;
     if (m.set.species === 'aegislash') m.form = 'shield';
   }
@@ -79,6 +80,7 @@ export class Tracker {
     this.lastMover = m.side;
     const id = toID(p[2]);
     const called = p.slice(3).some((x) => x.startsWith('[from]'));
+    if (!p.includes('[still]')) m.charging = ''; // the second turn hits (or anything else ends the charge)
     if (!called) {
       m.lastMove = id;
       if (!m.movesUsed.includes(id)) m.movesUsed.push(id);
@@ -89,6 +91,7 @@ export class Tracker {
     if (id === 'kingsshield' && m.set.species === 'aegislash') m.form = 'shield';
     this.events.push(`${p[1]} used ${p[2]}${p[3] ? ` → ${p[3]}` : ''}`);
   }
+  on__prepare(p) { const m = this.monOf(p[1]); if (m) m.charging = toID(p[2]); }
   on__damage(p) { const m = this.monOf(p[1]); if (!m) return; const s = hpOf(p[2]); m.hp = s.hp; if (s.fnt) m.fainted = true; if (s.status) m.status = s.status; }
   on__heal(p) { this.on__damage(p); }
   on__sethp(p) { this.on__damage(p); }

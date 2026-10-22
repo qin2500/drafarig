@@ -155,3 +155,21 @@ Reception use (chilly persona), win rate by persona.
   z22 15%, z24 17.5% vs 35–55% with the AI preview). Per-persona: tr 67%, calc 51%/42%, rock 41%/27% (AI/guide).
   (The pilot ran before the chilly persona brought Slowking; 24 chilly games in it.)
 - ~2 s/game per worker with the lead lookahead; 960 games ≈ 2.5 minutes on 14 workers.
+
+## Step 2c: VGC Strategy's second round (2026-10-21)
+1. BUG fixed: `damage()` turned every lib/calc refusal into 0, so Mimicry (refused as `mechanic-unsupported:type-change`)
+   made Stunfisk-Galar unhittable and harmless. Now a refusal is retried with the refused side's ability swapped for Run
+   Away in a second calc (`ai/data.mjs` calcLoose: same engine, Run Away also legal) — exact for Mimicry without terrain
+   (its own Ground/Steel); with terrain it's marked `mimicry-terrain` (approximate); anything still refused gets a rough
+   base-power estimate, never 0. Every refusal is counted per game and printed per batch ("calc refusals: N (codes)").
+   a02 quick check (48 games): Stunfisk brought 16/48 (was 92–97%), 30,541 refusals all type-change, all retried.
+2. Semi-invulnerable turns: the tracker records the charge (`-prepare`); a charging Phantom Force / Shadow Force / Fly /
+   Dig / Dive / Bounce user can only finish its move and is untargetable until it hits; choosing one this turn charges (no
+   damage) and makes it untargetable for the rest of the turn; Phantom / Shadow Force (Showdown `breaksProtect`) go
+   through Protect / King's Shield and lift it for the turn.
+3. Mega switching: a switch-in pays 0.25 × (worst single hit the foes it came in on can do to it ÷ its HP), on top of the
+   hits the resolver applies to its slot; switching out an evolved Mega costs 0.1 more.
+4. Sucker Punch / Thunderclap fail unless the target is about to use a damaging move (hasn't moved, not Protect / status).
+Tests: `tools/sim/test/fixes2.test.mjs` (5); 32/32 sim tests pass. Validation (machine load average ~60 from other work,
+so the s/game numbers are inflated): vs random 390/400 = 97.5% (95.5–98.6%); mirrors a01 280/600 = 46.7% (42.7–50.7%),
+z01 197/400 = 49.3% (44.4–54.1%); TR teams set TR (persona tr 98.9%, calc 83.5%, calc vs fast z24 87.0%).

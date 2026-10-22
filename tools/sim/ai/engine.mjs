@@ -4,7 +4,7 @@
 // value function. Damage comes from lib/calc (cached per state); the result is an expected state (HP and "alive"
 // probabilities), not a sampled one.
 import { normalizeScenario } from '../../../lib/calc/scenario.mjs';
-import { calc, mech, moveOf, statsOf, abilityOf, typesOf, speciesOf, PROTECTS, SPREAD, SINGLE, toID } from './data.mjs';
+import { calc, calcLoose, mech, moveOf, statsOf, abilityOf, typesOf, speciesOf, PROTECTS, SPREAD, SINGLE, toID } from './data.mjs';
 
 const SIDES = ['p1', 'p2'];
 export const foe = (s) => (s === 'p1' ? 'p2' : 'p1');
@@ -16,7 +16,7 @@ export function snapshot(T) {
   for (const s of SIDES) for (const m of T.mons[s]) {
     mons[m.key] = { key: m.key, side: s, set: m.set, mega: m.mega, hp: m.fainted ? 0 : m.hp, alive: m.fainted ? 0 : 1, status: m.status, boosts: { ...m.boosts },
       form: m.form, itemGone: m.itemGone, firstTurn: m.pos >= 0 && T.firstTurn(m), lastMove: m.lastMove, protectStreak: m.protectStreak, movesUsed: [...m.movesUsed],
-      locked: m.locked, taunt: m.taunt, seen: m.seen, brought: m.brought, pos: m.pos };
+      locked: m.locked, taunt: m.taunt, seen: m.seen, brought: m.brought, pos: m.pos, charging: m.charging ?? '', invuln: ['phantomforce', 'shadowforce', 'fly', 'dig', 'dive', 'bounce'].includes(m.charging ?? '') };
   }
   return { mons, active: { p1: T.active.p1.map((m) => (m && !m.fainted ? m.key : null)), p2: T.active.p2.map((m) => (m && !m.fainted ? m.key : null)) },
     side: structuredClone(T.side), field: { ...T.field }, turn: T.turn };
@@ -26,7 +26,7 @@ const clone = (S) => ({ mons: Object.fromEntries(Object.entries(S.mons).map(([k,
 
 // ---------- damage (lib/calc, cached) ----------
 const dmgCache = new Map();
-export const calcStats = { calls: 0, hits: 0 };
+export const calcStats = { calls: 0, hits: 0, refusals: {} };
 const bucket = (hp) => (hp > 0.5 ? 100 : hp > 1 / 3 ? 50 : Math.max(1, Math.round(hp * 100)));
 /** Damage of one hit as fractions of the defender's max HP: { min, max } (0 when immune / no damage). */
 export function damage(S, a, d, moveId, { spread = false, hh = false } = {}) {
@@ -41,7 +41,19 @@ export function damage(S, a, d, moveId, { spread = false, hh = false } = {}) {
     field: { weather: S.field.weather, terrain: S.field.terrain, attackerSide: { helpingHand: hh, allyPresent: spread }, defenderSide: { reflect: ds.reflect > 0, lightScreen: ds.lightScreen > 0, auroraVeil: ds.auroraVeil > 0, partnerPresent: spread } } };
   let r = calc.run(normalizeScenario(sc));
   if (r.class === 'needs-state' && r.question?.key) { sc[r.question.side].state[r.question.key] = r.question.options?.[0] ?? 0; r = calc.run(normalizeScenario(sc)); }
-  const out = r.class === 'exact' ? { min: r.range.min / r.maxHP, max: r.range.max / r.maxHP } : { min: 0, max: 0, refused: r.class !== 'no-damage' ? r.code ?? r.class : null };
+  // a refused calc is never "no damage": retry the refused side with a damage-neutral ability (Mimicry without terrain
+  // keeps its own types, so that's exact), else a rough estimate from base power; every refusal is counted by code
+  let approx = null;
+  if (r.class === 'refused') {
+    const code = r.code ?? 'refused';
+    calcStats.refusals[code] = (calcStats.refusals[code] ?? 0) + 1;
+    const side = r.side === 'defender' ? 'defender' : 'attacker';
+    const retry = { ...sc, [side]: { ...sc[side], set: { ...sc[side].set, ability: 'runaway' } } };
+    const r2 = calcLoose.run(normalizeScenario(retry));
+    if (r2.class === 'exact') { r = r2; approx = S.field.terrain && sc[side].set.ability === 'mimicry' ? 'mimicry-terrain' : null; }
+    else { const bp = mv.basePower || 0; approx = 'estimate'; r = bp > 0 ? { class: 'exact', range: { min: bp * 0.0015, max: bp * 0.0022 }, maxHP: 1 } : r; }
+  }
+  const out = r.class === 'exact' ? { min: r.range.min / r.maxHP, max: r.range.max / r.maxHP, ...(approx ? { approx } : {}) } : { min: 0, max: 0, refused: r.class !== 'no-damage' ? r.code ?? r.class : null };
   if (dmgCache.size > 200000) dmgCache.clear();
   dmgCache.set(key, out);
   return out;
@@ -95,6 +107,7 @@ export function optionsFor(S, side, pos, legal = null) {
     const mv = moveOf(id);
     if (!mv.exists) continue;
     if (!legal && m.locked && m.locked !== id && moves.includes(m.locked)) continue;
+    if (!legal && m.charging && id !== m.charging) continue;
     if (!legal && m.taunt > 0 && mv.category === 'Status') continue;
     if (id === 'fakeout' || id === 'firstimpression') { if (!m.firstTurn) continue; }
     if (id === 'lastresort' && m.set.moves.some((x) => x !== 'lastresort' && !m.movesUsed.includes(x))) continue;
@@ -202,7 +215,7 @@ export function resolve(S0, acts) {
     const m = S.mons[key];
     const act = (m.alive ?? 0) * (1 - (turnFx.flinch[key] ?? 0));
     if (act <= 0.001) continue;
-    if (a.kind === 'switch') { S.switches ??= { p1: 0, p2: 0 }; S.switches[a.side]++; enter(S, a.side, a.pos, a.to); m.movesUsed = []; m.protectStreak = 0; log.push(`${name(m)} → ${name(S.mons[a.to])}`); continue; }
+    if (a.kind === 'switch') { S.switches ??= { p1: 0, p2: 0 }; S.switches[a.side]++; if (m.mega) { S.megaOut ??= { p1: 0, p2: 0 }; S.megaOut[a.side]++; } (S.switchIns ??= []).push({ side: a.side, key: a.to, faced: S.active[foe(a.side)].filter(Boolean) }); enter(S, a.side, a.pos, a.to); m.movesUsed = []; m.protectStreak = 0; log.push(`${name(m)} → ${name(S.mons[a.to])}`); continue; }
     if (S.active[a.side][a.pos] !== key) continue;
     turnFx.moved[key] = true; turnFx.act[key] = act;
     if (a.fails || (a.move === 'lastresort' && m.set.moves.some((x) => x !== 'lastresort' && !m.movesUsed.includes(x))) || ((a.move === 'fakeout' || a.move === 'firstimpression') && !m.firstTurn)) { log.push(`${name(m)} ${a.move} fails`); m.protectStreak = 0; continue; }
@@ -278,6 +291,18 @@ function useMove(S, m, a, act, fx, log, acts) {
     const ignore = ['stalwart', 'propellertail'].includes(abilityOf(m.set, m.mega)) || id === 'snipeshot';
     if (!immune && !ignore) targets = [red];
   }
+  // Sucker Punch / Thunderclap: only into a target that's about to attack (it hasn't moved and chose a damaging move)
+  if (mv.id === 'suckerpunch' || mv.id === 'thunderclap') {
+    const tk = targets[0], ta = tk && acts.find((x) => x.kind === 'move' && S.active[x.side][x.pos] === tk);
+    if (!tk || fx.moved[tk] || !ta || moveOf(ta.move).category === 'Status') { log.push(`${name(m)} ${mv.name} fails (no attack to punish)`); return; }
+  }
+  // the first turn of a two-turn move (Phantom Force, Fly, Dig, Dive, Bounce…): it charges and becomes untargetable
+  if (mv.flags?.charge && !m.charging && !(m.set.item === 'powerherb' && !m.itemGone) && !(['solarbeam', 'solarblade'].includes(id) && S.field.weather === 'Sun')) {
+    m.charging = id;
+    if (['phantomforce', 'shadowforce', 'fly', 'dig', 'dive', 'bounce', 'skydrop'].includes(id)) m.invuln = true;
+    log.push(`${name(m)} charges ${mv.name}`); return;
+  }
+  m.charging = ''; m.invuln = false;
   const pri = priorityOf(m, id);
   const blockPri = pri > 0 && S.active[fs].some((k) => k && PRIORITY_BLOCK.has(abilityOf(S.mons[k].set, S.mons[k].mega)));
   if (mv.category === 'Status') { statusMove(S, m, mv, targets, act, fx, log); return; }
@@ -287,7 +312,9 @@ function useMove(S, m, a, act, fx, log, acts) {
     if (t.alive <= 0) continue;
     if (blockPri && t.side === fs) continue;
     let p = act * accOf(mv, m);
-    const blocked = fx.protect[tk] ?? 0;
+    if (t.invuln) { log.push(`${mv.name} → ${name(t)} misses (semi-invulnerable)`); continue; }
+    const blocked = mv.breaksProtect ? 0 : fx.protect[tk] ?? 0;
+    if (mv.breaksProtect && fx.protect[tk]) { fx.protect[tk] = 0; log.push(`${mv.name} breaks ${name(t)}'s protection`); }
     // King's Shield: a contact move that hits it drops the attacker's Attack by 1
     if (blocked && fx.kingsShield?.[tk] && mv.flags?.contact) m.boosts.atk = Math.max(-6, (m.boosts.atk ?? 0) - blocked * act);
     p *= 1 - blocked;
@@ -406,6 +433,17 @@ export function value(S, side, style = STYLES.balanced, brought = 4) {
   v += f * 0.35 * (threat(S, side) - threat(S, foe(side)));
   v -= 0.15 * (S.protects?.[side] ?? 0) * (style === STYLES.safe ? 0.5 : 1);
   v += 0.15 * (S.protects?.[foe(side)] ?? 0);
+  // a Pokémon switched in pays for the worst single hit the foes it came in on can throw at it (relative to its HP), so
+  // it doesn't come in on a predicted double target by luck of the prediction; an evolved Mega switched out costs extra
+  for (const si of S.switchIns ?? []) {
+    const d = S.mons[si.key];
+    if (!d || d.alive <= 0) continue;
+    let worst = 0;
+    for (const fk of si.faced) { const a = S.mons[fk]; if (!a || a.alive <= 0) continue; for (const id of a.set.moves) { const mv = moveOf(id); if (mv.category === 'Status' || id === 'fakeout') continue; const r = damage(S, a, d, id); worst = Math.max(worst, (r.min + r.max) / 2); } }
+    v -= (si.side === side ? 1 : -1) * 0.25 * Math.min(1, worst / Math.max(0.05, d.hp));
+  }
+  v -= 0.1 * (S.megaOut?.[side] ?? 0);
+  v += 0.1 * (S.megaOut?.[foe(side)] ?? 0);
   // a switch gives up the turn's action (the new Pokémon's matchup is already in the value)
   v -= 0.06 * (S.switches?.[side] ?? 0);
   v += 0.06 * (S.switches?.[foe(side)] ?? 0);

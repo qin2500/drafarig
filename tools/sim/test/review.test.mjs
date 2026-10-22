@@ -5,6 +5,7 @@ import { position, team } from './helpers.mjs';
 import { snapshot, optionsFor, resolve, spreadThreat } from '../ai/engine.mjs';
 import { HeuristicPlayer } from '../ai/player.mjs';
 import { setsFromText, PROTECTS } from '../ai/data.mjs';
+import guide from '../../../lib/guides/5v3.mjs';
 
 const A = team('a01'), Z1 = team('z01'), Z3 = team('z03'), Z4 = team('z04');
 const why = (r) => `\nchoice: ${r.choice}\n${JSON.stringify(r.note, null, 1)}`;
@@ -40,7 +41,7 @@ test('#3 hard lead rule: no Charizard lead into a visible spread Rock user witho
   assert.equal(p.leadAllowed([zard, sinis], setsFromText(team('z21'))), true, 'z21 has no Krookodile / Rock Slide Metagross');
 });
 
-test('#3 preview: the AI never leads an uncovered Charizard into z03; the guide policy uses the guide table (vs z01: Aegislash + Kangaskhan)', () => {
+test('#3 preview: the AI never leads an uncovered Charizard into z03; the guide policy uses the guide table (vs z01: its first row)', () => {
   const req = { teamPreview: true, side: { id: 'p1', pokemon: setsFromText(A).map((s) => ({ ident: `p1: ${s.name}`, details: `${s.name}, L50`, condition: '100/100' })) } };
   for (const seed of [1, 2, 3]) {
     const p = new HeuristicPlayer({ write() {}, async *[Symbol.asyncIterator]() {} }, { mine: A, theirs: Z3, seed, notes: true });
@@ -53,7 +54,9 @@ test('#3 preview: the AI never leads an uncovered Charizard into z03; the guide 
   g.ensure(req);
   g.preview(req);
   const pv = g.notes.at(-1).preview;
-  assert.deepEqual([pv.leads, [...pv.bring].sort()], [['aegislash', 'kangaskhan'], ['aegislash', 'charizard', 'kangaskhan', 'rotomfan']]);
+  // the guide's own first row (vs Metagross + Krookodile + Infernape), whatever it currently says
+  const row = guide.previews[0];
+  assert.deepEqual([pv.leads, [...pv.bring].sort()], [row.lead, [...row.bring4].sort()]);
   assert.match(pv.why, /guide preview/);
 });
 

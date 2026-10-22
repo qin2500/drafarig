@@ -1,6 +1,7 @@
 // One headless Champions Reg M-C doubles game between two players (heuristic or Showdown's random), deterministic per seed.
 import { PS, RandomPlayerAI, packTeam, FORMAT, toID, setsFromText, moveOf, PROTECTS, SPREAD } from './ai/data.mjs';
 import { HeuristicPlayer } from './ai/player.mjs';
+import { calcStats } from './ai/engine.mjs';
 
 const spreadUsers = (sets) => new Set(sets.filter((s) => s.moves.some((id) => SPREAD.has(moveOf(id).target) && moveOf(id).category !== 'Status')).map((s) => s.species));
 const rockUsers = (sets) => sets.some((s) => s.moves.some((id) => moveOf(id).type === 'Rock' && SPREAD.has(moveOf(id).target) && moveOf(id).category !== 'Status'));
@@ -13,6 +14,7 @@ const rockUsers = (sets) => sets.some((s) => s.moves.some((id) => moveOf(id).typ
  * turns it was available against an active spread threat, Charizard led into a spread-Rock team.
  */
 export async function playGame(p1, p2, seed, { keepLog = false, notes = false, maxTurns = 60 } = {}) {
+  const refusals0 = { ...calcStats.refusals }; // games run one at a time per worker, so the difference is this game's
   const streams = PS.getPlayerStreams(new PS.BattleStream());
   const mk = (side, other, stream, k) => (side.ai === 'random'
     ? new RandomPlayerAI(stream, { seed: [seed, k, 7, 11], mega: 0.8 })
@@ -70,5 +72,6 @@ export async function playGame(p1, p2, seed, { keepLog = false, notes = false, m
     sum[s].zardIntoRockUncovered = into && !(partner?.moves.includes('wideguard') || partner?.moves.includes('fakeout'));
   }
   const errors = (a.crashes ?? 0) + (b.crashes ?? 0);
-  return { winner: winner ?? 'tie', turns, summary: sum, errors, ...(keepLog ? { log } : {}), ...(notes ? { notes: { p1: a.notes ?? [], p2: b.notes ?? [] } } : {}) };
+  const refusals = Object.fromEntries(Object.entries(calcStats.refusals).map(([k, n]) => [k, n - (refusals0[k] ?? 0)]).filter(([, n]) => n > 0));
+  return { winner: winner ?? 'tie', turns, summary: sum, errors, refusals, ...(keepLog ? { log } : {}), ...(notes ? { notes: { p1: a.notes ?? [], p2: b.notes ?? [] } } : {}) };
 }
