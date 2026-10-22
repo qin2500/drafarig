@@ -122,6 +122,8 @@ A = {
     'sinis': S('Sinistcha', 'sinistcha', 'Coba Berry', 'Hospitality', 'Calm', [32, 0, 2, 0, 32, 0], ['Matcha Gotcha', 'Rage Powder', 'Trick Room', 'Protect']),
     'sinisB': S('Sinistcha', 'sinistcha', 'Sitrus Berry', 'Hospitality', 'Bold', [32, 0, 14, 0, 20, 0], ['Matcha Gotcha', 'Rage Powder', 'Trick Room', 'Life Dew']),
     'rotom': S('Rotom-Fan', 'rotomfan', 'Sitrus Berry', 'Levitate', 'Modest', [32, 0, 0, 32, 2, 0], ['Thunderbolt', 'Air Slash', 'Will-O-Wisp', 'Protect']),
+    # a08 as simulated: the item clause moved Rotom-Fan's Sitrus to Expert Belt (Sinistcha holds the Sitrus)
+    'rotomEB': S('Rotom-Fan', 'rotomfan', 'Expert Belt', 'Levitate', 'Modest', [32, 0, 0, 32, 2, 0], ['Thunderbolt', 'Air Slash', 'Will-O-Wisp', 'Protect']),
     'stunfisk': S('Stunfisk-Galar', 'stunfiskgalar', 'Leftovers', 'Mimicry', 'Brave', [32, 32, 2, 0, 0, 0], ['Stomping Tantrum', 'Snap Trap', 'Yawn', 'Protect']),
     'conk': S('Conkeldurr', 'conkeldurr', 'Life Orb', 'Iron Fist', 'Brave', [32, 32, 0, 0, 2, 0], ['Drain Punch', 'Mach Punch', 'Ice Punch', 'Protect']),
     'pelipper': S('Pelipper', 'pelipper', 'Focus Sash', 'Drizzle', 'Modest', [2, 0, 0, 32, 0, 32], ['Hurricane', 'Weather Ball', 'Tailwind', 'Wide Guard']),
@@ -144,6 +146,13 @@ AT = [
     ('a14', 'No Kangaskhan', 0.05, ['zardM', 'aegis', 'morpeko', 'sinis', 'rotom', 'stunfisk'], 'Ablation: Kangaskhan value'),
     ('a15', 'No Morpeko', 0.05, ['zardM', 'aegis', 'kanga', 'sinis', 'rotom', 'stunfisk'], 'Ablation: Morpeko value'),
     ('a16', 'Timid Charizard + Stunfisk', 0.05, ['zardT', 'aegis', 'kanga', 'morpeko', 'sinis', 'stunfisk'], 'Combine two variants'),
+    # Round-2 combinations (2026-10-21) of the round-1 gainers a05 / a06 / a08 (and a04). Weight 0 keeps the a01-a16 weights
+    # unchanged; items: Charizardite Y, Kasib, Silk Scarf, Focus Sash, Sitrus (Sinistcha), Expert Belt (Rotom-Fan): no clash.
+    ('a17', 'a05 + a06 + a08', 0.0, ['zardM', 'aegisSS', 'kangaDE', 'morpeko', 'sinisB', 'rotomEB'], 'Stack all three round-1 gainers'),
+    ('a18', 'a05 + a06', 0.0, ['zardM', 'aegisSS', 'kangaDE', 'morpeko', 'sinis', 'rotom'], 'Kangaskhan DE set + Aegislash Sneak/Kasib; Rotom keeps Sitrus'),
+    ('a19', 'a06 + a08', 0.0, ['zardM', 'aegisSS', 'kanga', 'morpeko', 'sinisB', 'rotomEB'], 'Aegislash Sneak/Kasib + Bold Sitrus Sinistcha'),
+    ('a20', 'a05 + a08', 0.0, ['zardM', 'aegis', 'kangaDE', 'morpeko', 'sinisB', 'rotomEB'], 'Kangaskhan DE set + Bold Sitrus Sinistcha'),
+    ('a21', 'a17 + bulky Charizard (a04)', 0.0, ['zardB', 'aegisSS', 'kangaDE', 'morpeko', 'sinisB', 'rotomEB'], 'All four round-1 gainers'),
 ]
 
 

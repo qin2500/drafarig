@@ -821,6 +821,86 @@
     ],
     "notes": {},
     "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nTimid Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Metal Coat\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Iron Head\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Life Orb\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk\nAdamant Nature\n- Fake Out\n- Last Resort\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Coba Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpD\nCalm Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n"
+   },
+   {
+    "id": "a17",
+    "label": "a05 + a06 + a08",
+    "weight": 0.0,
+    "why": "Stack all three round-1 gainers",
+    "sets": [
+     "zardM",
+     "aegisSS",
+     "kangaDE",
+     "morpeko",
+     "sinisB",
+     "rotomEB"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 6 HP / 32 SpA / 2 SpD / 26 Spe\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Silk Scarf\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "a18",
+    "label": "a05 + a06",
+    "weight": 0.0,
+    "why": "Kangaskhan DE set + Aegislash Sneak/Kasib; Rotom keeps Sitrus",
+    "sets": [
+     "zardM",
+     "aegisSS",
+     "kangaDE",
+     "morpeko",
+     "sinis",
+     "rotom"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 6 HP / 32 SpA / 2 SpD / 26 Spe\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Silk Scarf\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Coba Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpD\nCalm Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Protect\n\nRotom-Fan @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "a19",
+    "label": "a06 + a08",
+    "weight": 0.0,
+    "why": "Aegislash Sneak/Kasib + Bold Sitrus Sinistcha",
+    "sets": [
+     "zardM",
+     "aegisSS",
+     "kanga",
+     "morpeko",
+     "sinisB",
+     "rotomEB"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 6 HP / 32 SpA / 2 SpD / 26 Spe\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Life Orb\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk\nAdamant Nature\n- Fake Out\n- Last Resort\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "a20",
+    "label": "a05 + a08",
+    "weight": 0.0,
+    "why": "Kangaskhan DE set + Bold Sitrus Sinistcha",
+    "sets": [
+     "zardM",
+     "aegis",
+     "kangaDE",
+     "morpeko",
+     "sinisB",
+     "rotomEB"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 6 HP / 32 SpA / 2 SpD / 26 Spe\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Metal Coat\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Iron Head\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Silk Scarf\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "a21",
+    "label": "a17 + bulky Charizard (a04)",
+    "weight": 0.0,
+    "why": "All four round-1 gainers",
+    "sets": [
+     "zardB",
+     "aegisSS",
+     "kangaDE",
+     "morpeko",
+     "sinisB",
+     "rotomEB"
+    ],
+    "notes": {},
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 20 HP / 32 SpA / 14 Spe\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Silk Scarf\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n"
    }
   ]
  }
