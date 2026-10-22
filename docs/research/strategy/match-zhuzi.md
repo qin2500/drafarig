@@ -1,5 +1,19 @@
 # Anthony vs ZhuZi (Week 3): game plan
 
+> **Update 2026-10-22: the six changed.** The Showdown simulation picked a new six
+> (`docs/research/strategy/sim/zhuzi-sim-report.md`: 76.9% vs 24 plausible ZhuZi teams when played with the guide's
+> preview table, +5.6 over the best earlier six; re-run after a simulator bug fix). The changes:
+> - **Charizard:** 32 HP / 0 Speed.
+> - **Aegislash:** Kasib Berry, Shadow Sneak.
+> - **Kangaskhan:** Silk Scarf, Fake Out / Double-Edge / Sucker Punch / Protect.
+> - **Sinistcha:** Bold, Sitrus Berry, Life Dew.
+> - **Conkeldurr** replaces Rotom-Fan.
+>
+> `lib/guides/5v3.mjs` (what the app shows) is updated to that six, with recomputed calcs and the sim's preview table
+> (vs Metagross + Krookodile + Infernape: lead Kangaskhan + Sinistcha, Charizard + Conkeldurr behind; vs Slowking-G +
+> Umbreon: leave Charizard home). Sections 5–7 below still
+> describe the Week 1 sets: where a number differs, the guide and the report are current.
+
 2026-10-19.
 - **League:** sheet re-read 20:10 UTC. ZhuZi (seat 3): Metagross 20, Dragapult 15, Rotom-Wash 14, Oranguru 10, Krookodile 9, Infernape 7,
   Florges 7, Toxtricity 7, Galarian Slowking 6, Umbreon 5. Anthony: unchanged.

@@ -15,9 +15,12 @@ function side(x) {
   return { set: { species, item, ability, nature, moves: [], sp: { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0, ...(x.sp ?? {}) } }, state: { form: x.form ?? '' } };
 }
 let bad = 0, n = 0;
-for (const dir of ['lib/guides', 'lib/mocks']) {
-  let files = [];
-  try { files = readdirSync(new URL(dir, ROOT)).filter((f) => /^\d+v\d+\.mjs$/.test(f)); } catch { continue; }
+// optional: explicit guide / mock modules (paths from the repo root), e.g. a draft guide before it replaces lib/guides/5v3.mjs
+const only = process.argv.slice(2);
+const sources = only.length
+  ? only.map((p) => { const i = p.lastIndexOf('/'); return [p.slice(0, i), [p.slice(i + 1)]]; })
+  : ['lib/guides', 'lib/mocks'].map((dir) => { try { return [dir, readdirSync(new URL(dir, ROOT)).filter((f) => /^\d+v\d+\.mjs$/.test(f))]; } catch { return [dir, []]; } });
+for (const [dir, files] of sources) {
   for (const f of files) {
     const g = (await import(new URL(`${dir}/${f}`, ROOT))).default;
     for (const [i, c] of (g.calcs ?? []).entries()) {

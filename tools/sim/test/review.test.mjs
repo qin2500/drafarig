@@ -50,9 +50,11 @@ test('#3 preview: the AI never leads an uncovered Charizard into z03; the guide 
     const pv = p.notes.at(-1).preview;
     assert.ok(!pv.leads.includes('charizard') || pv.leads.some((x) => ['aegislash', 'kangaskhan', 'morpeko'].includes(x)), JSON.stringify(pv));
   }
-  const g = new HeuristicPlayer({ write() {}, async *[Symbol.asyncIterator]() {} }, { mine: A, theirs: Z1, seed: 1, notes: true, preview: 'guide' });
-  g.ensure(req);
-  g.preview(req);
+  // the guide's rows are written for its own six (guide.sets: c1, with Conkeldurr)
+  const req6 = { teamPreview: true, side: { id: 'p1', pokemon: setsFromText(guide.sets).map((s) => ({ ident: `p1: ${s.name}`, details: `${s.name}, L50`, condition: '100/100' })) } };
+  const g = new HeuristicPlayer({ write() {}, async *[Symbol.asyncIterator]() {} }, { mine: guide.sets, theirs: Z1, seed: 1, notes: true, preview: 'guide' });
+  g.ensure(req6);
+  g.preview(req6);
   const pv = g.notes.at(-1).preview;
   // the guide's own first row (vs Metagross + Krookodile + Infernape), whatever it currently says
   const row = guide.previews[0];

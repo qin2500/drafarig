@@ -1,0 +1,72 @@
+[
+ {
+  "if": "their 6 includes Mega Metagross + Krookodile + Infernape",
+  "bring4": [
+   "kangaskhan",
+   "sinistcha",
+   "charizard",
+   "conkeldurr"
+  ],
+  "lead": [
+   "kangaskhan",
+   "sinistcha"
+  ],
+  "note": "fitted: 124/156 in explore games"
+ },
+ {
+  "if": "their 6 includes Oranguru + Toxtricity",
+  "bring4": [
+   "charizard",
+   "kangaskhan",
+   "aegislash",
+   "sinistcha"
+  ],
+  "lead": [
+   "charizard",
+   "kangaskhan"
+  ],
+  "note": "fitted: 45/55 in explore games"
+ },
+ {
+  "if": "their 6 includes Galarian Slowking + Umbreon",
+  "bring4": [
+   "aegislash",
+   "kangaskhan",
+   "conkeldurr",
+   "sinistcha"
+  ],
+  "lead": [
+   "aegislash",
+   "kangaskhan"
+  ],
+  "note": "fitted: 14/20 in explore games"
+ },
+ {
+  "if": "their 6 includes Galarian Slowking",
+  "bring4": [
+   "charizard",
+   "kangaskhan",
+   "aegislash",
+   "sinistcha"
+  ],
+  "lead": [
+   "charizard",
+   "kangaskhan"
+  ],
+  "note": "fitted: 30/33 in explore games"
+ },
+ {
+  "if": "their 6 includes Dragapult + Umbreon",
+  "bring4": [
+   "charizard",
+   "kangaskhan",
+   "conkeldurr",
+   "sinistcha"
+  ],
+  "lead": [
+   "charizard",
+   "kangaskhan"
+  ],
+  "note": "fitted: 13/16 in explore games"
+ }
+]
