@@ -33,6 +33,8 @@ const list = (items, tag = 'ul', cls = '') => (items.length ? `<${tag} class="gd
 const goneSet = (P, found) => new Set([...found.removed, ...(found.ours?.removed ?? [])].map(base(P)));
 const goneTag = (P, found, ids) => (ids.some((id) => goneSet(P, found).has(base(P)(id))) ? ` <span class="small muted">${esc(G.gone)}</span>` : '');
 const short = (s) => (s.length > 32 ? `${s.slice(0, 30)}…` : s);
+// a preview row's condition as a chip label: rows all start "their 6 includes", so drop that before shortening
+const rowLabel = (s) => short(s.replace(/^their 6 includes\s+/i, ''));
 
 // ---------- workbench links ----------
 /** A guide calc as a link that shows the guide's stated range. */
@@ -82,7 +84,7 @@ export function card(P, ctx, st) {
   const p = g.previews[sel];
   const pLead = p ? g.leads.find((l) => l.ours.length === p.lead.length && l.ours.every((id) => p.lead.includes(id))) : null;
   const pOff = p ? goneTag(P, found, [...p.bring4, ...p.lead]) : '';
-  const previews = g.previews.length ? `<h4>${esc(G.previews)}</h4><div class="choices" role="group" aria-label="${esc(G.previews)}">${g.previews.map((x, i) => chipBtn(short(x.if), 'guide-preview', { i }, i === sel && st.lens === '4')).join('')}</div>
+  const previews = g.previews.length ? `<h4>${esc(G.previews)}</h4><div class="choices" role="group" aria-label="${esc(G.previews)}">${g.previews.map((x, i) => chipBtn(rowLabel(x.if), 'guide-preview', { i }, i === sel && st.lens === '4')).join('')}</div>
     ${p ? `<div class="gd-preview${pOff ? ' gd-gone' : ''}"><p class="small"><b>${esc(G.bring4)}</b> ${p.bring4.map((id) => esc(nm(P, id))).join(' · ')} &nbsp; <b>${esc(G.lead)}</b> ${p.lead.map((id) => esc(nm(P, id))).join(' + ')}${pOff}</p>
       ${p.note ? `<p class="small">${linkify(P, g, p.note)}</p>` : ''}${pLead?.t1 ? `<p class="small">T1 ${linkify(P, g, pLead.t1)}</p>` : ''}</div>` : ''}` : '';
   const fold = (title, n, body) => (body ? `<details class="gd-fold"><summary>${esc(title)}${n ? ` (${n})` : ''}</summary>${body}</details>` : '');
@@ -244,7 +246,7 @@ export function trayButton(P, m) {
   const p = g.previews[Math.min(st.preview ?? 0, Math.max(0, g.previews.length - 1))];
   const sheet = open ? `<div class="gd-sheet" role="dialog" aria-modal="false" aria-labelledby="gd-sheet-h"><div class="gd-sheet-in"><p class="gd-sheet-top"><b id="gd-sheet-h">${esc(G.head(g.coach))}</b> ${btn('×', 'guide-sheet', { key: '' }, { cls: 'wb-x', aria: G.close })}</p>
     ${g.remember.length ? `<ol class="rsns gd-remember">${g.remember.map((x) => `<li>${linkify(P, g, x)}</li>`).join('')}</ol>` : ''}
-    ${p ? `<p class="small"><b>${esc(short(p.if))}</b>: ${esc(G.bring4)} ${p.bring4.map((id) => esc(nm(P, id))).join(' · ')}; ${esc(G.lead)} ${p.lead.map((id) => esc(nm(P, id))).join(' + ')}</p>${p.note ? `<p class="small">${linkify(P, g, p.note)}</p>` : ''}` : ''}</div></div>` : '';
+    ${p ? `<p class="small"><b>${esc(rowLabel(p.if))}</b>: ${esc(G.bring4)} ${p.bring4.map((id) => esc(nm(P, id))).join(' · ')}; ${esc(G.lead)} ${p.lead.map((id) => esc(nm(P, id))).join(' + ')}</p>${p.note ? `<p class="small">${linkify(P, g, p.note)}</p>` : ''}` : ''}</div></div>` : '';
   return `<button type="button" class="gd-fab" data-pa="guide-sheet" data-key="${esc(key)}" aria-expanded="${open}">${esc(G.trayBtn)}</button>${sheet}`;
 }
 
