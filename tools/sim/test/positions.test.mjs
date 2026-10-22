@@ -109,8 +109,11 @@ test('Stance Change: Aegislash takes far more from Foul Play in Blade form than 
   assert.ok(blade.max > 1.5 * shield.max, `${JSON.stringify({ shield, blade })}`);
 });
 
-test('Foul Play avoidance: Aegislash mostly shields or stays out of Umbreon\'s Foul Play range', () => {
-  const r = position({ mine: A, theirs: team('z09'), us: ['aegislash', 'charizard'], them: ['umbreon', 'metagross'], mega: ['p1:charizard', 'p2:metagross'], field: { weather: 'Sun' }, bench: ['kangaskhan', 'sinistcha'] });
+// Foul Play only punishes a Blade-form Aegislash, i.e. when Aegislash moves BEFORE Umbreon. Without Trick Room the faster
+// Umbreon (85) hits it in Shield form first, so attacking is fine; under Trick Room Aegislash (72) moves first and is hit in
+// Blade form. (This test used to assert avoidance without Trick Room and only passed through a damage-cache leak.)
+test('Foul Play avoidance: under Trick Room Aegislash mostly shields instead of attacking into Umbreon', () => {
+  const r = position({ mine: A, theirs: team('z09'), us: ['aegislash', 'charizard'], them: ['umbreon', 'metagross'], mega: ['p1:charizard', 'p2:metagross'], field: { weather: 'Sun', tr: 3 }, bench: ['kangaskhan', 'sinistcha'] });
   const attacks = r.pOf(0, (a) => !!a.move && moveOf(a.move).category !== 'Status');
   assert.ok(attacks <= 0.6, `Aegislash attacks p ${attacks.toFixed(2)}${why(r)}`);
 });

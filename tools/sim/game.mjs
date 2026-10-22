@@ -1,7 +1,7 @@
 // One headless Champions Reg M-C doubles game between two players (heuristic or Showdown's random), deterministic per seed.
 import { PS, RandomPlayerAI, packTeam, FORMAT, toID, setsFromText, moveOf, PROTECTS, SPREAD } from './ai/data.mjs';
 import { HeuristicPlayer } from './ai/player.mjs';
-import { calcStats } from './ai/engine.mjs';
+import { calcStats, clearDamageCache } from './ai/engine.mjs';
 
 const spreadUsers = (sets) => new Set(sets.filter((s) => s.moves.some((id) => SPREAD.has(moveOf(id).target) && moveOf(id).category !== 'Status')).map((s) => s.species));
 const rockUsers = (sets) => sets.some((s) => s.moves.some((id) => moveOf(id).type === 'Rock' && SPREAD.has(moveOf(id).target) && moveOf(id).category !== 'Status'));
@@ -15,6 +15,7 @@ const rockUsers = (sets) => sets.some((s) => s.moves.some((id) => moveOf(id).typ
  */
 export async function playGame(p1, p2, seed, { keepLog = false, notes = false, maxTurns = 60 } = {}) {
   const refusals0 = { ...calcStats.refusals }; // games run one at a time per worker, so the difference is this game's
+  clearDamageCache(); // no cached damage may leak between games (different teams reuse the same slot keys)
   const streams = PS.getPlayerStreams(new PS.BattleStream());
   const mk = (side, other, stream, k) => (side.ai === 'random'
     ? new RandomPlayerAI(stream, { seed: [seed, k, 7, 11], mega: 0.8 })

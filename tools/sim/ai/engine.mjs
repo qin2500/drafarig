@@ -26,6 +26,11 @@ const clone = (S) => ({ mons: Object.fromEntries(Object.entries(S.mons).map(([k,
 
 // ---------- damage (lib/calc, cached) ----------
 const dmgCache = new Map();
+/** Cleared at the start of every game: keys name Pokémon by slot / species, so entries must not outlive one game. */
+export const clearDamageCache = () => dmgCache.clear();
+// the set itself is part of the key (two sets of one species, e.g. Scarf vs Life Orb Krookodile, must not share entries)
+const setIds = new WeakMap();
+const setId = (s) => { let k = setIds.get(s); if (!k) { k = JSON.stringify([s.species, s.item, s.ability, s.nature, s.sp ?? s.evs, s.moves]); setIds.set(s, k); } return k; };
 export const calcStats = { calls: 0, hits: 0, refusals: {} };
 const bucket = (hp) => (hp > 0.5 ? 100 : hp > 1 / 3 ? 50 : Math.max(1, Math.round(hp * 100)));
 /** Damage of one hit as fractions of the defender's max HP: { min, max } (0 when immune / no damage). */
@@ -33,7 +38,7 @@ export function damage(S, a, d, moveId, { spread = false, hh = false } = {}) {
   const mv = moveOf(moveId);
   const att = { ...a, form: a.set.species === 'aegislash' && mv.category !== 'Status' ? 'blade' : a.form };
   const ds = S.side[d.side];
-  const key = `${a.key}|${att.mega}|${JSON.stringify(att.boosts)}|${att.status}|${att.form}|${att.itemGone}|${bucket(a.hp)}|${d.key}|${d.mega}|${JSON.stringify(d.boosts)}|${d.form}|${d.itemGone}|${d.status}|${bucket(d.hp)}|${moveId}|${S.field.weather}|${S.field.terrain}|${ds.reflect > 0}|${ds.lightScreen > 0}|${ds.auroraVeil > 0}|${spread}|${hh}`;
+  const key = `${setId(a.set)}|${setId(d.set)}|${a.key}|${att.mega}|${JSON.stringify(att.boosts)}|${att.status}|${att.form}|${att.itemGone}|${bucket(a.hp)}|${d.key}|${d.mega}|${JSON.stringify(d.boosts)}|${d.form}|${d.itemGone}|${d.status}|${bucket(d.hp)}|${moveId}|${S.field.weather}|${S.field.terrain}|${ds.reflect > 0}|${ds.lightScreen > 0}|${ds.auroraVeil > 0}|${spread}|${hh}`;
   calcStats.calls++;
   if (dmgCache.has(key)) { calcStats.hits++; return dmgCache.get(key); }
   const state = (m) => ({ mega: m.mega, boosts: m.boosts, status: ['brn', 'par', 'psn', 'tox', 'slp', 'frz'].includes(m.status) ? m.status : '', hpPct: bucket(m.hp), itemConsumed: m.itemGone, form: m.form ?? '' });
