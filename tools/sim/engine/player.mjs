@@ -18,7 +18,17 @@ const WEATHER = { sunnyday: 'Sun', desolateland: 'Sun', raindance: 'Rain', primo
 const TERRAIN = { electricterrain: 'Electric', grassyterrain: 'Grassy', psychicterrain: 'Psychic', mistyterrain: 'Misty' };
 const WIN = 6; // a won / lost game: in the heuristic value's units a full side is ~4-5; as a learned logit, p ~ 0.998
 
-export const ENGINE_DEFAULTS = { samples: 3, maxOurs: 10, maxTheirs: 10, weights: null, wide: false };
+export const ENGINE_DEFAULTS = { samples: 3, maxOurs: 10, maxTheirs: 10, weights: null, wide: false, depth: 1, top2: 3, samples2: 1, width2: 4, dice: 'random' };
+
+/**
+ * "Most likely" dice for a clone: the average damage roll, and every chance event (accuracy, crits, secondary effects,
+ * Protect streaks) resolved to its likelier outcome. Speed ties stay random. One such simulation stands for the expected
+ * outcome the way the heuristic's model does, with Showdown's exact mechanics.
+ */
+function meanDice(b) {
+  b.randomizer = function (baseDamage) { const tr = this.trunc; return tr(tr(baseDamage * 92.5) / 100); };
+  b.randomChance = function (numerator, denominator) { return this.forceRandomChance ?? numerator * 2 >= denominator; };
+}
 
 export class EnginePlayer extends HeuristicPlayer {
   /** opts: HeuristicPlayer's, plus { battle: () => live PS Battle, samples, maxOurs, maxTheirs, weights (file), record } */
@@ -72,17 +82,34 @@ export class EnginePlayer extends HeuristicPlayer {
       }
     }
     const B = sol.qs.slice(0, this.e.maxTheirs).map((x) => x.j);
-    // determinized starting positions (one per sample), each played against every cell
+    // determinized starting positions (one per sample), each played against every cell with the same dice seed
+    // (common random numbers: the cells of one sample differ by the choices, not by luck)
     const bases = [];
     for (let d = 0; d < this.e.samples; d++) bases.push(this.determinize(live));
     const M = A.map(() => B.map(() => 0));
     for (let d = 0; d < bases.length; d++) {
       for (let i = 0; i < A.length; i++) for (let k = 0; k < B.length; k++) {
-        M[i][k] += this.playCell(bases[d], S, A[i], B[k], [this.seedBase, T.turn, d, i * 64 + k]) / bases.length;
+        M[i][k] += this.playCell(bases[d], S, A[i], B[k], [this.seedBase, T.turn, d, 0]) / bases.length;
         this.stats.cells++;
       }
     }
-    const { p, q } = solveGame(M);
+    let { p, q } = solveGame(M);
+    // depth 2 on the main lines: our top rows × his top columns are re-scored by a second simulated turn (both sides'
+    // best candidates there, solved as its own small game), and the choice is re-solved among those rows
+    if (this.e.depth >= 2) {
+      const top = (w) => [...w.keys()].sort((a, b) => w[b] - w[a]).filter((x, n) => n === 0 || w[x] > 0.01).slice(0, this.e.top2);
+      const R = top(p), Cc = top(q);
+      const ns = Math.min(bases.length, this.e.samples2);
+      const M2 = R.map((i) => Cc.map((k) => {
+        let v = 0;
+        for (let d = 0; d < ns; d++) v += this.deepCell(bases[d], S, A[i], B[k], [this.seedBase, T.turn, d, 1]) / ns;
+        return v;
+      }));
+      const s2 = solveGame(M2);
+      p = A.map(() => 0); R.forEach((i, n) => { p[i] = s2.p[n]; });
+      q = B.map(() => 0); Cc.forEach((k, n) => { q[k] = s2.q[n]; });
+      this.stats.deep = (this.stats.deep ?? 0) + R.length * Cc.length * ns;
+    }
     // play the equilibrium mix (tiny probabilities pruned)
     const keep = p.map((x) => (x < 0.02 ? 0 : x)); const tot = keep.reduce((t, x) => t + x, 0) || 1;
     let u = this.r() * tot, pick = 0;
@@ -94,6 +121,8 @@ export class EnginePlayer extends HeuristicPlayer {
   }
 
   get seedBase() { return this._seed ??= Math.floor(this.r() * 2 ** 31); }
+  /** Whether sample d uses the most-likely dice (--dice mean: all; mixed: the first sample). */
+  meanDiceFor(d) { return this.e.dice === 'mean' || (this.e.dice === 'mixed' && d === 0); }
 
   /** The live battle as we may know it: a clone with his hidden information replaced by our beliefs (JSON). */
   determinize(live) {
@@ -144,12 +173,55 @@ export class EnginePlayer extends HeuristicPlayer {
   playCell(json, S0, ours, theirs, seed) {
     const b = PS.Battle.fromJSON(json);
     b.prng = new PS.PRNG(seed.map((x) => (x >>> 0) % 65536));
+    if (this.meanDiceFor(seed[2])) meanDice(b);
     const me = this.me, them = foe(me);
     const actsBefore = { [me]: b.getSide(me).active.map((p) => p && toID(p.baseSpecies.baseSpecies)), [them]: b.getSide(them).active.map((p) => p && toID(p.baseSpecies.baseSpecies)) };
     const ok1 = b.choose(me, this.cloneChoice(b, me, ours)) || b.choose(me, 'default');
     const ok2 = b.choose(them, this.cloneChoice(b, them, theirs)) || b.choose(them, 'default');
     if (!ok1 || !ok2) this.stats.fallbacks++;
     return this.leaf(b, S0, { [me]: ours, [them]: theirs }, actsBefore);
+  }
+
+  /**
+   * Depth 2: play the cell's turn, take forced replacements by Showdown's default, then treat the next turn as its own
+   * small game: the heuristic's best few joints for both sides there (cheap settings), each pair played in Showdown and
+   * scored at the leaf; the value is that game's equilibrium value.
+   */
+  deepCell(json, S0, ours, theirs, seed) {
+    const me = this.me, them = foe(me);
+    const b = PS.Battle.fromJSON(json);
+    b.prng = new PS.PRNG(seed.map((x) => (x >>> 0) % 65536));
+    if (this.meanDiceFor(seed[2])) meanDice(b);
+    const actsBefore = {};
+    if (!(b.choose(me, this.cloneChoice(b, me, ours)) || b.choose(me, 'default'))) this.stats.fallbacks++;
+    if (!(b.choose(them, this.cloneChoice(b, them, theirs)) || b.choose(them, 'default'))) this.stats.fallbacks++;
+    for (let n = 0; n < 3 && !b.ended; n++) {
+      const pending = b.sides.filter((sd) => sd.activeRequest?.forceSwitch);
+      if (!pending.length) break;
+      for (const sd of pending) b.choose(sd.id, 'default');
+    }
+    if (b.ended) return this.leaf(b, S0, { [me]: ours, [them]: theirs }, actsBefore);
+    try {
+      const S1 = this.snapshotOf(b, S0);
+      const optsOf = (sideId) => [0, 1].map((pos) => {
+        const k = S1.active[sideId][pos];
+        if (!k) return [{ kind: 'pass', side: sideId, pos }];
+        if (sideId !== me) return optionsFor(S1, sideId, pos);
+        const act = b.getSide(me).activeRequest?.active?.[pos];
+        const bench = Object.values(S1.mons).filter((m) => m.side === me && m.brought && m.alive > 0 && m.pos < 0).map((m) => m.key);
+        return optionsFor(S1, me, pos, act ? { moves: act.moves, canMegaEvo: act.canMegaEvo, trapped: act.trapped || act.maybeTrapped, switches: bench, side: me } : null);
+      });
+      const o1 = optsOf(me), t1 = optsOf(them);
+      if (o1.some((x) => !x.length) || t1.some((x) => !x.length)) return this.leaf(b, S0, { [me]: ours, [them]: theirs }, actsBefore);
+      const sol = this.solve(S1, me, o1, t1, { topM: 3, topN: this.e.width2, topK: 2, iters: 1 });
+      const A1 = sol.final.slice(0, this.e.width2).map((x) => x.j), B1 = sol.qs.slice(0, this.e.width2).map((x) => x.j);
+      const json1 = JSON.stringify(b.toJSON());
+      const M1 = A1.map((a) => B1.map((c) => this.playCell(json1, S1, a, c, [seed[0], seed[1] + 1, seed[2], 2])));
+      const { p, q } = solveGame(M1);
+      return M1.reduce((t, row, i) => t + p[i] * row.reduce((u, x, k) => u + x * q[k], 0), 0);
+    } catch {
+      return this.leaf(b, S0, { [me]: ours, [them]: theirs }, actsBefore);
+    }
   }
 
   /**

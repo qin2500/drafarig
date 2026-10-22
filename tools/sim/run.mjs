@@ -59,7 +59,7 @@ export function taskList(a) {
   const persona = (ref, seed) => { const pp = a.persona === 'none' ? null : PERSONAS[ref]; return pp && unit(seed, 77) < (a.persona === 'all' ? 1 : pp[1]) ? pp[0] : null; };
   const side = (ref, ai, pre, seed, opp) => ({ ref, text: teamText(ref), ai, skill: Number(a[`${pre}skill`] ?? 0.85), style: a[`${pre}style`] ?? 'balanced', noise: Number(a[`${pre}noise`] ?? 0.07),
     usualBring: Number(a[`${pre}usual`] ?? 0), preview: opp ? 'ai' : a.preview ?? 'ai', persona: opp ? persona(ref, seed) : null,
-    sheets: a.sheets ?? 'open', samples: a.samples != null ? Number(a.samples) : null, weights: a[`${pre}weights`] ?? null, wide: !!a[`${pre}wide`], record: !!a.record });
+    sheets: a.sheets ?? 'open', samples: a.samples != null ? Number(a.samples) : null, weights: a[`${pre}weights`] ?? null, wide: !!a[`${pre}wide`], depth: a[`${pre}depth`] != null ? Number(a[`${pre}depth`]) : null, dice: a[`${pre}dice`] ?? null, record: !!a.record });
   // --sheets: what each AI believes about the other's sets (sheets.mjs); the battle itself always uses the real sets
   const sheets = a.sheets ?? 'open';
   const libs = sheets === 'closed' ? { theirs: library(CAND.opponent.teams.map((t) => ({ text: t.team, weight: t.weight }))), ours: library([{ text: teamText('a01') }]) } : {};
