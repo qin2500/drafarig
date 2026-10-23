@@ -36,11 +36,9 @@ solved; `--depth 2` re-scores the main lines with a second simulated turn; `--di
 - Validated: **depth 2, mean dice, 2 samples beats the noiseless heuristic 56.5% in mirror matches** (1,440 games).
 - The learned value (self-play logistic regression, `fit-value.mjs`) predicted slightly better but did not play better
   (−1.5 ± 3.0); the leaf stays the heuristic value. Depth 1 was not stronger than the heuristic (dice noise).
-- **Running now** (started 2026-10-23 10:23, `tools/sim/results/f1/`, script in the background session's tmp): engine on
-  both sides, closed sheets, 1,440 games each for c1, a17, c7, c2 with their tables (seed 1000000), then c1's preview
-  table refit under engine play (explore 1100000 → validate 1200000 vs the guide's table). When it finishes: update the
-  report (new section), the guide only if the recommendation changes, test (`npm test`, `verify_curated.mjs`, sim tests),
-  push, Kuma deploy, live smoke check.
+- **Final run done (2026-10-23):** engine on both sides, closed sheets, 1,440 games per six: c1 76.7%, c2 76.5% (tie),
+  c7 68.8% (−9.3 ± 3.2), a17 64.9% (−12.1 ± 3.2). The guide's preview table beat a re-fit one on fresh games (78.8% vs
+  72.5%) and stays. Report §6b; guide note updated; deployed via Kuma.
 
 ## Where things are
 

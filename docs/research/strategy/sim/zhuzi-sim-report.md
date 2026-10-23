@@ -10,6 +10,8 @@ in §5 as history only: they ran with the cache bug.*
 - **Bring this six ("c1"):** Charizard (32 HP / 0 Speed), Aegislash (Kasib Berry, Shadow Sneak), Kangaskhan (Silk Scarf:
   Fake Out / Double-Edge / Sucker Punch / Protect), Morpeko, Sinistcha (Bold, Sitrus), and **Conkeldurr in place of
   Rotom-Fan**. Sets in §1.
+- **Expert pilots confirm it** (§6b). With the search engine playing both sides (it beats the heuristic AI 56.5% in
+  mirror matches), c1 wins **76.7%** and beats a17 by **+12.1 ± 3.2**, and the Rotom-Fan version (c7) by +9.3.
 - **Closed team sheets (our league, best of 3) don't change the answer** (§6a). With species-only knowledge on both
   sides, c1 wins **78.5%** and beats a17 by **+8.6 ± 2.2**, a wider margin than with full information.
 - **Play it with the guide's preview table** (§6). The sim's estimate with that table and full information, on 2,880 fresh games:
@@ -241,6 +243,59 @@ The other rows were equal or slightly better as they are, so they stay.
 - Two dropped:
   - z05 (Trick Room + Imprison): 59/57.
   - z08 with the old row: 48/29. With the game-1 row above it is 81%.
+
+## 6b. Expert pilots: the search engine on both sides (round 10)
+
+Rounds 1–9 used the heuristic AI. Round 10 re-ran the deciding comparison with the search engine (`tools/sim/engine`,
+README there) piloting **both** sides:
+- each turn it plays the heuristic's candidate lines for real in Showdown, from a copy of the battle that hides what a
+  closed sheet hides (his unrevealed back two and unrevealed sets come from our beliefs);
+- it looks two turns ahead on the main lines (`--depth 2`), with most-likely dice, and solves each turn as a
+  simultaneous-move game;
+- in mirror matches it beats the noiseless heuristic **56.5%** of the time (1,440 games; fresh-seed confirmation 57.4%
+  of 960), so it is the stronger player.
+
+Setup: closed sheets, ZhuZi's personas, each six with its own fitted preview table (round 7), 1,440 games per six on
+the same seeds (1000000). About 1.5 s per decision. The runner's 120 s per-game timeout (raised to 900 s for engine
+runs afterwards) dropped 14 long games from c2 (1,426 of 1,440) and 21 from the c1 explore batch, a ~1% tilt toward
+short games; the paired comparisons only use seeds both sixes completed.
+
+| Six | Win rate (weighted) | vs c1 (paired) |
+|---|---|---|
+| **c1** | **76.7% ± 2.3** | — |
+| c2 (Stunfisk-Galar for Morpeko) | 76.5% | −0.4 ± 2.4 (tie) |
+| c7 (Rotom-Fan instead of Conkeldurr) | 68.8% | **−9.3 ± 3.2** |
+| a17 (Rotom-Fan, fast Charizard) | 64.9% | **−12.1 ± 3.2** |
+
+**With expert pilots c1's lead is wider than with the heuristic** (+12.1 vs a17, against +8.6 under the heuristic with
+closed sheets), and Conkeldurr is again the change that matters (c7: −9.3).
+
+Per team (c1 / a17), the matchups that decide it:
+- His likeliest teams: z01 87/83, z02 83/72, z03 78/85, z04 **82/30**, z06 83/85.
+- Where c1 gains most: Trick Room teams (z04 82/30, z16 88/55, z23 70/22) and z08, his anti-Charizard six (60/38).
+- Where c1 is weakest: z14 Scarf Rotom-Wash offense (47/45), z21 no-Krookodile goodstuffs (52/52), z15 Trick Room +
+  Fake Out (55/82, the one team where a17 is clearly better), z08 (60).
+
+c1 by his persona: calc 75%, tr 76%, rock 79%, chilly 93%. Brought: Kangaskhan and Sinistcha in every game, Charizard
+96%, Conkeldurr 67%, Aegislash 38%.
+
+**Verdict: the recommendation stands.** Bring c1 (Morpeko or Stunfisk-Galar in the sixth slot; a tie).
+
+**The preview table under expert play.** c1's table was re-fitted on 1,419 engine-vs-engine explore games (seeds
+1100000) and both tables were then played on 1,440 fresh games (seeds 1200000):
+
+| His six includes… | Guide's table | Re-fitted table |
+|---|---|---|
+| Mega Metagross + Krookodile + Infernape (n = 780) | **77%** | 69% (led Aegislash + Sinistcha) |
+| Oranguru + Toxtricity (300) | 75% | 76% (led Conkeldurr + Kangaskhan) |
+| Galarian Slowking + Umbreon, z08 (60) | **72%** | 65% |
+| Galarian Slowking, z07 / z19 (120) | **87%** | 78% |
+| Dragapult + Umbreon, z20 (60) | 95% | 92% |
+| no row (z09, z21: the AI's preview) | 67% | 68% |
+| **All (weighted)** | **78.8%** | 72.5% |
+
+The guide's table wins by **+5.3 ± 2.8** (paired): 1,419 explore games were too few to re-fit five rows, so the new
+fit chased noise. **The guide's table stays, now validated under expert play too.**
 
 ## 7. Per-choice reasoning (c1)
 
