@@ -18,7 +18,8 @@ const WEATHER = { sunnyday: 'Sun', desolateland: 'Sun', raindance: 'Rain', primo
 const TERRAIN = { electricterrain: 'Electric', grassyterrain: 'Grassy', psychicterrain: 'Psychic', mistyterrain: 'Misty' };
 const WIN = 6; // a won / lost game: in the heuristic value's units a full side is ~4-5; as a learned logit, p ~ 0.998
 
-export const ENGINE_DEFAULTS = { samples: 3, maxOurs: 10, maxTheirs: 10, weights: null, wide: false, depth: 1, top2: 3, samples2: 1, width2: 4, dice: 'random' };
+// defaults = the setting validated in mirror matches (README: depth 2, most-likely dice, 2 samples)
+export const ENGINE_DEFAULTS = { samples: 2, maxOurs: 10, maxTheirs: 10, weights: null, wide: false, depth: 2, top2: 3, samples2: 1, width2: 4, dice: 'mean' };
 
 /**
  * "Most likely" dice for a clone: the average damage roll, and every chance event (accuracy, crits, secondary effects,
