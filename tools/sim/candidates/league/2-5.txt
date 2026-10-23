@@ -1,0 +1,59 @@
+Spiritomb @ Roseli Berry
+Ability: Infiltrator
+Level: 50
+EVs: 31 HP / 11 Def / 24 SpD
+Relaxed Nature
+- Ally Switch
+- Snarl
+- Trick Room
+- Foul Play
+
+Ceruledge @ Colbur Berry
+Ability: Flash Fire
+Level: 50
+EVs: 31 HP / 25 Atk / 10 Def
+Adamant Nature
+- Bitter Blade
+- Swords Dance
+- Bulk Up
+- Shadow Sneak
+
+Milotic @ Sitrus Berry
+Ability: Competitive
+Level: 50
+EVs: 32 HP / 32 Def / 2 SpA
+Bold Nature
+- Muddy Water
+- Protect
+- Coil
+- Ice Beam
+
+Gholdengo @ Life Orb
+Ability: Good as Gold
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Modest Nature
+- Protect
+- Shadow Ball
+- Nasty Plot
+- Make It Rain
+
+Ninetales-Alola @ Light Clay
+Ability: Snow Warning
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Blizzard
+- Protect
+- Aurora Veil
+- Freeze-Dry
+
+Rillaboom @ Miracle Seed
+Ability: Grassy Surge
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Wood Hammer
+- Grassy Glide
+- Fake Out
+- High Horsepower

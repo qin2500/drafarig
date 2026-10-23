@@ -1,0 +1,59 @@
+Mr. Rime @ Sitrus Berry
+Ability: Screen Cleaner
+Level: 50
+EVs: 32 HP / 2 Def / 32 SpA
+Quiet Nature
+- Protect
+- Fake Out
+- Expanding Force
+- Freeze-Dry
+
+Rotom-Mow @ Choice Scarf
+Ability: Levitate
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Thunderbolt
+- Leaf Storm
+- Volt Switch
+- Electroweb
+
+Farigiraf @ Colbur Berry
+Ability: Armor Tail
+Level: 50
+EVs: 32 HP / 2 SpA / 32 SpD
+Sassy Nature
+- Trick Room
+- Helping Hand
+- Thunderbolt
+- Psychic
+
+Mimikyu @ Life Orb
+Ability: Disguise
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Play Rough
+- Shadow Sneak
+- Shadow Claw
+- Wood Hammer
+
+Golisopod @ Eject Button
+Ability: Emergency Exit
+Level: 50
+EVs: 32 HP / 32 Atk / 2 SpD
+Adamant Nature
+- First Impression
+- U-turn
+- Wide Guard
+- Aqua Jet
+
+Torkoal @ Charcoal
+Ability: Drought
+Level: 50
+EVs: 32 HP / 32 SpA / 2 SpD
+Quiet Nature
+- Protect
+- Weather Ball
+- Eruption
+- Heat Wave

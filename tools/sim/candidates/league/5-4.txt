@@ -1,0 +1,59 @@
+Charizard @ Life Orb
+Ability: Solar Power
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Ancient Power
+- Heat Wave
+- Overheat
+- Weather Ball
+
+Conkeldurr @ Black Belt
+Ability: Iron Fist
+Level: 50
+EVs: 32 HP / 32 Atk / 2 SpD
+Brave Nature
+- Knock Off
+- Mach Punch
+- Drain Punch
+- Ice Punch
+
+Sinistcha @ Colbur Berry
+Ability: Hospitality
+Level: 50
+EVs: 32 HP / 14 Def / 20 SpD
+Bold Nature
+- Life Dew
+- Protect
+- Shadow Ball
+- Rage Powder
+
+Aegislash @ Focus Sash
+Ability: Stance Change
+Level: 50
+EVs: 32 HP / 32 Atk / 2 SpD
+Adamant Nature
+- Iron Head
+- Wide Guard
+- Sacred Sword
+- Poltergeist
+
+Kangaskhan @ Silk Scarf
+Ability: Scrappy
+Level: 50
+EVs: 32 HP / 32 Atk / 2 Def
+Adamant Nature
+- Fake Out
+- 
+- Last Resort
+- Double-Edge
+
+Pelipper @ Sitrus Berry
+Ability: Drizzle
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Wide Guard
+- Hurricane
+- Tailwind
+- Weather Ball

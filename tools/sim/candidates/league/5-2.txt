@@ -1,0 +1,59 @@
+Conkeldurr @ Black Belt
+Ability: Iron Fist
+Level: 50
+EVs: 32 HP / 32 Atk / 2 SpD
+Brave Nature
+- Mach Punch
+- Knock Off
+- Thunder Punch
+- Drain Punch
+
+Charizard @ Choice Scarf
+Ability: Solar Power
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Ancient Power
+- Heat Wave
+- Overheat
+- Weather Ball
+
+Sinistcha @ Kasib Berry
+Ability: Hospitality
+Level: 50
+EVs: 32 HP / 14 Def / 20 SpD
+Bold Nature
+- Rage Powder
+- Trick Room
+- Protect
+- Life Dew
+
+Kangaskhan @ Silk Scarf
+Ability: Scrappy
+Level: 50
+EVs: 32 HP / 32 Atk / 2 Def
+Adamant Nature
+- Last Resort
+- Double-Edge
+- 
+- Hammer Arm
+
+Pelipper @ Sitrus Berry
+Ability: Drizzle
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Modest Nature
+- Hurricane
+- Weather Ball
+- Wide Guard
+- Tailwind
+
+Morpeko @ Life Orb
+Ability: Hunger Switch
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Electroweb
+- Fake Out
+- Protect
+- Aura Wheel

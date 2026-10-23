@@ -1,0 +1,59 @@
+Aegislash @ Focus Sash
+Ability: Stance Change
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Adamant Nature
+- Shadow Sneak
+- Sacred Sword
+- Iron Head
+- Poltergeist
+
+Kangaskhan @ Silk Scarf
+Ability: Scrappy
+Level: 50
+EVs: 32 HP / 32 Atk / 2 SpD
+Brave Nature
+- 
+- Fake Out
+- Ice Punch
+- Last Resort
+
+Pelipper @ Choice Scarf
+Ability: Drizzle
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Hurricane
+- Muddy Water
+- Tailwind
+- Weather Ball
+
+Sinistcha @ Colbur Berry
+Ability: Hospitality
+Level: 50
+EVs: 32 HP / 14 Def / 20 SpD
+Bold Nature
+- Protect
+- Matcha Gotcha
+- Trick Room
+- Rage Powder
+
+Charizard @ Life Orb
+Ability: Solar Power
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Modest Nature
+- Ancient Power
+- Heat Wave
+- Dragon Pulse
+- Weather Ball
+
+Conkeldurr @ Expert Belt
+Ability: Iron Fist
+Level: 50
+EVs: 32 HP / 32 Atk / 2 SpD
+Brave Nature
+- Ice Punch
+- Drain Punch
+- Knock Off
+- Mach Punch

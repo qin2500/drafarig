@@ -1,0 +1,59 @@
+Archaludon @ Leftovers
+Ability: Stamina
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Flash Cannon
+- Protect
+- Electro Shot
+- Dragon Pulse
+
+Araquanid @ Mystic Water
+Ability: Water Bubble
+Level: 50
+EVs: 32 HP / 1 Atk / 32 Def / 1 SpD
+Careful Nature
+- Wide Guard
+- Liquidation
+- Leech Life
+- Protect
+
+Ariados @ Sitrus Berry
+Ability: Insomnia
+Level: 50
+EVs: 32 HP / 32 Def / 2 SpD
+Impish Nature
+- Protect
+- Electroweb
+- String Shot
+- Rage Powder
+
+Pikachu @ Light Ball
+Ability: Lightning Rod
+Level: 50
+EVs: 1 HP / 32 Atk / 2 Def / 31 Spe
+Jolly Nature
+- Protect
+- Volt Tackle
+- Fake Out
+- Rising Voltage
+
+Starmie @ Life Orb
+Ability: Natural Cure
+Level: 50
+EVs: 25 HP / 26 SpA / 15 Spe
+Modest Nature
+- Hydro Pump
+- Expanding Force
+- Protect
+- Ice Beam
+
+Gliscor @ Grassy Seed
+Ability: Hyper Cutter
+Level: 50
+EVs: 30 HP / 15 Atk / 21 SpD
+Adamant Nature
+- Protect
+- Acrobatics
+- Dual Wingbeat
+- Tailwind

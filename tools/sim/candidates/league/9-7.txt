@@ -1,0 +1,59 @@
+Kingambit @ Chople Berry
+Ability: Defiant
+Level: 50
+EVs: 32 HP / 32 Atk / 2 SpD
+Adamant Nature
+- Low Kick
+- Swords Dance
+- Iron Head
+- Kowtow Cleave
+
+Whimsicott @ Focus Sash
+Ability: Prankster
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Tailwind
+- Protect
+- Moonblast
+- Sunny Day
+
+Zoroark-Hisui @ Choice Scarf
+Ability: Illusion
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Hyper Voice
+- Shadow Ball
+- Bitter Malice
+- Will-O-Wisp
+
+Malamar @ Roseli Berry
+Ability: Contrary
+Level: 50
+EVs: 32 HP / 2 Atk / 32 Spe
+Jolly Nature
+- Superpower
+- Protect
+- Skill Swap
+- Knock Off
+
+Sableye @ Sitrus Berry
+Ability: Prankster
+Level: 50
+EVs: 32 HP / 9 Def / 25 SpD
+Careful Nature
+- Reflect
+- Light Screen
+- Encore
+- Rain Dance
+
+Audino @ Mental Herb
+Ability: Healer
+Level: 50
+EVs: 32 HP / 9 Def / 25 SpD
+Sassy Nature
+- Trick Room
+- Protect
+- Simple Beam
+- Heal Pulse

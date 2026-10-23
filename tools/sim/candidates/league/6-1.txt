@@ -1,0 +1,59 @@
+Sneasler @ White Herb
+Ability: Unburden
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Adamant Nature
+- Protect
+- Coaching
+- Dire Claw
+- Close Combat
+
+Skeledirge @ Sitrus Berry
+Ability: Unaware
+Level: 50
+EVs: 27 HP / 13 Def / 17 SpA / 9 SpD
+Quiet Nature
+- Will-O-Wisp
+- Shadow Ball
+- Torch Song
+- Protect
+
+Serperior @ Leftovers
+Ability: Contrary
+Level: 50
+EVs: 1 HP / 32 SpA / 1 SpD / 32 Spe
+Modest Nature
+- Giga Drain
+- Leaf Storm
+- Dragon Pulse
+- Glare
+
+Excadrill @ Life Orb
+Ability: Sand Rush
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Adamant Nature
+- High Horsepower
+- Rock Slide
+- Iron Head
+- Protect
+
+Salamence @ Choice Scarf
+Ability: Intimidate
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Modest Nature
+- Draco Meteor
+- Protect
+- Flamethrower
+- Tailwind
+
+Samurott-Hisui @ Focus Sash
+Ability: Sharpness
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Aqua Cutter
+- Ceaseless Edge
+- Sacred Sword
+- Night Slash

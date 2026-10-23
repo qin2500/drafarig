@@ -1,0 +1,59 @@
+Staraptor @ Choice Scarf
+Ability: Intimidate
+Level: 50
+EVs: 32 HP / 2 Atk / 32 Spe
+Jolly Nature
+- Dual Wingbeat
+- Brave Bird
+- U-turn
+- Final Gambit
+
+Tsareena @ Focus Sash
+Ability: Queenly Majesty
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Triple Axel
+- Trop Kick
+- High Jump Kick
+- Low Kick
+
+Grimmsnarl @ Light Clay
+Ability: Prankster
+Level: 50
+EVs: 32 HP / 19 Def / 15 SpD
+Careful Nature
+- Light Screen
+- Reflect
+- Parting Shot
+- Spirit Break
+
+Mamoswine @ Life Orb
+Ability: Oblivious
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Adamant Nature
+- Ice Shard
+- High Horsepower
+- Protect
+- Icicle Crash
+
+Empoleon @ Chople Berry
+Ability: Competitive
+Level: 50
+EVs: 30 HP / 31 SpA / 5 Spe
+Modest Nature
+- Yawn
+- Protect
+- Ice Beam
+- Icy Wind
+
+Basculegion-F @ Rindo Berry
+Ability: Swift Swim
+Level: 50
+EVs: 1 Def / 32 SpA / 1 SpD / 32 Spe
+Modest Nature
+- Shadow Ball
+- Muddy Water
+- Ice Beam
+- Protect

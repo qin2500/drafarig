@@ -1,0 +1,59 @@
+Rotom-Wash @ Choice Scarf
+Ability: Levitate
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Hydro Pump
+- Volt Switch
+- Protect
+- Will-O-Wisp
+
+Metagross @ Life Orb
+Ability: Clear Body
+Level: 50
+EVs: 32 HP / 32 Atk / 2 SpD
+Adamant Nature
+- Psychic Fangs
+- Protect
+- Iron Head
+- Steel Roller
+
+Slowking-Galar @ Colbur Berry
+Ability: Regenerator
+Level: 50
+EVs: 32 HP / 2 SpA / 32 SpD
+Sassy Nature
+- Sludge Bomb
+- Protect
+- Expanding Force
+- Trick Room
+
+Oranguru @ Mental Herb
+Ability: Inner Focus
+Level: 50
+EVs: 32 HP / 2 SpA / 32 SpD
+Sassy Nature
+- Instruct
+- Expanding Force
+- Trick Room
+- Encore
+
+Umbreon @ Leftovers
+Ability: Inner Focus
+Level: 50
+EVs: 32 HP / 24 Def / 10 SpD
+Sassy Nature
+- Foul Play
+- Moonlight
+- Yawn
+- Snarl
+
+Florges @ Fairy Feather
+Ability: Flower Veil
+Level: 50
+EVs: 32 HP / 32 SpA / 2 SpD
+Modest Nature
+- Draining Kiss
+- Protect
+- Moonblast
+- Calm Mind

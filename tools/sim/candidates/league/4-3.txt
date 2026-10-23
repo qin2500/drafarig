@@ -1,0 +1,59 @@
+Farigiraf @ Grassy Seed
+Ability: Armor Tail
+Level: 50
+EVs: 27 HP / 20 Def / 19 SpD
+Bold Nature
+- Protect
+- Helping Hand
+- Psychic
+- Thunderbolt
+
+Incineroar @ Sitrus Berry
+Ability: Intimidate
+Level: 50
+EVs: 32 HP / 14 Def / 20 SpD
+Careful Nature
+- Throat Chop
+- Flare Blitz
+- Darkest Lariat
+- Fake Out
+
+Rotom-Mow @ Choice Scarf
+Ability: Levitate
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Will-O-Wisp
+- Protect
+- Electroweb
+- Volt Switch
+
+Golisopod @ Life Orb
+Ability: Emergency Exit
+Level: 50
+EVs: 32 HP / 32 Atk / 2 SpD
+Brave Nature
+- Aqua Jet
+- Liquidation
+- Wide Guard
+- Leech Life
+
+Mimikyu @ White Herb
+Ability: Disguise
+Level: 50
+EVs: 1 HP / 32 Atk / 1 Def / 32 Spe
+Adamant Nature
+- Play Rough
+- Wood Hammer
+- Trick Room
+- Shadow Claw
+
+Torkoal @ Charcoal
+Ability: Drought
+Level: 50
+EVs: 32 HP / 32 SpA / 2 SpD
+Quiet Nature
+- Eruption
+- Earth Power
+- Weather Ball
+- Heat Wave

@@ -1,0 +1,59 @@
+Rotom-Mow @ Choice Scarf
+Ability: Levitate
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Volt Switch
+- Leaf Storm
+- Thunderbolt
+- Electroweb
+
+Farigiraf @ Sitrus Berry
+Ability: Armor Tail
+Level: 50
+EVs: 32 HP / 2 SpA / 32 SpD
+Sassy Nature
+- Trick Room
+- Protect
+- Thunderbolt
+- Psychic
+
+Golisopod @ Life Orb
+Ability: Emergency Exit
+Level: 50
+EVs: 32 HP / 32 Atk / 2 Def
+Adamant Nature
+- Wide Guard
+- U-turn
+- Liquidation
+- Leech Life
+
+Torkoal @ Charcoal
+Ability: Drought
+Level: 50
+EVs: 32 HP / 32 SpA / 2 SpD
+Quiet Nature
+- Heat Wave
+- Weather Ball
+- Helping Hand
+- Earth Power
+
+Incineroar @ Rocky Helmet
+Ability: Intimidate
+Level: 50
+EVs: 32 HP / 32 Atk / 2 SpD
+Adamant Nature
+- Fake Out
+- Flare Blitz
+- Throat Chop
+- Parting Shot
+
+Mimikyu @ White Herb
+Ability: Disguise
+Level: 50
+EVs: 1 HP / 32 Atk / 1 Def / 32 Spe
+Adamant Nature
+- Shadow Claw
+- Play Rough
+- Shadow Sneak
+- Trick Room

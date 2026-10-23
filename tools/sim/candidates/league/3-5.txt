@@ -1,0 +1,59 @@
+Rotom-Wash @ Sitrus Berry
+Ability: Levitate
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Hydro Pump
+- Will-O-Wisp
+- Electroweb
+- Volt Switch
+
+Florges @ Leftovers
+Ability: Flower Veil
+Level: 50
+EVs: 32 HP / 32 SpA / 2 SpD
+Modest Nature
+- Dazzling Gleam
+- Protect
+- Moonblast
+- Draining Kiss
+
+Dragapult @ Life Orb
+Ability: Clear Body
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Shadow Ball
+- Will-O-Wisp
+- Protect
+- Draco Meteor
+
+Slowking-Galar @ Eject Button
+Ability: Regenerator
+Level: 50
+EVs: 32 HP / 2 SpA / 32 SpD
+Sassy Nature
+- Psychic
+- Protect
+- Chilly Reception
+- Trick Room
+
+Infernape @ Focus Sash
+Ability: Blaze
+Level: 50
+EVs: 2 Atk / 32 SpA / 32 Spe
+Hasty Nature
+- Aura Sphere
+- Fake Out
+- Close Combat
+- Protect
+
+Metagross @ Normal Gem
+Ability: Clear Body
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Iron Head
+- Psychic Fangs
+- Hammer Arm
+- Steel Roller

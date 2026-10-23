@@ -1,0 +1,59 @@
+Empoleon @ Chople Berry
+Ability: Competitive
+Level: 50
+EVs: 32 HP / 32 SpA / 2 SpD
+Modest Nature
+- Ice Beam
+- Hydro Pump
+- Protect
+- Icy Wind
+
+Jolteon @ Focus Sash
+Ability: Volt Absorb
+Level: 50
+EVs: 5 HP / 32 SpA / 29 Spe
+Modest Nature
+- Protect
+- Electroweb
+- Discharge
+- Weather Ball
+
+Volcarona @ Sitrus Berry
+Ability: Flame Body
+Level: 50
+EVs: 21 HP / 15 Def / 5 SpA / 1 SpD / 24 Spe
+Modest Nature
+- Overheat
+- Protect
+- Rage Powder
+- Struggle Bug
+
+Staraptor @ Choice Scarf
+Ability: Intimidate
+Level: 50
+EVs: 32 HP / 2 Atk / 32 Spe
+Jolly Nature
+- Brave Bird
+- Dual Wingbeat
+- U-turn
+- Final Gambit
+
+Mamoswine @ Life Orb
+Ability: Oblivious
+Level: 50
+EVs: 32 Atk / 2 SpD / 32 Spe
+Jolly Nature
+- Icicle Crash
+- High Horsepower
+- Protect
+- Ice Shard
+
+Grimmsnarl @ Light Clay
+Ability: Prankster
+Level: 50
+EVs: 32 HP / 19 Def / 15 SpD
+Careful Nature
+- Spirit Break
+- Reflect
+- Parting Shot
+- Light Screen

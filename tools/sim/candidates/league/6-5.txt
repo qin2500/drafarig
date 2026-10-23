@@ -1,0 +1,59 @@
+Tyranitar @ Chople Berry
+Ability: Sand Stream
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Knock Off
+- Superpower
+- Rock Slide
+- Low Kick
+
+Salamence @ Life Orb
+Ability: Intimidate
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Modest Nature
+- Heat Wave
+- Draco Meteor
+- Protect
+- Air Slash
+
+Tinkaton @ Occa Berry
+Ability: Mold Breaker
+Level: 50
+EVs: 32 Atk / 32 Def / 2 SpD
+Brave Nature
+- Play Rough
+- Gigaton Hammer
+- Fake Out
+- Feint
+
+Samurott-Hisui @ Black Glasses
+Ability: Sharpness
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Sacred Sword
+- Ceaseless Edge
+- Sucker Punch
+- Aqua Cutter
+
+Excadrill @ Focus Sash
+Ability: Sand Rush
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Adamant Nature
+- Rock Slide
+- Protect
+- Iron Head
+- High Horsepower
+
+Serperior @ Leftovers
+Ability: Contrary
+Level: 50
+EVs: 1 HP / 32 SpA / 1 SpD / 32 Spe
+Modest Nature
+- Protect
+- Leaf Storm
+- Glare
+- Dragon Pulse

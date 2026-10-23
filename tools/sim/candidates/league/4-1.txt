@@ -1,0 +1,59 @@
+Rotom-Mow @ Sitrus Berry
+Ability: Levitate
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Electroweb
+- Thunderbolt
+- Leaf Storm
+- Volt Switch
+
+Torkoal @ Charcoal
+Ability: Drought
+Level: 50
+EVs: 32 HP / 32 SpA / 2 SpD
+Quiet Nature
+- Protect
+- Heat Wave
+- Weather Ball
+- Eruption
+
+Mr. Rime @ Choice Scarf
+Ability: Screen Cleaner
+Level: 50
+EVs: 32 HP / 2 Def / 32 SpA
+Quiet Nature
+- Fake Out
+- Freeze-Dry
+- Expanding Force
+- Icy Wind
+
+Farigiraf @ Mental Herb
+Ability: Armor Tail
+Level: 50
+EVs: 32 HP / 2 SpA / 32 SpD
+Sassy Nature
+- Thunderbolt
+- Trick Room
+- Helping Hand
+- Protect
+
+Golisopod @ Eject Button
+Ability: Emergency Exit
+Level: 50
+EVs: 32 HP / 32 Atk / 2 SpD
+Adamant Nature
+- Leech Life
+- First Impression
+- Aqua Jet
+- U-turn
+
+Incineroar @ Passho Berry
+Ability: Intimidate
+Level: 50
+EVs: 32 HP / 14 Def / 20 SpD
+Careful Nature
+- Throat Chop
+- Parting Shot
+- Darkest Lariat
+- Flare Blitz

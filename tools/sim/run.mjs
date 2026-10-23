@@ -17,7 +17,7 @@ import { Worker, isMainThread, parentPort } from 'node:worker_threads';
 import { cpus } from 'node:os';
 import { readFileSync, existsSync, appendFileSync, mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
-import { beliefText, library } from './sheets.mjs';
+import { beliefText, library, usageLibrary } from './sheets.mjs';
 
 const CAND = JSON.parse(readFileSync(new URL('./candidates/zhuzi.json', import.meta.url), 'utf8'));
 const teamText = (ref) => {
@@ -59,10 +59,14 @@ export function taskList(a) {
   const persona = (ref, seed) => { const pp = a.persona === 'none' ? null : PERSONAS[ref]; return pp && unit(seed, 77) < (a.persona === 'all' ? 1 : pp[1]) ? pp[0] : null; };
   const side = (ref, ai, pre, seed, opp) => ({ ref, text: teamText(ref), ai, skill: Number(a[`${pre}skill`] ?? 0.85), style: a[`${pre}style`] ?? 'balanced', noise: Number(a[`${pre}noise`] ?? 0.07),
     usualBring: Number(a[`${pre}usual`] ?? 0), preview: opp ? 'ai' : a.preview ?? 'ai', persona: opp ? persona(ref, seed) : null,
-    sheets: a.sheets ?? 'open', samples: a.samples != null ? Number(a.samples) : null, weights: a[`${pre}weights`] ?? null, wide: !!a[`${pre}wide`], depth: a[`${pre}depth`] != null ? Number(a[`${pre}depth`]) : null, dice: a[`${pre}dice`] ?? null, record: !!a.record });
+    sheets: a.sheets ?? 'open', samples: a.samples != null ? Number(a.samples) : null, weights: a[`${pre}weights`] ?? null, wide: !!a[`${pre}wide`], depth: a[`${pre}depth`] != null ? Number(a[`${pre}depth`]) : null, dice: a[`${pre}dice`] ?? null, net: a[`${pre}net`] ?? null, record: !!a.record });
   // --sheets: what each AI believes about the other's sets (sheets.mjs); the battle itself always uses the real sets
   const sheets = a.sheets ?? 'open';
-  const libs = sheets === 'closed' ? { theirs: library(CAND.opponent.teams.map((t) => ({ text: t.team, weight: t.weight }))), ours: library([{ text: teamText('a01') }]) } : {};
+  // closed-sheet beliefs: ZhuZi's candidate sets / our Week 1 sets (the Week 3 study), or with --beliefs usage the
+  // format's most common set for every species (league-wide training and any other opponent)
+  const usageLib = sheets === 'closed' && a.beliefs === 'usage' ? usageLibrary() : null;
+  const libs = usageLib ? { theirs: usageLib, ours: usageLib }
+    : sheets === 'closed' ? { theirs: library(CAND.opponent.teams.map((t) => ({ text: t.team, weight: t.weight }))), ours: library([{ text: teamText('a01') }]) } : {};
   return Array.from({ length: n }, (_, i) => {
     const us = side(ours[i % ours.length], a['ours-ai'] ?? 'heuristic', '', base + i, false), them = side(theirs[i % theirs.length], a['theirs-ai'] ?? 'heuristic', 'opp-', base + i, true);
     if (sheets !== 'open') { us.belief = beliefText(them.text, sheets, libs.theirs); them.belief = beliefText(us.text, sheets, libs.ours); }

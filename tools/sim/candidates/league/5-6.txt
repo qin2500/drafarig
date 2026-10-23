@@ -1,0 +1,59 @@
+Charizard @ Choice Scarf
+Ability: Solar Power
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Modest Nature
+- Heat Wave
+- Protect
+- Ancient Power
+- Weather Ball
+
+Sinistcha @ Colbur Berry
+Ability: Hospitality
+Level: 50
+EVs: 32 HP / 4 Def / 30 SpD
+Bold Nature
+- Rage Powder
+- Trick Room
+- Life Dew
+- Protect
+
+Conkeldurr @ Life Orb
+Ability: Iron Fist
+Level: 50
+EVs: 32 HP / 32 Atk / 2 SpD
+Brave Nature
+- Drain Punch
+- Mach Punch
+- Knock Off
+- Ice Punch
+
+Morpeko @ Focus Sash
+Ability: Hunger Switch
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Parting Shot
+- Fake Out
+- Aura Wheel
+- Protect
+
+Pelipper @ Sitrus Berry
+Ability: Drizzle
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Modest Nature
+- Hurricane
+- Weather Ball
+- Muddy Water
+- Tailwind
+
+Kangaskhan @ Silk Scarf
+Ability: Scrappy
+Level: 50
+EVs: 32 HP / 32 Atk / 2 Def
+Brave Nature
+- 
+- Last Resort
+- Double-Edge
+- Hammer Arm

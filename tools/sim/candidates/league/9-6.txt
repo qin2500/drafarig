@@ -1,0 +1,59 @@
+Whimsicott @ Focus Sash
+Ability: Prankster
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Moonblast
+- Protect
+- Tailwind
+- Charm
+
+Zoroark-Hisui @ Choice Scarf
+Ability: Illusion
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Icy Wind
+- Will-O-Wisp
+- Bitter Malice
+- Shadow Ball
+
+Basculegion @ Mystic Water
+Ability: Adaptability
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Adamant Nature
+- Aqua Jet
+- Protect
+- Flip Turn
+- Last Respects
+
+Kingambit @ Chople Berry
+Ability: Defiant
+Level: 50
+EVs: 32 HP / 32 Atk / 2 SpD
+Adamant Nature
+- Protect
+- Low Kick
+- Kowtow Cleave
+- Sucker Punch
+
+Malamar @ Sitrus Berry
+Ability: Contrary
+Level: 50
+EVs: 32 HP / 12 Def / 22 SpD
+Relaxed Nature
+- Superpower
+- Protect
+- Knock Off
+- Trick Room
+
+Audino @ Mental Herb
+Ability: Healer
+Level: 50
+EVs: 32 HP / 32 Def / 2 SpD
+Relaxed Nature
+- Heal Pulse
+- Trick Room
+- Protect
+- Simple Beam

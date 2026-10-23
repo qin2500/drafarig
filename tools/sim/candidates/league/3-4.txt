@@ -1,0 +1,59 @@
+Florges @ Fairy Feather
+Ability: Flower Veil
+Level: 50
+EVs: 32 HP / 32 SpA / 2 SpD
+Modest Nature
+- Calm Mind
+- Pollen Puff
+- Dazzling Gleam
+- Protect
+
+Dragapult @ Light Clay
+Ability: Clear Body
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Protect
+- Shadow Ball
+- Draco Meteor
+- Will-O-Wisp
+
+Rotom-Wash @ Sitrus Berry
+Ability: Levitate
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Protect
+- Thunderbolt
+- Volt Switch
+- Will-O-Wisp
+
+Metagross @ Choice Scarf
+Ability: Clear Body
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Hammer Arm
+- Ice Punch
+- Iron Head
+- Psychic Fangs
+
+Infernape @ Focus Sash
+Ability: Blaze
+Level: 50
+EVs: 2 Atk / 32 SpA / 32 Spe
+Hasty Nature
+- Fake Out
+- Overheat
+- Protect
+- Heat Wave
+
+Toxtricity @ Life Orb
+Ability: Punk Rock
+Level: 50
+EVs: 1 HP / 32 SpA / 1 SpD / 32 Spe
+Timid Nature
+- Overdrive
+- Boomburst
+- Sludge Bomb
+- Volt Switch

@@ -1,0 +1,59 @@
+Excadrill @ Focus Sash
+Ability: Sand Rush
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Adamant Nature
+- Protect
+- Rock Slide
+- Iron Head
+- High Horsepower
+
+Tyranitar @ Choice Scarf
+Ability: Sand Stream
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Low Kick
+- Rock Slide
+- Ice Punch
+- Knock Off
+
+Samurott-Hisui @ Life Orb
+Ability: Sharpness
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Ceaseless Edge
+- Sucker Punch
+- Protect
+- Aqua Cutter
+
+Tinkaton @ Metal Coat
+Ability: Mold Breaker
+Level: 50
+EVs: 32 Atk / 32 Def / 2 SpD
+Brave Nature
+- Gigaton Hammer
+- Play Rough
+- Encore
+- Feint
+
+Skeledirge @ Leftovers
+Ability: Unaware
+Level: 50
+EVs: 27 HP / 13 Def / 17 SpA / 9 SpD
+Quiet Nature
+- Will-O-Wisp
+- Protect
+- Torch Song
+- Shadow Ball
+
+Sneasler @ Psychic Seed
+Ability: Unburden
+Level: 50
+EVs: 32 Atk / 2 Def / 32 Spe
+Jolly Nature
+- Protect
+- Fake Out
+- Close Combat
+- Dire Claw

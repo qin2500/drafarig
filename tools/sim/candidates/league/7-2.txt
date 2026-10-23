@@ -1,0 +1,59 @@
+Meowscarada @ Focus Sash
+Ability: Protean
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Adamant Nature
+- Triple Axel
+- Flower Trick
+- Protect
+- U-turn
+
+Meowstic @ Light Clay
+Ability: Prankster
+Level: 50
+EVs: 32 HP / 2 Def / 32 Spe
+Timid Nature
+- Fake Out
+- Sunny Day
+- Light Screen
+- Expanding Force
+
+Dragonite @ Dragon Fang
+Ability: Inner Focus
+Level: 50
+EVs: 29 HP / 32 Atk / 5 Spe
+Adamant Nature
+- Superpower
+- Low Kick
+- Stomping Tantrum
+- Protect
+
+Sandaconda @ Bright Powder
+Ability: Sand Veil
+Level: 50
+EVs: 32 HP / 32 Def / 2 Spe
+Bold Nature
+- Rock Slide
+- Body Press
+- Coil
+- Minimize
+
+Blaziken @ Life Orb
+Ability: Speed Boost
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Adamant Nature
+- Heat Wave
+- Protect
+- Detect
+- Aura Sphere
+
+Venusaur @ Expert Belt
+Ability: Chlorophyll
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Modest Nature
+- Leaf Storm
+- Sludge Bomb
+- Protect
+- Sleep Powder

@@ -1,0 +1,59 @@
+Tsareena @ Wide Lens
+Ability: Queenly Majesty
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Triple Axel
+- High Jump Kick
+- Low Kick
+- Power Whip
+
+Mamoswine @ Life Orb
+Ability: Oblivious
+Level: 50
+EVs: 32 Atk / 2 SpD / 32 Spe
+Jolly Nature
+- Ice Shard
+- Icicle Crash
+- Protect
+- Earthquake
+
+Staraptor @ Choice Scarf
+Ability: Intimidate
+Level: 50
+EVs: 32 HP / 2 Atk / 32 Spe
+Jolly Nature
+- Final Gambit
+- U-turn
+- Close Combat
+- Dual Wingbeat
+
+Volcarona @ Grassy Seed
+Ability: Flame Body
+Level: 50
+EVs: 21 HP / 15 Def / 5 SpA / 1 SpD / 24 Spe
+Modest Nature
+- Overheat
+- Heat Wave
+- Protect
+- Quiver Dance
+
+Jolteon @ Focus Sash
+Ability: Volt Absorb
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Volt Switch
+- Thunderbolt
+- Discharge
+- Electroweb
+
+Grimmsnarl @ Light Clay
+Ability: Prankster
+Level: 50
+EVs: 32 HP / 19 Def / 15 SpD
+Careful Nature
+- Spirit Break
+- Light Screen
+- Parting Shot
+- Reflect

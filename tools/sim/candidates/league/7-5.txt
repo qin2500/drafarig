@@ -1,0 +1,59 @@
+Runerigus @ Colbur Berry
+Ability: Wandering Spirit
+Level: 50
+EVs: 32 HP / 2 Atk / 32 SpD
+Sassy Nature
+- Poltergeist
+- Protect
+- Ally Switch
+- Trick Room
+
+Blaziken @ Focus Sash
+Ability: Speed Boost
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Modest Nature
+- Coaching
+- Close Combat
+- Heat Wave
+- Detect
+
+Dragonite @ Leftovers
+Ability: Inner Focus
+Level: 50
+EVs: 7 HP / 32 Atk / 27 Spe
+Adamant Nature
+- Protect
+- Superpower
+- Low Kick
+- Extreme Speed
+
+Meowstic @ Mental Herb
+Ability: Prankster
+Level: 50
+EVs: 32 HP / 2 Def / 32 Spe
+Timid Nature
+- Fake Out
+- Sunny Day
+- Skill Swap
+- Expanding Force
+
+Venusaur @ Wide Lens
+Ability: Chlorophyll
+Level: 50
+EVs: 1 HP / 32 SpA / 1 SpD / 32 Spe
+Modest Nature
+- Leaf Storm
+- Sludge Bomb
+- Protect
+- Sleep Powder
+
+Meowscarada @ Choice Scarf
+Ability: Protean
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Adamant Nature
+- Knock Off
+- Low Kick
+- Triple Axel
+- Protect

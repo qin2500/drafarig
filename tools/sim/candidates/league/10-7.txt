@@ -1,0 +1,59 @@
+Raichu @ Focus Sash
+Ability: Lightning Rod
+Level: 50
+EVs: 2 Def / 32 SpA / 32 Spe
+Timid Nature
+- Nuzzle
+- Encore
+- Protect
+- Endeavor
+
+Politoed @ Life Orb
+Ability: Drizzle
+Level: 50
+EVs: 32 HP / 2 Def / 32 SpA
+Quiet Nature
+- Protect
+- Perish Song
+- Ice Beam
+- Muddy Water
+
+Archaludon @ Leftovers
+Ability: Stamina
+Level: 50
+EVs: 32 HP / 1 Def / 1 SpA / 32 SpD
+Bold Nature
+- Dragon Pulse
+- Flash Cannon
+- Electro Shot
+- Protect
+
+Klefki @ Light Clay
+Ability: Prankster
+Level: 50
+EVs: 32 HP / 21 Def / 13 SpD
+Calm Nature
+- Reflect
+- Rain Dance
+- Light Screen
+- Thunder Wave
+
+Starmie @ Choice Scarf
+Ability: Natural Cure
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Ice Beam
+- Hydro Pump
+- Expanding Force
+- Scald
+
+Ariados @ Sitrus Berry
+Ability: Insomnia
+Level: 50
+EVs: 32 Atk
+Brave Nature
+- Poison Jab
+- Electroweb
+- First Impression
+- Rage Powder

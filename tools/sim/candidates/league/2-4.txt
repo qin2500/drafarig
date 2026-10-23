@@ -1,0 +1,59 @@
+Gholdengo @ Life Orb
+Ability: Good as Gold
+Level: 50
+EVs: 2 HP / 32 SpA / 32 Spe
+Timid Nature
+- Make It Rain
+- Protect
+- Shadow Ball
+- Nasty Plot
+
+Ceruledge @ Grassy Seed
+Ability: Flash Fire
+Level: 50
+EVs: 32 HP / 26 Atk / 4 Def / 1 SpD / 3 Spe
+Adamant Nature
+- Protect
+- Swords Dance
+- Bulk Up
+- Bitter Blade
+
+Spiritomb @ Mental Herb
+Ability: Infiltrator
+Level: 50
+EVs: 2 HP / 32 Def / 32 SpD
+Relaxed Nature
+- Pain Split
+- Trick Room
+- Ally Switch
+- Will-O-Wisp
+
+Rillaboom @ Miracle Seed
+Ability: Grassy Surge
+Level: 50
+EVs: 32 HP / 32 Atk / 2 Spe
+Adamant Nature
+- Wood Hammer
+- Fake Out
+- Grassy Glide
+- U-turn
+
+Lucario @ Choice Scarf
+Ability: Inner Focus
+Level: 50
+EVs: 2 HP / 32 Atk / 32 Spe
+Jolly Nature
+- Meteor Mash
+- Feint
+- Final Gambit
+- Flash Cannon
+
+Ninetales-Alola @ Never-Melt Ice
+Ability: Snow Warning
+Level: 50
+EVs: 1 HP / 1 Def / 32 SpA / 32 Spe
+Timid Nature
+- Freeze-Dry
+- Protect
+- Blizzard
+- Moonblast

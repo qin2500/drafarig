@@ -12,14 +12,16 @@ import { HeuristicPlayer, solveGame } from '../ai/player.mjs';
 import { PS, toID } from '../ai/data.mjs';
 import { snapshot, optionsFor, foe, value as heurValue, valueParts } from '../ai/engine.mjs';
 import { PROTECTS } from '../ai/data.mjs';
-import { features, loadWeights, learnedLeaf, LEARNED_PARTS } from './value.mjs';
+import { features, loadWeights, learnedLeaf, LEARNED_PARTS, ACTION_PARTS } from './value.mjs';
+import { encode } from './encode.mjs';
+import { MLP } from './net.mjs';
 
 const WEATHER = { sunnyday: 'Sun', desolateland: 'Sun', raindance: 'Rain', primordialsea: 'Rain', sandstorm: 'Sand', snowscape: 'Snow', snow: 'Snow', hail: 'Snow' };
 const TERRAIN = { electricterrain: 'Electric', grassyterrain: 'Grassy', psychicterrain: 'Psychic', mistyterrain: 'Misty' };
 const WIN = 6; // a won / lost game: in the heuristic value's units a full side is ~4-5; as a learned logit, p ~ 0.998
 
 // defaults = the setting validated in mirror matches (README: depth 2, most-likely dice, 2 samples)
-export const ENGINE_DEFAULTS = { samples: 2, maxOurs: 10, maxTheirs: 10, weights: null, wide: false, depth: 2, top2: 3, samples2: 1, width2: 4, dice: 'mean' };
+export const ENGINE_DEFAULTS = { samples: 2, maxOurs: 10, maxTheirs: 10, weights: null, wide: false, depth: 2, top2: 3, samples2: 1, width2: 4, dice: 'mean', net: null };
 
 /**
  * "Most likely" dice for a clone: the average damage roll, and every chance event (accuracy, crits, secondary effects,
@@ -38,6 +40,9 @@ export class EnginePlayer extends HeuristicPlayer {
     this.e = { ...ENGINE_DEFAULTS, ...Object.fromEntries(Object.entries(opts).filter(([k]) => k in ENGINE_DEFAULTS && opts[k] != null)) };
     this.getBattle = opts.battle;
     this.w = loadWeights(this.e.weights);
+    // the value network (net.mjs, trained by train-value.mjs on self-play): its logit is the leaf when given
+    this.net = this.e.net ? MLP.load(this.e.net) : null;
+    this.actionScale = this.net?.meta?.actionScale ?? 1.8;
     this.belief = PS.Teams.import(opts.theirs); // what we believe his six are (sheets.mjs)
     this.record = opts.record ? [] : null; // [{ parts, ps }] at each of our decisions, for value learning
     this.stats = { decisions: 0, cells: 0, ms: 0, fallbacks: 0 };
@@ -62,7 +67,9 @@ export class EnginePlayer extends HeuristicPlayer {
     if (this.record) {
       const R = this.snapshotOf(live, S);
       const parts = valueParts(R, me);
-      this.record.push({ turn: T.turn, parts: LEARNED_PARTS.map((k) => +parts[k].toFixed(4)), ps: features(live, me).map((x) => +x.toFixed(4)) });
+      const ps = features(live, me);
+      this.record.push({ turn: T.turn, parts: LEARNED_PARTS.map((k) => +parts[k].toFixed(4)), ps: ps.map((x) => +x.toFixed(4)),
+        enc: Array.from(encode(live, me, parts, ps), (x) => Math.round(x * 1000) / 1000) });
     }
     // a plan persona (ZhuZi's team habits) still overrides, as for the heuristic player
     const plan = this.planMove(S, ours, sol);
@@ -238,6 +245,12 @@ export class EnginePlayer extends HeuristicPlayer {
       S.protects[side] = joints[side].filter((a) => a.kind === 'move' && PROTECTS.has(a.move)).length;
       S.switches[side] = joints[side].filter((a) => a.kind === 'switch').length;
       for (const a of joints[side]) if (a.kind === 'switch' && S.mons[a.to]) S.switchIns.push({ key: a.to, side, faced: S.active[foe(side)].filter(Boolean) });
+    }
+    if (this.net) {
+      const parts = valueParts(S, me);
+      let z = this.net.forward(encode(b, me, parts, features(b, me)));
+      for (const k of ACTION_PARTS) z += this.actionScale * parts[k];
+      return z;
     }
     if (this.w) return learnedLeaf(this.w, valueParts(S, me), features(b, me));
     return heurValue(S, me, this.style);
