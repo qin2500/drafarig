@@ -15,7 +15,7 @@
 // already in the file, so an interrupted run resumes where it stopped.
 import { Worker, isMainThread, parentPort } from 'node:worker_threads';
 import { cpus } from 'node:os';
-import { readFileSync, existsSync, appendFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, existsSync, appendFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { beliefText, library, usageLibrary } from './sheets.mjs';
 
@@ -97,16 +97,26 @@ export function metrics(recs) {
   lines.push(`ours win rate by opponent persona: ${[...wr].map(([k, [x, n]]) => { const [lo, hi] = wilson(x, n); return `${k} ${x}/${n} = ${pc(x, n)} (${pc(lo * n, n)}–${pc(hi * n, n)})`; }).join(' · ')}`);
   return lines;
 }
-async function play(t) {
+async function play(t, opts = {}) {
   const { playGame } = await import('./game.mjs');
   const us = { ...t.ours, name: 'Ours' }, them = { ...t.theirs, name: 'Theirs' };
   const [p1, p2] = t.swap ? [them, us] : [us, them];
   const t0 = performance.now();
-  const r = await playGame(p1, p2, t.seed);
+  const r = await playGame(p1, p2, t.seed, opts);
+  if (opts.keepLog) return { log: r.log, winner: r.winner === 'tie' ? 'tie' : r.winner === (t.swap ? 'p2' : 'p1') ? 'ours' : 'theirs', turns: r.turns };
   const ourSide = t.swap ? 'p2' : 'p1', theirSide = t.swap ? 'p1' : 'p2';
   return { i: t.i, seed: t.seed, ours: t.ours.ref, theirs: t.theirs.ref, oursAs: ourSide, preview: t.ours.preview, sheets: t.sheets, persona: t.theirs.persona, winner: r.winner === 'tie' ? 'tie' : r.winner === ourSide ? 'ours' : 'theirs', turns: r.turns,
     our: r.summary[ourSide], their: r.summary[theirSide], errors: r.errors, refusals: r.refusals, ms: Math.round(performance.now() - t0),
     ...(r.engine ? { engine: { ours: r.engine[ourSide], theirs: r.engine[theirSide] } } : {}) };
+}
+
+/**
+ * Play game i of a run again, with the full battle log (games are deterministic per seed): args = the run's arguments
+ * (saved next to its results as <out>.args.json). Returns { log (Showdown protocol, omniscient), winner, turns }.
+ */
+export async function replayGame(args, i) {
+  const t = taskList({ ...args, games: i + 1 })[i];
+  return play(t, { keepLog: true });
 }
 
 if (!isMainThread) {
@@ -115,6 +125,8 @@ if (!isMainThread) {
   const a = parseArgs(process.argv.slice(2));
   const out = a.out ?? `tools/sim/results/${a.ours ?? 'a01'}_vs_${a.theirs ?? 'z01'}.jsonl`;
   mkdirSync(dirname(out), { recursive: true });
+  // the run's arguments, so the viewer can replay any game of it (tools/sim/viewer.mjs)
+  writeFileSync(`${out}.args.json`, JSON.stringify(a, null, 1));
   const done = new Set(existsSync(out) ? readFileSync(out, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l).i) : []);
   const tasks = taskList(a).filter((t) => !done.has(t.i));
   const nw = Math.min(Number(a.workers ?? Math.max(1, cpus().length - 1)), tasks.length || 1);
@@ -123,7 +135,8 @@ if (!isMainThread) {
   let next = 0, finished = 0, failed = 0;
   // one worker per slot; a game that runs past --timeout seconds (a stuck battle) is recorded as failed and its worker
   // replaced, so one bad game can't stall the run
-  const limit = 1000 * Number(a.timeout ?? 120);
+  // (engine players need longer: a depth-2 engine game on both sides can take several minutes)
+  const limit = 1000 * Number(a.timeout ?? (a['ours-ai'] === 'engine' || a['theirs-ai'] === 'engine' ? 900 : 120));
   const slot = () => new Promise((res) => {
     let w, timer, cur;
     const start = () => {
