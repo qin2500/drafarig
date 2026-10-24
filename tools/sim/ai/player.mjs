@@ -42,6 +42,8 @@ export function solveGame(M, iters = 400) {
   const tot = (a) => a.reduce((x, y) => x + y, 0);
   return { p: sR.map((x) => x / tot(sR)), q: sC.map((x) => x / tot(sC)) };
 }
+// move targets that need a chosen slot in doubles (Showdown's request "target" values)
+const TARGETED = new Set(['normal', 'any', 'adjacentAlly', 'adjacentFoe', 'adjacentAllyOrSelf']);
 const sampleBy = (items, w, r) => { let u = r() * items.reduce((t, x) => t + w(x), 0); for (const x of items) { u -= w(x); if (u <= 0) return x; } return items[0]; };
 export const DEFAULTS = { preview: 'ai', persona: null, skill: 0.85, temperature: 0.04, noise: 0.07, style: 'balanced', topM: 4, topN: 8, topK: 3, usualBring: 0, previewTemp: 0.05 };
 
@@ -440,8 +442,9 @@ export class HeuristicPlayer extends BattlePlayer {
     const moves = request.active[pos].moves;
     const n = moves.findIndex((x) => toID(x.id ?? x.move) === a.move) + 1;
     let s = `move ${n}`;
-    // a locked move (the second turn of Solar Beam, a charging or rampage move) takes no target
-    if (request.active.length > 1 && moves[n - 1]?.target !== undefined) {
+    // a locked move (the second turn of Solar Beam, a charging or rampage move) takes no target, nor does a move that
+    // can't choose one (Struggle when every move is disabled, spread and self moves)
+    if (request.active.length > 1 && TARGETED.has(moves[n - 1]?.target)) {
       if (typeof a.target === 'number') s += ` ${a.target + 1}`;
       else if (a.target === 'ally') s += ` -${(1 - pos) + 1}`;
       else if (a.target === 'self') s += ` -${pos + 1}`;

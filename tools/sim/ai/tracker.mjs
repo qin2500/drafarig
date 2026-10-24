@@ -58,6 +58,16 @@ export class Tracker {
     const s = hpOf(hp); m.hp = s.hp; m.status = s.status; m.fainted = s.fnt;
   }
   on_drag(p) { this.on_switch(p); }
+  // |swap|POKEMON|POSITION (Ally Switch): the Pokémon moves to that slot and whatever was there takes its old one
+  on_swap(p) {
+    const m = this.monOf(p[1]);
+    const to = Number(p[2]);
+    if (!m || !(to >= 0) || m.pos < 0) return;
+    const side = m.side, from = m.pos, other = this.active[side][to];
+    this.active[side][to] = m; m.pos = to;
+    this.active[side][from] = other && other !== m ? other : null;
+    if (other && other !== m) other.pos = from;
+  }
   on_replace(p) { this.on_switch(p); }
   leave(m) {
     m.charging = '';

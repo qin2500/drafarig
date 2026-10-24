@@ -18,7 +18,8 @@ const heur = (p) => { const P = Object.fromEntries(LEARNED_PARTS.map((k, i) => [
 let games = 0;
 for (const f of files) for (const line of readFileSync(f, 'utf8').trim().split('\n')) {
   const r = JSON.parse(line);
-  if (!r.engine || r.winner === 'tie') continue;
+  // a game where a player crashed and took Showdown's default move teaches the wrong lesson: skip it
+  if (!r.engine || r.winner === 'tie' || r.errors > 0) continue;
   games++;
   const hold = r.seed % 5 === 0;
   for (const [side, won] of [['ours', r.winner === 'ours'], ['theirs', r.winner === 'theirs']]) {
