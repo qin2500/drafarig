@@ -11,6 +11,34 @@ import { KEYS, validate } from '../lib/prep-schema.mjs';
 import { validateMock, mockFor, mockStaleness, MOCKS } from '../lib/mocks/index.mjs';
 import { parseTeamQuick, exportTeam } from '../lib/paste.mjs';
 import jacky from '../lib/mocks/4v8.mjs';
+import zhuzi from '../lib/mocks/3v8.mjs';
+
+test('the sim-chosen ZhuZi mock (W4) validates cleanly: three teams that parse, its notes and engine-checked calcs; matched by names', () => {
+  const { mock, problems } = validateMock(zhuzi, mech);
+  assert.deepEqual(problems, []);
+  assert.deepEqual([mock.coach, mock.vs, mock.week, mock.variants.length, mock.pilotNotes.leads.length], ['ZhuZi', 'Calvin', 4, 2, 3]);
+  for (const t of [mock.team, ...mock.variants.map((v) => v.team)]) assert.equal(parseTeamQuick(t, { mech, side: 'theirs' }).sets.filter((s) => s.set).length, 6, 'the six parse');
+  assert.ok(mock.calcs.length >= 15);
+  assert.ok(MOCKS.includes(zhuzi) && mockFor('ZhuZi', 'Calvin', { mech }));
+});
+
+test('the ZhuZi mock in the app: Play ZhuZi vs Calvin, teams B and C as variants, Copy for Showdown is the exact export', async (t) => {
+  const app = await mocks(t, 'prep/mocks');
+  await app.changeData({ pc: 'mk-friend' }, { value: 'Calvin' });
+  await app.click({ pa: 'mk-week', friend: 'Calvin', week: '4' });
+  await app.click({ pa: 'mk-play', ...btns(app, 'mk-play')[0] });
+  await app.waitFor(() => /Play ZhuZi vs Calvin/.test(T(app)), 'the ZhuZi mock', 20000);
+  const h = T(app);
+  for (const m of ['Metagross', 'Infernape', 'Toxtricity', 'Dragapult', 'Florges', 'Rotom-Wash']) assert.ok(h.includes(m), m);
+  await app.click({ pa: 'mk-copy', ...btns(app, 'mk-copy')[0] });
+  const sets = parseTeamQuick(zhuzi.team, { mech, side: 'theirs' }).sets.map((s) => s.set);
+  assert.equal(app.clipboard.at(-1), exportTeam(sets, mech).text);
+  for (const [key, first] of [['v1', 'Krookodile @ Choice Scarf'], ['v2', 'Oranguru @ Sitrus Berry']]) {
+    await app.click({ pa: 'mk-variant', ...btns(app, 'mk-variant').find((x) => x.v === key) });
+    await app.click({ pa: 'mk-copy', ...btns(app, 'mk-copy')[0] });
+    assert.ok(app.clipboard.at(-1).startsWith(first), key);
+  }
+});
 
 test('the curated Jacky mock validates cleanly; a broken entry is dropped and reported; matched by names', () => {
   const { mock, problems } = validateMock(jacky, mech);
@@ -43,7 +71,7 @@ test('Mocks home: friend, their weeks (W2 Jacky, curated ✓; W3 bye; your week 
   assert.match(h, /W1Anthony \(you\)/);
   assert.match(h, /W2Jacky next\? ?Curated ✓/);
   assert.match(h, /W3bye/);
-  assert.match(h, /W4ZhuZi ?Generated/);
+  assert.match(h, /W4ZhuZi ?Curated ✓/);
   assert.match(h, /Open as Jacky ›/);
   assert.match(h, /Record & note for Calvin ›/);
   const play = btns(app, 'mk-play')[0];
@@ -145,20 +173,20 @@ test('storage: the pilot document with mocks validates; without them (older buil
   assert.ok(validate('pilot', { ...base, mocks: [{ ...ok.mocks[0], useMyGuesses: 'yes' }] }).length);
 });
 
-test('a generated mock (W4 ZhuZi): built from his 10, labelled sets, copy keeps it on the record; Edit saves on the mock; Regenerate asks first; own guesses opt-in', async (t) => {
+test('a generated mock (W5 Hex): built from his 10, labelled sets, copy keeps it on the record; Edit saves on the mock; Regenerate asks first; own guesses opt-in', async (t) => {
   const storage = device();
   const app = await mocks(t, 'prep/mocks', storage);
   await app.changeData({ pc: 'mk-friend' }, { value: 'Calvin' });
-  await app.click({ pa: 'mk-week', friend: 'Calvin', week: '4' });
+  await app.click({ pa: 'mk-week', friend: 'Calvin', week: '5' });
   await app.click({ pa: 'mk-play', ...btns(app, 'mk-play')[0] });
-  await app.waitFor(() => /Generated from ZhuZi/.test(T(app)), 'the generated team', 30000);
+  await app.waitFor(() => /Generated from Hex/.test(T(app)), 'the generated team', 30000);
   const h = T(app);
-  for (const s of ['Play ZhuZi vs Calvin', 'A: best six', 'Item clause ok', 'Regenerate', "Use my saved guesses of ZhuZi's sets", 'Calvin will see these sets']) assert.ok(h.includes(s), s);
+  for (const s of ['Play Hex(法拉) vs Calvin', 'A: best six', 'Item clause ok', 'Regenerate', "Use my saved guesses of Hex(法拉)'s sets", 'Calvin will see these sets']) assert.ok(h.includes(s), s);
   assert.match(h, /ladder|worst case|matchup-tuned/);
   // Copy for Showdown: exact export, no header; the generated team is kept on the running record
   await app.click({ pa: 'mk-copy', ...btns(app, 'mk-copy')[0] }); await flushSaves(app);
   assert.ok(!/===/.test(app.clipboard.at(-1)));
-  const rec = () => { const d = JSON.parse(storage.getItem(KEYS.pilot)); assert.deepEqual(validate('pilot', d), [], 'the pilot document stays valid'); return d.mocks.find((x) => x.pilot === 'ZhuZi'); };
+  const rec = () => { const d = JSON.parse(storage.getItem(KEYS.pilot)); assert.deepEqual(validate('pilot', d), [], 'the pilot document stays valid'); return d.mocks.find((x) => x.pilot === 'Hex(法拉)'); };
   let m = rec();
   assert.equal(m.source, 'generated');
   assert.equal(m.variants[0].team, app.clipboard.at(-1), 'the record keeps what was copied');
@@ -166,7 +194,7 @@ test('a generated mock (W4 ZhuZi): built from his 10, labelled sets, copy keeps 
   // Edit › the first set: nature and an over-cap SP (clamped to 32); saved on the mock only, labelled "edited"
   const e = btns(app, 'mk-edit')[0];
   await app.click({ pa: 'mk-edit', ...e });
-  assert.match(T(app), /Editing ZhuZi's .+ for a mock · nothing here touches your teams/);
+  assert.match(T(app), /Editing Hex\(法拉\)'s .+ for a mock · nothing here touches your teams/);
   await app.changeData({ pc: 'mk-ed', key: 'nature' }, { value: 'timid' });
   await app.changeData({ pc: 'mk-ed', key: 'sp-spe' }, { value: '99' });
   assert.match(app.html(), /value="32" data-pc="mk-ed" data-key="sp-spe"/);
@@ -183,11 +211,11 @@ test('a generated mock (W4 ZhuZi): built from his 10, labelled sets, copy keeps 
   await app.click({ pa: 'mk-regen', ...btns(app, 'mk-regen')[0] });
   await app.click({ pa: 'mk-regen', ...btns(app, 'mk-regen').find((b) => b.sure) }); await flushSaves(app);
   assert.equal(rec().variants, undefined);
-  await app.waitFor(() => /Generated from ZhuZi/.test(T(app)) && !/edited/.test(T(app)), 'rebuilt', 30000);
+  await app.waitFor(() => /Generated from Hex/.test(T(app)) && !/edited/.test(T(app)), 'rebuilt', 30000);
   // the guesses toggle is opt-in and stored on the record
-  await app.changeData({ pc: 'mk-guesses', friend: 'Calvin', pilot: 'ZhuZi' }, { checked: true }); await flushSaves(app);
+  await app.changeData({ pc: 'mk-guesses', friend: 'Calvin', pilot: 'Hex(法拉)' }, { checked: true }); await flushSaves(app);
   assert.equal(rec().useMyGuesses, true);
-  await app.waitFor(() => /Generated from ZhuZi/.test(T(app)), 'rebuilt with guesses', 30000);
+  await app.waitFor(() => /Generated from Hex/.test(T(app)), 'rebuilt with guesses', 30000);
 });
 
 test('W5 Hex: a generated mock too, with the clauses checked and nothing saved until you use it', async (t) => {

@@ -1,0 +1,65 @@
+{
+ "written": "2026-10-25T16:37:05.570Z",
+ "teams": [
+  {
+   "id": "zc-1",
+   "label": "Bulky offense: Intimidate Krookodile + Rotom-Wash Will-O-Wisp vs his physical attackers",
+   "sets": [
+    "meta_mega",
+    "rotomw",
+    "krook_bulk",
+    "tox_scarf",
+    "nape",
+    "pult"
+   ]
+  },
+  {
+   "id": "zc-2",
+   "label": "Rock-heavy: Life Orb Krookodile Rock Slide / Stone Edge vs Volcarona and Staraptor, Oranguru Trick Room vs Tailwind",
+   "sets": [
+    "meta_mega",
+    "rotomw",
+    "krook_lo",
+    "tox_scarf",
+    "nape",
+    "oran"
+   ]
+  },
+  {
+   "id": "zc-3",
+   "label": "Anti-screens: Umbreon Taunt + Scarf Rotom-Wash",
+   "sets": [
+    "meta_mega",
+    "rotomw_scarf",
+    "krook_bulk",
+    "tox",
+    "nape",
+    "umb_supp"
+   ]
+  },
+  {
+   "id": "zc-4",
+   "label": "Fairy check: Florges for Grimmsnarl / Mamoswine",
+   "sets": [
+    "meta_mega",
+    "rotomw",
+    "krook_scarf",
+    "tox",
+    "florges",
+    "nape"
+   ]
+  },
+  {
+   "id": "zc-5",
+   "label": "Rock Slide Metagross + Trick Room mode",
+   "sets": [
+    "meta_mega_rock",
+    "rotomw",
+    "krook_bulk",
+    "tox_scarf",
+    "pult",
+    "oran"
+   ]
+  }
+ ]
+}

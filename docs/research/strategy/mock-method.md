@@ -252,3 +252,32 @@ export default {
 ```
 The app can render this like a guide. The extra action: **"Import as a team: vs Calvin (Jacky mock)"**, so Anthony can export it to
 Showdown and play it.
+
+## 5. W4 mock (ZhuZi → Calvin), chosen by simulation (2026-10-26)
+
+Steps 2–6 of §1 replaced by the simulator (`tools/sim`), so the teams come from games, not judgement:
+
+1. **Calvin's pool** (`tools/sim/candidates/calvin/build.mjs`): his Week 1 core (Mega Staraptor Tailwind, Grimmsnarl, Volcarona,
+   Basculegion-F, Mamoswine, worst-case Tauros) and 5 variations (Tsareena, Empoleon, Jolteon, Scarf Staraptor), ladder-usage
+   sets, plus 4 usage-random sixes from his roster (`league/8-*`).
+2. **ZhuZi's candidates:** his 24 Week 3 candidates plus 5 Calvin-targeted sixes (`zhuzi-vs-calvin/zc-*`), all from his 10.
+3. **Screen:** 192 games each with the heuristic AI, closed sheets with usage-based beliefs (`results/mock-calvin/screen`).
+   The Calvin-targeted sixes ranked mid-pack (59–70%): bulky Intimidate and Taunt cost more than they gained.
+4. **Confirm:** the top 6 with the depth-2 engine on both sides, 384 games each (`results/mock-calvin/engine`):
+
+| Six | Plan | Win % vs Calvin's pool |
+|---|---|---|
+| z21 | Fast offense: Mega Metagross, Fake Out Infernape, Scarf Toxtricity, Dragapult, Florges, Rotom-Wash | **86.5 ± 3.9** (team A) |
+| z18 | Rock spam: Rock Slide Metagross, Scarf Krookodile, Slowking-G Power Gem | **84.0 ± 3.9** (team B) |
+| z01 | Goodstuffs | 76.8 ± 4.6 |
+| z13 | Offense, Life Orb Infernape | 74.1 ± 4.6 |
+| z07 | Snow / Chilly Reception pivot | 71.7 ± 4.9 |
+| z05 | Trick Room + Instruct | **62.7 ± 5.1** (team C: ZhuZi's other real plan, the best practice vs Calvin's Tailwind) |
+
+5. **Leads** from the engine games (our preview spread over the AI's top options): A Infernape + Metagross 95% (n = 60),
+   Dragapult + Infernape 93%; B Krookodile + Infernape 88%, Dragapult + Infernape 95%; C Metagross + Oranguru 79%.
+6. **Calcs:** 18, all computed in the app engine. One correction to the old W4 outline: Rock Slide is **neutral** on Mega
+   Staraptor (Fighting resists Rock; Scarf Krookodile 18–22%), so Psychic Fangs (127–152%, OHKO) is the answer to it.
+
+App data: `lib/mocks/3v8.mjs` (team A + variants B and C). Watch any sim game in the viewer (`node tools/sim/viewer.mjs`,
+run `mock-calvin/engine/<six>.jsonl`).

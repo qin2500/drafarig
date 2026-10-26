@@ -1,0 +1,86 @@
+{
+ "coach": "Calvin",
+ "seat": 8,
+ "written": "2026-10-25T16:36:49.787Z",
+ "note": "Plus league/8-*.txt (usage-random sixes from his roster) for breadth.",
+ "teams": [
+  {
+   "id": "cal-1",
+   "label": "Week 1 core: Mega Staraptor Tailwind, Grimmsnarl screens, Volcarona, Basculegion-F, Mamoswine, Tauros",
+   "weight": 0.25,
+   "sets": [
+    "rapM",
+    "grimm",
+    "volc",
+    "basc",
+    "mamo",
+    "tauros"
+   ]
+  },
+  {
+   "id": "cal-2",
+   "label": "Week 1 core with Tsareena for Tauros",
+   "weight": 0.15,
+   "sets": [
+    "rapM",
+    "grimm",
+    "volc",
+    "basc",
+    "mamo",
+    "tsa"
+   ]
+  },
+  {
+   "id": "cal-3",
+   "label": "Empoleon instead of Basculegion-F",
+   "weight": 0.12,
+   "sets": [
+    "rapM",
+    "grimm",
+    "volc",
+    "emp",
+    "mamo",
+    "tauros"
+   ]
+  },
+  {
+   "id": "cal-4",
+   "label": "Fast: Jolteon + Tsareena, no Mamoswine",
+   "weight": 0.12,
+   "sets": [
+    "rapM",
+    "grimm",
+    "volc",
+    "basc",
+    "jolt",
+    "tsa"
+   ]
+  },
+  {
+   "id": "cal-5",
+   "label": "Scarf Staraptor (ladder Final Gambit set) instead of the Mega",
+   "weight": 0.12,
+   "sets": [
+    "rapS",
+    "grimm",
+    "volc",
+    "basc",
+    "mamo",
+    "tauros"
+   ]
+  },
+  {
+   "id": "cal-6",
+   "label": "Anti-Steel / anti-Trick-Room: Empoleon + Jolteon + Tauros",
+   "weight": 0.08,
+   "sets": [
+    "rapM",
+    "grimm",
+    "emp",
+    "jolt",
+    "mamo",
+    "tauros"
+   ]
+  }
+ ]
+}
