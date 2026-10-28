@@ -23,6 +23,8 @@ export class MLP {
     net.meta = j.meta ?? {};
     return net;
   }
+  /** Zero the output layer, so a new network starts at logit 0 (a residual net starts as exactly its base value). */
+  zeroOutput() { this.W.at(-1).fill(0); this.b.at(-1).fill(0); return this; }
   toJSON(meta = {}) { return { sizes: this.sizes, W: this.W.map((w) => Array.from(w, (x) => +x.toFixed(6))), b: this.b.map((w) => Array.from(w, (x) => +x.toFixed(6))), meta }; }
 
   /** The logit for input x; with acts, keeps every layer's activations (for training). */
@@ -45,9 +47,10 @@ export class MLP {
 
   /**
    * Train on X (array of Float32Array) and y (0/1). Returns per-epoch { train, val } log loss; keeps the weights of the
-   * best validation epoch (Xv, yv).
+   * best validation epoch (Xv, yv). off / offv: a fixed logit added to each example's output (a residual network learns
+   * only the correction to that base); omitted, 0.
    */
-  train(X, y, Xv, yv, { epochs = 30, batch = 256, lr = 1e-3, l2 = 1e-4, seed = 7, log = () => {} } = {}) {
+  train(X, y, Xv, yv, { epochs = 30, batch = 256, lr = 1e-3, l2 = 1e-4, seed = 7, off = null, offv = null, patience = Infinity, log = () => {} } = {}) {
     const L = this.W.length;
     const mW = this.W.map((w) => new Float32Array(w.length)), vW = this.W.map((w) => new Float32Array(w.length));
     const mb = this.b.map((w) => new Float32Array(w.length)), vb = this.b.map((w) => new Float32Array(w.length));
@@ -65,7 +68,7 @@ export class MLP {
         const end = Math.min(idx.length, s0 + batch);
         for (let k = s0; k < end; k++) {
           const acts = [];
-          const z = this.forward(X[idx[k]], acts);
+          const z = this.forward(X[idx[k]], acts) + (off ? off[idx[k]] : 0);
           const p = 1 / (1 + Math.exp(-z));
           tl += -(y[idx[k]] ? Math.log(p + 1e-9) : Math.log(1 - p + 1e-9));
           let delta = new Float32Array([p - y[idx[k]]]);
@@ -92,14 +95,15 @@ export class MLP {
           for (let i = 0; i < B.length; i++) { const gi = h[i] / bs; m2[i] = b1 * m2[i] + (1 - b1) * gi; v2[i] = b2 * v2[i] + (1 - b2) * gi * gi; B[i] -= lr * (m2[i] / c1) / (Math.sqrt(v2[i] / c2) + 1e-8); }
         }
       }
-      const val = this.loss(Xv, yv);
+      const val = this.loss(Xv, yv, offv);
       hist.push({ epoch: ep, train: +(tl / idx.length).toFixed(4), val: +val.toFixed(4) });
       log(hist.at(-1));
       if (val < best.val) best = { val, W: this.W.map((w) => w.slice()), b: this.b.map((w) => w.slice()), epoch: ep };
+      else if (ep - best.epoch >= patience) break;
     }
     if (best.W) { this.W = best.W; this.b = best.b; }
     return { hist, best: { epoch: best.epoch, val: +best.val.toFixed(4) } };
   }
-  loss(X, y) { let l = 0; for (let i = 0; i < X.length; i++) { const p = 1 / (1 + Math.exp(-this.forward(X[i]))); l -= y[i] ? Math.log(p + 1e-9) : Math.log(1 - p + 1e-9); } return l / Math.max(1, X.length); }
-  accuracy(X, y) { let a = 0; for (let i = 0; i < X.length; i++) a += (this.forward(X[i]) > 0) === !!y[i] ? 1 : 0; return a / Math.max(1, X.length); }
+  loss(X, y, off = null) { let l = 0; for (let i = 0; i < X.length; i++) { const p = 1 / (1 + Math.exp(-(this.forward(X[i]) + (off ? off[i] : 0)))); l -= y[i] ? Math.log(p + 1e-9) : Math.log(1 - p + 1e-9); } return l / Math.max(1, X.length); }
+  accuracy(X, y, off = null) { let a = 0; for (let i = 0; i < X.length; i++) a += (this.forward(X[i]) + (off ? off[i] : 0) > 0) === !!y[i] ? 1 : 0; return a / Math.max(1, X.length); }
 }

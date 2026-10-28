@@ -1,0 +1,230 @@
+{
+ "rain": [
+  {
+   "id": "z01",
+   "weight": 0.0918,
+   "set": "Hydro Pump / Rain Dance / Thunderbolt / Protect"
+  },
+  {
+   "id": "z02",
+   "weight": 0.0714,
+   "set": "Hydro Pump / Rain Dance / Thunderbolt / Protect"
+  },
+  {
+   "id": "z03",
+   "weight": 0.0714,
+   "set": "Hydro Pump / Rain Dance / Thunderbolt / Protect"
+  },
+  {
+   "id": "z04",
+   "weight": 0.0714,
+   "set": "Hydro Pump / Rain Dance / Thunderbolt / Protect"
+  },
+  {
+   "id": "z07",
+   "weight": 0.0408,
+   "set": "Hydro Pump / Rain Dance / Thunderbolt / Protect"
+  },
+  {
+   "id": "z09",
+   "weight": 0.0408,
+   "set": "Hydro Pump / Rain Dance / Thunderbolt / Protect"
+  },
+  {
+   "id": "z10",
+   "weight": 0.0306,
+   "set": "Hydro Pump / Thunderbolt / Volt Switch / Rain Dance"
+  },
+  {
+   "id": "z11",
+   "weight": 0.0306,
+   "set": "Hydro Pump / Rain Dance / Thunderbolt / Protect"
+  },
+  {
+   "id": "z12",
+   "weight": 0.0306,
+   "set": "Hydro Pump / Rain Dance / Thunderbolt / Protect"
+  },
+  {
+   "id": "z13",
+   "weight": 0.0408,
+   "set": "Hydro Pump / Rain Dance / Thunderbolt / Protect"
+  },
+  {
+   "id": "z14",
+   "weight": 0.0306,
+   "set": "Hydro Pump / Thunderbolt / Volt Switch / Rain Dance"
+  },
+  {
+   "id": "z16",
+   "weight": 0.0306,
+   "set": "Hydro Pump / Rain Dance / Thunderbolt / Protect"
+  },
+  {
+   "id": "z20",
+   "weight": 0.0306,
+   "set": "Hydro Pump / Rain Dance / Thunderbolt / Protect"
+  },
+  {
+   "id": "z21",
+   "weight": 0.0204,
+   "set": "Hydro Pump / Rain Dance / Thunderbolt / Protect"
+  },
+  {
+   "id": "z22",
+   "weight": 0.0204,
+   "set": "Hydro Pump / Rain Dance / Thunderbolt / Protect"
+  },
+  {
+   "id": "z24",
+   "weight": 0.0204,
+   "set": "Hydro Pump / Thunderbolt / Volt Switch / Rain Dance"
+  }
+ ],
+ "encore": [
+  {
+   "id": "z01",
+   "weight": 0.0918,
+   "mon": "Infernape",
+   "set": "Fake Out / Heat Wave / Close Combat / Encore"
+  },
+  {
+   "id": "z02",
+   "weight": 0.0714,
+   "mon": "Infernape",
+   "set": "Fake Out / Heat Wave / Close Combat / Encore"
+  },
+  {
+   "id": "z03",
+   "weight": 0.0714,
+   "mon": "Infernape",
+   "set": "Fake Out / Heat Wave / Close Combat / Encore"
+  },
+  {
+   "id": "z04",
+   "weight": 0.0714,
+   "mon": "Oranguru",
+   "set": "Trick Room / Instruct / Psychic / Encore"
+  },
+  {
+   "id": "z05",
+   "weight": 0.0408,
+   "mon": "Oranguru",
+   "set": "Trick Room / Instruct / Imprison / Encore"
+  },
+  {
+   "id": "z06",
+   "weight": 0.0612,
+   "mon": "Infernape",
+   "set": "Fake Out / Heat Wave / Close Combat / Encore"
+  },
+  {
+   "id": "z07",
+   "weight": 0.0408,
+   "mon": "Toxtricity",
+   "set": "Overdrive / Boomburst / Sludge Bomb / Encore"
+  },
+  {
+   "id": "z08",
+   "weight": 0.0612,
+   "mon": "Toxtricity",
+   "set": "Overdrive / Boomburst / Sludge Bomb / Encore"
+  },
+  {
+   "id": "z09",
+   "weight": 0.0408,
+   "mon": "Toxtricity",
+   "set": "Overdrive / Sludge Bomb / Boomburst / Encore"
+  },
+  {
+   "id": "z10",
+   "weight": 0.0306,
+   "mon": "Infernape",
+   "set": "Fake Out / Heat Wave / Close Combat / Encore"
+  },
+  {
+   "id": "z11",
+   "weight": 0.0306,
+   "mon": "Infernape",
+   "set": "Fake Out / Heat Wave / Close Combat / Encore"
+  },
+  {
+   "id": "z12",
+   "weight": 0.0306,
+   "mon": "Infernape",
+   "set": "Fake Out / Heat Wave / Close Combat / Encore"
+  },
+  {
+   "id": "z13",
+   "weight": 0.0408,
+   "mon": "Infernape",
+   "set": "Fake Out / Overheat / Aura Sphere / Encore"
+  },
+  {
+   "id": "z14",
+   "weight": 0.0306,
+   "mon": "Infernape",
+   "set": "Fake Out / Heat Wave / Close Combat / Encore"
+  },
+  {
+   "id": "z15",
+   "weight": 0.0408,
+   "mon": "Infernape",
+   "set": "Fake Out / Heat Wave / Close Combat / Encore"
+  },
+  {
+   "id": "z16",
+   "weight": 0.0306,
+   "mon": "Oranguru",
+   "set": "Trick Room / Instruct / Psychic / Encore"
+  },
+  {
+   "id": "z17",
+   "weight": 0.0306,
+   "mon": "Oranguru",
+   "set": "Trick Room / Instruct / Imprison / Encore"
+  },
+  {
+   "id": "z18",
+   "weight": 0.0306,
+   "mon": "Infernape",
+   "set": "Fake Out / Heat Wave / Close Combat / Encore"
+  },
+  {
+   "id": "z19",
+   "weight": 0.0306,
+   "mon": "Toxtricity",
+   "set": "Overdrive / Sludge Bomb / Boomburst / Encore"
+  },
+  {
+   "id": "z20",
+   "weight": 0.0306,
+   "mon": "Toxtricity",
+   "set": "Overdrive / Boomburst / Sludge Bomb / Encore"
+  },
+  {
+   "id": "z21",
+   "weight": 0.0204,
+   "mon": "Infernape",
+   "set": "Fake Out / Heat Wave / Close Combat / Encore"
+  },
+  {
+   "id": "z22",
+   "weight": 0.0204,
+   "mon": "Infernape",
+   "set": "Fake Out / Heat Wave / Close Combat / Encore"
+  },
+  {
+   "id": "z23",
+   "weight": 0.0306,
+   "mon": "Oranguru",
+   "set": "Trick Room / Instruct / Psychic / Encore"
+  },
+  {
+   "id": "z24",
+   "weight": 0.0204,
+   "mon": "Infernape",
+   "set": "Fake Out / Heat Wave / Close Combat / Encore"
+  }
+ ]
+}

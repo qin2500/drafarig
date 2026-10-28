@@ -1,0 +1,60 @@
+Oranguru @ Sitrus Berry  
+Ability: Inner Focus  
+Level: 50  
+EVs: 32 HP / 2 Def / 32 SpD  
+Sassy Nature  
+- Trick Room  
+- Instruct  
+- Imprison  
+- Encore  
+
+Toxtricity @ Life Orb  
+Ability: Punk Rock  
+Level: 50  
+EVs: 32 HP / 32 SpA / 2 SpD  
+Quiet Nature  
+- Overdrive  
+- Boomburst  
+- Sludge Bomb  
+- Protect  
+
+Metagross @ Metagrossite  
+Ability: Clear Body  
+Level: 50  
+EVs: 24 HP / 15 Atk / 27 Spe  
+Adamant Nature  
+- Psychic Fangs  
+- Iron Head  
+- Bullet Punch  
+- Protect  
+
+Slowking (Slowking-Galar) @ Colbur Berry  
+Ability: Regenerator  
+Level: 50  
+EVs: 32 HP / 5 Def / 19 SpA / 10 SpD  
+Sassy Nature  
+- Trick Room  
+- Chilly Reception  
+- Sludge Bomb  
+- Protect  
+
+Krookodile @ Passho Berry  
+Ability: Intimidate  
+Level: 50  
+EVs: 32 HP / 3 Def / 25 SpD / 6 Spe  
+Impish Nature  
+- Knock Off  
+- High Horsepower  
+- Rock Slide  
+- Protect  
+
+Dragapult @ Focus Sash  
+Ability: Clear Body  
+Level: 50  
+EVs: 2 HP / 32 SpA / 32 Spe  
+Timid Nature  
+- Draco Meteor  
+- Shadow Ball  
+- Will-O-Wisp  
+- Protect  
+

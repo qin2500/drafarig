@@ -1,0 +1,60 @@
+Umbreon @ Sitrus Berry  
+Ability: Inner Focus  
+Level: 50  
+EVs: 32 HP / 24 Def / 10 SpD  
+Careful Nature  
+- Foul Play  
+- Taunt  
+- Helping Hand  
+- Protect  
+
+Metagross @ Metagrossite  
+Ability: Clear Body  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Jolly Nature  
+- Psychic Fangs  
+- Iron Head  
+- Stomping Tantrum  
+- Protect  
+
+Rotom (Rotom-Wash) @ Life Orb  
+Ability: Levitate  
+Level: 50  
+EVs: 32 HP / 4 Def / 8 SpA / 16 SpD / 6 Spe  
+Modest Nature  
+- Hydro Pump  
+- Will-O-Wisp  
+- Thunderbolt  
+- Protect  
+
+Dragapult @ Focus Sash  
+Ability: Clear Body  
+Level: 50  
+EVs: 2 HP / 32 SpA / 32 Spe  
+Timid Nature  
+- Draco Meteor  
+- Shadow Ball  
+- Will-O-Wisp  
+- Protect  
+
+Krookodile @ Expert Belt  
+Ability: Intimidate  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Adamant Nature  
+- Rock Slide  
+- Stone Edge  
+- High Horsepower  
+- Protect  
+
+Toxtricity @ Choice Scarf  
+Ability: Punk Rock  
+Level: 50  
+EVs: 1 HP / 32 SpA / 1 SpD / 32 Spe  
+Timid Nature  
+- Overdrive  
+- Boomburst  
+- Sludge Bomb  
+- Volt Switch  
+
