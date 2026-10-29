@@ -231,3 +231,47 @@ test('teambuilder (Ning in scope): Guide box with notes (4 + more), calcs from y
   assert.match(T(ms), /Guide: Rock Slide OHKOs Charizard/);
   assert.match(T(ms), /From the guide: Lucario Rock Slide → Charizard-Mega-Y 200–240%/);
 });
+
+test('Deep dive: a tab only when the guide has one; ranking, every six with paste, copy and import; ZhuZi\'s real deep dive validates', async (t) => {
+  // the real Week 3 data: every six keeps its paste and leads, every calc survives validation
+  const real = (await import('../lib/guides/5v3.mjs')).default;
+  const { guide: rg } = validateGuide(real, mech);
+  assert.equal(rg.deep.sixes.length, real.deep.sixes.length);
+  assert.ok(rg.deep.sixes.every((s) => s.paste.includes('@')));
+  assert.equal(rg.deep.calcs.length, real.deep.calcs.length);
+  // the fixture has no deep dive: no tab
+  t.after(registerGuide({ ...FIXTURE, deep: undefined }));
+  const plain = await brief(t);
+  assert.ok(!/id="ptab-deep"/.test(plain.html()), 'no Deep dive tab without data');
+  plain.restore();
+});
+
+test('Deep dive tab renders with the fixture\'s deep data', async (t) => {
+  const deep = {
+    written: '2026-10-29', method: ['Fixture method'], caveats: ['Fixture caveat'],
+    sixes: [
+      { id: 'a', name: 'Your six', tag: 'yours', change: 'Mine.', paste: FIXTURE.sets, leads: [{ if: 'their 6 includes Rillaboom', bring4: ['charizard', 'kangaskhan', 'sinistcha', 'pelipper'], lead: ['charizard', 'kangaskhan'], fit: 'fitted: 3/4' }],
+        results: { n: 960, zhuzi: 70, anti: { pct: 60, n: 300 }, rock: { pct: 55, n: 100 }, vsYours: null, vsYoursAnti: null } },
+      { id: 'b', name: 'Other six', change: 'Other.', paste: FIXTURE.sets, leads: [],
+        results: { n: 960, zhuzi: 75, anti: { pct: 50, n: 300 }, rock: null, vsYours: { d: 5, ci: 3, n: 960 }, vsYoursAnti: { d: -10, ci: 6, n: 300 } } },
+    ],
+    opponents: [{ id: 'z1', label: 'His goodstuffs', weight: 0.5, why: 'likely', anti: true, paste: FIXTURE.sets }],
+    calcs: [{ attacker: { id: 'charizardmegay', set: 'ours' }, defender: { id: 'gholdengo', set: 'worst' }, move: 'heatwave', field: {}, range: '80–95%', verdict: '2HKO', why: '' }],
+  };
+  t.after(registerGuide({ ...FIXTURE, deep }));
+  const storage = device();
+  const app = await bootApp({ mode: 'prep/5v2/deep', storage });
+  t.after(() => app.restore());
+  await app.waitFor(() => /Deep dive vs Ning/.test(T(app)), 'the tab', 20000);
+  const h = T(app);
+  for (const s of ['Deep dive', 'The short version', 'Your six: 70.0% vs his likely sixes', 'Best vs his likely sixes: Other six (75.0%)', 'Ranking', '+5.0 ±3.0',
+    'Leads (fitted in the sims)', 'Charizard + Kangaskhan', 'Copy paste', 'Import as team', "Ning's modelled sixes", 'His goodstuffs', '50% likely', 'Calcs for your six', '80–95%', 'How these numbers were made'])
+    assert.ok(h.includes(s), s);
+  assert.match(app.html(), /id="ptab-deep"[^>]*aria-current="page"/);
+  assert.ok(btns(app, 'dd-copy').some((b) => b.kind === 'six' && b.six === 'b'));
+  await app.click({ pa: 'dd-import', six: 'b' });
+  await flushSaves(app);
+  const all = JSON.parse(storage.getItem(KEYS.teams) ?? '{"teams":[]}').teams;
+  const team = all.find((x) => x.name === 'Other six (vs Ning)');
+  assert.equal(team?.slots.length, 2, 'imported as a team');
+});

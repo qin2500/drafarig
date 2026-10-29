@@ -911,3 +911,27 @@ export const MOCKS = {
   noteHead: (p, f, w) => `Mock: ${p}'s team vs ${f}${w ? ` (W${w})` : ''}`, noteTeam: (v) => `Team played: ${v}`, noteRecord: (w, l) => `Record: ${w}–${l}`,
   noteGame: (i, g, nm) => `Game ${i}: ${g.result === 'W' ? 'won' : 'lost'}${g.ourLead?.length ? `, led ${g.ourLead.map(nm).join(' + ')}` : ''}${g.theirLead?.length ? ` vs ${g.theirLead.map(nm).join(' + ')}` : ''}${g.line ? `, ${g.line}` : ''}`,
 };
+
+// The matchup's Deep dive tab (public/prep-deep.js)
+export const DEEP = {
+  tab: 'Deep dive', head: (c) => `Deep dive vs ${c}`, sub: (d, n) => `Every six we tested in the sims (${n}) · updated ${d ? fmtDate(d) : '?'}`,
+  none: 'No deep dive for this matchup yet.', short: 'The short version',
+  yourLine: (n, z, a) => `${n}: ${z} vs his likely sixes, ${a} vs the anti-Charizard ones.`,
+  topLine: (n, z) => `Best vs his likely sixes: ${n} (${z}).`, topAntiLine: (n, a) => `Best vs anti-Charizard sixes: ${n} (${a}).`,
+  rsLine: (all, inf) => { const f = (x) => `${x.d > 0 ? '+' : ''}${x.d.toFixed(1)} ±${x.ci.toFixed(1)}${Math.abs(x.d) <= x.ci ? ' (a tie)' : ''}`; return `Rock Slide on Kangaskhan instead of Sucker Punch (tested on the old six): ${f(all)} vs all his sixes${inf ? `, ${f(inf)} vs his Infernape sixes` : ''}.`; },
+  rankHead: 'Ranking', six: 'Six', colZhuzi: 'His likely', colAnti: 'Anti-Zard', colRock: 'Rock-heavy', colVs: 'vs yours', base: 'baseline',
+  partial: (n) => `(${n} games so far)`, deltaTip: (n) => `Points vs your six on the same ${n} games, ±95%. Crosses 0 = a tie.`,
+  rankHelp: '"His likely" weights his 24 modelled sixes by how likely he brings each. "vs yours" is the paired difference to your six on identical games; grey = within the margin, a tie.',
+  engineHead: 'Engine check', enginePending: 'Still running: the top sixes replayed with the search engine on both sides.',
+  engineHelp: 'Same idea with the search engine (it looks ahead) piloting both sides: fewer games, wider margins, closer to strong play.',
+  sixesHead: 'Every six', yoursPill: 'yours', guidePill: 'old guide', vsAnti: 'vs yours on anti-Charizard sixes:',
+  leadsHead: 'Leads (fitted in the sims)', ifHe: 'If his six has', lead: 'Lead', back: 'Back', noLeads: 'No fitted lead table for this six.',
+  leadsHelp: 'Each row: the lead that won most when his preview showed those Pokémon, then validated on fresh games.',
+  paste: 'Paste', copy: 'Copy paste', importTeam: 'Import as team', copied: (n) => `Copied: ${n}`, copyFailed: "Couldn't copy; select the text instead",
+  teamName: (c, n) => `${n} (vs ${c})`, reason: (c) => `from the ${c} deep dive`,
+  calcsHead: 'Calcs for your six', calcsHelp: 'Each one re-checked in the app\'s damage engine. Their sets: ladder usage, or the worst case where marked.',
+  yourHits: 'Your hits', hisHits: 'His hits',
+  hisHead: (c) => `${c}'s modelled sixes`, hisHelp: 'What the sims played against: his 24 likely sixes (with how likely we think each is) and two Rock-heavy sixes like your mock partner\'s.',
+  weight: (p) => `${p}% likely`, extra: 'extra test', antiTag: 'anti-Charizard',
+  methodHead: 'How these numbers were made', caveatsHead: 'Caveats',
+};

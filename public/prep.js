@@ -29,10 +29,11 @@ import * as Guide from './prep-guide.js';
 import * as Mocks from './prep-mocks.js';
 import * as WB from './prep-workbench.js';
 import * as MockPov from './prep-mockpov.js';
+import * as Deep from './prep-deep.js';
 
 const SAVE_DELAY = 400;
-const TAB_LABEL = { brief: 'Brief', plan: 'Plan', sets: 'Sets', calcs: 'Calcs', practice: 'Practice' };
-const MODULES = [Sets, Calcs, Plan, Practice, Matchup, Chat, TB, Teams, WB, Moves, Threats, Guide, Mocks, MockPov];
+const TAB_LABEL = { brief: 'Brief', plan: 'Plan', sets: 'Sets', calcs: 'Calcs', practice: 'Practice', deep: C.DEEP.tab };
+const MODULES = [Sets, Calcs, Plan, Practice, Matchup, Chat, TB, Teams, WB, Moves, Threats, Guide, Mocks, MockPov, Deep];
 
 /**
  * app: { dex, league(), sheet(), usage(), coresCx(), viewingCoach(), setViewingCoach(name), goMode(mode), toast(msg),
@@ -804,16 +805,19 @@ export function createPrep(app) {
     let ws = m.ws;
     const legacy = unassignedVs([...P.ws.values()], m.opp.name);
     // an old Build link (#…/build/<n>) that couldn't be redirected yet (sheet loading, no set): the Sets section
-    const tab = r.detail?.side === 'build' ? 'sets' : MATCH_TABS.includes(r.tab) ? r.tab : idRoute ? 'plan' : 'brief';
+    const deep = Deep.has(P, m);
+    const tab0 = r.detail?.side === 'build' ? 'sets' : MATCH_TABS.includes(r.tab) ? r.tab : idRoute ? 'plan' : 'brief';
+    const tab = tab0 === 'deep' && !deep ? 'brief' : tab0;
     // Your own Sets, Calcs and Practice are working sections: opening one starts this matchup's prep (the footer says it's saved on
     // this device). Another coach's view, or earlier unassigned prep vs this coach (offered for review), keeps the start panel.
     if (!ws && !legacy.length && m.pov.name === P.ownSide() && ['sets', 'calcs', 'practice'].includes(tab) && !P.readOnly()) ws = P.ensureWorkspace(m.pov.name, m.opp.name) ?? null;
     const dots = ws ? draftDots(ws) : {};
     const seatRoute = { view: 'ws', pov: m.pov.order, opp: m.opp.order };
-    const hrefOf = (k) => formatRoute(idRoute && k !== 'brief' ? { view: 'ws', wsId: ws.id, tab: k } : { ...seatRoute, tab: k });
-    const tabs = `<nav class="dtabs" aria-label="${esc(`Sections for vs ${m.opp.name}`)}">${MATCH_TABS.map((k) => `<a href="${esc(hrefOf(k))}" id="ptab-${k}" data-pa="tab" data-tab="${k}"${tab === k && !r.detail ? ' aria-current="page" class="active"' : ''}${dots[k] ? ` aria-label="${esc(`${TAB_LABEL[k]}, ${C.BRIEF.unsavedDot[k]}`)}"` : ''}>${esc(TAB_LABEL[k])}${dots[k] ? '<span class="dot" aria-hidden="true"></span>' : ''}</a>`).join('')}</nav>`;
+    const hrefOf = (k) => formatRoute(idRoute && k !== 'brief' && k !== 'deep' ? { view: 'ws', wsId: ws.id, tab: k } : { ...seatRoute, tab: k });
+    const tabs = `<nav class="dtabs" aria-label="${esc(`Sections for vs ${m.opp.name}`)}">${MATCH_TABS.filter((k) => k !== 'deep' || deep).map((k) => `<a href="${esc(hrefOf(k))}" id="ptab-${k}" data-pa="tab" data-tab="${k}"${tab === k && !r.detail ? ' aria-current="page" class="active"' : ''}${dots[k] ? ` aria-label="${esc(`${TAB_LABEL[k]}, ${C.BRIEF.unsavedDot[k]}`)}"` : ''}>${esc(TAB_LABEL[k])}${dots[k] ? '<span class="dot" aria-hidden="true"></span>' : ''}</a>`).join('')}</nav>`;
     let body;
     if (tab === 'brief') body = Matchup.brief(P, { r, pov: m.pov, opp: m.opp, ws, legacy });
+    else if (tab === 'deep') body = Deep.tab(P, m);
     else if (ws) body = tab === 'sets' ? Sets.tab(P, ws) : tab === 'calcs' ? Calcs.tab(P, ws) : tab === 'practice' ? Practice.tab(P, ws) : Plan.tab(P, ws);
     else body = (tab === 'plan' && !legacy.length && Plan.previewTab(P, m)) || startPanel(m, legacy, tab);
     return `<section class="panel prep-match" data-key="match">${povRow(m.pov.name, src)}${oppStrip(m.pov, m.opp.order)}
@@ -1032,7 +1036,7 @@ export function createPrep(app) {
       <span class="ws-title">${owner ? `${esc(owner)} ` : ''}vs ${esc(ws.coach)}</span>${ws.isNext ? ' <span class="chip ok">next</span>' : ''}</div>
       ${owner ? '' : `<p class="banner warn unassigned">${esc(C.POV.unassignedBanner)} ${btn(C.POV.review, 'go-owner', { ws: ws.id }, { primary: true })}</p>`}`;
     // section buttons (not an ARIA tablist: no arrow-key model to promise); the current one is marked aria-current
-    const tabs = `<nav class="ptabs" aria-label="Prep sections">${Object.entries(TAB_LABEL).filter(([k]) => k !== 'brief' || owner).map(([k, l]) => `<button type="button" id="ptab-${k}" data-pa="tab" data-tab="${k}"${!r.kind && tab === k ? ' aria-current="page" class="active"' : ''}>${l}</button>`).join('')}</nav>`;
+    const tabs = `<nav class="ptabs" aria-label="Prep sections">${Object.entries(TAB_LABEL).filter(([k]) => k !== 'deep' && (k !== 'brief' || owner)).map(([k, l]) => `<button type="button" id="ptab-${k}" data-pa="tab" data-tab="${k}"${!r.kind && tab === k ? ' aria-current="page" class="active"' : ''}>${l}</button>`).join('')}</nav>`;
     if (r.kind === 'owner') return `<section class="panel prep-ws" data-key="ws">${head}${ownerScreen(ws)}</section>`;
     let body;
     if (!r.kind) {
@@ -1188,7 +1192,7 @@ export function createPrep(app) {
       const m = P.match(r);
       if (m) {
         // a section tap starts saved prep for this matchup, unless an earlier unassigned one could be it: then the tab asks
-        if (tab !== 'brief' && !m.ws && !unassignedVs([...P.ws.values()], m.opp.name).length && !P.ensureWorkspace(m.pov.name, m.opp.name)) return;
+        if (tab !== 'brief' && tab !== 'deep' && !m.ws && !unassignedVs([...P.ws.values()], m.opp.name).length && !P.ensureWorkspace(m.pov.name, m.opp.name)) return;
         return P.go({ view: 'ws', pov: r.pov, opp: r.opp, tab: MATCH_TABS.includes(tab) ? tab : 'brief' }, { push: false });
       }
       const ws = P.ws.get(r.wsId), owner = ownerOf(ws);

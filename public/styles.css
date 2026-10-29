@@ -1029,3 +1029,19 @@ button.st-btn:hover, button.st-btn:focus-visible { border-color: var(--line); }
 .prep .mk-bar button { flex: 1; min-height: 44px; }
 .prep .mk-form select { min-width: 9em; }
 @media (max-width: 767px) { .prep .mk-team { grid-template-columns: minmax(0, 1fr); } .prep .mk-form select, .prep .mk-form input { min-height: 44px; font-size: 16px; } .prep .mk-playbtn { width: 100%; min-height: 44px; } }
+/* Deep dive tab (public/prep-deep.js) */
+.prep .dd-scroll { overflow-x: auto; max-width: 100%; }
+.prep .dd-table { font-size: 13px; }
+.prep .dd-table th, .prep .dd-table td { text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.prep .dd-table thead th { font-size: 12px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+.prep .dd-table tr.dd-yours > * { background: var(--okbg); }
+.prep .dd-table .linkish { text-align: left; font-weight: 600; }
+.prep .dd-d { white-space: nowrap; font-weight: 600; }
+.prep .dd-d.up { color: var(--ok); } .prep .dd-d.down { color: var(--bad); } .prep .dd-d.tie { color: var(--muted); font-weight: 400; }
+.prep .dd-six.dd-yours { border-color: var(--ok); }
+.prep .dd-six > summary, .prep .dd-opp > summary { display: list-item; }
+.prep .dd-sum { display: block; margin: 2px 0 0 1.1em; }
+.prep .dd-six h4 { margin: 10px 0 4px; font-size: 13px; }
+.prep .dd-paste { font-size: 12px; max-height: 22em; }
+.prep .dd-calcs li { margin: 4px 0; }
+.prep .dd-six { scroll-margin-top: 200px; }

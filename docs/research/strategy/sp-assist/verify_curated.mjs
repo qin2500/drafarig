@@ -1,4 +1,4 @@
-// Re-run every curated calc (lib/guides/*.mjs, lib/mocks/*.mjs) in the APP engine and compare with the stated range.
+// Re-run every curated calc (lib/guides/*.mjs with their Deep dive calcs, lib/mocks/*.mjs) in the APP engine and compare with the stated range.
 // Run from the repo root: node docs/research/strategy/sp-assist/verify_curated.mjs   (read-only; exits 1 on a mismatch > 0.5%)
 import { readdirSync } from 'node:fs';
 const ROOT = new URL('../../../../', import.meta.url);
@@ -23,7 +23,7 @@ const sources = only.length
 for (const [dir, files] of sources) {
   for (const f of files) {
     const g = (await import(new URL(`${dir}/${f}`, ROOT))).default;
-    for (const [i, c] of (g.calcs ?? []).entries()) {
+    for (const [i, c] of [...(g.calcs ?? []), ...(g.deep?.calcs ?? [])].entries()) {
       const a = side(c.attacker), d = side(c.defender);
       a.set.moves = [c.move];
       d.set.moves = ['protect'];
