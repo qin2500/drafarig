@@ -15,7 +15,10 @@ const ROWS = [
   { if: 'their 6 includes Dragapult + Umbreon', need: ['dragapult', 'umbreon'] },
 ];
 const K = 10, MIN = 15;
-const rowOf = (z) => ROWS.findIndex((r) => r.need.every((s) => six[z].includes(s)));
+// a team given as a file (not one of his candidate ids): its species from the Showdown text
+const speciesOf = (z) => six[z] ??= readFileSync(new URL(`../../../../../${z}`, import.meta.url), 'utf8').trim().split(/\n\n+/)
+  .map((b) => b.split('\n')[0].split(' @ ')[0].replace(/\s*\(.*\)\s*$/, '').toLowerCase().replace(/[^a-z0-9]/g, ''));
+const rowOf = (z) => ROWS.findIndex((r) => r.need.every((s) => speciesOf(z).includes(s)));
 const games = process.argv.slice(2).flatMap((f) => readFileSync(f, 'utf8').trim().split('\n').map((l) => JSON.parse(l))).filter((r) => r.winner);
 const out = [];
 ROWS.forEach((row, i) => {
