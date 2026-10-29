@@ -246,6 +246,12 @@ export class EnginePlayer extends HeuristicPlayer {
       S.switches[side] = joints[side].filter((a) => a.kind === 'switch').length;
       for (const a of joints[side]) if (a.kind === 'switch' && S.mons[a.to]) S.switchIns.push({ key: a.to, side, faced: S.active[foe(side)].filter(Boolean) });
     }
+    if (this.net?.meta?.residual) {
+      // residual network (train-residual.mjs): the heuristic value plus the network's correction, in the heuristic's
+      // units, so a zero network plays exactly as the original engine
+      const parts = valueParts(S, me);
+      return heurValue(S, me, this.style) + this.net.forward(encode(b, me, parts, features(b, me))) / this.actionScale;
+    }
     if (this.net) {
       const parts = valueParts(S, me);
       let z = this.net.forward(encode(b, me, parts, features(b, me)));

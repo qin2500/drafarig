@@ -1,0 +1,60 @@
+Maushold @ Wide Lens  
+Ability: Friend Guard  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Jolly Nature  
+- Follow Me  
+- Super Fang  
+- Population Bomb  
+- Feint  
+
+Politoed @ Sitrus Berry  
+Ability: Drizzle  
+Level: 50  
+EVs: 32 HP / 2 Def / 32 SpA  
+Quiet Nature  
+- Weather Ball  
+- Muddy Water  
+- Protect  
+- Perish Song  
+
+Baxcalibur @ Life Orb  
+Ability: Thermal Exchange  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Jolly Nature  
+- Glaive Rush  
+- Protect  
+- High Horsepower  
+- Ice Shard  
+
+Garchomp @ Rocky Helmet  
+Ability: Rough Skin  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Adamant Nature  
+- Stomping Tantrum  
+- Dragon Claw  
+- Earthquake  
+- Rock Slide  
+
+Salamence @ Salamencite  
+Ability: Intimidate  
+Level: 50  
+EVs: 1 HP / 32 SpA / 1 SpD / 32 Spe  
+Timid Nature  
+- Hyper Voice  
+- Protect  
+- Tailwind  
+- Draco Meteor  
+
+Metagross @ Metagrossite  
+Ability: Clear Body  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Jolly Nature  
+- Psychic Fangs  
+- Stomping Tantrum  
+- Ice Punch  
+- Protect  
+

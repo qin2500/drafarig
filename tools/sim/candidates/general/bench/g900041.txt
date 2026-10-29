@@ -1,0 +1,60 @@
+Alakazam @ Alakazite  
+Ability: Synchronize  
+Level: 50  
+EVs: 2 HP / 32 SpA / 32 Spe  
+Modest Nature  
+- Expanding Force  
+- Shadow Ball  
+- Protect  
+- Encore  
+
+Indeedee (Indeedee-F) (F) @ Sitrus Berry  
+Ability: Psychic Surge  
+Level: 50  
+EVs: 32 HP / 32 Def / 2 SpD  
+Relaxed Nature  
+- Imprison  
+- Trick Room  
+- Follow Me  
+- Psychic  
+
+Farigiraf @ Colbur Berry  
+Ability: Armor Tail  
+Level: 50  
+EVs: 27 HP / 20 Def / 19 SpD  
+Bold Nature  
+- Trick Room  
+- Helping Hand  
+- Protect  
+- Thunderbolt  
+
+Pawmot @ Focus Sash  
+Ability: Iron Fist  
+Level: 50  
+EVs: 32 Atk / 2 Def / 32 Spe  
+Jolly Nature  
+- Close Combat  
+- Ice Punch  
+- Protect  
+- Revival Blessing  
+
+Annihilape @ Choice Scarf  
+Ability: Defiant  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Jolly Nature  
+- Close Combat  
+- Shadow Claw  
+- Rage Fist  
+- Drain Punch  
+
+Whimsicott @ Fairy Feather  
+Ability: Prankster  
+Level: 50  
+EVs: 2 HP / 32 SpA / 32 Spe  
+Timid Nature  
+- Moonblast  
+- Tailwind  
+- Protect  
+- Sunny Day  
+

@@ -1,0 +1,60 @@
+Sneasler @ Grassy Seed  
+Ability: Unburden  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Jolly Nature  
+- Fake Out  
+- Rock Slide  
+- Protect  
+- Dire Claw  
+
+Metagross @ Metagrossite  
+Ability: Clear Body  
+Level: 50  
+EVs: 24 HP / 15 Atk / 27 Spe  
+Adamant Nature  
+- Protect  
+- Psychic Fangs  
+- Body Press  
+- Stomping Tantrum  
+
+Gengar @ Gengarite  
+Ability: Cursed Body  
+Level: 50  
+EVs: 2 HP / 32 SpA / 32 Spe  
+Timid Nature  
+- Perish Song  
+- Shadow Ball  
+- Substitute  
+- Sludge Bomb  
+
+Rillaboom @ Miracle Seed  
+Ability: Grassy Surge  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Jolly Nature  
+- High Horsepower  
+- Grassy Glide  
+- Wood Hammer  
+- Fake Out  
+
+Pelipper @ Focus Sash  
+Ability: Drizzle  
+Level: 50  
+EVs: 2 HP / 32 SpA / 32 Spe  
+Timid Nature  
+- Tailwind  
+- Protect  
+- Hurricane  
+- Weather Ball  
+
+Indeedee (Indeedee-F) (F) @ Colbur Berry  
+Ability: Psychic Surge  
+Level: 50  
+EVs: 32 HP / 32 Def / 2 SpD  
+Relaxed Nature  
+- Helping Hand  
+- Follow Me  
+- Trick Room  
+- Psychic  
+

@@ -1,0 +1,60 @@
+Blastoise @ Blastoisinite  
+Ability: Torrent  
+Level: 50  
+EVs: 2 HP / 32 SpA / 32 Spe  
+Modest Nature  
+- Shell Smash  
+- Water Spout  
+- Protect  
+- Terrain Pulse  
+
+Gengar @ Focus Sash  
+Ability: Cursed Body  
+Level: 50  
+EVs: 13 HP / 32 SpA / 21 Spe  
+Modest Nature  
+- Sludge Bomb  
+- Trick Room  
+- Taunt  
+- Shadow Ball  
+
+Rotom (Rotom-Heat) @ Leftovers  
+Ability: Levitate  
+Level: 50  
+EVs: 2 HP / 32 SpA / 32 Spe  
+Timid Nature  
+- Will-O-Wisp  
+- Volt Switch  
+- Overheat  
+- Thunderbolt  
+
+Incineroar @ Sitrus Berry  
+Ability: Intimidate  
+Level: 50  
+EVs: 32 HP / 20 Def / 14 SpD  
+Impish Nature  
+- Fake Out  
+- Flare Blitz  
+- Darkest Lariat  
+- Parting Shot  
+
+Sneasler @ Psychic Seed  
+Ability: Unburden  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Adamant Nature  
+- Dire Claw  
+- Close Combat  
+- Rock Tomb  
+- Fake Out  
+
+Salamence @ Salamencite  
+Ability: Intimidate  
+Level: 50  
+EVs: 1 HP / 32 SpA / 1 SpD / 32 Spe  
+Timid Nature  
+- Flamethrower  
+- Protect  
+- Double-Edge  
+- Tailwind  
+

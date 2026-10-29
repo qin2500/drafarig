@@ -1,0 +1,60 @@
+Lucario @ Lucarionite  
+Ability: Steadfast  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Jolly Nature  
+- Detect  
+- Bullet Punch  
+- Meteor Mash  
+- Close Combat  
+
+Indeedee (Indeedee-F) (F) @ Sitrus Berry  
+Ability: Psychic Surge  
+Level: 50  
+EVs: 32 HP / 32 Def / 2 SpD  
+Relaxed Nature  
+- Terrain Pulse  
+- Psychic  
+- Helping Hand  
+- Trick Room  
+
+Ninetales (Ninetales-Alola) @ Focus Sash  
+Ability: Snow Warning  
+Level: 50  
+EVs: 2 HP / 32 SpA / 32 Spe  
+Timid Nature  
+- Protect  
+- Blizzard  
+- Aurora Veil  
+- Freeze-Dry  
+
+Basculegion (M) @ Mystic Water  
+Ability: Adaptability  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Jolly Nature  
+- Aqua Jet  
+- Flip Turn  
+- Liquidation  
+- Last Respects  
+
+Archaludon @ Leftovers  
+Ability: Stamina  
+Level: 50  
+EVs: 2 HP / 32 SpA / 32 Spe  
+Timid Nature  
+- Dragon Pulse  
+- Protect  
+- Electro Shot  
+- Snarl  
+
+Swampert @ Swampertite  
+Ability: Torrent  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Adamant Nature  
+- Ice Punch  
+- Protect  
+- Wave Crash  
+- High Horsepower  
+

@@ -1,0 +1,60 @@
+Sneasler @ Grassy Seed  
+Ability: Unburden  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Jolly Nature  
+- Fake Out  
+- Dire Claw  
+- Close Combat  
+- Rock Tomb  
+
+Garchomp @ Garchompite Z  
+Ability: Sand Veil  
+Level: 50  
+EVs: 2 HP / 32 SpA / 32 Spe  
+Timid Nature  
+- Protect  
+- Earth Power  
+- Dragon Pulse  
+- Power Gem  
+
+Salamence @ Salamencite  
+Ability: Intimidate  
+Level: 50  
+EVs: 2 HP / 32 SpA / 32 Spe  
+Timid Nature  
+- Protect  
+- Tailwind  
+- Hyper Voice  
+- Heat Wave  
+
+Kingambit @ Black Glasses  
+Ability: Defiant  
+Level: 50  
+EVs: 32 HP / 32 Atk / 2 SpD  
+Brave Nature  
+- Iron Head  
+- Sucker Punch  
+- Protect  
+- Kowtow Cleave  
+
+Sinistcha @ Colbur Berry  
+Ability: Hospitality  
+Level: 50  
+EVs: 32 HP / 14 Def / 20 SpD  
+Bold Nature  
+- Rage Powder  
+- Trick Room  
+- Matcha Gotcha  
+- Protect  
+
+Dragonite @ Dragoninite  
+Ability: Multiscale  
+Level: 50  
+EVs: 1 HP / 1 Def / 32 SpA / 32 Spe  
+Modest Nature  
+- Protect  
+- Extreme Speed  
+- Thunderbolt  
+- Dragon Pulse  
+

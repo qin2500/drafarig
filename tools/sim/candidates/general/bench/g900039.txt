@@ -1,0 +1,60 @@
+Rillaboom @ Sitrus Berry  
+Ability: Grassy Surge  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Jolly Nature  
+- Protect  
+- Grassy Glide  
+- U-turn  
+- High Horsepower  
+
+Gardevoir @ Gardevoirite  
+Ability: Synchronize  
+Level: 50  
+EVs: 32 HP / 2 Def / 32 SpA  
+Modest Nature  
+- Calm Mind  
+- Protect  
+- Hyper Voice  
+- Expanding Force  
+
+Blastoise @ Blastoisinite  
+Ability: Torrent  
+Level: 50  
+EVs: 2 HP / 32 SpA / 32 Spe  
+Modest Nature  
+- Shell Smash  
+- Protect  
+- Aura Sphere  
+- Water Spout  
+
+Inteleon @ Scope Lens  
+Ability: Sniper  
+Level: 50  
+EVs: 2 HP / 32 SpA / 32 Spe  
+Timid Nature  
+- Protect  
+- Ice Beam  
+- Snipe Shot  
+- Vacuum Wave  
+
+Incineroar @ Rocky Helmet  
+Ability: Intimidate  
+Level: 50  
+EVs: 32 HP / 32 Atk / 2 SpD  
+Adamant Nature  
+- Parting Shot  
+- Fake Out  
+- Flare Blitz  
+- Protect  
+
+Indeedee (Indeedee-F) (F) @ Colbur Berry  
+Ability: Psychic Surge  
+Level: 50  
+EVs: 32 HP / 32 Def / 2 SpD  
+Bold Nature  
+- Protect  
+- Trick Room  
+- Follow Me  
+- Psychic  
+

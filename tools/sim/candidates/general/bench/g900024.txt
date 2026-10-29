@@ -1,0 +1,60 @@
+Sneasler @ Focus Sash  
+Ability: Unburden  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Adamant Nature  
+- Close Combat  
+- Fake Out  
+- Dire Claw  
+- Rock Slide  
+
+Charizard @ Charizardite Y  
+Ability: Blaze  
+Level: 50  
+EVs: 12 HP / 14 Def / 8 SpA / 32 Spe  
+Timid Nature  
+- Heat Wave  
+- Solar Beam  
+- Protect  
+- Ancient Power  
+
+Tyranitar @ Tyranitarite  
+Ability: Sand Stream  
+Level: 50  
+EVs: 17 HP / 17 Atk / 32 Spe  
+Jolly Nature  
+- Protect  
+- Knock Off  
+- Low Kick  
+- Rock Slide  
+
+Rillaboom @ Miracle Seed  
+Ability: Grassy Surge  
+Level: 50  
+EVs: 2 HP / 32 Atk / 32 Spe  
+Jolly Nature  
+- Grassy Glide  
+- Wood Hammer  
+- Protect  
+- Fake Out  
+
+Pelipper @ Sitrus Berry  
+Ability: Drizzle  
+Level: 50  
+EVs: 2 HP / 32 SpA / 32 Spe  
+Timid Nature  
+- Tailwind  
+- Hurricane  
+- Wide Guard  
+- Protect  
+
+Archaludon @ Leftovers  
+Ability: Stamina  
+Level: 50  
+EVs: 32 HP / 1 Def / 1 SpA / 21 SpD / 11 Spe  
+Calm Nature  
+- Electro Shot  
+- Snarl  
+- Dragon Pulse  
+- Draco Meteor  
+
