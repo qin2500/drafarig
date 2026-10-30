@@ -100,6 +100,8 @@ const sixes = SIXES.map((s) => {
   } : null;
   const eng = E && E.size >= 50 ? { n: E.size, zhuzi: wtd(E), anti: sub(E, anti), vsYours: s.id === 'n1b' || !baseEng ? null : diff(E, baseEng) } : null;
   const table = json(`${R}${s.table}`) ?? [];
+  // your six with its first lead table, also replayed by the engine: shows how much the lead table matters there
+  if (s.id === 'n1b') { const E1 = load(`${R}n1-eng.jsonl`); if (E1 && E && E1.size >= 50) { const x = diff(E1, E); s.notes = [...(s.notes ?? []), `Engine check with the first lead table: ${wtd(E1)}% vs his likely sixes (${x.d > 0 ? '+' : ''}${x.d} ±${x.ci} vs the refit table${Math.abs(x.d) <= x.ci ? ", a tie" : ""}).`]; } }
   return { id: s.id, name: s.name, tag: s.tag ?? '', change: s.change, notes: s.notes ?? [], paste: read(`${CAND}${s.file}`).trim(),
     leads: table.map((p) => ({ if: p.if, bring4: p.bring4, lead: p.lead, fit: p.note ?? '' })), results: res, engine: eng };
 });
