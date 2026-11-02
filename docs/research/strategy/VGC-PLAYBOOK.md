@@ -88,7 +88,8 @@ Charizard (Mega Y), Sinistcha, Pelipper, Kangaskhan, Aegislash, Morpeko, Conkeld
 Game 1 misplays; game 2 Tauros (Sheer Force Rock Slide) double-KO'd Charizard and Rotom-Fan. Plan:
 `match-calvin.md`. Calvin's core: Mega Staraptor Tailwind, Grimmsnarl, Volcarona, Basculegion-F, Mamoswine, Tauros.
 
-### Week 3 vs ZhuZi (seat 3): prep done, live in the app guide (`lib/guides/5v3.mjs`)
+### Week 3 vs ZhuZi (seat 3): **won 2–0** (reported 2026-11-02), prep live in the app guide (`lib/guides/5v3.mjs`)
+- Anthony's read: ZhuZi was favoured on team comp but misplayed, so the win says little about engine blind spots.
 - ZhuZi's 10: Metagross, Dragapult, Rotom-Wash, Oranguru, Krookodile, Infernape, Florges, Toxtricity, Slowking-G, Umbreon.
 - **Bring "c1":** Mega Charizard Y (Modest 32 HP / 32 SpA / 2 SpD: Heat Wave, Weather Ball, Solar Beam, Protect);
   Aegislash (Kasib, Brave: Poltergeist, Shadow Sneak, King's Shield, Wide Guard); Kangaskhan (Silk Scarf, Scrappy,
@@ -103,6 +104,16 @@ Game 1 misplays; game 2 Tauros (Sheer Force Rock Slide) double-KO'd Charizard an
   vs a17 +12.1 ± 3.2; c2 (Stunfisk) ties. Most-valuable choices: Sinistcha (−18 without it), Wide Guard (−10), Kangaskhan
   Protect (−8), Conkeldurr (+7). Most set details are ties; their reasons are calcs. Weak spots: bulky Umbreon / Taunt
   sixes (~53%). Full report: `docs/research/strategy/sim/zhuzi-sim-report.md`.
+
+### Week 4 vs Hex (seat 1): prep in progress (started 2026-11-02)
+- Schedule (league sheet "Paring" tab): W4 Hex, W5 Jacky.
+- Hex's 10: Garchomp, Indeedee-F, Armarouge, Corviknight, Rotom-Heat, Drampa, Kleavor, Banette, Ditto, Forretress.
+  Megas: Garchomp (Sand Force or Mega-Z: Levitate, 151 Spe, special), Banette (Prankster), Drampa.
+- What makes it hard: Psychic Terrain (Indeedee-F) blocks our priority into grounded targets; Indeedee + Armarouge
+  Trick Room with Expanding Force; Cloud Nine Drampa turns off our sun; Flash Fire Armarouge; Rock Slide from Garchomp,
+  Kleavor and Forretress into Charizard. Scan: `sp-assist/hex_scan.py` → `hex-scan.json`. Pool: `sp-assist/gen_hex.py`
+  → `tools/sim/candidates/hex.json` (run sims with `--cands tools/sim/candidates/hex.json`).
+- Sim AI fixes made for this match: Psychic Terrain priority block, Expanding Force as a spread move, Cloud Nine.
 
 ### Week 4 mock: Anthony pilots ZhuZi against Calvin (`lib/mocks/3v8.mjs`, method `mock-method.md` §5)
 Anthony and Calvin run mocks for each other's next opponent. Mocks show the normal prep screens from the opponent's POV.

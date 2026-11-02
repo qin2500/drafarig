@@ -848,7 +848,7 @@
    },
    {
     "id": "s001",
-    "label": "Charizard+Aegislash+Kangaskhan+Morpeko+Sinistcha+Conkeldurr",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Morpeko+Sinistcha+Conkeldurr",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -871,7 +871,7 @@
    },
    {
     "id": "s002",
-    "label": "Charizard+Aegislash+Kangaskhan+Morpeko+Sinistcha+Rotom-Fan",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Morpeko+Sinistcha+Rotom-Fan",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -894,7 +894,7 @@
    },
    {
     "id": "s003",
-    "label": "Charizard+Aegislash+Kangaskhan+Morpeko+Sinistcha+Stunfisk-Galar",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Morpeko+Sinistcha+Stunfisk-Galar",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -917,7 +917,7 @@
    },
    {
     "id": "s004",
-    "label": "Charizard+Aegislash+Kangaskhan+Morpeko+Sinistcha+Pelipper",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Morpeko+Sinistcha+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -940,7 +940,7 @@
    },
    {
     "id": "s005",
-    "label": "Charizard+Aegislash+Kangaskhan+Morpeko+Sinistcha+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Morpeko+Sinistcha+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -963,7 +963,7 @@
    },
    {
     "id": "s006",
-    "label": "Charizard+Aegislash+Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -986,7 +986,7 @@
    },
    {
     "id": "s007",
-    "label": "Charizard+Aegislash+Kangaskhan+Morpeko+Conkeldurr+Stunfisk-Galar",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Morpeko+Conkeldurr+Stunfisk-Galar",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1009,7 +1009,7 @@
    },
    {
     "id": "s008",
-    "label": "Charizard+Aegislash+Kangaskhan+Morpeko+Conkeldurr+Pelipper",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Morpeko+Conkeldurr+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Expert Belt (item clause)",
     "sets": [
@@ -1032,7 +1032,7 @@
    },
    {
     "id": "s009",
-    "label": "Charizard+Aegislash+Kangaskhan+Morpeko+Conkeldurr+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Morpeko+Conkeldurr+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1055,7 +1055,7 @@
    },
    {
     "id": "s010",
-    "label": "Charizard+Aegislash+Kangaskhan+Morpeko+Rotom-Fan+Stunfisk-Galar",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Morpeko+Rotom-Fan+Stunfisk-Galar",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1078,7 +1078,7 @@
    },
    {
     "id": "s011",
-    "label": "Charizard+Aegislash+Kangaskhan+Morpeko+Rotom-Fan+Pelipper",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Morpeko+Rotom-Fan+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -1101,7 +1101,7 @@
    },
    {
     "id": "s012",
-    "label": "Charizard+Aegislash+Kangaskhan+Morpeko+Rotom-Fan+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Morpeko+Rotom-Fan+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1124,7 +1124,7 @@
    },
    {
     "id": "s013",
-    "label": "Charizard+Aegislash+Kangaskhan+Morpeko+Stunfisk-Galar+Pelipper",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Morpeko+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -1147,7 +1147,7 @@
    },
    {
     "id": "s014",
-    "label": "Charizard+Aegislash+Kangaskhan+Morpeko+Stunfisk-Galar+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Morpeko+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1170,7 +1170,7 @@
    },
    {
     "id": "s015",
-    "label": "Charizard+Aegislash+Kangaskhan+Morpeko+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Morpeko+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -1193,7 +1193,7 @@
    },
    {
     "id": "s016",
-    "label": "Charizard+Aegislash+Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1216,7 +1216,7 @@
    },
    {
     "id": "s017",
-    "label": "Charizard+Aegislash+Kangaskhan+Sinistcha+Conkeldurr+Stunfisk-Galar",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Sinistcha+Conkeldurr+Stunfisk-Galar",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1239,7 +1239,7 @@
    },
    {
     "id": "s018",
-    "label": "Charizard+Aegislash+Kangaskhan+Sinistcha+Conkeldurr+Pelipper",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Sinistcha+Conkeldurr+Pelipper",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1262,7 +1262,7 @@
    },
    {
     "id": "s019",
-    "label": "Charizard+Aegislash+Kangaskhan+Sinistcha+Conkeldurr+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Sinistcha+Conkeldurr+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1285,7 +1285,7 @@
    },
    {
     "id": "s020",
-    "label": "Charizard+Aegislash+Kangaskhan+Sinistcha+Rotom-Fan+Stunfisk-Galar",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Sinistcha+Rotom-Fan+Stunfisk-Galar",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1308,7 +1308,7 @@
    },
    {
     "id": "s021",
-    "label": "Charizard+Aegislash+Kangaskhan+Sinistcha+Rotom-Fan+Pelipper",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Sinistcha+Rotom-Fan+Pelipper",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1331,7 +1331,7 @@
    },
    {
     "id": "s022",
-    "label": "Charizard+Aegislash+Kangaskhan+Sinistcha+Rotom-Fan+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Sinistcha+Rotom-Fan+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1354,7 +1354,7 @@
    },
    {
     "id": "s023",
-    "label": "Charizard+Aegislash+Kangaskhan+Sinistcha+Stunfisk-Galar+Pelipper",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Sinistcha+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1377,7 +1377,7 @@
    },
    {
     "id": "s024",
-    "label": "Charizard+Aegislash+Kangaskhan+Sinistcha+Stunfisk-Galar+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Sinistcha+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1400,7 +1400,7 @@
    },
    {
     "id": "s025",
-    "label": "Charizard+Aegislash+Kangaskhan+Sinistcha+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Sinistcha+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1423,7 +1423,7 @@
    },
    {
     "id": "s026",
-    "label": "Charizard+Aegislash+Kangaskhan+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1446,7 +1446,7 @@
    },
    {
     "id": "s027",
-    "label": "Charizard+Aegislash+Kangaskhan+Conkeldurr+Rotom-Fan+Pelipper",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Conkeldurr+Rotom-Fan+Pelipper",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1469,7 +1469,7 @@
    },
    {
     "id": "s028",
-    "label": "Charizard+Aegislash+Kangaskhan+Conkeldurr+Rotom-Fan+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Conkeldurr+Rotom-Fan+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1492,7 +1492,7 @@
    },
    {
     "id": "s029",
-    "label": "Charizard+Aegislash+Kangaskhan+Conkeldurr+Stunfisk-Galar+Pelipper",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Conkeldurr+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1515,7 +1515,7 @@
    },
    {
     "id": "s030",
-    "label": "Charizard+Aegislash+Kangaskhan+Conkeldurr+Stunfisk-Galar+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Conkeldurr+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1538,7 +1538,7 @@
    },
    {
     "id": "s031",
-    "label": "Charizard+Aegislash+Kangaskhan+Conkeldurr+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Conkeldurr+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1561,7 +1561,7 @@
    },
    {
     "id": "s032",
-    "label": "Charizard+Aegislash+Kangaskhan+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Rotom-Fan+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1584,7 +1584,7 @@
    },
    {
     "id": "s033",
-    "label": "Charizard+Aegislash+Kangaskhan+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Rotom-Fan+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1607,7 +1607,7 @@
    },
    {
     "id": "s034",
-    "label": "Charizard+Aegislash+Kangaskhan+Rotom-Fan+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Rotom-Fan+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1630,7 +1630,7 @@
    },
    {
     "id": "s035",
-    "label": "Charizard+Aegislash+Kangaskhan+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Kangaskhan+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1653,7 +1653,7 @@
    },
    {
     "id": "s036",
-    "label": "Charizard+Aegislash+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan",
+    "label": "Mega Charizard Y+Aegislash+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1676,7 +1676,7 @@
    },
    {
     "id": "s037",
-    "label": "Charizard+Aegislash+Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar",
+    "label": "Mega Charizard Y+Aegislash+Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1699,7 +1699,7 @@
    },
    {
     "id": "s038",
-    "label": "Charizard+Aegislash+Morpeko+Sinistcha+Conkeldurr+Pelipper",
+    "label": "Mega Charizard Y+Aegislash+Morpeko+Sinistcha+Conkeldurr+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Expert Belt (item clause)",
     "sets": [
@@ -1722,7 +1722,7 @@
    },
    {
     "id": "s039",
-    "label": "Charizard+Aegislash+Morpeko+Sinistcha+Conkeldurr+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Morpeko+Sinistcha+Conkeldurr+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1745,7 +1745,7 @@
    },
    {
     "id": "s040",
-    "label": "Charizard+Aegislash+Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar",
+    "label": "Mega Charizard Y+Aegislash+Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1768,7 +1768,7 @@
    },
    {
     "id": "s041",
-    "label": "Charizard+Aegislash+Morpeko+Sinistcha+Rotom-Fan+Pelipper",
+    "label": "Mega Charizard Y+Aegislash+Morpeko+Sinistcha+Rotom-Fan+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -1791,7 +1791,7 @@
    },
    {
     "id": "s042",
-    "label": "Charizard+Aegislash+Morpeko+Sinistcha+Rotom-Fan+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Morpeko+Sinistcha+Rotom-Fan+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1814,7 +1814,7 @@
    },
    {
     "id": "s043",
-    "label": "Charizard+Aegislash+Morpeko+Sinistcha+Stunfisk-Galar+Pelipper",
+    "label": "Mega Charizard Y+Aegislash+Morpeko+Sinistcha+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -1837,7 +1837,7 @@
    },
    {
     "id": "s044",
-    "label": "Charizard+Aegislash+Morpeko+Sinistcha+Stunfisk-Galar+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Morpeko+Sinistcha+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1860,7 +1860,7 @@
    },
    {
     "id": "s045",
-    "label": "Charizard+Aegislash+Morpeko+Sinistcha+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Morpeko+Sinistcha+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -1883,7 +1883,7 @@
    },
    {
     "id": "s046",
-    "label": "Charizard+Aegislash+Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
+    "label": "Mega Charizard Y+Aegislash+Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1906,7 +1906,7 @@
    },
    {
     "id": "s047",
-    "label": "Charizard+Aegislash+Morpeko+Conkeldurr+Rotom-Fan+Pelipper",
+    "label": "Mega Charizard Y+Aegislash+Morpeko+Conkeldurr+Rotom-Fan+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Sitrus Berry (item clause)",
     "sets": [
@@ -1929,7 +1929,7 @@
    },
    {
     "id": "s048",
-    "label": "Charizard+Aegislash+Morpeko+Conkeldurr+Rotom-Fan+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Morpeko+Conkeldurr+Rotom-Fan+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1952,7 +1952,7 @@
    },
    {
     "id": "s049",
-    "label": "Charizard+Aegislash+Morpeko+Conkeldurr+Stunfisk-Galar+Pelipper",
+    "label": "Mega Charizard Y+Aegislash+Morpeko+Conkeldurr+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Expert Belt (item clause)",
     "sets": [
@@ -1975,7 +1975,7 @@
    },
    {
     "id": "s050",
-    "label": "Charizard+Aegislash+Morpeko+Conkeldurr+Stunfisk-Galar+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Morpeko+Conkeldurr+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -1998,7 +1998,7 @@
    },
    {
     "id": "s051",
-    "label": "Charizard+Aegislash+Morpeko+Conkeldurr+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Morpeko+Conkeldurr+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Expert Belt (item clause)",
     "sets": [
@@ -2021,7 +2021,7 @@
    },
    {
     "id": "s052",
-    "label": "Charizard+Aegislash+Morpeko+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "label": "Mega Charizard Y+Aegislash+Morpeko+Rotom-Fan+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -2044,7 +2044,7 @@
    },
    {
     "id": "s053",
-    "label": "Charizard+Aegislash+Morpeko+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Morpeko+Rotom-Fan+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2067,7 +2067,7 @@
    },
    {
     "id": "s054",
-    "label": "Charizard+Aegislash+Morpeko+Rotom-Fan+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Morpeko+Rotom-Fan+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -2090,7 +2090,7 @@
    },
    {
     "id": "s055",
-    "label": "Charizard+Aegislash+Morpeko+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Morpeko+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -2113,7 +2113,7 @@
    },
    {
     "id": "s056",
-    "label": "Charizard+Aegislash+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
+    "label": "Mega Charizard Y+Aegislash+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2136,7 +2136,7 @@
    },
    {
     "id": "s057",
-    "label": "Charizard+Aegislash+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper",
+    "label": "Mega Charizard Y+Aegislash+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2159,7 +2159,7 @@
    },
    {
     "id": "s058",
-    "label": "Charizard+Aegislash+Sinistcha+Conkeldurr+Rotom-Fan+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Sinistcha+Conkeldurr+Rotom-Fan+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2182,7 +2182,7 @@
    },
    {
     "id": "s059",
-    "label": "Charizard+Aegislash+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper",
+    "label": "Mega Charizard Y+Aegislash+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2205,7 +2205,7 @@
    },
    {
     "id": "s060",
-    "label": "Charizard+Aegislash+Sinistcha+Conkeldurr+Stunfisk-Galar+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Sinistcha+Conkeldurr+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2228,7 +2228,7 @@
    },
    {
     "id": "s061",
-    "label": "Charizard+Aegislash+Sinistcha+Conkeldurr+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Sinistcha+Conkeldurr+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2251,7 +2251,7 @@
    },
    {
     "id": "s062",
-    "label": "Charizard+Aegislash+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "label": "Mega Charizard Y+Aegislash+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2274,7 +2274,7 @@
    },
    {
     "id": "s063",
-    "label": "Charizard+Aegislash+Sinistcha+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Sinistcha+Rotom-Fan+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2297,7 +2297,7 @@
    },
    {
     "id": "s064",
-    "label": "Charizard+Aegislash+Sinistcha+Rotom-Fan+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Sinistcha+Rotom-Fan+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2320,7 +2320,7 @@
    },
    {
     "id": "s065",
-    "label": "Charizard+Aegislash+Sinistcha+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Sinistcha+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2343,7 +2343,7 @@
    },
    {
     "id": "s066",
-    "label": "Charizard+Aegislash+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "label": "Mega Charizard Y+Aegislash+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2366,7 +2366,7 @@
    },
    {
     "id": "s067",
-    "label": "Charizard+Aegislash+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2389,7 +2389,7 @@
    },
    {
     "id": "s068",
-    "label": "Charizard+Aegislash+Conkeldurr+Rotom-Fan+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Conkeldurr+Rotom-Fan+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2412,7 +2412,7 @@
    },
    {
     "id": "s069",
-    "label": "Charizard+Aegislash+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2435,7 +2435,7 @@
    },
    {
     "id": "s070",
-    "label": "Charizard+Aegislash+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Aegislash+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2458,7 +2458,7 @@
    },
    {
     "id": "s071",
-    "label": "Charizard+Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan",
+    "label": "Mega Charizard Y+Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2481,7 +2481,7 @@
    },
    {
     "id": "s072",
-    "label": "Charizard+Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar",
+    "label": "Mega Charizard Y+Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2504,7 +2504,7 @@
    },
    {
     "id": "s073",
-    "label": "Charizard+Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Pelipper",
+    "label": "Mega Charizard Y+Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Expert Belt (item clause)",
     "sets": [
@@ -2527,7 +2527,7 @@
    },
    {
     "id": "s074",
-    "label": "Charizard+Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Simipour",
+    "label": "Mega Charizard Y+Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2550,7 +2550,7 @@
    },
    {
     "id": "s075",
-    "label": "Charizard+Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar",
+    "label": "Mega Charizard Y+Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2573,7 +2573,7 @@
    },
    {
     "id": "s076",
-    "label": "Charizard+Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Pelipper",
+    "label": "Mega Charizard Y+Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -2596,7 +2596,7 @@
    },
    {
     "id": "s077",
-    "label": "Charizard+Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Simipour",
+    "label": "Mega Charizard Y+Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2619,7 +2619,7 @@
    },
    {
     "id": "s078",
-    "label": "Charizard+Kangaskhan+Morpeko+Sinistcha+Stunfisk-Galar+Pelipper",
+    "label": "Mega Charizard Y+Kangaskhan+Morpeko+Sinistcha+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -2642,7 +2642,7 @@
    },
    {
     "id": "s079",
-    "label": "Charizard+Kangaskhan+Morpeko+Sinistcha+Stunfisk-Galar+Simipour",
+    "label": "Mega Charizard Y+Kangaskhan+Morpeko+Sinistcha+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2665,7 +2665,7 @@
    },
    {
     "id": "s080",
-    "label": "Charizard+Kangaskhan+Morpeko+Sinistcha+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Kangaskhan+Morpeko+Sinistcha+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -2688,7 +2688,7 @@
    },
    {
     "id": "s081",
-    "label": "Charizard+Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
+    "label": "Mega Charizard Y+Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2711,7 +2711,7 @@
    },
    {
     "id": "s082",
-    "label": "Charizard+Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Pelipper",
+    "label": "Mega Charizard Y+Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Sitrus Berry (item clause)",
     "sets": [
@@ -2734,7 +2734,7 @@
    },
    {
     "id": "s083",
-    "label": "Charizard+Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Simipour",
+    "label": "Mega Charizard Y+Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2757,7 +2757,7 @@
    },
    {
     "id": "s084",
-    "label": "Charizard+Kangaskhan+Morpeko+Conkeldurr+Stunfisk-Galar+Pelipper",
+    "label": "Mega Charizard Y+Kangaskhan+Morpeko+Conkeldurr+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Expert Belt (item clause)",
     "sets": [
@@ -2780,7 +2780,7 @@
    },
    {
     "id": "s085",
-    "label": "Charizard+Kangaskhan+Morpeko+Conkeldurr+Stunfisk-Galar+Simipour",
+    "label": "Mega Charizard Y+Kangaskhan+Morpeko+Conkeldurr+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2803,7 +2803,7 @@
    },
    {
     "id": "s086",
-    "label": "Charizard+Kangaskhan+Morpeko+Conkeldurr+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Kangaskhan+Morpeko+Conkeldurr+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Expert Belt (item clause)",
     "sets": [
@@ -2826,7 +2826,7 @@
    },
    {
     "id": "s087",
-    "label": "Charizard+Kangaskhan+Morpeko+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "label": "Mega Charizard Y+Kangaskhan+Morpeko+Rotom-Fan+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -2849,7 +2849,7 @@
    },
    {
     "id": "s088",
-    "label": "Charizard+Kangaskhan+Morpeko+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "label": "Mega Charizard Y+Kangaskhan+Morpeko+Rotom-Fan+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2872,7 +2872,7 @@
    },
    {
     "id": "s089",
-    "label": "Charizard+Kangaskhan+Morpeko+Rotom-Fan+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Kangaskhan+Morpeko+Rotom-Fan+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -2895,7 +2895,7 @@
    },
    {
     "id": "s090",
-    "label": "Charizard+Kangaskhan+Morpeko+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Kangaskhan+Morpeko+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -2918,7 +2918,7 @@
    },
    {
     "id": "s091",
-    "label": "Charizard+Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
+    "label": "Mega Charizard Y+Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2941,7 +2941,7 @@
    },
    {
     "id": "s092",
-    "label": "Charizard+Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper",
+    "label": "Mega Charizard Y+Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2964,7 +2964,7 @@
    },
    {
     "id": "s093",
-    "label": "Charizard+Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Simipour",
+    "label": "Mega Charizard Y+Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -2987,7 +2987,7 @@
    },
    {
     "id": "s094",
-    "label": "Charizard+Kangaskhan+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper",
+    "label": "Mega Charizard Y+Kangaskhan+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3010,7 +3010,7 @@
    },
    {
     "id": "s095",
-    "label": "Charizard+Kangaskhan+Sinistcha+Conkeldurr+Stunfisk-Galar+Simipour",
+    "label": "Mega Charizard Y+Kangaskhan+Sinistcha+Conkeldurr+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3033,7 +3033,7 @@
    },
    {
     "id": "s096",
-    "label": "Charizard+Kangaskhan+Sinistcha+Conkeldurr+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Kangaskhan+Sinistcha+Conkeldurr+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3056,7 +3056,7 @@
    },
    {
     "id": "s097",
-    "label": "Charizard+Kangaskhan+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "label": "Mega Charizard Y+Kangaskhan+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3079,7 +3079,7 @@
    },
    {
     "id": "s098",
-    "label": "Charizard+Kangaskhan+Sinistcha+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "label": "Mega Charizard Y+Kangaskhan+Sinistcha+Rotom-Fan+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3102,7 +3102,7 @@
    },
    {
     "id": "s099",
-    "label": "Charizard+Kangaskhan+Sinistcha+Rotom-Fan+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Kangaskhan+Sinistcha+Rotom-Fan+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3125,7 +3125,7 @@
    },
    {
     "id": "s100",
-    "label": "Charizard+Kangaskhan+Sinistcha+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Kangaskhan+Sinistcha+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3148,7 +3148,7 @@
    },
    {
     "id": "s101",
-    "label": "Charizard+Kangaskhan+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "label": "Mega Charizard Y+Kangaskhan+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3171,7 +3171,7 @@
    },
    {
     "id": "s102",
-    "label": "Charizard+Kangaskhan+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "label": "Mega Charizard Y+Kangaskhan+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3194,7 +3194,7 @@
    },
    {
     "id": "s103",
-    "label": "Charizard+Kangaskhan+Conkeldurr+Rotom-Fan+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Kangaskhan+Conkeldurr+Rotom-Fan+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3217,7 +3217,7 @@
    },
    {
     "id": "s104",
-    "label": "Charizard+Kangaskhan+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Kangaskhan+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3240,7 +3240,7 @@
    },
    {
     "id": "s105",
-    "label": "Charizard+Kangaskhan+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Kangaskhan+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3263,7 +3263,7 @@
    },
    {
     "id": "s106",
-    "label": "Charizard+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
+    "label": "Mega Charizard Y+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3286,7 +3286,7 @@
    },
    {
     "id": "s107",
-    "label": "Charizard+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper",
+    "label": "Mega Charizard Y+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Leftovers (item clause)",
     "sets": [
@@ -3309,7 +3309,7 @@
    },
    {
     "id": "s108",
-    "label": "Charizard+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Simipour",
+    "label": "Mega Charizard Y+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3332,7 +3332,7 @@
    },
    {
     "id": "s109",
-    "label": "Charizard+Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper",
+    "label": "Mega Charizard Y+Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Expert Belt (item clause)",
     "sets": [
@@ -3355,7 +3355,7 @@
    },
    {
     "id": "s110",
-    "label": "Charizard+Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar+Simipour",
+    "label": "Mega Charizard Y+Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3378,7 +3378,7 @@
    },
    {
     "id": "s111",
-    "label": "Charizard+Morpeko+Sinistcha+Conkeldurr+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Morpeko+Sinistcha+Conkeldurr+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Expert Belt (item clause)",
     "sets": [
@@ -3401,7 +3401,7 @@
    },
    {
     "id": "s112",
-    "label": "Charizard+Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "label": "Mega Charizard Y+Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -3424,7 +3424,7 @@
    },
    {
     "id": "s113",
-    "label": "Charizard+Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "label": "Mega Charizard Y+Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3447,7 +3447,7 @@
    },
    {
     "id": "s114",
-    "label": "Charizard+Morpeko+Sinistcha+Rotom-Fan+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Morpeko+Sinistcha+Rotom-Fan+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -3470,7 +3470,7 @@
    },
    {
     "id": "s115",
-    "label": "Charizard+Morpeko+Sinistcha+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Morpeko+Sinistcha+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -3493,7 +3493,7 @@
    },
    {
     "id": "s116",
-    "label": "Charizard+Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "label": "Mega Charizard Y+Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Sitrus Berry (item clause)",
     "sets": [
@@ -3516,7 +3516,7 @@
    },
    {
     "id": "s117",
-    "label": "Charizard+Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "label": "Mega Charizard Y+Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3539,7 +3539,7 @@
    },
    {
     "id": "s118",
-    "label": "Charizard+Morpeko+Conkeldurr+Rotom-Fan+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Morpeko+Conkeldurr+Rotom-Fan+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Sitrus Berry (item clause)",
     "sets": [
@@ -3562,7 +3562,7 @@
    },
    {
     "id": "s119",
-    "label": "Charizard+Morpeko+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Morpeko+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Expert Belt (item clause)",
     "sets": [
@@ -3585,7 +3585,7 @@
    },
    {
     "id": "s120",
-    "label": "Charizard+Morpeko+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Morpeko+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -3608,7 +3608,7 @@
    },
    {
     "id": "s121",
-    "label": "Charizard+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "label": "Mega Charizard Y+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3631,7 +3631,7 @@
    },
    {
     "id": "s122",
-    "label": "Charizard+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "label": "Mega Charizard Y+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3654,7 +3654,7 @@
    },
    {
     "id": "s123",
-    "label": "Charizard+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3677,7 +3677,7 @@
    },
    {
     "id": "s124",
-    "label": "Charizard+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3700,7 +3700,7 @@
    },
    {
     "id": "s125",
-    "label": "Charizard+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3723,7 +3723,7 @@
    },
    {
     "id": "s126",
-    "label": "Charizard+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Charizard Y+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3746,7 +3746,7 @@
    },
    {
     "id": "s127",
-    "label": "Aegislash+Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan",
+    "label": "Aegislash+Mega Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3769,7 +3769,7 @@
    },
    {
     "id": "s128",
-    "label": "Aegislash+Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar",
+    "label": "Aegislash+Mega Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3792,7 +3792,7 @@
    },
    {
     "id": "s129",
-    "label": "Aegislash+Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Pelipper",
+    "label": "Aegislash+Mega Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Expert Belt (item clause)",
     "sets": [
@@ -3815,7 +3815,7 @@
    },
    {
     "id": "s130",
-    "label": "Aegislash+Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Simipour",
+    "label": "Aegislash+Mega Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3838,7 +3838,7 @@
    },
    {
     "id": "s131",
-    "label": "Aegislash+Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar",
+    "label": "Aegislash+Mega Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3861,7 +3861,7 @@
    },
    {
     "id": "s132",
-    "label": "Aegislash+Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Pelipper",
+    "label": "Aegislash+Mega Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -3884,7 +3884,7 @@
    },
    {
     "id": "s133",
-    "label": "Aegislash+Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Simipour",
+    "label": "Aegislash+Mega Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3907,7 +3907,7 @@
    },
    {
     "id": "s134",
-    "label": "Aegislash+Kangaskhan+Morpeko+Sinistcha+Stunfisk-Galar+Pelipper",
+    "label": "Aegislash+Mega Kangaskhan+Morpeko+Sinistcha+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -3930,7 +3930,7 @@
    },
    {
     "id": "s135",
-    "label": "Aegislash+Kangaskhan+Morpeko+Sinistcha+Stunfisk-Galar+Simipour",
+    "label": "Aegislash+Mega Kangaskhan+Morpeko+Sinistcha+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3953,7 +3953,7 @@
    },
    {
     "id": "s136",
-    "label": "Aegislash+Kangaskhan+Morpeko+Sinistcha+Pelipper+Simipour",
+    "label": "Aegislash+Mega Kangaskhan+Morpeko+Sinistcha+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -3976,7 +3976,7 @@
    },
    {
     "id": "s137",
-    "label": "Aegislash+Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
+    "label": "Aegislash+Mega Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -3999,7 +3999,7 @@
    },
    {
     "id": "s138",
-    "label": "Aegislash+Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Pelipper",
+    "label": "Aegislash+Mega Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Sitrus Berry (item clause)",
     "sets": [
@@ -4022,7 +4022,7 @@
    },
    {
     "id": "s139",
-    "label": "Aegislash+Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Simipour",
+    "label": "Aegislash+Mega Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4045,7 +4045,7 @@
    },
    {
     "id": "s140",
-    "label": "Aegislash+Kangaskhan+Morpeko+Conkeldurr+Stunfisk-Galar+Pelipper",
+    "label": "Aegislash+Mega Kangaskhan+Morpeko+Conkeldurr+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Expert Belt (item clause)",
     "sets": [
@@ -4068,7 +4068,7 @@
    },
    {
     "id": "s141",
-    "label": "Aegislash+Kangaskhan+Morpeko+Conkeldurr+Stunfisk-Galar+Simipour",
+    "label": "Aegislash+Mega Kangaskhan+Morpeko+Conkeldurr+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4091,7 +4091,7 @@
    },
    {
     "id": "s142",
-    "label": "Aegislash+Kangaskhan+Morpeko+Conkeldurr+Pelipper+Simipour",
+    "label": "Aegislash+Mega Kangaskhan+Morpeko+Conkeldurr+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Expert Belt (item clause)",
     "sets": [
@@ -4114,7 +4114,7 @@
    },
    {
     "id": "s143",
-    "label": "Aegislash+Kangaskhan+Morpeko+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "label": "Aegislash+Mega Kangaskhan+Morpeko+Rotom-Fan+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -4137,7 +4137,7 @@
    },
    {
     "id": "s144",
-    "label": "Aegislash+Kangaskhan+Morpeko+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "label": "Aegislash+Mega Kangaskhan+Morpeko+Rotom-Fan+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4160,7 +4160,7 @@
    },
    {
     "id": "s145",
-    "label": "Aegislash+Kangaskhan+Morpeko+Rotom-Fan+Pelipper+Simipour",
+    "label": "Aegislash+Mega Kangaskhan+Morpeko+Rotom-Fan+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -4183,7 +4183,7 @@
    },
    {
     "id": "s146",
-    "label": "Aegislash+Kangaskhan+Morpeko+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Aegislash+Mega Kangaskhan+Morpeko+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -4206,7 +4206,7 @@
    },
    {
     "id": "s147",
-    "label": "Aegislash+Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
+    "label": "Aegislash+Mega Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4229,7 +4229,7 @@
    },
    {
     "id": "s148",
-    "label": "Aegislash+Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper",
+    "label": "Aegislash+Mega Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4252,7 +4252,7 @@
    },
    {
     "id": "s149",
-    "label": "Aegislash+Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Simipour",
+    "label": "Aegislash+Mega Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4275,7 +4275,7 @@
    },
    {
     "id": "s150",
-    "label": "Aegislash+Kangaskhan+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper",
+    "label": "Aegislash+Mega Kangaskhan+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4298,7 +4298,7 @@
    },
    {
     "id": "s151",
-    "label": "Aegislash+Kangaskhan+Sinistcha+Conkeldurr+Stunfisk-Galar+Simipour",
+    "label": "Aegislash+Mega Kangaskhan+Sinistcha+Conkeldurr+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4321,7 +4321,7 @@
    },
    {
     "id": "s152",
-    "label": "Aegislash+Kangaskhan+Sinistcha+Conkeldurr+Pelipper+Simipour",
+    "label": "Aegislash+Mega Kangaskhan+Sinistcha+Conkeldurr+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4344,7 +4344,7 @@
    },
    {
     "id": "s153",
-    "label": "Aegislash+Kangaskhan+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "label": "Aegislash+Mega Kangaskhan+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4367,7 +4367,7 @@
    },
    {
     "id": "s154",
-    "label": "Aegislash+Kangaskhan+Sinistcha+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "label": "Aegislash+Mega Kangaskhan+Sinistcha+Rotom-Fan+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4390,7 +4390,7 @@
    },
    {
     "id": "s155",
-    "label": "Aegislash+Kangaskhan+Sinistcha+Rotom-Fan+Pelipper+Simipour",
+    "label": "Aegislash+Mega Kangaskhan+Sinistcha+Rotom-Fan+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4413,7 +4413,7 @@
    },
    {
     "id": "s156",
-    "label": "Aegislash+Kangaskhan+Sinistcha+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Aegislash+Mega Kangaskhan+Sinistcha+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4436,7 +4436,7 @@
    },
    {
     "id": "s157",
-    "label": "Aegislash+Kangaskhan+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "label": "Aegislash+Mega Kangaskhan+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4459,7 +4459,7 @@
    },
    {
     "id": "s158",
-    "label": "Aegislash+Kangaskhan+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "label": "Aegislash+Mega Kangaskhan+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4482,7 +4482,7 @@
    },
    {
     "id": "s159",
-    "label": "Aegislash+Kangaskhan+Conkeldurr+Rotom-Fan+Pelipper+Simipour",
+    "label": "Aegislash+Mega Kangaskhan+Conkeldurr+Rotom-Fan+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4505,7 +4505,7 @@
    },
    {
     "id": "s160",
-    "label": "Aegislash+Kangaskhan+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Aegislash+Mega Kangaskhan+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4528,7 +4528,7 @@
    },
    {
     "id": "s161",
-    "label": "Aegislash+Kangaskhan+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Aegislash+Mega Kangaskhan+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4551,7 +4551,7 @@
    },
    {
     "id": "s162",
-    "label": "Aegislash+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
+    "label": "Aegislash+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar (no Mega)",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4574,7 +4574,7 @@
    },
    {
     "id": "s163",
-    "label": "Aegislash+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper",
+    "label": "Aegislash+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper (no Mega)",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Leftovers (item clause)",
     "sets": [
@@ -4597,7 +4597,7 @@
    },
    {
     "id": "s164",
-    "label": "Aegislash+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Simipour",
+    "label": "Aegislash+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4620,7 +4620,7 @@
    },
    {
     "id": "s165",
-    "label": "Aegislash+Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper",
+    "label": "Aegislash+Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper (no Mega)",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Expert Belt (item clause)",
     "sets": [
@@ -4643,7 +4643,7 @@
    },
    {
     "id": "s166",
-    "label": "Aegislash+Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar+Simipour",
+    "label": "Aegislash+Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4666,7 +4666,7 @@
    },
    {
     "id": "s167",
-    "label": "Aegislash+Morpeko+Sinistcha+Conkeldurr+Pelipper+Simipour",
+    "label": "Aegislash+Morpeko+Sinistcha+Conkeldurr+Pelipper+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Expert Belt (item clause)",
     "sets": [
@@ -4689,7 +4689,7 @@
    },
    {
     "id": "s168",
-    "label": "Aegislash+Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "label": "Aegislash+Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper (no Mega)",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -4712,7 +4712,7 @@
    },
    {
     "id": "s169",
-    "label": "Aegislash+Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "label": "Aegislash+Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4735,7 +4735,7 @@
    },
    {
     "id": "s170",
-    "label": "Aegislash+Morpeko+Sinistcha+Rotom-Fan+Pelipper+Simipour",
+    "label": "Aegislash+Morpeko+Sinistcha+Rotom-Fan+Pelipper+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -4758,7 +4758,7 @@
    },
    {
     "id": "s171",
-    "label": "Aegislash+Morpeko+Sinistcha+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Aegislash+Morpeko+Sinistcha+Stunfisk-Galar+Pelipper+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -4781,7 +4781,7 @@
    },
    {
     "id": "s172",
-    "label": "Aegislash+Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "label": "Aegislash+Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper (no Mega)",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Sitrus Berry (item clause)",
     "sets": [
@@ -4804,7 +4804,7 @@
    },
    {
     "id": "s173",
-    "label": "Aegislash+Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "label": "Aegislash+Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4827,7 +4827,7 @@
    },
    {
     "id": "s174",
-    "label": "Aegislash+Morpeko+Conkeldurr+Rotom-Fan+Pelipper+Simipour",
+    "label": "Aegislash+Morpeko+Conkeldurr+Rotom-Fan+Pelipper+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Sitrus Berry (item clause)",
     "sets": [
@@ -4850,7 +4850,7 @@
    },
    {
     "id": "s175",
-    "label": "Aegislash+Morpeko+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Aegislash+Morpeko+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Expert Belt (item clause)",
     "sets": [
@@ -4873,7 +4873,7 @@
    },
    {
     "id": "s176",
-    "label": "Aegislash+Morpeko+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Aegislash+Morpeko+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -4896,7 +4896,7 @@
    },
    {
     "id": "s177",
-    "label": "Aegislash+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "label": "Aegislash+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper (no Mega)",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4919,7 +4919,7 @@
    },
    {
     "id": "s178",
-    "label": "Aegislash+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "label": "Aegislash+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4942,7 +4942,7 @@
    },
    {
     "id": "s179",
-    "label": "Aegislash+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper+Simipour",
+    "label": "Aegislash+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4965,7 +4965,7 @@
    },
    {
     "id": "s180",
-    "label": "Aegislash+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Aegislash+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -4988,7 +4988,7 @@
    },
    {
     "id": "s181",
-    "label": "Aegislash+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Aegislash+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -5011,7 +5011,7 @@
    },
    {
     "id": "s182",
-    "label": "Aegislash+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Aegislash+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -5034,7 +5034,7 @@
    },
    {
     "id": "s183",
-    "label": "Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
+    "label": "Mega Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -5057,7 +5057,7 @@
    },
    {
     "id": "s184",
-    "label": "Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper",
+    "label": "Mega Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Leftovers (item clause)",
     "sets": [
@@ -5080,7 +5080,7 @@
    },
    {
     "id": "s185",
-    "label": "Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Simipour",
+    "label": "Mega Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -5103,7 +5103,7 @@
    },
    {
     "id": "s186",
-    "label": "Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper",
+    "label": "Mega Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Expert Belt (item clause)",
     "sets": [
@@ -5126,7 +5126,7 @@
    },
    {
     "id": "s187",
-    "label": "Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar+Simipour",
+    "label": "Mega Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -5149,7 +5149,7 @@
    },
    {
     "id": "s188",
-    "label": "Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Pelipper+Simipour",
+    "label": "Mega Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Expert Belt (item clause)",
     "sets": [
@@ -5172,7 +5172,7 @@
    },
    {
     "id": "s189",
-    "label": "Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "label": "Mega Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -5195,7 +5195,7 @@
    },
    {
     "id": "s190",
-    "label": "Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "label": "Mega Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -5218,7 +5218,7 @@
    },
    {
     "id": "s191",
-    "label": "Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Pelipper+Simipour",
+    "label": "Mega Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -5241,7 +5241,7 @@
    },
    {
     "id": "s192",
-    "label": "Kangaskhan+Morpeko+Sinistcha+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Kangaskhan+Morpeko+Sinistcha+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -5264,7 +5264,7 @@
    },
    {
     "id": "s193",
-    "label": "Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "label": "Mega Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Sitrus Berry (item clause)",
     "sets": [
@@ -5287,7 +5287,7 @@
    },
    {
     "id": "s194",
-    "label": "Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "label": "Mega Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -5310,7 +5310,7 @@
    },
    {
     "id": "s195",
-    "label": "Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Pelipper+Simipour",
+    "label": "Mega Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Sitrus Berry (item clause)",
     "sets": [
@@ -5333,7 +5333,7 @@
    },
    {
     "id": "s196",
-    "label": "Kangaskhan+Morpeko+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Kangaskhan+Morpeko+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Expert Belt (item clause)",
     "sets": [
@@ -5356,7 +5356,7 @@
    },
    {
     "id": "s197",
-    "label": "Kangaskhan+Morpeko+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Kangaskhan+Morpeko+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -5379,7 +5379,7 @@
    },
    {
     "id": "s198",
-    "label": "Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "label": "Mega Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -5402,7 +5402,7 @@
    },
    {
     "id": "s199",
-    "label": "Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "label": "Mega Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -5425,7 +5425,7 @@
    },
    {
     "id": "s200",
-    "label": "Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper+Simipour",
+    "label": "Mega Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -5448,7 +5448,7 @@
    },
    {
     "id": "s201",
-    "label": "Kangaskhan+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Kangaskhan+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -5471,7 +5471,7 @@
    },
    {
     "id": "s202",
-    "label": "Kangaskhan+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Kangaskhan+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -5494,7 +5494,7 @@
    },
    {
     "id": "s203",
-    "label": "Kangaskhan+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Mega Kangaskhan+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -5517,7 +5517,7 @@
    },
    {
     "id": "s204",
-    "label": "Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "label": "Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper (no Mega)",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Rocky Helmet (item clause)",
     "sets": [
@@ -5540,7 +5540,7 @@
    },
    {
     "id": "s205",
-    "label": "Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "label": "Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -5563,7 +5563,7 @@
    },
    {
     "id": "s206",
-    "label": "Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper+Simipour",
+    "label": "Morpeko+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Leftovers (item clause)",
     "sets": [
@@ -5586,7 +5586,7 @@
    },
    {
     "id": "s207",
-    "label": "Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Expert Belt (item clause)",
     "sets": [
@@ -5609,7 +5609,7 @@
    },
    {
     "id": "s208",
-    "label": "Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Life Orb (item clause)",
     "sets": [
@@ -5632,7 +5632,7 @@
    },
    {
     "id": "s209",
-    "label": "Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen | Pelipper: Focus Sash -> Sitrus Berry (item clause)",
     "sets": [
@@ -5655,7 +5655,7 @@
    },
    {
     "id": "s210",
-    "label": "Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
+    "label": "Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour (no Mega)",
     "weight": 0.0,
     "why": "screen",
     "sets": [
@@ -5675,6 +5675,75 @@
      "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
     },
     "team": "Sinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "x119",
+    "label": "s119 with Mega Charizard X",
+    "weight": 0.0,
+    "why": "X vs Y on the top six | Pelipper: Focus Sash -> Expert Belt (item clause)",
+    "sets": [
+     "zardX",
+     "morpeko",
+     "conk",
+     "stunfisk",
+     "pelipper",
+     "simipour"
+    ],
+    "notes": {
+     "zardX": "Fire/Dragon: Rock only 2x; Dragon Claw for Garchomp / Drampa",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite X\nAbility: Blaze\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Flare Blitz\n- Dragon Claw\n- Dragon Dance\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nPelipper @ Expert Belt\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "x117",
+    "label": "s117 with Mega Charizard X",
+    "weight": 0.0,
+    "why": "X vs Y",
+    "sets": [
+     "zardX",
+     "morpeko",
+     "conk",
+     "rotom",
+     "stunfisk",
+     "simipour"
+    ],
+    "notes": {
+     "zardX": "Fire/Dragon: Rock only 2x; Dragon Claw for Garchomp / Drampa",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "rotom": "a17",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite X\nAbility: Blaze\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Flare Blitz\n- Dragon Claw\n- Dragon Dance\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "x110",
+    "label": "s110 with Mega Charizard X",
+    "weight": 0.0,
+    "why": "X vs Y",
+    "sets": [
+     "zardX",
+     "morpeko",
+     "sinis",
+     "conk",
+     "stunfisk",
+     "simipour"
+    ],
+    "notes": {
+     "zardX": "Fire/Dragon: Rock only 2x; Dragon Claw for Garchomp / Drampa",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "sinis": "c1",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite X\nAbility: Blaze\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Flare Blitz\n- Dragon Claw\n- Dragon Dance\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
    }
   ],
   "beliefRef": "o01"

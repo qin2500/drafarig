@@ -112,7 +112,16 @@ from itertools import combinations
 TEN = ['zardY', 'aegis', 'kanga', 'morpeko', 'sinis', 'conk', 'rotom', 'stunfisk', 'pelipper', 'simipour']
 for n, six in enumerate(combinations(TEN, 6), 1):
     keys = [('kangaM' if k == 'kanga' and 'zardY' not in six else k) for k in six]
-    AT.append((f's{n:03d}', '+'.join(A[k]['name'] for k in keys), 0, keys, 'screen'))
+    NAME = {'zardY': 'Mega Charizard Y', 'kangaM': 'Mega Kangaskhan'}
+    lab = '+'.join(NAME.get(k, A[k]['name']) for k in keys) + ('' if any(k in NAME for k in keys) else ' (no Mega)')
+    AT.append((f's{n:03d}', lab, 0, keys, 'screen'))
+
+# Mega choice on the shortlist (2026-11-02): Mega Charizard X instead of Y (Rock 2x not 4x, no sun to lose to Cloud Nine)
+AT += [
+    ('x119', 's119 with Mega Charizard X', 0, ['zardX', 'morpeko', 'conk', 'stunfisk', 'pelipper', 'simipour'], 'X vs Y on the top six'),
+    ('x117', 's117 with Mega Charizard X', 0, ['zardX', 'morpeko', 'conk', 'rotom', 'stunfisk', 'simipour'], 'X vs Y'),
+    ('x110', 's110 with Mega Charizard X', 0, ['zardX', 'morpeko', 'sinis', 'conk', 'stunfisk', 'simipour'], 'X vs Y'),
+]
 
 # Plan-commitment personas (run.mjs): the share of games where his AI plays the team's plan out of habit
 PERSONAS = {**{t: ['tr', 0.6] for t in ['h03', 'h06', 'h07', 'h15', 'h18']},
