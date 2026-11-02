@@ -19,7 +19,10 @@ import { readFileSync, existsSync, appendFileSync, mkdirSync, writeFileSync } fr
 import { dirname } from 'node:path';
 import { beliefText, library, usageLibrary } from './sheets.mjs';
 
-const CAND = JSON.parse(readFileSync(new URL('./candidates/zhuzi.json', import.meta.url), 'utf8'));
+// --cands <file>: the candidate pool (default candidates/zhuzi.json, the Week 3 study; candidates/hex.json for Week 4)
+const CANDS_ARG = process.argv.indexOf('--cands');
+const CAND_FILE = CANDS_ARG > 0 ? process.argv[CANDS_ARG + 1] : new URL('./candidates/zhuzi.json', import.meta.url);
+const CAND = JSON.parse(readFileSync(CAND_FILE, 'utf8'));
 const teamText = (ref) => {
   const c = [...CAND.ours.teams, ...CAND.opponent.teams].find((t) => t.id === ref);
   if (c) return c.team;
@@ -51,7 +54,8 @@ export function expandIds(list) {
   });
 }
 // Plan-commitment personas (ai-review.md #5): the share of opponent players who play the team's plan out of habit
-export const PERSONAS = { z04: ['tr', 0.6], z05: ['tr', 0.6], z15: ['tr', 0.6], z16: ['tr', 0.6], z23: ['tr', 0.6], z06: ['tr', 0.3], z03: ['rock', 0.6], z08: ['rock', 0.6], z18: ['rock', 0.6], z07: ['chilly', 0.6] };
+const ZHUZI_PERSONAS = { z04: ['tr', 0.6], z05: ['tr', 0.6], z15: ['tr', 0.6], z16: ['tr', 0.6], z23: ['tr', 0.6], z06: ['tr', 0.3], z03: ['rock', 0.6], z08: ['rock', 0.6], z18: ['rock', 0.6], z07: ['chilly', 0.6] };
+export const PERSONAS = CAND.opponent.personas ?? ZHUZI_PERSONAS;
 const unit = (seed, salt) => { let h = (seed * 2654435761) ^ salt; h = Math.imul(h ^ (h >>> 16), 2246822519); h = Math.imul(h ^ (h >>> 13), 3266489917); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
 export function taskList(a) {
   const ours = expandIds(a.ours ?? 'a01'), theirs = expandIds(a.theirs ?? 'z01');
@@ -66,7 +70,7 @@ export function taskList(a) {
   // format's most common set for every species (league-wide training and any other opponent)
   const usageLib = sheets === 'closed' && a.beliefs === 'usage' ? usageLibrary() : null;
   const libs = usageLib ? { theirs: usageLib, ours: usageLib }
-    : sheets === 'closed' ? { theirs: library(CAND.opponent.teams.map((t) => ({ text: t.team, weight: t.weight }))), ours: library([{ text: teamText('a01') }]) } : {};
+    : sheets === 'closed' ? { theirs: library(CAND.opponent.teams.map((t) => ({ text: t.team, weight: t.weight }))), ours: library([{ text: teamText(CAND.ours.beliefRef ?? 'a01') }]) } : {};
   return Array.from({ length: n }, (_, i) => {
     const us = side(ours[i % ours.length], a['ours-ai'] ?? 'heuristic', '', base + i, false), them = side(theirs[i % theirs.length], a['theirs-ai'] ?? 'heuristic', 'opp-', base + i, true);
     if (sheets !== 'open') { us.belief = beliefText(them.text, sheets, libs.theirs); them.belief = beliefText(us.text, sheets, libs.ours); }

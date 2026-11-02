@@ -4,10 +4,12 @@
 // Shrinkage: (wins + K × row mean) / (games + K), K = 10, options with fewer than MIN games are skipped. Teams that match no
 // row keep the AI's preview. Report on stderr.
 import { readFileSync } from 'node:fs';
-const C = JSON.parse(readFileSync(new URL('../../../../../tools/sim/candidates/zhuzi.json', import.meta.url), 'utf8'));
-const SPECIES = { meta: 'metagross', pult: 'dragapult', rotomw: 'rotomwash', krook: 'krookodile', nape: 'infernape', tox: 'toxtricity', oran: 'oranguru', king: 'slowkinggalar', umb: 'umbreon', florges: 'florges' };
-const six = Object.fromEntries(C.opponent.teams.map((t) => [t.id, t.sets.map((k) => SPECIES[k.replace(/_.*/, '')])]));
-const ROWS = [
+// --cands <file> (first argument pair): another pool with its own `opponent.rows` (e.g. candidates/hex.json)
+const argv = process.argv.slice(2), ci = argv.indexOf('--cands'), CF = ci >= 0 ? argv.splice(ci, 2)[1] : null;
+const C = JSON.parse(readFileSync(CF ?? new URL('../../../../../tools/sim/candidates/zhuzi.json', import.meta.url), 'utf8'));
+const fromText = (t) => t.trim().split(/\n\n+/).map((b) => b.split('\n')[0].split(' @ ')[0].replace(/\s*\(.*\)\s*$/, '').toLowerCase().replace(/[^a-z0-9]/g, ''));
+const six = Object.fromEntries(C.opponent.teams.map((t) => [t.id, fromText(t.team)]));
+const ROWS = C.opponent.rows ?? [
   { if: 'their 6 includes Mega Metagross + Krookodile + Infernape', need: ['metagross', 'krookodile', 'infernape'] },
   { if: 'their 6 includes Oranguru + Toxtricity', need: ['oranguru', 'toxtricity'] },
   { if: 'their 6 includes Galarian Slowking + Umbreon', need: ['slowkinggalar', 'umbreon'] },
@@ -19,7 +21,7 @@ const K = 10, MIN = 15;
 const speciesOf = (z) => six[z] ??= readFileSync(new URL(`../../../../../${z}`, import.meta.url), 'utf8').trim().split(/\n\n+/)
   .map((b) => b.split('\n')[0].split(' @ ')[0].replace(/\s*\(.*\)\s*$/, '').toLowerCase().replace(/[^a-z0-9]/g, ''));
 const rowOf = (z) => ROWS.findIndex((r) => r.need.every((s) => speciesOf(z).includes(s)));
-const games = process.argv.slice(2).flatMap((f) => readFileSync(f, 'utf8').trim().split('\n').map((l) => JSON.parse(l))).filter((r) => r.winner);
+const games = argv.flatMap((f) => readFileSync(f, 'utf8').trim().split('\n').map((l) => JSON.parse(l))).filter((r) => r.winner);
 const out = [];
 ROWS.forEach((row, i) => {
   const R = games.filter((g) => rowOf(g.theirs) === i);

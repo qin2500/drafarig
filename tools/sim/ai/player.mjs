@@ -10,7 +10,7 @@ import guide5v3 from '../../../lib/guides/5v3.mjs';
 const GUIDE_PREVIEWS = guide5v3.previews ?? [];
 const tables = new Map();
 const previewRows = (p) => p === 'guide' ? GUIDE_PREVIEWS : /\.json$/.test(p ?? '') ? (tables.get(p) ?? tables.set(p, JSON.parse(readFileSync(p, 'utf8'))).get(p)) : null;
-import { snapshot, optionsFor, resolve, value, damage, STYLES, foe, speed, pAtLeast } from './engine.mjs';
+import { snapshot, optionsFor, resolve, value, damage, STYLES, foe, speed, pAtLeast, spreadMove } from './engine.mjs';
 
 
 /** mulberry32: a small seeded PRNG (deterministic per game seed). */
@@ -313,7 +313,7 @@ export class HeuristicPlayer extends BattlePlayer {
         for (const fk of S.active[foe(d.side)]) {
           if (!fk) continue;
           const a = S.mons[fk];
-          for (const id of a.set.moves) { const mv = moveOf(id); if (mv.category === 'Status') continue; const r = damage(S, a, d, id, { spread: SPREAD.has(mv.target) }); p = Math.max(p, pAtLeast(r.min, r.max, d.hp)); }
+          for (const id of a.set.moves) { const mv = moveOf(id); if (mv.category === 'Status') continue; const r = damage(S, a, d, id, { spread: spreadMove(S, a, id) }); p = Math.max(p, pAtLeast(r.min, r.max, d.hp)); }
         }
         koRisk.set(k, p);
       }

@@ -49,6 +49,11 @@ export function damage(S, a, d, moveId, { spread = false, hh = false } = {}) {
   // a refused calc is never "no damage": retry the refused side with a damage-neutral ability (Mimicry without terrain
   // keeps its own types, so that's exact), else a rough estimate from base power; every refusal is counted by code
   let approx = null;
+  if (r.class === 'refused' && r.code === 'mechanic-unsupported:expanding-force-lone-target') {
+    const r2 = calc.run(normalizeScenario({ ...sc, field: { ...sc.field, defenderSide: { ...sc.field.defenderSide, partnerPresent: true } } }));
+    // (an immune target, e.g. Dark-type Morpeko, comes back 'no-damage': keep that, never the base-power estimate)
+    r = r2.class === 'exact' ? { ...r2, range: { min: r2.range.min / 0.75, max: r2.range.max / 0.75 } } : r2;
+  }
   if (r.class === 'refused') {
     const code = r.code ?? 'refused';
     calcStats.refusals[code] = (calcStats.refusals[code] ?? 0) + 1;
@@ -90,6 +95,12 @@ export function priorityOf(m, moveId) {
 // ---------- options ----------
 const isGhost = (m) => typesOf(m.set, m.mega).includes('Ghost');
 const PRIORITY_BLOCK = new Set(['queenlymajesty', 'dazzling', 'armortail']);
+/** Grounded for terrain: not Flying, not Levitate, no Air Balloon (Gravity / Iron Ball not modelled). */
+export const grounded = (m) => !typesOf(m.set, m.mega).includes('Flying') && abilityOf(m.set, m.mega) !== 'levitate' && !(m.set.item === 'airballoon' && !m.itemGone);
+/** A spread move here: spread targets, or Expanding Force from a grounded user in Psychic Terrain (hits both foes, 1.5x). */
+export const spreadMove = (S, m, id) => SPREAD.has(moveOf(id).target) || (id === 'expandingforce' && S.field.terrain === 'Psychic' && grounded(m));
+/** Psychic Terrain: a priority move (incl. Prankster status) into a grounded foe fails. */
+const terrainBlocks = (S, m, d, id) => S.field.terrain === 'Psychic' && d.side !== m.side && grounded(d) && priorityOf(m, id) > 0;
 const NO_FLINCH = new Set(['innerfocus', 'shielddust']);
 /**
  * Options for one active slot from what's known: moves (with targets), switches to bench members. `legal` (our own
@@ -129,7 +140,8 @@ export function optionsFor(S, side, pos, legal = null) {
       for (const t of foes) {
         const d = S.mons[S.active[foe(side)][t]];
         if (failsInto(S, m, d, id)) continue;
-        if (id === 'fakeout' && (NO_FLINCH.has(abilityOf(d.set, d.mega)) || (isGhost(d) && abilityOf(m.set, m.mega) !== 'scrappy') || S.active[foe(side)].some((k) => k && PRIORITY_BLOCK.has(abilityOf(S.mons[k].set, S.mons[k].mega))) || (S.field.terrain === 'Psychic' && !typesOf(d.set, d.mega).includes('Flying')))) continue;
+        if (id === 'fakeout' && (NO_FLINCH.has(abilityOf(d.set, d.mega)) || (isGhost(d) && abilityOf(m.set, m.mega) !== 'scrappy') || S.active[foe(side)].some((k) => k && PRIORITY_BLOCK.has(abilityOf(S.mons[k].set, S.mons[k].mega))) || (S.field.terrain === 'Psychic' && grounded(d)))) continue;
+        if (mv.category !== 'Status' && terrainBlocks(S, m, d, id)) continue;
         out.push({ kind: 'move', side, pos, move: id, target: t, mega });
       }
     } else if (mv.target === 'adjacentAlly' || mv.target === 'adjacentAllyOrSelf') {
@@ -162,7 +174,7 @@ export function spreadThreat(S, side) {
     const a = S.mons[k];
     for (const id of a.set.moves) {
       const mv = moveOf(id);
-      if (!SPREAD.has(mv.target) || mv.category === 'Status') continue;
+      if (!spreadMove(S, a, id) || mv.category === 'Status') continue;
       for (const tk of S.active[side]) if (tk) { const r = damage(S, a, S.mons[tk], id, { spread: true }); w = Math.max(w, (r.min + r.max) / 2 / Math.max(0.05, S.mons[tk].hp)); }
     }
   }
@@ -242,7 +254,7 @@ function bestTarget(S, m, id) {
 function targetsOf(S, m, a) {
   const mv = moveOf(a.move);
   const fs = foe(m.side);
-  if (SPREAD.has(mv.target)) {
+  if (spreadMove(S, m, a.move)) {
     const ts = S.active[fs].filter(Boolean);
     if (mv.target === 'allAdjacent' && S.active[m.side][1 - a.pos]) ts.push(S.active[m.side][1 - a.pos]);
     return { list: ts, spread: ts.length > 1 };
@@ -316,6 +328,7 @@ function useMove(S, m, a, act, fx, log, acts) {
     const t = S.mons[tk];
     if (t.alive <= 0) continue;
     if (blockPri && t.side === fs) continue;
+    if (terrainBlocks(S, m, t, id)) { log.push(`${mv.name} → ${name(t)} blocked (Psychic Terrain)`); continue; }
     let p = act * accOf(mv, m);
     if (t.invuln) { log.push(`${mv.name} → ${name(t)} misses (semi-invulnerable)`); continue; }
     const blocked = mv.breaksProtect ? 0 : fx.protect[tk] ?? 0;
@@ -493,7 +506,7 @@ export function threat(S, side) {
       for (const id of a.set.moves) {
         const mv = moveOf(id);
         if (mv.category === 'Status' || id === 'fakeout' || (id === 'lastresort' && a.set.moves.some((x) => x !== 'lastresort' && !a.movesUsed.includes(x)))) continue;
-        const r = damage(S, a, d, id, { spread: SPREAD.has(mv.target) && S.active[foe(side)].filter(Boolean).length > 1 });
+        const r = damage(S, a, d, id, { spread: spreadMove(S, a, id) && S.active[foe(side)].filter(Boolean).length > 1 });
         const acc = mv.accuracy === true ? 1 : mv.accuracy / 100;
         const mean = Math.min(d.hp, (r.min + r.max) / 2);
         // a target that can Protect next turn (it didn't just) blunts the threat; one that just Protected can't
