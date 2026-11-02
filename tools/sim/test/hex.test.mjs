@@ -38,3 +38,11 @@ test('Expanding Force: spread in Psychic Terrain, and a real calc (not an estima
   assert.ok(lone.min > 0.3, `lone ${JSON.stringify(lone)}`);
   assert.ok(Math.abs(both.min / lone.min - 0.75) < 0.02, `spread ${both.min} vs lone ${lone.min}`);
 });
+
+test('Cloud Nine: no sun boost while Drampa is active', () => {
+  const zard = { ...mon(team('o01'), 'charizard', 'p1'), mega: true }, rotom = mon(team('h01'), 'rotomheat', 'p2'), drampa = mon(team('h01'), 'drampa', 'p2');
+  const S = (withDrampa) => ({ field: { weather: 'Sun', terrain: '' }, side: { p1: {}, p2: {} }, active: { p1: ['p1:charizard', null], p2: ['p2:rotomheat', withDrampa ? 'p2:drampa' : null] },
+    mons: { 'p1:charizard': { ...zard, alive: 1 }, 'p2:rotomheat': { ...rotom, alive: 1 }, 'p2:drampa': { ...drampa, alive: 1 } } });
+  const sun = damage(S(false), zard, rotom, 'weatherball'), none = damage(S(true), zard, rotom, 'weatherball');
+  assert.ok(none.max < sun.max * 0.5, `sun ${sun.max} vs Cloud Nine ${none.max}`);
+});

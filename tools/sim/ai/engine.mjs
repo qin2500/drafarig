@@ -24,6 +24,9 @@ export function snapshot(T) {
 const clone = (S) => ({ mons: Object.fromEntries(Object.entries(S.mons).map(([k, m]) => [k, { ...m, boosts: { ...m.boosts } }])), active: { p1: [...S.active.p1], p2: [...S.active.p2] },
   side: { p1: { ...S.side.p1 }, p2: { ...S.side.p2 } }, field: { ...S.field }, turn: S.turn });
 
+/** The weather in effect: none while a Cloud Nine / Air Lock Pokémon is active (Drampa), as in Showdown. */
+export const wx = (S) => (Object.values(S.active ?? {}).flat().some((k) => k && S.mons?.[k] && S.mons[k].alive > 0 && ['cloudnine', 'airlock'].includes(abilityOf(S.mons[k].set, S.mons[k].mega))) ? '' : S.field.weather);
+
 // ---------- damage (lib/calc, cached) ----------
 const dmgCache = new Map();
 /** Cleared at the start of every game: keys name Pokémon by slot / species, so entries must not outlive one game. */
@@ -38,12 +41,12 @@ export function damage(S, a, d, moveId, { spread = false, hh = false } = {}) {
   const mv = moveOf(moveId);
   const att = { ...a, form: a.set.species === 'aegislash' && mv.category !== 'Status' ? 'blade' : a.form };
   const ds = S.side[d.side];
-  const key = `${setId(a.set)}|${setId(d.set)}|${a.key}|${att.mega}|${JSON.stringify(att.boosts)}|${att.status}|${att.form}|${att.itemGone}|${bucket(a.hp)}|${d.key}|${d.mega}|${JSON.stringify(d.boosts)}|${d.form}|${d.itemGone}|${d.status}|${bucket(d.hp)}|${moveId}|${S.field.weather}|${S.field.terrain}|${ds.reflect > 0}|${ds.lightScreen > 0}|${ds.auroraVeil > 0}|${spread}|${hh}`;
+  const key = `${setId(a.set)}|${setId(d.set)}|${a.key}|${att.mega}|${JSON.stringify(att.boosts)}|${att.status}|${att.form}|${att.itemGone}|${bucket(a.hp)}|${d.key}|${d.mega}|${JSON.stringify(d.boosts)}|${d.form}|${d.itemGone}|${d.status}|${bucket(d.hp)}|${moveId}|${wx(S)}|${S.field.terrain}|${ds.reflect > 0}|${ds.lightScreen > 0}|${ds.auroraVeil > 0}|${spread}|${hh}`;
   calcStats.calls++;
   if (dmgCache.has(key)) { calcStats.hits++; return dmgCache.get(key); }
   const state = (m) => ({ mega: m.mega, boosts: m.boosts, status: ['brn', 'par', 'psn', 'tox', 'slp', 'frz'].includes(m.status) ? m.status : '', hpPct: bucket(m.hp), itemConsumed: m.itemGone, form: m.form ?? '' });
   const sc = { attacker: { set: a.set, state: state(att) }, defender: { set: d.set, state: state(d) }, move: { id: moveId },
-    field: { weather: S.field.weather, terrain: S.field.terrain, attackerSide: { helpingHand: hh, allyPresent: spread }, defenderSide: { reflect: ds.reflect > 0, lightScreen: ds.lightScreen > 0, auroraVeil: ds.auroraVeil > 0, partnerPresent: spread } } };
+    field: { weather: wx(S), terrain: S.field.terrain, attackerSide: { helpingHand: hh, allyPresent: spread }, defenderSide: { reflect: ds.reflect > 0, lightScreen: ds.lightScreen > 0, auroraVeil: ds.auroraVeil > 0, partnerPresent: spread } } };
   let r = calc.run(normalizeScenario(sc));
   if (r.class === 'needs-state' && r.question?.key) { sc[r.question.side].state[r.question.key] = r.question.options?.[0] ?? 0; r = calc.run(normalizeScenario(sc)); }
   // a refused calc is never "no damage": retry the refused side with a damage-neutral ability (Mimicry without terrain
@@ -78,7 +81,8 @@ export function speed(S, m) {
   if (m.set.item === 'choicescarf' && !m.itemGone) s = Math.floor(s * 1.5);
   if (S.side[m.side].tailwind > 0) s *= 2;
   const ab = abilityOf(m.set, m.mega);
-  if ((ab === 'chlorophyll' && S.field.weather === 'Sun') || (ab === 'swiftswim' && S.field.weather === 'Rain') || (ab === 'sandrush' && S.field.weather === 'Sand') || (ab === 'slushrush' && S.field.weather === 'Snow')) s *= 2;
+  const w = wx(S);
+  if ((ab === 'chlorophyll' && w === 'Sun') || (ab === 'swiftswim' && w === 'Rain') || (ab === 'sandrush' && w === 'Sand') || (ab === 'slushrush' && w === 'Snow')) s *= 2;
   return s;
 }
 export function priorityOf(m, moveId) {
@@ -128,7 +132,7 @@ export function optionsFor(S, side, pos, legal = null) {
     if (id === 'fakeout' || id === 'firstimpression') { if (!m.firstTurn) continue; }
     if (id === 'lastresort' && m.set.moves.some((x) => x !== 'lastresort' && !m.movesUsed.includes(x))) continue;
     // a charge move outside its weather wastes a turn (the resolver doesn't model the charge): only in sun or with Power Herb
-    if (['solarbeam', 'solarblade'].includes(id) && S.field.weather !== 'Sun' && !(m.set.item === 'powerherb' && !m.itemGone) && !(mega && abilityOf(m.set, true) === 'drought')) continue;
+    if (['solarbeam', 'solarblade'].includes(id) && wx(S) !== 'Sun' && !(m.set.item === 'powerherb' && !m.itemGone) && !(mega && abilityOf(m.set, true) === 'drought')) continue;
     if ((PROTECTS.has(id) || id === 'wideguard' || id === 'quickguard') && m.protectStreak > 0) continue;
     if (id === 'trickroom' && S.field.tr > 0 && S.field.trBy === side) continue;
     if (id === 'tailwind' && (S.field.tr > 0 || S.side[side].tailwind > 0)) continue;
@@ -314,7 +318,7 @@ function useMove(S, m, a, act, fx, log, acts) {
     if (!tk || fx.moved[tk] || !ta || moveOf(ta.move).category === 'Status') { log.push(`${name(m)} ${mv.name} fails (no attack to punish)`); return; }
   }
   // the first turn of a two-turn move (Phantom Force, Fly, Dig, Dive, Bounce…): it charges and becomes untargetable
-  if (mv.flags?.charge && !m.charging && !(m.set.item === 'powerherb' && !m.itemGone) && !(['solarbeam', 'solarblade'].includes(id) && S.field.weather === 'Sun')) {
+  if (mv.flags?.charge && !m.charging && !(m.set.item === 'powerherb' && !m.itemGone) && !(['solarbeam', 'solarblade'].includes(id) && wx(S) === 'Sun')) {
     m.charging = id;
     if (['phantomforce', 'shadowforce', 'fly', 'dig', 'dive', 'bounce', 'skydrop'].includes(id)) m.invuln = true;
     log.push(`${name(m)} charges ${mv.name}`); return;
@@ -448,7 +452,7 @@ export function valueParts(S, side, brought = 4) {
     const sign = s === side ? 1 : -1;
     P.tailwind += sign * 0.08 * Math.min(3, S.side[s].tailwind) * (S.field.tr > 0 ? 0 : 1);
     P.screens += sign * 0.04 * (Math.min(4, S.side[s].reflect) + Math.min(4, S.side[s].lightScreen) + Math.min(4, S.side[s].auroraVeil));
-    if (S.field.weather === 'Sun') P.sun += sign * 0.035 * Object.values(S.mons).filter((m) => m.side === s && m.alive > 0 && (m.brought || m.pos >= 0) && SUN_USERS(m)).length;
+    if (wx(S) === 'Sun') P.sun += sign * 0.035 * Object.values(S.mons).filter((m) => m.side === s && m.alive > 0 && (m.brought || m.pos >= 0) && SUN_USERS(m)).length;
   }
   // next turn's initiative: what each side's actives threaten (expected damage, KO chances, who moves first), so a
   // turn that only delays (double Protect) isn't free and speed control pays now
