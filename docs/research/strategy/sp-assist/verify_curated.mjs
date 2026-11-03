@@ -29,7 +29,8 @@ for (const [dir, files] of sources) {
       d.set.moves = ['protect'];
       // field.intimidate: the workbench seeds it as the attacker's state.intimidated (public/prep-guide.js, prep-workbench.js)
       if (c.field?.intimidate) a.state.intimidated = Number(c.field.intimidate);
-      const field = { weather: c.field?.weather ?? '' };
+      // terrain too (Psychic Terrain boosts Expanding Force / Psychic, as the workbench seeds it: public/prep-guide.js calcSeed)
+      const field = { weather: c.field?.weather ?? '', ...(c.field?.terrain ? { terrain: c.field.terrain } : {}) };
       const r = calc.run({ attacker: a, defender: d, move: { id: c.move }, field });
       n++;
       if (r.class !== 'exact') { console.log(`${dir}/${f} #${i}: engine ${r.class} ${r.code ?? ''}`); bad++; continue; }
