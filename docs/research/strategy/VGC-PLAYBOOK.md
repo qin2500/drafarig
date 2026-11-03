@@ -105,7 +105,7 @@ Game 1 misplays; game 2 Tauros (Sheer Force Rock Slide) double-KO'd Charizard an
   Protect (−8), Conkeldurr (+7). Most set details are ties; their reasons are calcs. Weak spots: bulky Umbreon / Taunt
   sixes (~53%). Full report: `docs/research/strategy/sim/zhuzi-sim-report.md`.
 
-### Week 4 vs Hex (seat 1): prep in progress (started 2026-11-02)
+### Week 4 vs Hex (seat 1): prep done 2026-11-03, guide `lib/guides/5v1.mjs`
 - Schedule (league sheet "Paring" tab): W4 Hex, W5 Jacky.
 - Hex's 10: Garchomp, Indeedee-F, Armarouge, Corviknight, Rotom-Heat, Drampa, Kleavor, Banette, Ditto, Forretress.
   Megas: Garchomp (Sand Force or Mega-Z: Levitate, 151 Spe, special), Banette (Prankster), Drampa.
@@ -114,6 +114,11 @@ Game 1 misplays; game 2 Tauros (Sheer Force Rock Slide) double-KO'd Charizard an
   Kleavor and Forretress into Charizard. Scan: `sp-assist/hex_scan.py` → `hex-scan.json`. Pool: `sp-assist/gen_hex.py`
   → `tools/sim/candidates/hex.json` (run sims with `--cands tools/sim/candidates/hex.json`).
 - Sim AI fixes made for this match: Psychic Terrain priority block, Expanding Force as a spread move, Cloud Nine.
+- Result: bring s119 (Mega Charizard Y, Morpeko, Conkeldurr, Simipour, Stunfisk-Galar, Pelipper): 66.6% ±2.4 over 1,440
+  engine-vs-engine closed-sheet games. Lead Morpeko + Simipour, Charizard + Conkeldurr behind, every game (the engine's own
+  preview; heuristic-fitted tables lost 14 points under the engine, and no fixed Drampa preview beat it). Weak: Drampa
+  leads (5–8%), Armarouge + Indeedee-F (45%), his Trick Room (53% vs 74%). Sixth slot: Rotom-Fan / Sinistcha tie Pelipper.
+  Conkeldurr is a back-line piece: never in front of a healthy Armarouge in terrain. Report: `sim/hex-sim-report.md`.
 
 ### Week 4 mock: Anthony pilots ZhuZi against Calvin (`lib/mocks/3v8.mjs`, method `mock-method.md` §5)
 Anthony and Calvin run mocks for each other's next opponent. Mocks show the normal prep screens from the opponent's POV.
