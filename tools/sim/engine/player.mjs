@@ -58,7 +58,7 @@ export class EnginePlayer extends HeuristicPlayer {
     const ours = request.active.map((act, pos) => {
       const p = request.side.pokemon[pos];
       if (!S.active[me][pos] || p.condition.endsWith(' fnt') || p.commanding) return [{ kind: 'pass', side: me, pos }];
-      return optionsFor(S, me, pos, { moves: act.moves, canMegaEvo: act.canMegaEvo, trapped: act.trapped || act.maybeTrapped, switches: L.switches.map((x) => x.key), side: me });
+      return optionsFor(S, me, pos, { moves: act.moves, canMegaEvo: act.canMegaEvo && this.megaOk(p.details), trapped: act.trapped || act.maybeTrapped, switches: L.switches.map((x) => x.key), side: me });
     });
     while (ours.length < 2) ours.push([{ kind: 'pass', side: me, pos: ours.length }]);
     const theirs = [0, 1].map((pos) => optionsFor(S, them, pos));
@@ -217,7 +217,7 @@ export class EnginePlayer extends HeuristicPlayer {
         if (sideId !== me) return optionsFor(S1, sideId, pos);
         const act = b.getSide(me).activeRequest?.active?.[pos];
         const bench = Object.values(S1.mons).filter((m) => m.side === me && m.brought && m.alive > 0 && m.pos < 0).map((m) => m.key);
-        return optionsFor(S1, me, pos, act ? { moves: act.moves, canMegaEvo: act.canMegaEvo, trapped: act.trapped || act.maybeTrapped, switches: bench, side: me } : null);
+        return optionsFor(S1, me, pos, act ? { moves: act.moves, canMegaEvo: act.canMegaEvo && this.megaOk(S1.mons[k].species), trapped: act.trapped || act.maybeTrapped, switches: bench, side: me } : null);
       });
       const o1 = optsOf(me), t1 = optsOf(them);
       if (o1.some((x) => !x.length) || t1.some((x) => !x.length)) return this.leaf(b, S0, { [me]: ours, [them]: theirs }, actsBefore);

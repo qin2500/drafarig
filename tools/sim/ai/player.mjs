@@ -52,6 +52,8 @@ export class HeuristicPlayer extends BattlePlayer {
   constructor(stream, opts) {
     super(stream, false);
     this.o = { ...DEFAULTS, ...opts };
+    // --megaplan <species>: with several stones, only that species Mega Evolves (a fixed game plan, e.g. Mega Kangaskhan)
+    this.megaOk = (details) => !this.o.megaPlan || toID(String(details).split(',')[0]).startsWith(toID(this.o.megaPlan));
     this.style = STYLES[this.o.style] ?? STYLES.balanced;
     this.mine = setsFromText(opts.mine);
     this.theirs = setsFromText(opts.theirs);
@@ -261,7 +263,7 @@ export class HeuristicPlayer extends BattlePlayer {
     const ours = request.active.map((act, pos) => {
       const p = request.side.pokemon[pos];
       if (!S.active[me][pos] || p.condition.endsWith(' fnt') || p.commanding) return [{ kind: 'pass', side: me, pos }];
-      return optionsFor(S, me, pos, { moves: act.moves, canMegaEvo: act.canMegaEvo, trapped: act.trapped || act.maybeTrapped, switches: L.switches.map((x) => x.key), side: me });
+      return optionsFor(S, me, pos, { moves: act.moves, canMegaEvo: act.canMegaEvo && this.megaOk(p.details), trapped: act.trapped || act.maybeTrapped, switches: L.switches.map((x) => x.key), side: me });
     });
     while (ours.length < 2) ours.push([{ kind: 'pass', side: me, pos: ours.length }]);
     const theirs = [0, 1].map((pos) => optionsFor(S, them, pos));
