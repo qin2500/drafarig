@@ -11218,6 +11218,1616 @@
      "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
     },
     "team": "Charizard @ Charizardite X\nAbility: Blaze\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Flare Blitz\n- Dragon Claw\n- Dragon Dance\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k001",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Morpeko+Sinistcha+Conkeldurr",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "morpeko",
+     "sinis",
+     "conk"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "sinis": "c1",
+     "conk": "c1; Ice Punch 4x into Garchomp"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n"
+   },
+   {
+    "id": "k002",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Morpeko+Sinistcha+Rotom-Fan",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "morpeko",
+     "sinis",
+     "rotom"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "sinis": "c1",
+     "rotom": "a17"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "k003",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Morpeko+Sinistcha+Stunfisk-Galar",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "morpeko",
+     "sinis",
+     "stunfisk"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "sinis": "c1",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n"
+   },
+   {
+    "id": "k004",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Morpeko+Sinistcha+Pelipper",
+    "weight": 0.0,
+    "why": "both stones | Pelipper: Focus Sash -> Life Orb (item clause)",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "morpeko",
+     "sinis",
+     "pelipper"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "sinis": "c1",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nPelipper @ Life Orb\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n"
+   },
+   {
+    "id": "k005",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Morpeko+Sinistcha+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "morpeko",
+     "sinis",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "sinis": "c1",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k006",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "morpeko",
+     "conk",
+     "rotom"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "rotom": "a17"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "k007",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Morpeko+Conkeldurr+Stunfisk-Galar",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "morpeko",
+     "conk",
+     "stunfisk"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n"
+   },
+   {
+    "id": "k008",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Morpeko+Conkeldurr+Pelipper",
+    "weight": 0.0,
+    "why": "both stones | Pelipper: Focus Sash -> Expert Belt (item clause)",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "morpeko",
+     "conk",
+     "pelipper"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nPelipper @ Expert Belt\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n"
+   },
+   {
+    "id": "k009",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Morpeko+Conkeldurr+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "morpeko",
+     "conk",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k010",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Morpeko+Rotom-Fan+Stunfisk-Galar",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "morpeko",
+     "rotom",
+     "stunfisk"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "rotom": "a17",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n"
+   },
+   {
+    "id": "k011",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Morpeko+Rotom-Fan+Pelipper",
+    "weight": 0.0,
+    "why": "both stones | Pelipper: Focus Sash -> Life Orb (item clause)",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "morpeko",
+     "rotom",
+     "pelipper"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "rotom": "a17",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nPelipper @ Life Orb\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n"
+   },
+   {
+    "id": "k012",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Morpeko+Rotom-Fan+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "morpeko",
+     "rotom",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "rotom": "a17",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k013",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Morpeko+Stunfisk-Galar+Pelipper",
+    "weight": 0.0,
+    "why": "both stones | Pelipper: Focus Sash -> Life Orb (item clause)",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "morpeko",
+     "stunfisk",
+     "pelipper"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nPelipper @ Life Orb\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n"
+   },
+   {
+    "id": "k014",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Morpeko+Stunfisk-Galar+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "morpeko",
+     "stunfisk",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k015",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Morpeko+Pelipper+Simipour",
+    "weight": 0.0,
+    "why": "both stones | Pelipper: Focus Sash -> Life Orb (item clause)",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "morpeko",
+     "pelipper",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nPelipper @ Life Orb\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k016",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "sinis",
+     "conk",
+     "rotom"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "sinis": "c1",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "rotom": "a17"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "k017",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Sinistcha+Conkeldurr+Stunfisk-Galar",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "sinis",
+     "conk",
+     "stunfisk"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "sinis": "c1",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n"
+   },
+   {
+    "id": "k018",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Sinistcha+Conkeldurr+Pelipper",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "sinis",
+     "conk",
+     "pelipper"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "sinis": "c1",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n"
+   },
+   {
+    "id": "k019",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Sinistcha+Conkeldurr+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "sinis",
+     "conk",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "sinis": "c1",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k020",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Sinistcha+Rotom-Fan+Stunfisk-Galar",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "sinis",
+     "rotom",
+     "stunfisk"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "sinis": "c1",
+     "rotom": "a17",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n"
+   },
+   {
+    "id": "k021",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Sinistcha+Rotom-Fan+Pelipper",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "sinis",
+     "rotom",
+     "pelipper"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "sinis": "c1",
+     "rotom": "a17",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n"
+   },
+   {
+    "id": "k022",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Sinistcha+Rotom-Fan+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "sinis",
+     "rotom",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "sinis": "c1",
+     "rotom": "a17",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k023",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Sinistcha+Stunfisk-Galar+Pelipper",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "sinis",
+     "stunfisk",
+     "pelipper"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "sinis": "c1",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n"
+   },
+   {
+    "id": "k024",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Sinistcha+Stunfisk-Galar+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "sinis",
+     "stunfisk",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "sinis": "c1",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k025",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Sinistcha+Pelipper+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "sinis",
+     "pelipper",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "sinis": "c1",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k026",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "conk",
+     "rotom",
+     "stunfisk"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "rotom": "a17",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n"
+   },
+   {
+    "id": "k027",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Conkeldurr+Rotom-Fan+Pelipper",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "conk",
+     "rotom",
+     "pelipper"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "rotom": "a17",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n"
+   },
+   {
+    "id": "k028",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Conkeldurr+Rotom-Fan+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "conk",
+     "rotom",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "rotom": "a17",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k029",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Conkeldurr+Stunfisk-Galar+Pelipper",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "conk",
+     "stunfisk",
+     "pelipper"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n"
+   },
+   {
+    "id": "k030",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Conkeldurr+Stunfisk-Galar+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "conk",
+     "stunfisk",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k031",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Conkeldurr+Pelipper+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "conk",
+     "pelipper",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k032",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "rotom",
+     "stunfisk",
+     "pelipper"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "rotom": "a17",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n"
+   },
+   {
+    "id": "k033",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "rotom",
+     "stunfisk",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "rotom": "a17",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k034",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Rotom-Fan+Pelipper+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "rotom",
+     "pelipper",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "rotom": "a17",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k035",
+    "label": "Mega Charizard Y / Aegislash+Mega Kangaskhan+Stunfisk-Galar+Pelipper+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "aegis",
+     "kangaM",
+     "stunfisk",
+     "pelipper",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "aegis": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Shadow Sneak\n- King's Shield\n- Wide Guard\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k071",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Rotom-Fan",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "morpeko",
+     "sinis",
+     "conk",
+     "rotom"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "sinis": "c1",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "rotom": "a17"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
+    "id": "k072",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Stunfisk-Galar",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "morpeko",
+     "sinis",
+     "conk",
+     "stunfisk"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "sinis": "c1",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n"
+   },
+   {
+    "id": "k073",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Pelipper",
+    "weight": 0.0,
+    "why": "both stones | Pelipper: Focus Sash -> Expert Belt (item clause)",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "morpeko",
+     "sinis",
+     "conk",
+     "pelipper"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "sinis": "c1",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nPelipper @ Expert Belt\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n"
+   },
+   {
+    "id": "k074",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Morpeko+Sinistcha+Conkeldurr+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "morpeko",
+     "sinis",
+     "conk",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "sinis": "c1",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k075",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Stunfisk-Galar",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "morpeko",
+     "sinis",
+     "rotom",
+     "stunfisk"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "sinis": "c1",
+     "rotom": "a17",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n"
+   },
+   {
+    "id": "k076",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Pelipper",
+    "weight": 0.0,
+    "why": "both stones | Pelipper: Focus Sash -> Life Orb (item clause)",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "morpeko",
+     "sinis",
+     "rotom",
+     "pelipper"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "sinis": "c1",
+     "rotom": "a17",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nPelipper @ Life Orb\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n"
+   },
+   {
+    "id": "k077",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Morpeko+Sinistcha+Rotom-Fan+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "morpeko",
+     "sinis",
+     "rotom",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "sinis": "c1",
+     "rotom": "a17",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k078",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Morpeko+Sinistcha+Stunfisk-Galar+Pelipper",
+    "weight": 0.0,
+    "why": "both stones | Pelipper: Focus Sash -> Life Orb (item clause)",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "morpeko",
+     "sinis",
+     "stunfisk",
+     "pelipper"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "sinis": "c1",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nPelipper @ Life Orb\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n"
+   },
+   {
+    "id": "k079",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Morpeko+Sinistcha+Stunfisk-Galar+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "morpeko",
+     "sinis",
+     "stunfisk",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "sinis": "c1",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k080",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Morpeko+Sinistcha+Pelipper+Simipour",
+    "weight": 0.0,
+    "why": "both stones | Pelipper: Focus Sash -> Life Orb (item clause)",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "morpeko",
+     "sinis",
+     "pelipper",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "sinis": "c1",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nPelipper @ Life Orb\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k081",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "morpeko",
+     "conk",
+     "rotom",
+     "stunfisk"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "rotom": "a17",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n"
+   },
+   {
+    "id": "k082",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Pelipper",
+    "weight": 0.0,
+    "why": "both stones | Pelipper: Focus Sash -> Sitrus Berry (item clause)",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "morpeko",
+     "conk",
+     "rotom",
+     "pelipper"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "rotom": "a17",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nPelipper @ Sitrus Berry\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n"
+   },
+   {
+    "id": "k083",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Morpeko+Conkeldurr+Rotom-Fan+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "morpeko",
+     "conk",
+     "rotom",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "rotom": "a17",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k084",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Morpeko+Conkeldurr+Stunfisk-Galar+Pelipper",
+    "weight": 0.0,
+    "why": "both stones | Pelipper: Focus Sash -> Expert Belt (item clause)",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "morpeko",
+     "conk",
+     "stunfisk",
+     "pelipper"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nPelipper @ Expert Belt\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n"
+   },
+   {
+    "id": "k085",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Morpeko+Conkeldurr+Stunfisk-Galar+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "morpeko",
+     "conk",
+     "stunfisk",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k086",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Morpeko+Conkeldurr+Pelipper+Simipour",
+    "weight": 0.0,
+    "why": "both stones | Pelipper: Focus Sash -> Expert Belt (item clause)",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "morpeko",
+     "conk",
+     "pelipper",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nPelipper @ Expert Belt\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k087",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Morpeko+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "weight": 0.0,
+    "why": "both stones | Pelipper: Focus Sash -> Life Orb (item clause)",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "morpeko",
+     "rotom",
+     "stunfisk",
+     "pelipper"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "rotom": "a17",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nPelipper @ Life Orb\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n"
+   },
+   {
+    "id": "k088",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Morpeko+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "morpeko",
+     "rotom",
+     "stunfisk",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "rotom": "a17",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k089",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Morpeko+Rotom-Fan+Pelipper+Simipour",
+    "weight": 0.0,
+    "why": "both stones | Pelipper: Focus Sash -> Life Orb (item clause)",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "morpeko",
+     "rotom",
+     "pelipper",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "rotom": "a17",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nPelipper @ Life Orb\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k090",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Morpeko+Stunfisk-Galar+Pelipper+Simipour",
+    "weight": 0.0,
+    "why": "both stones | Pelipper: Focus Sash -> Life Orb (item clause)",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "morpeko",
+     "stunfisk",
+     "pelipper",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "morpeko": "c1; Dark Aura Wheel into Indeedee / Armarouge / Banette",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nMorpeko @ Focus Sash\nAbility: Hunger Switch\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Aura Wheel\n- Taunt\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nPelipper @ Life Orb\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k091",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Stunfisk-Galar",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "sinis",
+     "conk",
+     "rotom",
+     "stunfisk"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "sinis": "c1",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "rotom": "a17",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n"
+   },
+   {
+    "id": "k092",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Pelipper",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "sinis",
+     "conk",
+     "rotom",
+     "pelipper"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "sinis": "c1",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "rotom": "a17",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n"
+   },
+   {
+    "id": "k093",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Sinistcha+Conkeldurr+Rotom-Fan+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "sinis",
+     "conk",
+     "rotom",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "sinis": "c1",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "rotom": "a17",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k094",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Sinistcha+Conkeldurr+Stunfisk-Galar+Pelipper",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "sinis",
+     "conk",
+     "stunfisk",
+     "pelipper"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "sinis": "c1",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n"
+   },
+   {
+    "id": "k095",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Sinistcha+Conkeldurr+Stunfisk-Galar+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "sinis",
+     "conk",
+     "stunfisk",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "sinis": "c1",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k096",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Sinistcha+Conkeldurr+Pelipper+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "sinis",
+     "conk",
+     "pelipper",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "sinis": "c1",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k097",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Sinistcha+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "sinis",
+     "rotom",
+     "stunfisk",
+     "pelipper"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "sinis": "c1",
+     "rotom": "a17",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n"
+   },
+   {
+    "id": "k098",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Sinistcha+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "sinis",
+     "rotom",
+     "stunfisk",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "sinis": "c1",
+     "rotom": "a17",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k099",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Sinistcha+Rotom-Fan+Pelipper+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "sinis",
+     "rotom",
+     "pelipper",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "sinis": "c1",
+     "rotom": "a17",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k100",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Sinistcha+Stunfisk-Galar+Pelipper+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "sinis",
+     "stunfisk",
+     "pelipper",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "sinis": "c1",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k101",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Pelipper",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "conk",
+     "rotom",
+     "stunfisk",
+     "pelipper"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "rotom": "a17",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n"
+   },
+   {
+    "id": "k102",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Conkeldurr+Rotom-Fan+Stunfisk-Galar+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "conk",
+     "rotom",
+     "stunfisk",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "rotom": "a17",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k103",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Conkeldurr+Rotom-Fan+Pelipper+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "conk",
+     "rotom",
+     "pelipper",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "rotom": "a17",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k104",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Conkeldurr+Stunfisk-Galar+Pelipper+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "conk",
+     "stunfisk",
+     "pelipper",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
+   },
+   {
+    "id": "k105",
+    "label": "Mega Charizard Y / Mega Kangaskhan+Rotom-Fan+Stunfisk-Galar+Pelipper+Simipour",
+    "weight": 0.0,
+    "why": "both stones",
+    "sets": [
+     "zardY",
+     "kangaM",
+     "rotom",
+     "stunfisk",
+     "pelipper",
+     "simipour"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "kangaM": "Mega (Parental Bond) when Charizard stays home",
+     "rotom": "a17",
+     "stunfisk": "Electric immune (Rotom-Heat), Steel vs Fairy-less Hex",
+     "pelipper": "Rain halves his Fire (Armarouge, Rotom-Heat); Wide Guard + Tailwind",
+     "simipour": "Ice Beam 4x into Garchomp; Water into Armarouge / Rotom-Heat"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nKangaskhan @ Kangaskhanite\nAbility: Scrappy\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nAdamant Nature\n- Fake Out\n- Double-Edge\n- Sucker Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Air Slash\n- Will-O-Wisp\n- Protect\n\nStunfisk-Galar @ Leftovers\nAbility: Mimicry\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Stomping Tantrum\n- Snap Trap\n- Yawn\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n\nSimipour @ Mystic Water\nAbility: Torrent\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Fake Out\n- Scald\n- Ice Beam\n- Protect\n"
    }
   ],
   "beliefRef": "o01"

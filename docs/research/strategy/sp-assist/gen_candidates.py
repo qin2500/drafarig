@@ -1,7 +1,7 @@
 """Generate the simulation candidate teams (docs/research/strategy/sim/zhuzi-candidates.md).
 Writes tools/sim/candidates/zhuzi.json. Every set is checked against data/mechanics.json: species legal, ability legal for the
 species (Mega: base ability; the stone gives the Mega's), every move in the Champions learnset, item in the regulation pool,
-item clause per team, at most one Mega stone per team, SP <= 32 per stat and <= 66 total, weights sum to 1 per side.
+item clause per team, any number of Mega stones (one Mega Evolution per battle), SP <= 32 per stat and <= 66 total, weights sum to 1 per side.
 Run: python3 gen_candidates.py"""
 import json, os
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
@@ -95,8 +95,7 @@ def check(team):
             stones += 1
         if any(v > 32 for v in s['sp']) or sum(s['sp']) > 66:
             probs.append(f'{sid} SP {s["sp"]}')
-    if stones > 1:
-        probs.append(f'{stones} Mega stones')
+    # several stones are legal (the format's validator accepts them); Showdown allows one Mega Evolution per battle
     return probs
 
 

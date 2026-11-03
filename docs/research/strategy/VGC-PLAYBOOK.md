@@ -25,7 +25,8 @@ read this before any VGC work. Details and evidence live in the files it links; 
 - **Stat Points (SP)** replace EVs: HP = base + SP + 75, other stats = base + SP + 20, then nature ×1.1 / ×0.9
   (truncated). Max 32 per stat, 66 total. **SP go on the Showdown `EVs:` line as-is** (`EVs: 32 HP / 32 SpA`); never
   convert to the 252 scale.
-- Megas: one per team; the Mega turn already gets the Mega's weather (Charizard Y's sun applies that turn); the Champions
+- Megas: one Mega Evolution per battle, but a team may hold several stones (format validator accepts Charizardite Y +
+  Kangaskhanite; corrected 2026-11-03, the old "one per team" rule kept both-stone sixes out of every sim before Week 4); the Mega turn already gets the Mega's weather (Charizard Y's sun applies that turn); the Champions
   mod keeps a Mega after fainting. PP capped at 20. Doubles screens ×0.67; spread moves ×0.75.
 - The app's damage engine (`lib/calc`, vendored @smogon/calc 0.12.0, gen 0 for Champions) is the **source of truth**.
   The Showdown simulator matches it to the HP point.
