@@ -76,10 +76,10 @@ The app guide is `lib/guides/5v1.mjs`.*
   | A: AI preview | 61.4% | — |
   | B: Morpeko + Conkeldurr lead, Charizard / Simipour back | 59.9% | −1.5 ±7.1 |
   | C: Conkeldurr + Simipour lead, Charizard / Morpeko back | 58.6% | −2.8 ±6.6 |
-  | D: Charizard + Morpeko lead, Conkeldurr / Simipour back | 44.5% | −17.2 ±7.8 |
-  | E: Morpeko + Conkeldurr lead, Simipour / Pelipper back | see §4 | |
+  | D: Charizard + Morpeko lead, Conkeldurr / Simipour back | 45.1% | −16.4 ±7.6 |
+  | E: Morpeko + Conkeldurr lead, Simipour / Pelipper back | 63.3% | +1.9 ±6.7 |
 
-  No option beats the AI preview, so the guide has no separate Drampa row. Leading Charizard into Drampa is clearly wrong.
+  No option beats the AI preview beyond noise (E is +1.9 ±6.7), so the guide has no separate Drampa row. Leading Charizard into Drampa is clearly wrong.
 
 ## 3. Where s119 loses (final run)
 
@@ -116,4 +116,3 @@ The app guide is `lib/guides/5v1.mjs`.*
 - His real sets and sixes are unknown; weights are judgement.
 - The engine is the same as Week 3: all gated upgrades tied.
 - Conkeldurr's value comes from the back line. It does Drain Punch into Drampa, Indeedee-F and Kleavor, Ice Punch into Garchomp, and it moves early under his Trick Room. In terrain it dies to Expanding Force (180–213%), so it must not sit in front of a healthy Armarouge.
-- Option E of the Drampa test was still running at writing; see the commit log for its result.
