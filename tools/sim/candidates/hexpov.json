@@ -11,7 +11,7 @@
    {
     "id": "p001",
     "label": "Garchomp+Indeedee-F+Armarouge+Corviknight+Rotom-Heat+Drampa (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -34,7 +34,7 @@
    {
     "id": "p002",
     "label": "Garchomp+Indeedee-F+Armarouge+Corviknight+Rotom-Heat+Kleavor (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chompZ",
@@ -57,7 +57,7 @@
    {
     "id": "p003",
     "label": "Garchomp+Indeedee-F+Armarouge+Corviknight+Rotom-Heat+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -80,7 +80,7 @@
    {
     "id": "p004",
     "label": "Garchomp+Indeedee-F+Armarouge+Corviknight+Rotom-Heat+Ditto (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chompZ",
@@ -103,7 +103,7 @@
    {
     "id": "p005",
     "label": "Garchomp+Indeedee-F+Armarouge+Corviknight+Rotom-Heat+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -126,7 +126,7 @@
    {
     "id": "p006",
     "label": "Garchomp+Indeedee-F+Armarouge+Corviknight+Drampa+Kleavor (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -149,7 +149,7 @@
    {
     "id": "p007",
     "label": "Garchomp+Indeedee-F+Armarouge+Corviknight+Drampa+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause); Drampa: Life Orb -> Focus Sash (item clause)",
     "sets": [
      "chomp_lo",
@@ -172,7 +172,7 @@
    {
     "id": "p008",
     "label": "Garchomp+Indeedee-F+Armarouge+Corviknight+Drampa+Ditto (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -195,7 +195,7 @@
    {
     "id": "p009",
     "label": "Garchomp+Indeedee-F+Armarouge+Corviknight+Drampa+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Focus Sash (item clause)",
     "sets": [
      "chompZ",
@@ -218,7 +218,7 @@
    {
     "id": "p010",
     "label": "Garchomp+Indeedee-F+Armarouge+Corviknight+Kleavor+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -241,7 +241,7 @@
    {
     "id": "p011",
     "label": "Garchomp+Indeedee-F+Armarouge+Corviknight+Kleavor+Ditto (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chompZ",
@@ -264,7 +264,7 @@
    {
     "id": "p012",
     "label": "Garchomp+Indeedee-F+Armarouge+Corviknight+Kleavor+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -287,7 +287,7 @@
    {
     "id": "p013",
     "label": "Garchomp+Indeedee-F+Armarouge+Corviknight+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -310,7 +310,7 @@
    {
     "id": "p014",
     "label": "Garchomp+Indeedee-F+Armarouge+Corviknight+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Focus Sash (item clause)",
     "sets": [
      "chomp_lo",
@@ -333,7 +333,7 @@
    {
     "id": "p015",
     "label": "Garchomp+Indeedee-F+Armarouge+Corviknight+Ditto+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -356,7 +356,7 @@
    {
     "id": "p016",
     "label": "Garchomp+Indeedee-F+Armarouge+Rotom-Heat+Drampa+Kleavor (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -379,7 +379,7 @@
    {
     "id": "p017",
     "label": "Garchomp+Indeedee-F+Armarouge+Rotom-Heat+Drampa+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause); Drampa: Life Orb -> Focus Sash (item clause)",
     "sets": [
      "chomp_lo",
@@ -402,7 +402,7 @@
    {
     "id": "p018",
     "label": "Garchomp+Indeedee-F+Armarouge+Rotom-Heat+Drampa+Ditto (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -425,7 +425,7 @@
    {
     "id": "p019",
     "label": "Garchomp+Indeedee-F+Armarouge+Rotom-Heat+Drampa+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Focus Sash (item clause)",
     "sets": [
      "chompZ",
@@ -448,7 +448,7 @@
    {
     "id": "p020",
     "label": "Garchomp+Indeedee-F+Armarouge+Rotom-Heat+Kleavor+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -471,7 +471,7 @@
    {
     "id": "p021",
     "label": "Garchomp+Indeedee-F+Armarouge+Rotom-Heat+Kleavor+Ditto (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chompZ",
@@ -494,7 +494,7 @@
    {
     "id": "p022",
     "label": "Garchomp+Indeedee-F+Armarouge+Rotom-Heat+Kleavor+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -517,7 +517,7 @@
    {
     "id": "p023",
     "label": "Garchomp+Indeedee-F+Armarouge+Rotom-Heat+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -540,7 +540,7 @@
    {
     "id": "p024",
     "label": "Garchomp+Indeedee-F+Armarouge+Rotom-Heat+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Focus Sash (item clause)",
     "sets": [
      "chomp_lo",
@@ -563,7 +563,7 @@
    {
     "id": "p025",
     "label": "Garchomp+Indeedee-F+Armarouge+Rotom-Heat+Ditto+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -586,7 +586,7 @@
    {
     "id": "p026",
     "label": "Garchomp+Indeedee-F+Armarouge+Drampa+Kleavor+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause); Drampa: Life Orb -> Focus Sash (item clause); Kleavor: Focus Sash -> Sitrus Berry (item clause)",
     "sets": [
      "chomp_lo",
@@ -609,7 +609,7 @@
    {
     "id": "p027",
     "label": "Garchomp+Indeedee-F+Armarouge+Drampa+Kleavor+Ditto (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -632,7 +632,7 @@
    {
     "id": "p028",
     "label": "Garchomp+Indeedee-F+Armarouge+Drampa+Kleavor+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Sitrus Berry (item clause)",
     "sets": [
      "chompZ",
@@ -655,7 +655,7 @@
    {
     "id": "p029",
     "label": "Garchomp+Indeedee-F+Armarouge+Drampa+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause); Drampa: Life Orb -> Focus Sash (item clause)",
     "sets": [
      "chomp_lo",
@@ -678,7 +678,7 @@
    {
     "id": "p030",
     "label": "Garchomp+Indeedee-F+Armarouge+Drampa+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause); Drampa: Life Orb -> Focus Sash (item clause); Forretress: Rocky Helmet -> Sitrus Berry (item clause)",
     "sets": [
      "chomp_lo",
@@ -701,7 +701,7 @@
    {
     "id": "p031",
     "label": "Garchomp+Indeedee-F+Armarouge+Drampa+Ditto+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Focus Sash (item clause)",
     "sets": [
      "chompZ",
@@ -724,7 +724,7 @@
    {
     "id": "p032",
     "label": "Garchomp+Indeedee-F+Armarouge+Kleavor+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -747,7 +747,7 @@
    {
     "id": "p033",
     "label": "Garchomp+Indeedee-F+Armarouge+Kleavor+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Sitrus Berry (item clause)",
     "sets": [
      "chomp_lo",
@@ -770,7 +770,7 @@
    {
     "id": "p034",
     "label": "Garchomp+Indeedee-F+Armarouge+Kleavor+Ditto+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -793,7 +793,7 @@
    {
     "id": "p035",
     "label": "Garchomp+Indeedee-F+Armarouge+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Focus Sash (item clause)",
     "sets": [
      "chomp_lo",
@@ -816,7 +816,7 @@
    {
     "id": "p036",
     "label": "Garchomp+Indeedee-F+Corviknight+Rotom-Heat+Drampa+Kleavor (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chompZ",
@@ -839,7 +839,7 @@
    {
     "id": "p037",
     "label": "Garchomp+Indeedee-F+Corviknight+Rotom-Heat+Drampa+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -862,7 +862,7 @@
    {
     "id": "p038",
     "label": "Garchomp+Indeedee-F+Corviknight+Rotom-Heat+Drampa+Ditto (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chompZ",
@@ -885,7 +885,7 @@
    {
     "id": "p039",
     "label": "Garchomp+Indeedee-F+Corviknight+Rotom-Heat+Drampa+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -908,7 +908,7 @@
    {
     "id": "p040",
     "label": "Garchomp+Indeedee-F+Corviknight+Rotom-Heat+Kleavor+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chomp_lo",
@@ -931,7 +931,7 @@
    {
     "id": "p041",
     "label": "Garchomp+Indeedee-F+Corviknight+Rotom-Heat+Kleavor+Ditto (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chompZ",
@@ -954,7 +954,7 @@
    {
     "id": "p042",
     "label": "Garchomp+Indeedee-F+Corviknight+Rotom-Heat+Kleavor+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Life Orb (item clause)",
     "sets": [
      "chompZ",
@@ -977,7 +977,7 @@
    {
     "id": "p043",
     "label": "Garchomp+Indeedee-F+Corviknight+Rotom-Heat+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chomp_lo",
@@ -1000,7 +1000,7 @@
    {
     "id": "p044",
     "label": "Garchomp+Indeedee-F+Corviknight+Rotom-Heat+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -1023,7 +1023,7 @@
    {
     "id": "p045",
     "label": "Garchomp+Indeedee-F+Corviknight+Rotom-Heat+Ditto+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Life Orb (item clause)",
     "sets": [
      "chompZ",
@@ -1046,7 +1046,7 @@
    {
     "id": "p046",
     "label": "Garchomp+Indeedee-F+Corviknight+Drampa+Kleavor+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -1069,7 +1069,7 @@
    {
     "id": "p047",
     "label": "Garchomp+Indeedee-F+Corviknight+Drampa+Kleavor+Ditto (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chompZ",
@@ -1092,7 +1092,7 @@
    {
     "id": "p048",
     "label": "Garchomp+Indeedee-F+Corviknight+Drampa+Kleavor+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -1115,7 +1115,7 @@
    {
     "id": "p049",
     "label": "Garchomp+Indeedee-F+Corviknight+Drampa+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -1138,7 +1138,7 @@
    {
     "id": "p050",
     "label": "Garchomp+Indeedee-F+Corviknight+Drampa+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Focus Sash (item clause)",
     "sets": [
      "chomp_lo",
@@ -1161,7 +1161,7 @@
    {
     "id": "p051",
     "label": "Garchomp+Indeedee-F+Corviknight+Drampa+Ditto+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -1184,7 +1184,7 @@
    {
     "id": "p052",
     "label": "Garchomp+Indeedee-F+Corviknight+Kleavor+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chomp_lo",
@@ -1207,7 +1207,7 @@
    {
     "id": "p053",
     "label": "Garchomp+Indeedee-F+Corviknight+Kleavor+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -1230,7 +1230,7 @@
    {
     "id": "p054",
     "label": "Garchomp+Indeedee-F+Corviknight+Kleavor+Ditto+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Life Orb (item clause)",
     "sets": [
      "chompZ",
@@ -1253,7 +1253,7 @@
    {
     "id": "p055",
     "label": "Garchomp+Indeedee-F+Corviknight+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -1276,7 +1276,7 @@
    {
     "id": "p056",
     "label": "Garchomp+Indeedee-F+Rotom-Heat+Drampa+Kleavor+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -1299,7 +1299,7 @@
    {
     "id": "p057",
     "label": "Garchomp+Indeedee-F+Rotom-Heat+Drampa+Kleavor+Ditto (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chompZ",
@@ -1322,7 +1322,7 @@
    {
     "id": "p058",
     "label": "Garchomp+Indeedee-F+Rotom-Heat+Drampa+Kleavor+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -1345,7 +1345,7 @@
    {
     "id": "p059",
     "label": "Garchomp+Indeedee-F+Rotom-Heat+Drampa+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -1368,7 +1368,7 @@
    {
     "id": "p060",
     "label": "Garchomp+Indeedee-F+Rotom-Heat+Drampa+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Focus Sash (item clause)",
     "sets": [
      "chomp_lo",
@@ -1391,7 +1391,7 @@
    {
     "id": "p061",
     "label": "Garchomp+Indeedee-F+Rotom-Heat+Drampa+Ditto+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -1414,7 +1414,7 @@
    {
     "id": "p062",
     "label": "Garchomp+Indeedee-F+Rotom-Heat+Kleavor+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chomp_lo",
@@ -1437,7 +1437,7 @@
    {
     "id": "p063",
     "label": "Garchomp+Indeedee-F+Rotom-Heat+Kleavor+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -1460,7 +1460,7 @@
    {
     "id": "p064",
     "label": "Garchomp+Indeedee-F+Rotom-Heat+Kleavor+Ditto+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Life Orb (item clause)",
     "sets": [
      "chompZ",
@@ -1483,7 +1483,7 @@
    {
     "id": "p065",
     "label": "Garchomp+Indeedee-F+Rotom-Heat+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -1506,7 +1506,7 @@
    {
     "id": "p066",
     "label": "Garchomp+Indeedee-F+Drampa+Kleavor+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -1529,7 +1529,7 @@
    {
     "id": "p067",
     "label": "Garchomp+Indeedee-F+Drampa+Kleavor+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Sitrus Berry (item clause)",
     "sets": [
      "chomp_lo",
@@ -1552,7 +1552,7 @@
    {
     "id": "p068",
     "label": "Garchomp+Indeedee-F+Drampa+Kleavor+Ditto+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -1575,7 +1575,7 @@
    {
     "id": "p069",
     "label": "Garchomp+Indeedee-F+Drampa+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Focus Sash (item clause)",
     "sets": [
      "chomp_lo",
@@ -1598,7 +1598,7 @@
    {
     "id": "p070",
     "label": "Garchomp+Indeedee-F+Kleavor+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -1621,7 +1621,7 @@
    {
     "id": "p071",
     "label": "Garchomp+Armarouge+Corviknight+Rotom-Heat+Drampa+Kleavor (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -1644,7 +1644,7 @@
    {
     "id": "p072",
     "label": "Garchomp+Armarouge+Corviknight+Rotom-Heat+Drampa+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause); Drampa: Life Orb -> Focus Sash (item clause)",
     "sets": [
      "chomp_lo",
@@ -1667,7 +1667,7 @@
    {
     "id": "p073",
     "label": "Garchomp+Armarouge+Corviknight+Rotom-Heat+Drampa+Ditto (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -1690,7 +1690,7 @@
    {
     "id": "p074",
     "label": "Garchomp+Armarouge+Corviknight+Rotom-Heat+Drampa+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -1713,7 +1713,7 @@
    {
     "id": "p075",
     "label": "Garchomp+Armarouge+Corviknight+Rotom-Heat+Kleavor+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -1736,7 +1736,7 @@
    {
     "id": "p076",
     "label": "Garchomp+Armarouge+Corviknight+Rotom-Heat+Kleavor+Ditto (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chompZ",
@@ -1759,7 +1759,7 @@
    {
     "id": "p077",
     "label": "Garchomp+Armarouge+Corviknight+Rotom-Heat+Kleavor+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chompZ",
@@ -1782,7 +1782,7 @@
    {
     "id": "p078",
     "label": "Garchomp+Armarouge+Corviknight+Rotom-Heat+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -1805,7 +1805,7 @@
    {
     "id": "p079",
     "label": "Garchomp+Armarouge+Corviknight+Rotom-Heat+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -1828,7 +1828,7 @@
    {
     "id": "p080",
     "label": "Garchomp+Armarouge+Corviknight+Rotom-Heat+Ditto+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chompZ",
@@ -1851,7 +1851,7 @@
    {
     "id": "p081",
     "label": "Garchomp+Armarouge+Corviknight+Drampa+Kleavor+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause); Drampa: Life Orb -> Focus Sash (item clause); Kleavor: Focus Sash -> Sitrus Berry (item clause)",
     "sets": [
      "chomp_lo",
@@ -1874,7 +1874,7 @@
    {
     "id": "p082",
     "label": "Garchomp+Armarouge+Corviknight+Drampa+Kleavor+Ditto (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -1897,7 +1897,7 @@
    {
     "id": "p083",
     "label": "Garchomp+Armarouge+Corviknight+Drampa+Kleavor+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -1920,7 +1920,7 @@
    {
     "id": "p084",
     "label": "Garchomp+Armarouge+Corviknight+Drampa+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause); Drampa: Life Orb -> Focus Sash (item clause)",
     "sets": [
      "chomp_lo",
@@ -1943,7 +1943,7 @@
    {
     "id": "p085",
     "label": "Garchomp+Armarouge+Corviknight+Drampa+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause); Drampa: Life Orb -> Focus Sash (item clause)",
     "sets": [
      "chomp_lo",
@@ -1966,7 +1966,7 @@
    {
     "id": "p086",
     "label": "Garchomp+Armarouge+Corviknight+Drampa+Ditto+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -1989,7 +1989,7 @@
    {
     "id": "p087",
     "label": "Garchomp+Armarouge+Corviknight+Kleavor+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -2012,7 +2012,7 @@
    {
     "id": "p088",
     "label": "Garchomp+Armarouge+Corviknight+Kleavor+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -2035,7 +2035,7 @@
    {
     "id": "p089",
     "label": "Garchomp+Armarouge+Corviknight+Kleavor+Ditto+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chompZ",
@@ -2058,7 +2058,7 @@
    {
     "id": "p090",
     "label": "Garchomp+Armarouge+Corviknight+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -2081,7 +2081,7 @@
    {
     "id": "p091",
     "label": "Garchomp+Armarouge+Rotom-Heat+Drampa+Kleavor+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause); Drampa: Life Orb -> Focus Sash (item clause); Kleavor: Focus Sash -> Leftovers (item clause)",
     "sets": [
      "chomp_lo",
@@ -2104,7 +2104,7 @@
    {
     "id": "p092",
     "label": "Garchomp+Armarouge+Rotom-Heat+Drampa+Kleavor+Ditto (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -2127,7 +2127,7 @@
    {
     "id": "p093",
     "label": "Garchomp+Armarouge+Rotom-Heat+Drampa+Kleavor+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -2150,7 +2150,7 @@
    {
     "id": "p094",
     "label": "Garchomp+Armarouge+Rotom-Heat+Drampa+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause); Drampa: Life Orb -> Focus Sash (item clause)",
     "sets": [
      "chomp_lo",
@@ -2173,7 +2173,7 @@
    {
     "id": "p095",
     "label": "Garchomp+Armarouge+Rotom-Heat+Drampa+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause); Drampa: Life Orb -> Focus Sash (item clause)",
     "sets": [
      "chomp_lo",
@@ -2196,7 +2196,7 @@
    {
     "id": "p096",
     "label": "Garchomp+Armarouge+Rotom-Heat+Drampa+Ditto+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -2219,7 +2219,7 @@
    {
     "id": "p097",
     "label": "Garchomp+Armarouge+Rotom-Heat+Kleavor+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -2242,7 +2242,7 @@
    {
     "id": "p098",
     "label": "Garchomp+Armarouge+Rotom-Heat+Kleavor+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -2265,7 +2265,7 @@
    {
     "id": "p099",
     "label": "Garchomp+Armarouge+Rotom-Heat+Kleavor+Ditto+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chompZ",
@@ -2288,7 +2288,7 @@
    {
     "id": "p100",
     "label": "Garchomp+Armarouge+Rotom-Heat+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -2311,7 +2311,7 @@
    {
     "id": "p101",
     "label": "Garchomp+Armarouge+Drampa+Kleavor+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause); Drampa: Life Orb -> Focus Sash (item clause); Kleavor: Focus Sash -> Sitrus Berry (item clause)",
     "sets": [
      "chomp_lo",
@@ -2334,7 +2334,7 @@
    {
     "id": "p102",
     "label": "Garchomp+Armarouge+Drampa+Kleavor+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause); Drampa: Life Orb -> Focus Sash (item clause); Kleavor: Focus Sash -> Sitrus Berry (item clause)",
     "sets": [
      "chomp_lo",
@@ -2357,7 +2357,7 @@
    {
     "id": "p103",
     "label": "Garchomp+Armarouge+Drampa+Kleavor+Ditto+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -2380,7 +2380,7 @@
    {
     "id": "p104",
     "label": "Garchomp+Armarouge+Drampa+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause); Drampa: Life Orb -> Focus Sash (item clause)",
     "sets": [
      "chomp_lo",
@@ -2403,7 +2403,7 @@
    {
     "id": "p105",
     "label": "Garchomp+Armarouge+Kleavor+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Armarouge: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -2426,7 +2426,7 @@
    {
     "id": "p106",
     "label": "Garchomp+Corviknight+Rotom-Heat+Drampa+Kleavor+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -2449,7 +2449,7 @@
    {
     "id": "p107",
     "label": "Garchomp+Corviknight+Rotom-Heat+Drampa+Kleavor+Ditto (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chompZ",
@@ -2472,7 +2472,7 @@
    {
     "id": "p108",
     "label": "Garchomp+Corviknight+Rotom-Heat+Drampa+Kleavor+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chompZ",
@@ -2495,7 +2495,7 @@
    {
     "id": "p109",
     "label": "Garchomp+Corviknight+Rotom-Heat+Drampa+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -2518,7 +2518,7 @@
    {
     "id": "p110",
     "label": "Garchomp+Corviknight+Rotom-Heat+Drampa+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -2541,7 +2541,7 @@
    {
     "id": "p111",
     "label": "Garchomp+Corviknight+Rotom-Heat+Drampa+Ditto+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chompZ",
@@ -2564,7 +2564,7 @@
    {
     "id": "p112",
     "label": "Garchomp+Corviknight+Rotom-Heat+Kleavor+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chomp_lo",
@@ -2587,7 +2587,7 @@
    {
     "id": "p113",
     "label": "Garchomp+Corviknight+Rotom-Heat+Kleavor+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chomp_lo",
@@ -2610,7 +2610,7 @@
    {
     "id": "p114",
     "label": "Garchomp+Corviknight+Rotom-Heat+Kleavor+Ditto+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chompZ",
@@ -2633,7 +2633,7 @@
    {
     "id": "p115",
     "label": "Garchomp+Corviknight+Rotom-Heat+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chomp_lo",
@@ -2656,7 +2656,7 @@
    {
     "id": "p116",
     "label": "Garchomp+Corviknight+Drampa+Kleavor+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -2679,7 +2679,7 @@
    {
     "id": "p117",
     "label": "Garchomp+Corviknight+Drampa+Kleavor+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -2702,7 +2702,7 @@
    {
     "id": "p118",
     "label": "Garchomp+Corviknight+Drampa+Kleavor+Ditto+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chompZ",
@@ -2725,7 +2725,7 @@
    {
     "id": "p119",
     "label": "Garchomp+Corviknight+Drampa+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -2748,7 +2748,7 @@
    {
     "id": "p120",
     "label": "Garchomp+Corviknight+Kleavor+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chomp_lo",
@@ -2771,7 +2771,7 @@
    {
     "id": "p121",
     "label": "Garchomp+Rotom-Heat+Drampa+Kleavor+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -2794,7 +2794,7 @@
    {
     "id": "p122",
     "label": "Garchomp+Rotom-Heat+Drampa+Kleavor+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -2817,7 +2817,7 @@
    {
     "id": "p123",
     "label": "Garchomp+Rotom-Heat+Drampa+Kleavor+Ditto+Forretress (Mega-Z Garchomp)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chompZ",
@@ -2840,7 +2840,7 @@
    {
     "id": "p124",
     "label": "Garchomp+Rotom-Heat+Drampa+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -2863,7 +2863,7 @@
    {
     "id": "p125",
     "label": "Garchomp+Rotom-Heat+Kleavor+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "chomp_lo",
@@ -2886,7 +2886,7 @@
    {
     "id": "p126",
     "label": "Garchomp+Drampa+Kleavor+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -2909,7 +2909,7 @@
    {
     "id": "p127",
     "label": "Indeedee-F+Armarouge+Corviknight+Rotom-Heat+Drampa+Kleavor (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -2932,7 +2932,7 @@
    {
     "id": "p128",
     "label": "Indeedee-F+Armarouge+Corviknight+Rotom-Heat+Drampa+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -2955,7 +2955,7 @@
    {
     "id": "p129",
     "label": "Indeedee-F+Armarouge+Corviknight+Rotom-Heat+Drampa+Ditto (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -2978,7 +2978,7 @@
    {
     "id": "p130",
     "label": "Indeedee-F+Armarouge+Corviknight+Rotom-Heat+Drampa+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Focus Sash (item clause)",
     "sets": [
      "indee",
@@ -3001,7 +3001,7 @@
    {
     "id": "p131",
     "label": "Indeedee-F+Armarouge+Corviknight+Rotom-Heat+Kleavor+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "indee",
@@ -3024,7 +3024,7 @@
    {
     "id": "p132",
     "label": "Indeedee-F+Armarouge+Corviknight+Rotom-Heat+Kleavor+Ditto (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "indee",
@@ -3047,7 +3047,7 @@
    {
     "id": "p133",
     "label": "Indeedee-F+Armarouge+Corviknight+Rotom-Heat+Kleavor+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3070,7 +3070,7 @@
    {
     "id": "p134",
     "label": "Indeedee-F+Armarouge+Corviknight+Rotom-Heat+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "indee",
@@ -3093,7 +3093,7 @@
    {
     "id": "p135",
     "label": "Indeedee-F+Armarouge+Corviknight+Rotom-Heat+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3116,7 +3116,7 @@
    {
     "id": "p136",
     "label": "Indeedee-F+Armarouge+Corviknight+Rotom-Heat+Ditto+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3139,7 +3139,7 @@
    {
     "id": "p137",
     "label": "Indeedee-F+Armarouge+Corviknight+Drampa+Kleavor+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3162,7 +3162,7 @@
    {
     "id": "p138",
     "label": "Indeedee-F+Armarouge+Corviknight+Drampa+Kleavor+Ditto (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3185,7 +3185,7 @@
    {
     "id": "p139",
     "label": "Indeedee-F+Armarouge+Corviknight+Drampa+Kleavor+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Sitrus Berry (item clause)",
     "sets": [
      "indee",
@@ -3208,7 +3208,7 @@
    {
     "id": "p140",
     "label": "Indeedee-F+Armarouge+Corviknight+Drampa+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3231,7 +3231,7 @@
    {
     "id": "p141",
     "label": "Indeedee-F+Armarouge+Corviknight+Drampa+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Focus Sash (item clause)",
     "sets": [
      "indee",
@@ -3254,7 +3254,7 @@
    {
     "id": "p142",
     "label": "Indeedee-F+Armarouge+Corviknight+Drampa+Ditto+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Focus Sash (item clause)",
     "sets": [
      "indee",
@@ -3277,7 +3277,7 @@
    {
     "id": "p143",
     "label": "Indeedee-F+Armarouge+Corviknight+Kleavor+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "indee",
@@ -3300,7 +3300,7 @@
    {
     "id": "p144",
     "label": "Indeedee-F+Armarouge+Corviknight+Kleavor+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3323,7 +3323,7 @@
    {
     "id": "p145",
     "label": "Indeedee-F+Armarouge+Corviknight+Kleavor+Ditto+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3346,7 +3346,7 @@
    {
     "id": "p146",
     "label": "Indeedee-F+Armarouge+Corviknight+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3369,7 +3369,7 @@
    {
     "id": "p147",
     "label": "Indeedee-F+Armarouge+Rotom-Heat+Drampa+Kleavor+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3392,7 +3392,7 @@
    {
     "id": "p148",
     "label": "Indeedee-F+Armarouge+Rotom-Heat+Drampa+Kleavor+Ditto (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3415,7 +3415,7 @@
    {
     "id": "p149",
     "label": "Indeedee-F+Armarouge+Rotom-Heat+Drampa+Kleavor+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Leftovers (item clause)",
     "sets": [
      "indee",
@@ -3438,7 +3438,7 @@
    {
     "id": "p150",
     "label": "Indeedee-F+Armarouge+Rotom-Heat+Drampa+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3461,7 +3461,7 @@
    {
     "id": "p151",
     "label": "Indeedee-F+Armarouge+Rotom-Heat+Drampa+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Focus Sash (item clause)",
     "sets": [
      "indee",
@@ -3484,7 +3484,7 @@
    {
     "id": "p152",
     "label": "Indeedee-F+Armarouge+Rotom-Heat+Drampa+Ditto+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Focus Sash (item clause)",
     "sets": [
      "indee",
@@ -3507,7 +3507,7 @@
    {
     "id": "p153",
     "label": "Indeedee-F+Armarouge+Rotom-Heat+Kleavor+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "indee",
@@ -3530,7 +3530,7 @@
    {
     "id": "p154",
     "label": "Indeedee-F+Armarouge+Rotom-Heat+Kleavor+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3553,7 +3553,7 @@
    {
     "id": "p155",
     "label": "Indeedee-F+Armarouge+Rotom-Heat+Kleavor+Ditto+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3576,7 +3576,7 @@
    {
     "id": "p156",
     "label": "Indeedee-F+Armarouge+Rotom-Heat+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3599,7 +3599,7 @@
    {
     "id": "p157",
     "label": "Indeedee-F+Armarouge+Drampa+Kleavor+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3622,7 +3622,7 @@
    {
     "id": "p158",
     "label": "Indeedee-F+Armarouge+Drampa+Kleavor+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Sitrus Berry (item clause)",
     "sets": [
      "indee",
@@ -3645,7 +3645,7 @@
    {
     "id": "p159",
     "label": "Indeedee-F+Armarouge+Drampa+Kleavor+Ditto+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Sitrus Berry (item clause)",
     "sets": [
      "indee",
@@ -3668,7 +3668,7 @@
    {
     "id": "p160",
     "label": "Indeedee-F+Armarouge+Drampa+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause); Forretress: Rocky Helmet -> Focus Sash (item clause)",
     "sets": [
      "indee",
@@ -3691,7 +3691,7 @@
    {
     "id": "p161",
     "label": "Indeedee-F+Armarouge+Kleavor+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3714,7 +3714,7 @@
    {
     "id": "p162",
     "label": "Indeedee-F+Corviknight+Rotom-Heat+Drampa+Kleavor+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "indee",
@@ -3737,7 +3737,7 @@
    {
     "id": "p163",
     "label": "Indeedee-F+Corviknight+Rotom-Heat+Drampa+Kleavor+Ditto (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "indee",
@@ -3760,7 +3760,7 @@
    {
     "id": "p164",
     "label": "Indeedee-F+Corviknight+Rotom-Heat+Drampa+Kleavor+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3783,7 +3783,7 @@
    {
     "id": "p165",
     "label": "Indeedee-F+Corviknight+Rotom-Heat+Drampa+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "indee",
@@ -3806,7 +3806,7 @@
    {
     "id": "p166",
     "label": "Indeedee-F+Corviknight+Rotom-Heat+Drampa+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3829,7 +3829,7 @@
    {
     "id": "p167",
     "label": "Indeedee-F+Corviknight+Rotom-Heat+Drampa+Ditto+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3852,7 +3852,7 @@
    {
     "id": "p168",
     "label": "Indeedee-F+Corviknight+Rotom-Heat+Kleavor+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "indee",
@@ -3875,7 +3875,7 @@
    {
     "id": "p169",
     "label": "Indeedee-F+Corviknight+Rotom-Heat+Kleavor+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Life Orb (item clause)",
     "sets": [
      "indee",
@@ -3898,7 +3898,7 @@
    {
     "id": "p170",
     "label": "Indeedee-F+Corviknight+Rotom-Heat+Kleavor+Ditto+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Life Orb (item clause)",
     "sets": [
      "indee",
@@ -3921,7 +3921,7 @@
    {
     "id": "p171",
     "label": "Indeedee-F+Corviknight+Rotom-Heat+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Life Orb (item clause)",
     "sets": [
      "indee",
@@ -3944,7 +3944,7 @@
    {
     "id": "p172",
     "label": "Indeedee-F+Corviknight+Drampa+Kleavor+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "indee",
@@ -3967,7 +3967,7 @@
    {
     "id": "p173",
     "label": "Indeedee-F+Corviknight+Drampa+Kleavor+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -3990,7 +3990,7 @@
    {
     "id": "p174",
     "label": "Indeedee-F+Corviknight+Drampa+Kleavor+Ditto+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -4013,7 +4013,7 @@
    {
     "id": "p175",
     "label": "Indeedee-F+Corviknight+Drampa+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -4036,7 +4036,7 @@
    {
     "id": "p176",
     "label": "Indeedee-F+Corviknight+Kleavor+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Life Orb (item clause)",
     "sets": [
      "indee",
@@ -4059,7 +4059,7 @@
    {
     "id": "p177",
     "label": "Indeedee-F+Rotom-Heat+Drampa+Kleavor+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "indee",
@@ -4082,7 +4082,7 @@
    {
     "id": "p178",
     "label": "Indeedee-F+Rotom-Heat+Drampa+Kleavor+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -4105,7 +4105,7 @@
    {
     "id": "p179",
     "label": "Indeedee-F+Rotom-Heat+Drampa+Kleavor+Ditto+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -4128,7 +4128,7 @@
    {
     "id": "p180",
     "label": "Indeedee-F+Rotom-Heat+Drampa+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -4151,7 +4151,7 @@
    {
     "id": "p181",
     "label": "Indeedee-F+Rotom-Heat+Kleavor+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Life Orb (item clause)",
     "sets": [
      "indee",
@@ -4174,7 +4174,7 @@
    {
     "id": "p182",
     "label": "Indeedee-F+Drampa+Kleavor+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Forretress: Rocky Helmet -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -4197,7 +4197,7 @@
    {
     "id": "p183",
     "label": "Armarouge+Corviknight+Rotom-Heat+Drampa+Kleavor+Banette (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "arma_hw",
@@ -4220,7 +4220,7 @@
    {
     "id": "p184",
     "label": "Armarouge+Corviknight+Rotom-Heat+Drampa+Kleavor+Ditto (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "arma_hw",
@@ -4243,7 +4243,7 @@
    {
     "id": "p185",
     "label": "Armarouge+Corviknight+Rotom-Heat+Drampa+Kleavor+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "arma_hw",
@@ -4266,7 +4266,7 @@
    {
     "id": "p186",
     "label": "Armarouge+Corviknight+Rotom-Heat+Drampa+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "arma_hw",
@@ -4289,7 +4289,7 @@
    {
     "id": "p187",
     "label": "Armarouge+Corviknight+Rotom-Heat+Drampa+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "arma_hw",
@@ -4312,7 +4312,7 @@
    {
     "id": "p188",
     "label": "Armarouge+Corviknight+Rotom-Heat+Drampa+Ditto+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "arma_hw",
@@ -4335,7 +4335,7 @@
    {
     "id": "p189",
     "label": "Armarouge+Corviknight+Rotom-Heat+Kleavor+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "arma_hw",
@@ -4358,7 +4358,7 @@
    {
     "id": "p190",
     "label": "Armarouge+Corviknight+Rotom-Heat+Kleavor+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "arma_hw",
@@ -4381,7 +4381,7 @@
    {
     "id": "p191",
     "label": "Armarouge+Corviknight+Rotom-Heat+Kleavor+Ditto+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "arma_hw",
@@ -4404,7 +4404,7 @@
    {
     "id": "p192",
     "label": "Armarouge+Corviknight+Rotom-Heat+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "arma_hw",
@@ -4427,7 +4427,7 @@
    {
     "id": "p193",
     "label": "Armarouge+Corviknight+Drampa+Kleavor+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "arma_hw",
@@ -4450,7 +4450,7 @@
    {
     "id": "p194",
     "label": "Armarouge+Corviknight+Drampa+Kleavor+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "arma_hw",
@@ -4473,7 +4473,7 @@
    {
     "id": "p195",
     "label": "Armarouge+Corviknight+Drampa+Kleavor+Ditto+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "arma_hw",
@@ -4496,7 +4496,7 @@
    {
     "id": "p196",
     "label": "Armarouge+Corviknight+Drampa+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "arma_hw",
@@ -4519,7 +4519,7 @@
    {
     "id": "p197",
     "label": "Armarouge+Corviknight+Kleavor+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "arma_hw",
@@ -4542,7 +4542,7 @@
    {
     "id": "p198",
     "label": "Armarouge+Rotom-Heat+Drampa+Kleavor+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "arma_hw",
@@ -4565,7 +4565,7 @@
    {
     "id": "p199",
     "label": "Armarouge+Rotom-Heat+Drampa+Kleavor+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "arma_hw",
@@ -4588,7 +4588,7 @@
    {
     "id": "p200",
     "label": "Armarouge+Rotom-Heat+Drampa+Kleavor+Ditto+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "arma_hw",
@@ -4611,7 +4611,7 @@
    {
     "id": "p201",
     "label": "Armarouge+Rotom-Heat+Drampa+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "arma_hw",
@@ -4634,7 +4634,7 @@
    {
     "id": "p202",
     "label": "Armarouge+Rotom-Heat+Kleavor+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "arma_hw",
@@ -4657,7 +4657,7 @@
    {
     "id": "p203",
     "label": "Armarouge+Drampa+Kleavor+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "arma_hw",
@@ -4680,7 +4680,7 @@
    {
     "id": "p204",
     "label": "Corviknight+Rotom-Heat+Drampa+Kleavor+Banette+Ditto (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "corv_tw",
@@ -4703,7 +4703,7 @@
    {
     "id": "p205",
     "label": "Corviknight+Rotom-Heat+Drampa+Kleavor+Banette+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "corv_tw",
@@ -4726,7 +4726,7 @@
    {
     "id": "p206",
     "label": "Corviknight+Rotom-Heat+Drampa+Kleavor+Ditto+Forretress (no Mega)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "corv_tw",
@@ -4749,7 +4749,7 @@
    {
     "id": "p207",
     "label": "Corviknight+Rotom-Heat+Drampa+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "corv_tw",
@@ -4772,7 +4772,7 @@
    {
     "id": "p208",
     "label": "Corviknight+Rotom-Heat+Kleavor+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "corv_tw",
@@ -4795,7 +4795,7 @@
    {
     "id": "p209",
     "label": "Corviknight+Drampa+Kleavor+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "corv_tw",
@@ -4818,7 +4818,7 @@
    {
     "id": "p210",
     "label": "Rotom-Heat+Drampa+Kleavor+Banette+Ditto+Forretress (Mega Banette)",
-    "weight": 0.0043,
+    "weight": 0.0,
     "why": "every-six screen",
     "sets": [
      "rotomh",
@@ -4841,7 +4841,7 @@
    {
     "id": "h01",
     "label": "Core + Drampa (ladder sets)",
-    "weight": 0.0043,
+    "weight": 0.1111,
     "why": "His five big picks + Cloud Nine Drampa: the most likely single six | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -4864,7 +4864,7 @@
    {
     "id": "h02",
     "label": "Core + Kleavor",
-    "weight": 0.0043,
+    "weight": 0.0889,
     "why": "Core + his next physical attacker",
     "sets": [
      "chompZ",
@@ -4887,7 +4887,7 @@
    {
     "id": "h03",
     "label": "Psychic Terrain Trick Room, Mega Drampa",
-    "weight": 0.0043,
+    "weight": 0.0667,
     "why": "Full TR mode around Indeedee + Armarouge | Garchomp: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -4910,7 +4910,7 @@
    {
     "id": "h04",
     "label": "Anti-Charizard rocks, no Mega",
-    "weight": 0.0043,
+    "weight": 0.0778,
     "why": "Every answer to Charizard: Rock Slide x2, Wide Guard, Cloud Nine | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_scarf",
@@ -4933,7 +4933,7 @@
    {
     "id": "h05",
     "label": "Tailwind offense",
-    "weight": 0.0043,
+    "weight": 0.0667,
     "why": "Double Tailwind, fast mode instead of TR | Armarouge: Focus Sash -> Life Orb (item clause); Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "corv_tw",
@@ -4956,7 +4956,7 @@
    {
     "id": "h06",
     "label": "Mega Banette Prankster Trick Room",
-    "weight": 0.0043,
+    "weight": 0.0444,
     "why": "Priority TR; Garchomp loses its Mega | Drampa: Life Orb -> Expert Belt (item clause); Garchomp: Life Orb -> Focus Sash (item clause)",
     "sets": [
      "banM",
@@ -4979,7 +4979,7 @@
    {
     "id": "h07",
     "label": "TR + Imprison (anti-Sinistcha)",
-    "weight": 0.0043,
+    "weight": 0.0444,
     "why": "Stops Sinistcha undoing his Trick Room | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "indee_imp",
@@ -5002,7 +5002,7 @@
    {
     "id": "h08",
     "label": "Sand Force Mega Garchomp",
-    "weight": 0.0043,
+    "weight": 0.0333,
     "why": "The other Garchomp Mega (bulky, works in TR)",
     "sets": [
      "chompM",
@@ -5025,7 +5025,7 @@
    {
     "id": "h09",
     "label": "No Corviknight: Kleavor + Drampa",
-    "weight": 0.0043,
+    "weight": 0.0556,
     "why": "Corviknight benched for both cheap attackers | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -5048,7 +5048,7 @@
    {
     "id": "h10",
     "label": "Scarf Garchomp + Mega Drampa",
-    "weight": 0.0043,
+    "weight": 0.0444,
     "why": "Mega on Drampa, Scarf rocks on Garchomp",
     "sets": [
      "chomp_scarf",
@@ -5071,7 +5071,7 @@
    {
     "id": "h11",
     "label": "Human: Ditto",
-    "weight": 0.0043,
+    "weight": 0.0333,
     "why": "Comfort pick: Scarf Ditto copies Charizard / Kangaskhan",
     "sets": [
      "chompZ",
@@ -5094,7 +5094,7 @@
    {
     "id": "h12",
     "label": "Bulk Up Corviknight balance",
-    "weight": 0.0043,
+    "weight": 0.0444,
     "why": "Bulky Corviknight + Wide Guard Armarouge",
     "sets": [
      "chompZ",
@@ -5117,7 +5117,7 @@
    {
     "id": "h13",
     "label": "Scarf Rotom-Heat offense",
-    "weight": 0.0043,
+    "weight": 0.0333,
     "why": "Scarf Rotom-Heat | Kleavor: Focus Sash -> Life Orb (item clause)",
     "sets": [
      "chompZ",
@@ -5140,7 +5140,7 @@
    {
     "id": "h14",
     "label": "Full anti-Anthony",
-    "weight": 0.0043,
+    "weight": 0.0556,
     "why": "Rock Slide x2, Cloud Nine, Wide Guard, Imprison | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_lo",
@@ -5163,7 +5163,7 @@
    {
     "id": "h15",
     "label": "Forretress Trick Room",
-    "weight": 0.0043,
+    "weight": 0.0222,
     "why": "Cheapest pick as a Sturdy TR abuser | Forretress: Rocky Helmet -> Life Orb (item clause); Armarouge: Life Orb -> Expert Belt (item clause); Garchomp: Life Orb -> Focus Sash (item clause)",
     "sets": [
      "indee",
@@ -5186,7 +5186,7 @@
    {
     "id": "h16",
     "label": "Prankster Taunt / Encore, fast",
-    "weight": 0.0043,
+    "weight": 0.0333,
     "why": "Banette stops our Trick Room with priority | Armarouge: Focus Sash -> Life Orb (item clause)",
     "sets": [
      "banM_enc",
@@ -5209,7 +5209,7 @@
    {
     "id": "h17",
     "label": "No Indeedee: fast Garchomp-Z",
-    "weight": 0.0043,
+    "weight": 0.0444,
     "why": "Leaves the terrain home; Heat Wave Armarouge | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -5232,7 +5232,7 @@
    {
     "id": "h18",
     "label": "Mega Drampa TR + rocks",
-    "weight": 0.0043,
+    "weight": 0.0444,
     "why": "TR mode with Rock Slide backups | Garchomp: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -5255,7 +5255,7 @@
    {
     "id": "h19",
     "label": "Human: Banette + Ditto",
-    "weight": 0.0043,
+    "weight": 0.0222,
     "why": "Low-cost comfort picks | Garchomp: Choice Scarf -> Expert Belt (item clause)",
     "sets": [
      "banM",
@@ -5278,7 +5278,7 @@
    {
     "id": "h20",
     "label": "Special Garchomp-Z, Bulk Up Corviknight",
-    "weight": 0.0043,
+    "weight": 0.0333,
     "why": "Flamethrower Mega-Z for Aegislash | Armarouge: Focus Sash -> Life Orb (item clause)",
     "sets": [
      "chompZ_fire",

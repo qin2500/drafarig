@@ -38,12 +38,15 @@ for n, six in enumerate(combinations(TEN, 6), 1):
     keys = sets_for(six)
     mega = 'Mega Banette' if 'banM' in keys else 'Mega-Z Garchomp' if 'chompZ' in keys else 'no Mega'
     tid = f'p{n:03d}'
-    PT.append((tid, '+'.join(NAME[s] for s in six) + f' ({mega})', 1, keys, 'every-six screen'))
+    PT.append((tid, '+'.join(NAME[s] for s in six) + f' ({mega})', 0, keys, 'every-six screen'))
     if 'banM' in keys or ('indee' in keys and 'arma_tr' in keys):
         PP[tid] = ['tr', 0.3]
 
 if __name__ == '__main__':
-    ht, he = build(H, PT + [(t, l, 1, k, w) for (t, l, _, k, w) in HT], 'hex')
+    # weights: p-sixes 0, h-sixes as in hex.json, so closed-sheet beliefs (run.mjs library(): modal set per species,
+    # weighted) are exactly hex.json's. With equal weights the modal Garchomp became Life Orb physical and our AI misread
+    # Mega-Z Garchomp all game (s119 vs h01: 29/39 wins -> 6/39 on the same seeds).
+    ht, he = build(H, PT + HT, 'hex')
     at, ae = build(A, AT, 'anthony')
     for tid_, p in he + ae:
         print('PROBLEM', tid_, p)
