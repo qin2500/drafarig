@@ -116,3 +116,40 @@ The app guide is `lib/guides/5v1.mjs`.*
 - His real sets and sixes are unknown; weights are judgement.
 - The engine is the same as Week 3: all gated upgrades tied.
 - Conkeldurr's value comes from the back line. It does Drain Punch into Drampa, Indeedee-F and Kleavor, Ice Punch into Garchomp, and it moves early under his Trick Room. In terrain it dies to Expanding Force (180–213%), so it must not sit in front of a healthy Armarouge.
+
+## 5. From Hex's side (2026-11-03/04, Anthony's idea: build his six from his perspective, then pit the two)
+
+Engine both sides, closed sheets, 40 games per cell unless noted. Pool `tools/sim/candidates/hexpov.json`
+(`sp-assist/gen_hexpov.py`: p001–p210 = every six of his 10 with his ladder sets, one Mega: Banette if present, else
+Mega-Z Garchomp; h01–h20 as before; k001–k070 = our sixes with both Charizardite Y and Kangaskhanite).
+Scripts: `sim/scripts/hex-pov.mjs` (his ranking), `hex-br.mjs` (our best response), `matrix-game.mjs` (zero-sum solve).
+
+1. **His best sixes against what he'd expect from us** (heuristic, 230 sixes × 6 of ours × 10 games; `results/hex/pov`).
+   Garchomp and Drampa are his most valuable picks, and Corviknight is his worst (−8.6). My hand-built teams leaned on Corviknight.
+2. **Engine matrix** (`results/hex/matrix`; open-sheet copy `matrix-open`). Real counters to s119, all of them
+   Indeedee-F + Armarouge with Kleavor or Forretress and no Corviknight:
+
+   | Hex six | s119 win rate |
+   |---|---|
+   | p022 (Mega-Z Garchomp / Indeedee-F / Armarouge / Rotom-Heat / Kleavor / Forretress) | 10–45% |
+   | p026 (Garchomp / Indeedee-F / Armarouge / Drampa / Kleavor / Mega Banette) | 5–38% |
+   | h15 (Forretress Trick Room) | 20–48% |
+
+   p047 was our AI's own bad preview: it benched Morpeko, and the guide plan won 83–88%. The Mega Banette sixes p091 / p095 were mostly the belief bug (step 5): 53–70% with open sheets.
+3. **Our best response** (`results/hex/br`, heuristic). The Charizard sixes are best against his likely teams and worst
+   against the counters. Engine check:
+
+   | Six | vs likely h01–h20 | Worst vs the counters |
+   |---|---|---|
+   | s206 (no Mega: Morpeko / Sinistcha / Conkeldurr / Rotom-Fan / Pelipper / Simipour) | 58.7% (−9.2 ±6.6 vs s119) | 53% |
+   | s195 (Mega Kangaskhan) | 51.6% | 43% |
+4. **His reply to s206** (`results/hex/pov2`, then engine `matrix2`, open sheets in `ab/s206-open2`). s206 loses 57–87%
+   to h14 (full anti-Anthony) and to the Mega Banette + Ditto sixes p043 / p134 / p097. s119 beats three of those four
+   (53–85% with open sheets) and loses to h14 (25–35%).
+5. **Solve.** Combined s119 / s206 × 18 Hex sixes: the best mix is s119 2/3, s206 1/3, worth about 21% against his single best counter (h14). That figure is closed sheets, with the belief bug included. No six beats every six he can build. The team sheet is fixed for the Bo3, so the pick stays **s119**: best against his likely teams, the larger share of the mix, and good against the anti-s206 sixes. Hex would have to find one of his counters for it to lose.
+6. **Preview vs his real counters** (`results/hex/counterprev`, 40 games each, seed 4000000). Four options were tested: the AI preview, the guide plan, Charizard home with Pelipper, and Charizard home with Stunfisk. All scored 18–35% against h14 / p022 / p026 / h15, within noise of each other. The guide flags the shape at preview; no bring fixes it.
+7. **Kangaskhanite vs Silk Scarf** (`results/hex/kscreen`, `kbr`; 70 paired sixes, heuristic). The stone scores +7.2 against his likely teams and +6.4 against the counters. The engine says k086 (s119 with Kangaskhan for Stunfisk) ties s119 (65.9%, −2.0 ±6.7). Anthony's view: plan around one main Mega.
+8. **Pitfalls found.**
+   - **Belief weighting.** The closed-sheet belief is the weighted modal set per species, so the pool weights change our AI's beliefs. Equal weights made it believe physical Garchomp against Mega-Z: s119 vs h01 went from 29/39 to 6/39 on the same seeds.
+   - **Mega reveal.** The engine keeps the believed set after a Mega reveal (reported to VGC Engine Dev). Check open against closed sheets before trusting a counter.
+   - **Mega stones.** The generator wrongly allowed one Mega stone per team; the format allows several (fixed in 7d92dec).

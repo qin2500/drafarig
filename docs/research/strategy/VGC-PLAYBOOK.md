@@ -120,6 +120,10 @@ Game 1 misplays; game 2 Tauros (Sheer Force Rock Slide) double-KO'd Charizard an
   preview; heuristic-fitted tables lost 14 points under the engine, and no fixed Drampa preview beat it). Weak: Drampa
   leads (5–8%), Armarouge + Indeedee-F (45%), his Trick Room (53% vs 74%). Sixth slot: Rotom-Fan / Sinistcha tie Pelipper.
   Conkeldurr is a back-line piece: never in front of a healthy Armarouge in terrain. Report: `sim/hex-sim-report.md`.
+- 2026-11-04 game-theory pass (his side too, report §5): it cycles; no six of ours beats all of his. His real counters to
+  s119 are Indeedee-F + Armarouge + Kleavor / Forretress sixes with no Corviknight and "full anti-Anthony" h14 (20–35%,
+  no bring fixes it). The six that beats those (s206, no Mega) loses to his Mega Banette / anti-Anthony replies. Keep s119.
+  Kangaskhanite beat Silk Scarf (+6–7 heuristic). Method: always build the opponent's best response, then ours.
 
 ### Week 4 mock: Anthony pilots ZhuZi against Calvin (`lib/mocks/3v8.mjs`, method `mock-method.md` §5)
 Anthony and Calvin run mocks for each other's next opponent. Mocks show the normal prep screens from the opponent's POV.
