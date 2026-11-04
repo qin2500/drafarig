@@ -129,8 +129,9 @@ Game 1 misplays; game 2 Tauros (Sheer Force Rock Slide) double-KO'd Charizard an
 Anthony and Calvin run mocks for each other's next opponent. Mocks show the normal prep screens from the opponent's POV.
 Sim-chosen ZhuZi teams vs Calvin's pool (engine both sides, 384 games each): **A** fast offense z21 86.5%, **B** rock
 spam z18 84.0%, **C** Trick Room + Instruct z05 62.7% (his other real plan, the best practice for Calvin's Tailwind).
-Correction found: Rock Slide is neutral on Mega Staraptor; Psychic Fangs is the answer. Committed b730d6e; **not yet
-deployed** (as of 2026-10-28).
+Correction found: Rock Slide is neutral on Mega Staraptor; Psychic Fangs is the answer. Committed b730d6e.
+Re-checked 2026-11-04 against every ZhuZi six (210): team A stands (closest new six -1.6 ±2.3 in the engine);
+mock-method.md §5 step 7. Deploy requested with c8fb120 (relay still pending).
 
 ## 6. Delivering and shipping
 
