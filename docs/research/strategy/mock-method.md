@@ -279,5 +279,19 @@ Steps 2–6 of §1 replaced by the simulator (`tools/sim`), so the teams come fr
 6. **Calcs:** 18, all computed in the app engine. One correction to the old W4 outline: Rock Slide is **neutral** on Mega
    Staraptor (Fighting resists Rock; Scarf Krookodile 18–22%), so Psychic Fangs (127–152%, OHKO) is the answer to it.
 
+7. **Re-check, 2026-11-04** (`sp-assist/gen_zhuzi_mock.py` → `tools/sim/candidates/zhuzi-mock.json`, results
+   `mock-calvin/screen-all` and `mock-calvin/engine/y*`):
+   - **Screen:** every ZhuZi six (y001–y210) against the same Calvin list, heuristic AI, 96 games each, seed 4000000. Team A ranked #4 of 234, B #8, C #41.
+   - **Engine check:** the best four new sixes, same args as step 4, paired with z21. Results vs team A:
+
+     | Six | Win rate | vs A |
+     |---|---|---|
+     | y021 (A's six with ladder sets) | 87.8% | −1.6 ±2.3 |
+     | y099 | 80.2% | −9.1 |
+     | y011 | 76.8% | −12.5 |
+     | y015 | 73.2% | −16.1 |
+
+   - **Verdict:** the mock teams stand. The z21 file now holds 89.3%; the 86.5% in step 4 was the original run.
+
 App data: `lib/mocks/3v8.mjs` (team A + variants B and C). Watch any sim game in the viewer (`node tools/sim/viewer.mjs`,
 run `mock-calvin/engine/<six>.jsonl`).
