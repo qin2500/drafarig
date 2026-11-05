@@ -18,6 +18,23 @@ import { MLP } from './net.mjs';
 
 const WEATHER = { sunnyday: 'Sun', desolateland: 'Sun', raindance: 'Rain', primordialsea: 'Rain', sandstorm: 'Sand', snowscape: 'Snow', snow: 'Snow', hail: 'Snow' };
 const TERRAIN = { electricterrain: 'Electric', grassyterrain: 'Grassy', psychicterrain: 'Psychic', mistyterrain: 'Misty' };
+/** Expected value lost to entry hazards by `sideId`'s live, benched Pokémon (heuristic units: a mon's HP is worth 0.65). */
+export function hazardCost(b, sideId) {
+  const side = b.getSide(sideId), sc = side.sideConditions;
+  const layers = sc.spikes?.layers ?? 0;
+  if (!sc.stealthrock && !layers) return 0;
+  let c = 0;
+  for (const p of side.pokemon) {
+    if (p.isActive || p.fainted || p.hp <= 0) continue;
+    if (p.hasItem?.('heavydutyboots') || p.hasAbility?.('magicguard')) continue;
+    let f = 0;
+    if (sc.stealthrock) f += 2 ** Math.max(-6, Math.min(6, b.dex.getEffectiveness('Rock', p))) / 8;
+    if (layers && p.isGrounded()) f += [0, 1 / 8, 1 / 6, 1 / 4][Math.min(3, layers)];
+    c += 0.65 * Math.min(f, p.hp / p.maxhp) * HAZARD_SWITCH_P;
+  }
+  return c;
+}
+const HAZARD_SWITCH_P = 0.6; // chance a benched mon comes in before the game ends (roughly)
 const WIN = 6; // a won / lost game: in the heuristic value's units a full side is ~4-5; as a learned logit, p ~ 0.998
 
 // defaults = the setting validated in mirror matches (README: depth 2, most-likely dice, 2 samples)
@@ -239,6 +256,13 @@ export class EnginePlayer extends HeuristicPlayer {
   leaf(b, S0, joints, actsBefore) {
     const me = this.me;
     if (b.ended) return !b.winner ? 0 : (b.getSide(me).name === b.winner ? WIN : -WIN);
+    // entry hazards (Stealth Rock from Kleavor's Stone Axe, Spikes) aren't in the heuristic snapshot: charge each side
+    // the expected switch-in damage to its live back line, so a 4x-Rock Charizard in the back is worth less under rocks
+    return this.leafCore(b, S0, joints, actsBefore) - hazardCost(b, me) + hazardCost(b, foe(me));
+  }
+
+  leafCore(b, S0, joints, actsBefore) {
+    const me = this.me;
     const S = this.snapshotOf(b, S0);
     S.protects = {}; S.switches = {}; S.switchIns = [];
     for (const side of [me, foe(me)]) {
