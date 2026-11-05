@@ -55,3 +55,14 @@ Garchomp + Forretress + Armarouge sixes (often Mega Banette / Ditto). Engine che
 likely Hex six (Forretress was his last-priority pick); no lead fixed them (38–40% each).
 
 Not tested: Heatproof Sinistcha (nC04h, stopped once nC19 was chosen); Sash vs Scarf Pelipper on nC19 beyond the A/C tie.
+
+## Recoil re-check (2026-11-05, after Anthony's note)
+The engine games always included recoil, Rocky Helmet and Rough Skin (they run in Showdown's battle code), so the
+win rates stand. The hand calcs in the guide did not. Mega Kangaskhan Double-Edge recoil is 33% of the damage dealt,
+once over both Parental Bond hits; Rocky Helmet and Rough Skin hit Kangaskhan once per contact hit (twice).
+Per use, Kangaskhan loses: Mega-Z / Drampa 25–29%, Armarouge 21–25%, Rotom-Heat 20–24%, Kleavor 11–13%;
+**Indeedee-F (Rocky Helmet) 53–57%** for 72–86% damage; Forretress 39–40% for 21–25%; base Garchomp (Rough Skin) 47–51%.
+After the foe's hit first: Mega-Z Draco then Double-Edge leaves Kangaskhan 0–30 HP (faints 2.4%; Double-Edge KOs
+Mega-Z 0.4%); Drampa Draco (Trick Room) then Double-Edge always faints Kangaskhan; Life Orb Armarouge under Trick
+Room 26%. Guide changes: no Double-Edge into Indeedee-F; Mega-Z only beside a second hit or after Fake Out; Drampa only
+outside Trick Room. Script: job tmp `hex/recoil2.mjs` (not kept in the repo).
