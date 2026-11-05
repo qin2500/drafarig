@@ -76,6 +76,12 @@ read this before any VGC work. Details and evidence live in the files it links; 
   `--preview <table.json>` on seed B.
 - **Watch any game:** `node tools/sim/viewer.mjs` → http://127.0.0.1:4700 (Showdown's replay player; games replay
   exactly from their seed).
+- **Anthony vs the engine:** `node tools/sim/showdown/serve.mjs` runs the vendored Showdown server on
+  http://localhost:8000 (localhost only; it opens the official client, with its teambuilder) and logs in a bot,
+  "Engine". PM it `play` (hidden weighted draw of the opponent's likely sixes) or `play <id>`. Reg M-C, closed sheets,
+  Bo3, the engine at defaults, searching the live in-process battle; its belief of his sets starts from `beliefRef` and
+  learns what each game shows. Every game (full log, both sides' inputs, his real six, the engine's belief, its notes)
+  goes to `tools/sim/results/play/<user>-<time>/game-N.json` (local, git-ignored). Review those for engine fixes.
 - **League teams:** `tools/sim/league-teams.mjs` builds 80 validated sixes from every coach's drafted roster
   (`tools/sim/candidates/league/<seat>-<n>.txt`), for self-play and generalization checks.
 - Per-opponent candidate pools: `tools/sim/candidates/zhuzi.json`, `calvin/`, `zhuzi-vs-calvin/`.

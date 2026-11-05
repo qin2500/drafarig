@@ -6,3 +6,4 @@ dist/
 __pycache__/
 tools/sim/vendor/
 tools/sim/results/
+tools/sim/showdown/my-teams.txt
