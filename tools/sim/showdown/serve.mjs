@@ -4,7 +4,7 @@
 //
 //   node tools/sim/showdown/serve.mjs            then open http://localhost:8000 and PM "Engine": play
 //
-// Options: --port 8000, --cands tools/sim/candidates/hexpov.json, --theirs <comma ids> (the sixes the engine may play),
+// Options: --port 8000, --cands tools/sim/candidates/hex2.json, --theirs <comma ids> (the sixes the engine may play),
 //          --name Engine.
 // Rules: Reg M-C, closed team sheets (Open Team Sheets removed), best of 3. The engine starts each series from a guess of
 // your sets (your earlier weeks' sets, else ladder usage) and learns what each game shows, as a person would.
@@ -27,7 +27,7 @@ const BOT = arg('name', 'Engine');
 const CHALLENGE_FORMAT = `${FORMAT}@@@!Open Team Sheets, Best Of = 3`;
 
 // ---------- the teams ----------
-const CAND = JSON.parse(readFileSync(`${ROOT}${arg('cands', 'tools/sim/candidates/hexpov.json')}`, 'utf8'));
+const CAND = JSON.parse(readFileSync(`${ROOT}${arg('cands', 'tools/sim/candidates/hex2.json')}`, 'utf8'));
 const team = (id) => [...CAND.ours.teams, ...CAND.opponent.teams].find((t) => t.id === id);
 const THEIR_IDS = arg('theirs', 'h01,h02,h03,h04,h05,h06,h07,h08,h09,h10,h11,h12,h13,h14,h15,h16,h17,h18,h19,h20,p022,p026,p047,p091,p095,p043,p134,p097').split(',');
 const THEIRS = THEIR_IDS.map((id) => ({ id, label: team(id).label, text: team(id).team, weight: team(id).weight ?? 0 }));
@@ -35,7 +35,7 @@ const POOL = THEIRS.filter((t) => t.weight > 0); // "random": a weighted draw fr
 const draw = () => { let r = Math.random() * POOL.reduce((s, t) => s + t.weight, 0); for (const t of POOL) { r -= t.weight; if (r <= 0) return t; } return POOL.at(-1); };
 // your teams, ready for the teambuilder's "Import from text" (or Backup/Restore, which takes them all at once)
 const MY_TEAMS = `${ROOT}tools/sim/showdown/my-teams.txt`;
-writeFileSync(MY_TEAMS, (arg('ours', 's119,k086,s206').split(',')).map((id) => `=== [${FORMAT}] ${id} ${team(id).label.replace(/[/|]/g, '-')} ===\n\n${team(id).team.trim()}\n`).join('\n'));
+writeFileSync(MY_TEAMS, (arg('ours', 'nC19,nC04,nA19').split(',')).map((id) => `=== [${FORMAT}] ${id} ${team(id).label.replace(/[/|]/g, '-')} ===\n\n${team(id).team.trim()}\n`).join('\n'));
 
 // the engine's prior on your sets: what you showed in earlier weeks (beliefRef), else ladder usage
 const PRIOR = new Map([...usageLibrary(), ...library([{ text: team(CAND.ours.beliefRef ?? 'o01')?.team ?? '' }])]);

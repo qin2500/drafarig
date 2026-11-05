@@ -131,6 +131,14 @@ Game 1 misplays; game 2 Tauros (Sheer Force Rock Slide) double-KO'd Charizard an
   no bring fixes it). The six that beats those (s206, no Mega) loses to his Mega Banette / anti-Anthony replies. Keep s119.
   Kangaskhanite beat Silk Scarf (+6–7 heuristic). Method: always build the opponent's best response, then ours.
 
+- **2026-11-05 round 2 (after the Calvin mock: Kleavor + Rotom-Heat swept s119).** Anthony: no Simipour /
+  Stunfisk-Galar unless essential; Mega Kangaskhan main; Charizard needs speed support; don't over-correct. New six
+  **nC19**: Charizard Y (stone held, rarely brought), Choice Scarf Pelipper, Rock Slide Mega Kangaskhan, Electroweb
+  Morpeko, Guts Life Orb Rock Slide Conkeldurr, Electroweb Rotom-Fan: 65.5% of 640 engine games, +6.6 ±4.4 over the
+  Sinistcha version. Lead Kangaskhan + Rotom-Fan into Indeedee-F + Armarouge + Drampa (Cloud Nine kills rain), Pelipper +
+  Morpeko into Kleavor sixes. Weak: Rock Slide leads (h14/h04 ~40%), Forretress counter sixes (25–45%). Engine fix: entry
+  hazards cost at the leaf. Report `sim/hex2-report.md`; guide `lib/guides/5v1.mjs` rewritten.
+
 ### Week 4 mock: Anthony pilots ZhuZi against Calvin (`lib/mocks/3v8.mjs`, method `mock-method.md` §5)
 Anthony and Calvin run mocks for each other's next opponent. Mocks show the normal prep screens from the opponent's POV.
 Sim-chosen ZhuZi teams vs Calvin's pool (engine both sides, 384 games each): **A** fast offense z21 86.5%, **B** rock
