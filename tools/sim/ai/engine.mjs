@@ -30,7 +30,7 @@ export const wx = (S) => (Object.values(S.active ?? {}).flat().some((k) => k && 
 // ---------- damage (lib/calc, cached) ----------
 const dmgCache = new Map();
 /** Cleared at the start of every game: keys name Pokémon by slot / species, so entries must not outlive one game. */
-export const clearDamageCache = () => dmgCache.clear();
+export const clearDamageCache = () => { dmgCache.clear(); trMemo.clear(); };
 // the set itself is part of the key (two sets of one species, e.g. Scarf vs Life Orb Krookodile, must not share entries)
 const setIds = new WeakMap();
 const setId = (s) => { let k = setIds.get(s); if (!k) { k = JSON.stringify([s.species, s.item, s.ability, s.nature, s.sp ?? s.evs, s.moves]); setIds.set(s, k); } return k; };
@@ -476,11 +476,15 @@ export function valueParts(S, side, brought = 4) {
 /**
  * How much Trick Room favours `mine` over `theirs` (−1..1): over every pairing, +1 where mine is slower, −1 where faster,
  * each pairing weighted by how hard the two hit each other (so a slow attacker outsped by their fast one counts, two
- * walls don't). Memoised per set of live Pokémon.
+ * walls don't). Memoised per set of live Pokémon. The key holds the sets themselves (each player sees the other side
+ * through its own belief, so the same slot can carry different sets) and the side's screens, and the memo is cleared
+ * every game with the damage cache: it used to be keyed by slot only and leaked across players and games, which made
+ * Trick Room games depend on what the worker had played before (found by the Hex Week 4 retro, 2026-11-06).
  */
 const trMemo = new Map();
 function trShare(S, mine, theirs) {
-  const k = `${mine.map((m) => `${m.key}${m.mega ? 'M' : ''}`).join()}|${theirs.map((m) => `${m.key}${m.mega ? 'M' : ''}`).join()}`;
+  const sk = (m) => `${setId(m.set)}${m.mega ? 'M' : ''}`;
+  const k = `${mine.map(sk).join()}|${theirs.map(sk).join()}|${JSON.stringify(S.side)}`;
   if (trMemo.has(k)) return trMemo.get(k);
   const hit = (a, b) => Math.max(0, ...a.set.moves.filter((id) => moveOf(id).category !== 'Status' && id !== 'fakeout').map((id) => { const r = damage({ field: { weather: '', terrain: '' }, side: S.side }, { ...a, boosts: {}, hp: 1, status: '' }, { ...b, boosts: {}, hp: 1, status: '' }, id); return (r.min + r.max) / 2; }));
   let num = 0, den = 0;
