@@ -6,7 +6,8 @@
 //     [--swap]  (alternate which side is p1)  [--preview ai|guide|explore|<rows.json>] (ours: the AI's lead lookahead, the guide's
 //     table, uniform over the AI's top 8 previews, or a fitted table of guide-shaped rows)
 //     [--sheets open|ots|closed] (what each AI knows of the other's sets: all, open team sheets without SP / nature,
-//     species only; sheets.mjs)  [--persona default|none|all] (opponent plan-commitment personas: the PERSONAS shares, none, or every game)
+//     species only; sheets.mjs)  [--beliefs pool|modal|usage] (closed: every candidate set by weight, narrowed by what the game
+//     reveals (default); the one most likely set per species (before 2026-11-06); ladder usage)  [--persona default|none|all] (opponent plan-commitment personas: the PERSONAS shares, none, or every game)
 //     --theirs z01..z24 expands to the 24 ids (round-robin per game)
 //
 // --ours / --theirs: a candidate id (tools/sim/candidates/zhuzi.json: a01…, z01…), a comma list (round-robin per game),
@@ -17,7 +18,7 @@ import { Worker, isMainThread, parentPort } from 'node:worker_threads';
 import { cpus } from 'node:os';
 import { readFileSync, existsSync, appendFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
-import { beliefText, library, usageLibrary } from './sheets.mjs';
+import { beliefText, library, pool, usageLibrary } from './sheets.mjs';
 
 // --cands <file>: the candidate pool (default candidates/zhuzi.json, the Week 3 study; candidates/hex.json for Week 4)
 const CANDS_ARG = process.argv.indexOf('--cands');
@@ -57,6 +58,8 @@ export function expandIds(list) {
 const ZHUZI_PERSONAS = { z04: ['tr', 0.6], z05: ['tr', 0.6], z15: ['tr', 0.6], z16: ['tr', 0.6], z23: ['tr', 0.6], z06: ['tr', 0.3], z03: ['rock', 0.6], z08: ['rock', 0.6], z18: ['rock', 0.6], z07: ['chilly', 0.6] };
 export const PERSONAS = CAND.opponent.personas ?? ZHUZI_PERSONAS;
 const unit = (seed, salt) => { let h = (seed * 2654435761) ^ salt; h = Math.imul(h ^ (h >>> 16), 2246822519); h = Math.imul(h ^ (h >>> 13), 3266489917); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
+// beliefRef: the six (or comma list of sixes, the first most likely) the opponent believes our sets come from
+const beliefRefs = () => String(CAND.ours.beliefRef ?? 'a01').split(',').map((r, n) => ({ text: teamText(r.trim()), weight: 1 / (n + 1) }));
 export function taskList(a) {
   const ours = expandIds(a.ours ?? 'a01'), theirs = expandIds(a.theirs ?? 'z01');
   const n = Number(a.games ?? 100), base = Number(a.seed ?? 1);
@@ -70,10 +73,15 @@ export function taskList(a) {
   // format's most common set for every species (league-wide training and any other opponent)
   const usageLib = sheets === 'closed' && a.beliefs === 'usage' ? usageLibrary() : null;
   const libs = usageLib ? { theirs: usageLib, ours: usageLib }
-    : sheets === 'closed' ? { theirs: library(CAND.opponent.teams.map((t) => ({ text: t.team, weight: t.weight }))), ours: library([{ text: teamText(CAND.ours.beliefRef ?? 'a01') }]) } : {};
+    : sheets === 'closed' ? { theirs: library(CAND.opponent.teams.map((t) => ({ text: t.team, weight: t.weight }))), ours: library(beliefRefs()) } : {};
+  // --beliefs pool (closed, the default): each AI also gets every candidate set per species, and picks among them by
+  // what the game has shown (a Garchomp that has not Mega Evolved may be the Life Orb one)
+  const pools = sheets === 'closed' && !usageLib && a.beliefs !== 'modal'
+    ? { theirs: pool(CAND.opponent.teams.map((t) => ({ text: t.team, weight: t.weight }))), ours: pool(beliefRefs()) } : null;
   return Array.from({ length: n }, (_, i) => {
     const us = side(ours[i % ours.length], a['ours-ai'] ?? 'heuristic', '', base + i, false), them = side(theirs[i % theirs.length], a['theirs-ai'] ?? 'heuristic', 'opp-', base + i, true);
     if (sheets !== 'open') { us.belief = beliefText(them.text, sheets, libs.theirs); them.belief = beliefText(us.text, sheets, libs.ours); }
+    if (pools) { us.beliefPool = pools.theirs; them.beliefPool = pools.ours; }
     return { i, seed: base + i, swap: !!a.swap && i % 2 === 1, sheets, ours: us, theirs: them };
   });
 }

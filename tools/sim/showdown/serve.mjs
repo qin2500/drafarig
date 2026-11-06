@@ -38,7 +38,7 @@ const MY_TEAMS = `${ROOT}tools/sim/showdown/my-teams.txt`;
 writeFileSync(MY_TEAMS, (arg('ours', 'nC19,nC04,nA19').split(',')).map((id) => `=== [${FORMAT}] ${id} ${team(id).label.replace(/[/|]/g, '-')} ===\n\n${team(id).team.trim()}\n`).join('\n'));
 
 // the engine's prior on your sets: what you showed in earlier weeks (beliefRef), else ladder usage
-const PRIOR = new Map([...usageLibrary(), ...library([{ text: team(CAND.ours.beliefRef ?? 'o01')?.team ?? '' }])]);
+const PRIOR = new Map([...usageLibrary(), ...library(String(CAND.ours.beliefRef ?? 'o01').split(',').map((r, n) => ({ text: team(r.trim())?.team ?? '', weight: 1 / (n + 1) })))]);
 
 /** What a game showed of the human's six (moves used, items, abilities, Mega), merged into the series so far. */
 function revealed(log, humanSets, side, prev) {

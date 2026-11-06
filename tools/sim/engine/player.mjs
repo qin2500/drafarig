@@ -110,7 +110,7 @@ export class EnginePlayer extends HeuristicPlayer {
     // determinized starting positions (one per sample), each played against every cell with the same dice seed
     // (common random numbers: the cells of one sample differ by the choices, not by luck)
     const bases = [];
-    for (let d = 0; d < this.e.samples; d++) bases.push(this.determinize(live));
+    for (let d = 0; d < this.e.samples; d++) bases.push(this.determinize(live, d));
     const M = A.map(() => B.map(() => 0));
     for (let d = 0; d < bases.length; d++) {
       for (let i = 0; i < A.length; i++) for (let k = 0; k < B.length; k++) {
@@ -150,20 +150,33 @@ export class EnginePlayer extends HeuristicPlayer {
   meanDiceFor(d) { return this.e.dice === 'mean' || (this.e.dice === 'mixed' && d === 0); }
 
   /** The live battle as we may know it: a clone with his hidden information replaced by our beliefs (JSON). */
-  determinize(live) {
+  determinize(live, d = 0) {
     const b = PS.Battle.fromJSON(JSON.stringify(live.toJSON()));
     for (const s of b.sides) s.clearChoice();
     const side = b.getSide(foe(this.me));
     const base = (p) => toID(p.baseSpecies.baseSpecies);
     const lib = new Map(this.belief.map((s) => [toID(PS.Dex.species.get(s.species).baseSpecies), s]));
     const revealed = (p) => p.isActive || p.previouslySwitchedIn > 0 || p.fainted;
+    // closed sheets with a pool: sample 0 takes each Pokémon's most likely set that fits what it has shown (the
+    // tracker's belief), later samples draw one by weight, so the search also meets the sets he may really run
+    const tm = new Map((this.pool ? this.T.mons[foe(this.me)] : []).map((m) => [m.set.species, m]));
+    const draw = (sp) => {
+      const m = tm.get(sp);
+      const xs = m && this.fitting(m);
+      if (!xs?.length) return null;
+      if (d === 0) return xs[0].ps;
+      let u = this.r() * xs.reduce((t, x) => t + x.w, 0);
+      for (const x of xs) { u -= x.w; if (u <= 0) return x.ps; }
+      return xs.at(-1).ps;
+    };
     // 1. his unrevealed bench: any of the six he hasn't shown yet
     const shown = new Set(side.pokemon.filter(revealed).map(base));
     const pool = [...lib.keys()].filter((k) => !shown.has(k));
     side.pokemon.forEach((p, i) => {
       if (revealed(p) || !pool.length) return;
       const k = pool.splice(Math.floor(this.r() * pool.length), 1)[0];
-      const set = structuredClone(lib.get(k));
+      const set = structuredClone(draw(toID(lib.get(k).species)) ?? lib.get(k));
+      set.name = lib.get(k).name;
       const np = new p.constructor(set, side);
       np.position = p.position;
       side.pokemon[i] = np;
@@ -172,7 +185,7 @@ export class EnginePlayer extends HeuristicPlayer {
     // 2. revealed Pokémon: beliefs for what he hasn't shown (moves not yet used, spread, nature, item, ability)
     for (const p of side.pokemon) {
       if (!revealed(p) || p.fainted) continue;
-      const bs = lib.get(base(p));
+      const bs = draw(toID(p.baseSpecies.name)) ?? lib.get(base(p));
       if (!bs || this.o.sheets === 'open') continue;
       if (!p.transformed) {
         const used = p.baseMoveSlots.filter((m) => m.used);
@@ -183,7 +196,13 @@ export class EnginePlayer extends HeuristicPlayer {
         if (slots.length) { p.baseMoveSlots = slots; p.moveSlots = slots.slice(); p.set.moves = slots.map((m) => m.move); }
       }
       const stone = (id) => !!b.dex.items.get(id).megaStone;
-      if (p.item && !stone(p.item) && !p.volatiles.choicelock && toID(bs.item) && !stone(toID(bs.item))) { p.item = toID(bs.item); p.set.item = bs.item; p.itemState = b.initEffectState({ id: p.item, target: p }); }
+      // with a pool the believed item may be a Mega Stone where he holds none, or the reverse (a Garchomp that has not
+      // Mega Evolved may be the Life Orb one): whether it can still Mega Evolve follows the belief
+      const swapStone = !!this.pool && !p.species.isMega && !side.pokemon.some((q) => q.species.isMega);
+      if (p.item && (swapStone || !stone(p.item)) && !p.volatiles.choicelock && toID(bs.item) && (swapStone || !stone(toID(bs.item)))) {
+        p.item = toID(bs.item); p.set.item = bs.item; p.itemState = b.initEffectState({ id: p.item, target: p });
+        if (swapStone) p.canMegaEvo = b.actions.canMegaEvo(p);
+      }
       if (p.ability === p.baseAbility && !p.species.isMega && toID(bs.ability)) { p.baseAbility = p.ability = toID(bs.ability); p.set.ability = bs.ability; p.abilityState = b.initEffectState({ id: p.ability, target: p }); }
       p.set.evs = { ...bs.evs }; p.set.nature = bs.nature;
       const st = b.spreadModify(p.species.baseStats, p.set);

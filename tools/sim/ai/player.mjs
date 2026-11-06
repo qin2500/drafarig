@@ -1,7 +1,7 @@
 // The heuristic player (tools/sim/NOTES.md "Step 2"): a Showdown BattlePlayer that reads the protocol into a Tracker,
 // scores options with the turn model in engine.mjs (lib/calc damage), looks one ply ahead against the opponent's top
 // replies, and picks with skill / temperature / noise. Deterministic per seed. Open team sheets: it knows both teams' sets.
-import { BattlePlayer, setsFromText, toID, statsOf, abilityOf, moveOf, typesOf, mech, PROTECTS, SPREAD } from './data.mjs';
+import { BattlePlayer, PS, setsFromText, megaForme, toID, statsOf, abilityOf, moveOf, typesOf, mech, PROTECTS, SPREAD } from './data.mjs';
 import { Tracker } from './tracker.mjs';
 import { readFileSync } from 'node:fs';
 import guide5v3 from '../../../lib/guides/5v3.mjs';
@@ -57,6 +57,9 @@ export class HeuristicPlayer extends BattlePlayer {
     this.style = STYLES[this.o.style] ?? STYLES.balanced;
     this.mine = setsFromText(opts.mine);
     this.theirs = setsFromText(opts.theirs);
+    // closed sheets (--beliefs pool): every candidate set per species with its weight; revise() picks per Pokémon
+    this.pool = opts.beliefPool ? Object.fromEntries(Object.entries(opts.beliefPool).map(([id, xs]) =>
+      [id, xs.map(([ps, w]) => ({ ps, s: setsFromText(PS.Teams.export([ps]))[0], w }))])) : null;
     this.r = rng(opts.seed ?? 1);
     this.notes = [];
     this.T = null;
@@ -82,10 +85,29 @@ export class HeuristicPlayer extends BattlePlayer {
     // replay what was already logged (team preview lines) into the tracker
     for (const l of this.log) this.T.line(l);
   }
+  /** Pool candidates for his Pokémon m that fit everything the game has shown, most likely first (all, if none fit). */
+  fitting(m) {
+    const xs = this.pool?.[m.set.species];
+    if (!xs?.length) return [];
+    const sh = m.shown ?? { moves: [], item: '', ability: '' };
+    const misses = (c) => (m.mega && !megaForme(c)) + (!!sh.item && c.item !== sh.item) + (!!sh.ability && !m.mega && c.ability !== sh.ability)
+      + sh.moves.filter((x) => x !== 'struggle' && !c.moves.includes(x)).length + (m.movesUsed.length >= 2 && /^choice/.test(c.item));
+    const ok = xs.filter((x) => !misses(x.s));
+    return ok.length ? ok : [...xs].sort((a, b) => misses(a.s) - misses(b.s) || b.w - a.w).slice(0, 1);
+  }
+  /** Closed sheets: each of his Pokémon is believed to be its most likely candidate set given what it has shown. */
+  revise() {
+    if (!this.pool || !this.T) return;
+    for (const m of this.T.mons[this.me === 'p1' ? 'p2' : 'p1']) {
+      const c = this.fitting(m)[0];
+      if (c && c.s !== m.belief) { m.belief = c.s; m.set = { ...c.s, name: m.set.name }; }
+    }
+  }
   receiveRequest(request) {
     this.ensure(request);
     this.request = request;
     if (request.wait) return;
+    if (!request.teamPreview) this.revise();
     let choice;
     try {
       if (request.teamPreview) choice = this.preview(request);

@@ -16,7 +16,7 @@ const baseOf = (speciesName) => { const sp = DEX.species.get(speciesName); retur
 export function newMon(set, side, i) {
   return { key: `${side}:${i}`, side, i, set, species: set.species, mega: false, hp: 1, status: '', boosts: {}, fainted: false, pos: -1,
     itemGone: false, form: set.species === 'aegislash' ? 'shield' : '', entered: -1, lastMove: '', protectStreak: 0, movesUsed: [], locked: '',
-    taunt: 0, seen: false, brought: false };
+    taunt: 0, seen: false, brought: false, shown: { moves: [], item: '', ability: '' } };
 }
 
 export class Tracker {
@@ -41,6 +41,29 @@ export class Tracker {
     const cmd = p[0];
     const h = this[`on_${cmd.replace(/^-/, '_')}`];
     if (h) h.call(this, p);
+    this.reveal(p);
+  }
+  /**
+   * What a line shows of a Pokémon's hidden set, kept all game in m.shown (its item, its ability, every move it chose;
+   * for closed-sheet beliefs). "[from] item: X" / "[from] ability: X" belong to the [of] Pokémon when there is one,
+   * else to the line's subject; -item / -enditem / -ability / -activate / -mega name the subject's own (an item that
+   * arrives by Trick-like moves is not its original, so it is skipped).
+   */
+  reveal(p) {
+    const cmd = p[0];
+    const of = p.find((x) => x.startsWith('[of] '));
+    const from = p.find((x) => x.startsWith('[from] '));
+    const own = (ident) => (ident && /^p[12][ab]?: /.test(ident) ? this.monOf(ident) : null);
+    const set = (m, k, v) => { if (m && v && !m.shown[k]) m.shown[k] = toID(v); };
+    const tag = from?.match(/^\[from\] (item|ability): (.+)$/);
+    if (tag) set(own(of ? of.slice(5) : p[1]), tag[1], tag[2]);
+    const m = own(p[1]);
+    if (!m) return;
+    if (cmd === '-enditem') set(m, 'item', p[2]);
+    if (cmd === '-item' && !/\[from\] move: (Trick|Switcheroo|Thief|Covet|Bestow)/.test(from ?? '')) set(m, 'item', p[2]);
+    if (cmd === '-ability' && !tag) set(m, 'ability', p[2]);
+    if (cmd === '-activate' && /^(item|ability): /.test(p[2] ?? '')) { const [k, n] = p[2].split(': '); set(m, k, n); }
+    if (cmd === '-mega' && p[3]) set(m, 'item', p[3]);
   }
   on_switch(p) {
     const [, ident, details, hp] = p;
@@ -94,6 +117,7 @@ export class Tracker {
     if (!called) {
       m.lastMove = id;
       if (!m.movesUsed.includes(id)) m.movesUsed.push(id);
+      if (!m.shown.moves.includes(id)) m.shown.moves.push(id);
       m.protectStreak = PROTECTS.has(id) || id === 'wideguard' ? m.protectStreak + 1 : 0;
       if (/^choice/.test(m.set.item) && !m.itemGone) m.locked = id;
     }

@@ -31,6 +31,21 @@ export function library(teams) {
 }
 
 /**
+ * species id -> every candidate set with its summed team weight, most likely first: { id: [[set, w], ...] } (plain
+ * JSON, so it travels to workers). Sixes of weight 0 still count a little (0.001 each): a set he might run stays
+ * possible. The players narrow it by what the game reveals (player.mjs revise / determinize).
+ */
+export function pool(teams) {
+  const tally = new Map();
+  for (const { text, weight } of teams) for (const s of PS.Teams.import(text)) {
+    const id = toID(s.species); // the forme as listed (Rotom-Heat and Rotom-Wash stay apart; never a Mega)
+    const k = JSON.stringify({ ...s, name: '' });
+    const m = tally.get(id) ?? new Map(); m.set(k, (m.get(k) ?? 0) + (weight || 0.001)); tally.set(id, m);
+  }
+  return Object.fromEntries([...tally].map(([id, m]) => [id, [...m].sort((a, b) => b[1] - a[1]).map(([k, w]) => [JSON.parse(k), +w.toFixed(4)])]));
+}
+
+/**
  * species id -> the format's most common set (ladder usage, data/cache: top ability, item, four moves, spread). For
  * --beliefs usage: closed-sheet beliefs that hold for any opponent in the league, not one scouted roster.
  */
