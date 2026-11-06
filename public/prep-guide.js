@@ -48,12 +48,30 @@ export function calcLink(P, g, i, { label = null, draft = null } = {}) {
 export function hitLink(P, g, a, move, d, oursAttack, label) {
   return `<button type="button" class="linkish gd-calc" data-pa="guide-hit" data-coach="${esc(g.coach)}" data-pov="${g.pov}" data-opp="${g.opp}" data-a="${esc(a)}" data-m="${esc(move)}" data-d="${esc(d)}" data-ours="${oursAttack ? 1 : 0}">${esc(label)} ›</button>`;
 }
+/**
+ * Whether prose "a–b%" states a calc's range: exactly, or each end rounded to the prose's precision (prose says
+ * "124–149%" for a calc of "124.1–148.9%").
+ */
+export function sameRange(calcRange, x) {
+  if (!calcRange) return false;
+  if (calcRange === x) return true;
+  const num = (r) => (String(r).match(/^(\d+(?:\.\d+)?)–(\d+(?:\.\d+)?)%$/) ?? []).slice(1);
+  const [a, b] = num(calcRange), [p, q] = num(x);
+  if (a == null || p == null) return false;
+  const near = (v, w) => { const d = (w.split('.')[1] ?? '').length; return Number(v).toFixed(d) === Number(w).toFixed(d); };
+  return near(a, p) && near(b, q);
+}
+/** The calc a prose range points at: an exact match first, else a rounded one (-1: none). */
+export function findRange(calcs, x) {
+  const i = calcs.findIndex((c) => c.range === x);
+  return i >= 0 ? i : calcs.findIndex((c) => sameRange(c.range, x));
+}
 /** Text with its "a–b%" numbers as workbench links where a guide calc states that range; the others marked unchecked. */
 export function linkify(P, g, text) {
   const parts = String(text).split(/(\d+(?:\.\d+)?–\d+(?:\.\d+)?%)/);
   return parts.map((x, k) => {
     if (k % 2 === 0) return esc(x);
-    const i = g.calcs.findIndex((c) => c.range === x);
+    const i = findRange(g.calcs, x);
     return i >= 0 ? calcLink(P, g, i, { label: x }) : `<span class="gd-unchecked" title="${esc(G.unchecked)}">${esc(x)}</span>`;
   }).join('');
 }

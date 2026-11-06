@@ -410,3 +410,12 @@ test('route: #prep/<p>v<o>/guide round-trips; guide is a read-only tab', () => {
   assert.equal(formatRoute({ view: 'ws', pov: 5, opp: 1, tab: 'guide' }), '#prep/5v1/guide');
   assert.ok(MATCH_TABS.indexOf('guide') === 1 && READ_TABS.includes('guide'));
 });
+
+test('guide prose ranges link to a calc when they state its range, rounded to the prose precision', async () => {
+  const { sameRange } = await import('../public/prep-guide.js');
+  assert.ok(sameRange('124.1–148.9%', '124.1–148.9%'));
+  assert.ok(sameRange('124.1–148.9%', '124–149%'));
+  assert.ok(!sameRange('124.1–148.9%', '124–150%'));
+  assert.ok(!sameRange('70.3–83.2%', '70–84%'));
+  assert.ok(!sameRange(undefined, '70–83%'));
+});

@@ -298,7 +298,9 @@ test('mock POV: "Open as Jacky" opens #prep/4v8 as Jacky with a banner; the mock
   // the workbench: your side is the mock's set
   await app.click({ pa: 'back' });
   await app.click({ pa: 'tab', tab: 'brief' });
-  await app.click({ pa: 'guide-calc', ...btns(app, 'guide-calc')[0] });
+  // the Eruption-into-Staraptor calc (prose ranges link too, so pick it by index, not position)
+  const eru = jacky.calcs.findIndex((c) => c.move === 'eruption' && /staraptor/.test(c.defender.id));
+  await app.click({ pa: 'guide-calc', ...btns(app, 'guide-calc').find((b) => Number(b.i) === eru) });
   assert.match(app.html(), /Eruption: Torkoal → Calvin&#39;s Staraptor-Mega/);
   await app.waitFor(() => /Guide: [\d.]+–[\d.]+% · now [\d.]+–[\d.]+% ✓/.test(T(app)), 'the mock calc reproduces with the mock set', 20000);
   await app.click({ pa: 'wb-close' });

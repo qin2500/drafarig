@@ -13,7 +13,7 @@ import { GAME_TAGS } from '../lib/prep-schema.mjs';
 import * as C from './prep-copy.js';
 import { esc, btn, chipBtn, h2, select, itemIcon } from './prep-ui.js';
 import * as WB from './prep-workbench.js';
-import { theirSide, over, battleOf } from './prep-guide.js';
+import { theirSide, over, battleOf, findRange } from './prep-guide.js';
 import { pilot as pastePilot } from './prep-practice.js';
 import { generateMock, setsOf } from '../lib/mock-gen.mjs';
 import { suggestPlans } from '../lib/prep-plans.mjs';
@@ -242,7 +242,7 @@ const list = (items, tag = 'ul') => (items.length ? `<${tag} class="gd-list">${i
 function linkify(P, mk, friend, pilot, text) {
   return String(text).split(/(\d+(?:\.\d+)?–\d+(?:\.\d+)?%)/).map((x, k) => {
     if (k % 2 === 0) return esc(x);
-    const i = mk.mock.calcs.findIndex((c) => c.range === x || c.range.replace(/\.0(?=[–%])/g, '') === x);
+    const i = findRange(mk.mock.calcs, x);
     return i >= 0 ? calcLink(friend, pilot, i, x) : `<span class="gd-unchecked" title="${esc(C.GUIDE.unchecked)}">${esc(x)}</span>`;
   }).join('');
 }
