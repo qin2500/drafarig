@@ -22,29 +22,38 @@ from gen_hex2 import A2
 # L = Smogon Reg M-C ladder (data/cache usage) modal; W = worst case / anti-Anthony (jacky-scan.json); H = human / mock.
 J = {
     # Incineroar: Fake Out 99%, Parting Shot 96%, Flare Blitz 91%, Sitrus 63%
-    'incin': S('Incineroar', 'incineroar', 'Sitrus Berry', 'Intimidate', 'Careful', [32, 0, 14, 0, 20, 0], ['Fake Out', 'Parting Shot', 'Flare Blitz', 'Throat Chop'], 'L: modal'),
+    'incin': S('Incineroar', 'incineroar', 'Sitrus Berry', 'Intimidate', 'Careful', [32, 0, 14, 0, 20, 0], ['Fake Out', 'Parting Shot', 'Flare Blitz', 'Darkest Lariat'], 'L: modal (Lariat 42% > Throat Chop 29%)'),
+    'incin_wisp': S('Incineroar', 'incineroar', 'Sitrus Berry', 'Intimidate', 'Careful', [32, 0, 14, 0, 20, 0], ['Fake Out', 'Parting Shot', 'Flare Blitz', 'Will-O-Wisp'], 'W: Wisp into Mega Kangaskhan / Conkeldurr'),
+    'incin_snarl': S('Incineroar', 'incineroar', 'Sitrus Berry', 'Intimidate', 'Careful', [32, 0, 14, 0, 20, 0], ['Fake Out', 'Parting Shot', 'Flare Blitz', 'Snarl'], 'L: Snarl 7% (vs Charizard Y / Pelipper)'),
     'incin_chople': S('Incineroar', 'incineroar', 'Chople Berry', 'Intimidate', 'Careful', [32, 0, 14, 0, 20, 0], ['Fake Out', 'Parting Shot', 'Flare Blitz', 'Throat Chop'], 'H/W: our Week 2 mock set; Chople vs Conkeldurr / Mega Kangaskhan'),
     'incin_lariat': S('Incineroar', 'incineroar', 'Sitrus Berry', 'Intimidate', 'Adamant', [32, 32, 0, 0, 2, 0], ['Fake Out', 'Flare Blitz', 'Darkest Lariat', 'Protect'], 'L: Adamant attacker (Lariat 31%)'),
-    # Golisopod: Mega (Bug/Steel, Tough Claws) modal Leech Life / Iron Head / Protect / Swords Dance
-    'goliM': S('Golisopod', 'golisopod', 'Golisopite', 'Emergency Exit', 'Adamant', [32, 32, 0, 0, 2, 0], ['Leech Life', 'Iron Head', 'Swords Dance', 'Protect'], 'L: Mega modal'),
+    # Golisopod: Mega (Bug/Steel, Tough Claws) ladder Leech Life 98 / Iron Head 92 / Protect 86 / Sucker Punch 66 / SD 20
+    'goliM': S('Golisopod', 'golisopod', 'Golisopite', 'Emergency Exit', 'Adamant', [32, 32, 0, 0, 2, 0], ['Leech Life', 'Iron Head', 'Sucker Punch', 'Protect'], 'L: Mega modal'),
+    'goliM_sd': S('Golisopod', 'golisopod', 'Golisopite', 'Emergency Exit', 'Adamant', [32, 32, 0, 0, 2, 0], ['Leech Life', 'Iron Head', 'Swords Dance', 'Protect'], 'L: Swords Dance 20%'),
+    'goliM_cc': S('Golisopod', 'golisopod', 'Golisopite', 'Emergency Exit', 'Adamant', [32, 32, 0, 0, 2, 0], ['Leech Life', 'Iron Head', 'Close Combat', 'Protect'], 'W: Close Combat OHKOs Mega Kangaskhan 101-119% (jacky-scan)'),
+    'goliM_aj': S('Golisopod', 'golisopod', 'Golisopite', 'Emergency Exit', 'Adamant', [32, 32, 0, 0, 2, 0], ['Leech Life', 'Iron Head', 'Aqua Jet', 'Protect'], 'W: Aqua Jet priority into Charizard / Torkoal-less teams'),
     'goliM_fi': S('Golisopod', 'golisopod', 'Golisopite', 'Emergency Exit', 'Brave', [32, 32, 0, 0, 2, 0], ['First Impression', 'Iron Head', 'Liquidation', 'Protect'], 'H/W: mock set; Liquidation into Charizard / Torkoal-free sun'),
     'goliM_sp': S('Golisopod', 'golisopod', 'Golisopite', 'Emergency Exit', 'Brave', [32, 32, 0, 0, 2, 0], ['Leech Life', 'Iron Head', 'Sucker Punch', 'Protect'], 'L: Sucker Punch 27%, Brave TR spread'),
     # Farigiraf: Armor Tail blocks our priority (Fake Out, Mach Punch, Sucker Punch) into his side
-    'fari': S('Farigiraf', 'farigiraf', 'Sitrus Berry', 'Armor Tail', 'Bold', [27, 0, 20, 0, 19, 0], ['Trick Room', 'Psychic', 'Helping Hand', 'Protect'], 'L: modal'),
+    'fari': S('Farigiraf', 'farigiraf', 'Sitrus Berry', 'Armor Tail', 'Bold', [27, 0, 20, 0, 19, 0], ['Trick Room', 'Psychic', 'Thunderbolt', 'Helping Hand'], 'L: modal (TR 98, Psychic 81, Thunderbolt 70, HH 42)'),
+    'fari_hh': S('Farigiraf', 'farigiraf', 'Sitrus Berry', 'Armor Tail', 'Bold', [27, 0, 20, 0, 19, 0], ['Trick Room', 'Psychic', 'Helping Hand', 'Protect'], 'L: support, no Thunderbolt'),
     'fari_tb': S('Farigiraf', 'farigiraf', 'Sitrus Berry', 'Armor Tail', 'Sassy', [32, 0, 0, 2, 32, 0], ['Trick Room', 'Psychic', 'Thunderbolt', 'Protect'], 'L/W: Thunderbolt 40% (4x Pelipper)'),
     'fari_colbur': S('Farigiraf', 'farigiraf', 'Colbur Berry', 'Armor Tail', 'Bold', [27, 0, 20, 0, 19, 0], ['Trick Room', 'Psychic', 'Helping Hand', 'Protect'], 'L: Colbur 16% (vs Morpeko Aura Wheel)'),
     # Torkoal: Drought Eruption
     'tork': S('Torkoal', 'torkoal', 'Charcoal', 'Drought', 'Quiet', [32, 0, 0, 32, 2, 0], ['Eruption', 'Weather Ball', 'Earth Power', 'Protect'], 'L: modal'),
     'tork_hh': S('Torkoal', 'torkoal', 'Charcoal', 'Drought', 'Quiet', [32, 0, 0, 32, 2, 0], ['Eruption', 'Heat Wave', 'Helping Hand', 'Protect'], 'L: Heat Wave 38%, Helping Hand 28%'),
+    'tork_yawn': S('Torkoal', 'torkoal', 'Charcoal', 'Drought', 'Quiet', [32, 0, 0, 32, 2, 0], ['Eruption', 'Weather Ball', 'Yawn', 'Protect'], 'L: Yawn 7%'),
     'tork_sb': S('Torkoal', 'torkoal', 'Charcoal', 'Drought', 'Quiet', [32, 0, 0, 32, 2, 0], ['Eruption', 'Weather Ball', 'Solar Beam', 'Protect'], 'W: Solar Beam into Pelipper rain answers'),
     # Rotom-Mow: Scarf 81%
-    'mow': S('Rotom-Mow', 'rotommow', 'Choice Scarf', 'Levitate', 'Timid', [2, 0, 0, 32, 0, 32], ['Leaf Storm', 'Thunderbolt', 'Volt Switch', 'Electroweb'], 'L: Scarf modal'),
+    'mow': S('Rotom-Mow', 'rotommow', 'Choice Scarf', 'Levitate', 'Timid', [2, 0, 0, 32, 0, 32], ['Leaf Storm', 'Volt Switch', 'Trick', 'Electroweb'], 'L: Scarf modal (Leaf Storm 100, Volt Switch 87, Trick 75, Electroweb 74)'),
     'mow_wisp': S('Rotom-Mow', 'rotommow', 'Sitrus Berry', 'Levitate', 'Modest', [32, 0, 0, 32, 2, 0], ['Leaf Storm', 'Thunderbolt', 'Will-O-Wisp', 'Protect'], 'L: Sitrus 13%, Wisp 13% (vs Kangaskhan / Conkeldurr)'),
     # Mimikyu: Disguise; Trick Room 46%
-    'mimi': S('Mimikyu', 'mimikyu', 'Life Orb', 'Disguise', 'Adamant', [2, 32, 0, 0, 0, 32], ['Play Rough', 'Shadow Sneak', 'Shadow Claw', 'Protect'], 'L: Life Orb attacker'),
+    'mimi': S('Mimikyu', 'mimikyu', 'Life Orb', 'Disguise', 'Adamant', [2, 32, 0, 0, 0, 32], ['Play Rough', 'Shadow Sneak', 'Wood Hammer', 'Protect'], 'L: Life Orb attacker (Wood Hammer 67%)'),
+    'mimi_sun': S('Mimikyu', 'mimikyu', 'Life Orb', 'Disguise', 'Adamant', [2, 32, 0, 0, 0, 32], ['Play Rough', 'Shadow Sneak', 'Wood Hammer', 'Sunny Day'], 'L: ladder modal four (Sunny Day 53%)'),
     'mimi_tr': S('Mimikyu', 'mimikyu', 'Mental Herb', 'Disguise', 'Brave', [32, 32, 2, 0, 0, 0], ['Trick Room', 'Play Rough', 'Shadow Sneak', 'Will-O-Wisp'], 'L: TR setter (Mental Herb 14%, Wisp 20%)'),
     # Mr. Rime: Fake Out + Trick Room
     'rime': S('Mr. Rime', 'mrrime', 'Twisted Spoon', 'Screen Cleaner', 'Quiet', [32, 0, 2, 32, 0, 0], ['Fake Out', 'Trick Room', 'Freeze-Dry', 'Psychic'], 'L/H: modal + mock'),
+    'rime_iw': S('Mr. Rime', 'mrrime', 'Focus Sash', 'Screen Cleaner', 'Modest', [2, 0, 0, 32, 0, 32], ['Fake Out', 'Icy Wind', 'Freeze-Dry', 'Protect'], 'L: Icy Wind 19%, Sash 35%: speed control without Trick Room'),
     # Rotom (base): Electric/Ghost
     'rotomb': S('Rotom', 'rotom', 'Sitrus Berry', 'Levitate', 'Modest', [32, 0, 0, 32, 2, 0], ['Thunderbolt', 'Shadow Ball', 'Will-O-Wisp', 'Protect'], 'H: no ladder data; Wisp + coverage'),
     # Appletun: Thick Fat halves our Fire
@@ -53,6 +62,15 @@ J = {
     'lyc': S('Lycanroc-Midnight', 'lycanrocmidnight', 'Life Orb', 'No Guard', 'Brave', [32, 32, 2, 0, 0, 0], ['Rock Slide', 'Stone Edge', 'Close Combat', 'Protect'], 'H/W: mock set, TR attacker'),
     'lyc_fast': S('Lycanroc-Midnight', 'lycanrocmidnight', 'Focus Sash', 'No Guard', 'Jolly', [2, 32, 0, 0, 0, 32], ['Rock Slide', 'Close Combat', 'Sucker Punch', 'Protect'], 'W: fast No Guard Rock Slide vs Charizard'),
 }
+
+# Item clause alternatives (ladder second choices) when an earlier set in the six holds the same item; without them
+# build() hands out Life Orb to the second Sitrus holder (retro 2026-11-06: 185 of 210 sixes had a Life Orb Farigiraf).
+ALTS = {'incineroar': ['Chople Berry', 'Rocky Helmet', 'Safety Goggles'], 'farigiraf': ['Focus Sash', 'Colbur Berry', 'Leftovers'],
+        'rotommow': ['Leftovers', 'Occa Berry'], 'rotom': ['Leftovers', 'Colbur Berry'], 'appletun': ['Leftovers', 'Rocky Helmet'],
+        'mimikyu': ['Rocky Helmet', 'Mental Herb'], 'lycanrocmidnight': ['Focus Sash', 'Expert Belt'], 'mrrime': ['Occa Berry', 'Sitrus Berry', 'Leftovers'],
+        'torkoal': ['Sitrus Berry', 'Leftovers']}
+for _s in J.values():
+    _s['alts'] = ALTS.get(_s['species'], [])
 
 # ---------------- Jacky teams (weights: judgement) ----------------
 # His six most expensive picks (Golisopod, Incineroar, Farigiraf, Torkoal, Rotom-Mow, Mimikyu = 93 of 100 points) are the
@@ -75,12 +93,16 @@ JT = [
     ('j14', 'Colbur Farigiraf + Wisp Mow', 0.04, ['goliM', 'incin', 'fari_colbur', 'tork', 'mow_wisp', 'rime'], 'Anti-Morpeko / anti-physical'),
     ('j15', 'Lycanroc + Mr. Rime, no Mimikyu / Mow', 0.03, ['goliM_fi', 'incin', 'fari', 'tork', 'rime', 'lyc'], 'Mock six with standard Incineroar'),
     ('j16', 'Rotom + Appletun cheap picks', 0.03, ['goliM', 'incin', 'fari', 'tork', 'rotomb', 'apple'], 'Low-cost comfort picks'),
+    ('j17', 'Anti-Kangaskhan: Close Combat Golisopod + Wisp Incineroar', 0.05, ['goliM_cc', 'incin_wisp', 'fari', 'tork', 'mow', 'mimi_tr'], 'Worst case for our Mega Kangaskhan'),
+    ('j18', 'Ladder modal six (Sun Mimikyu, Yawn Torkoal)', 0.04, ['goliM', 'incin', 'fari', 'tork_yawn', 'mow', 'mimi_sun'], 'Ladder sets throughout'),
+    ('j19', 'Aqua Jet Golisopod + Icy Wind Mr. Rime', 0.03, ['goliM_aj', 'incin_snarl', 'fari_hh', 'tork', 'rime_iw', 'mimi_tr'], 'Anti-Charizard priority + speed control'),
+    ('j20', 'Swords Dance Golisopod under Trick Room', 0.03, ['goliM_sd', 'incin', 'fari_hh', 'tork', 'mimi_tr', 'rime'], 'Setup in Trick Room'),
 ]
 TEN = ['goliM', 'incin', 'fari', 'tork', 'mow', 'mimi_tr', 'rime', 'rotomb', 'apple', 'lyc']
 QT = [(f'q{n:03d}', '+'.join(J[k]['name'] for k in six), 0, list(six), 'every-six screen') for n, six in enumerate(combinations(TEN, 6), 1)]
 
 PERSONAS = {**{t: ['tr', 0.6] for t in ['j02', 'j05', 'j06', 'j12', 'j15']},
-            **{t: ['tr', 0.3] for t in ['j01', 'j03', 'j04', 'j09', 'j10', 'j11', 'j13', 'j14', 'j16']},
+            **{t: ['tr', 0.3] for t in ['j01', 'j03', 'j04', 'j09', 'j10', 'j11', 'j13', 'j14', 'j16', 'j17', 'j18', 'j20']},
             **{t: ['rock', 0.6] for t in ['j04', 'j07']}}
 ROWS = [
     {'if': 'their 6 includes Torkoal + Farigiraf + Mr. Rime', 'need': ['torkoal', 'farigiraf', 'mrrime']},
@@ -112,15 +134,17 @@ for pk, m in PKG.items():
         NT.append((f'y{pk}{n:02d}', '+'.join(NAME[s] for s in six) + f' [{pk}]', 1, [m[s] for s in six], f'package {pk}'))
 # closed-sheet belief of our sets (what Jacky expects): Hex round-2 six nC19 with the common Iron Fist Conkeldurr
 BELIEF = ('b01', 'belief: our last six (nC19 shape, ladder Conkeldurr)', 0, ['zardY', 'pel_scarf', 'kangaM_rs', 'morpeko_web', 'conk', 'rotom_web'], 'beliefRef')
+# the two of our eight he has not seen in the nC19 shape: what earlier weeks showed (Weeks 1-3 Sinistcha, Iron Head Aegislash)
+BELIEF2 = ('b02', 'belief: Sinistcha + Aegislash (earlier weeks)', 0, ['sinis', 'aegis_ih', 'zardY', 'pel_scarf', 'kangaM_rs', 'conk'], 'beliefRef (second)')
 
 if __name__ == '__main__':
     jt, je = build(J, JT + QT, 'jacky')
-    at, ae = build(A3, NT + [BELIEF], 'anthony')
+    at, ae = build(A3, NT + [BELIEF, BELIEF2], 'anthony')
     for tid_, p in je + ae:
         print('PROBLEM', tid_, p)
     dst = os.path.join(ROOT, 'tools', 'sim', 'candidates')
     json.dump({'version': 1, 'written': '2026-11-06', 'format': 'gen9championsvgc2026regmc', 'level': 50,
                'notes': 'Week 5 vs Jacky round 1 (gen_jacky.py): every six of the 8 allowed mons x 2 set packages vs his weighted sixes + every-six screen.',
                'opponent': {'coach': 'Jacky', 'seat': 4, 'teams': jt, 'personas': PERSONAS, 'rows': ROWS},
-               'ours': {'coach': 'Anthony', 'seat': 5, 'teams': at, 'beliefRef': 'b01'}}, open(os.path.join(dst, 'jacky.json'), 'w'), indent=1)
+               'ours': {'coach': 'Anthony', 'seat': 5, 'teams': at, 'beliefRef': 'b01,b02'}}, open(os.path.join(dst, 'jacky.json'), 'w'), indent=1)
     print(len(jt), 'Jacky teams,', len(at), 'Anthony teams; problems:', len(je) + len(ae))

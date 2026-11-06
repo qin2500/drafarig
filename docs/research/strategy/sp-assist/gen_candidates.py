@@ -224,7 +224,7 @@ def resolve_items(team):
     for s in team:
         s = dict(s)
         if tid(s['item']) in used:
-            new = next(i for i in FALLBACK if tid(i) not in used)
+            new = next(i for i in s.get('alts', []) + FALLBACK if tid(i) not in used)
             notes.append(f"{s['name']}: {s['item']} -> {new} (item clause)")
             s['item'] = new
         used.add(tid(s['item']))

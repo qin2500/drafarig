@@ -21,6 +21,8 @@ ANTHONY = {
     'Sinistcha': mon('sinistcha', 'Calm', sp_from('Calm:32/0/2/0/32/0')[1], 'Hospitality', 'cobaberry'),
     'Conkeldurr': mon('conkeldurr', 'Brave', sp_from('Brave:32/32/0/0/2/0')[1], 'Iron Fist', 'lifeorb'),
     'Kangaskhan': mon('kangaskhan', 'Adamant', sp_from('Adamant:32/32/2/0/0/0')[1], 'Scrappy', 'lifeorb'),
+    # the set we actually bring (Weeks 3-4): Mega, so Jacky's / Hex's hits are judged into Parental Bond's bulk
+    'Mega Kangaskhan': mon('kangaskhanmega', 'Adamant', sp_from('Adamant:32/32/2/0/0/0')[1], 'Parental Bond', 'kangaskhanite'),
     'Pelipper': mon('pelipper', 'Modest', sp_from('Modest:2/0/0/32/0/32')[1], 'Drizzle', 'focussash'),
     'Stunfisk-Galar': mon('stunfiskgalar', 'Brave', sp_from('Brave:32/32/2/0/0/0')[1], 'Mimicry', 'sitrusberry'),
     'Simipour': mon('simipour', 'Modest', sp_from('Modest:2/0/0/32/0/32')[1], 'Torrent', 'mysticwater'),
