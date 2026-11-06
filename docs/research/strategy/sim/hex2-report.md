@@ -66,3 +66,21 @@ After the foe's hit first: Mega-Z Draco then Double-Edge leaves Kangaskhan 0–3
 Mega-Z 0.4%); Drampa Draco (Trick Room) then Double-Edge always faints Kangaskhan; Life Orb Armarouge under Trick
 Room 26%. Guide changes: no Double-Edge into Indeedee-F; Mega-Z only beside a second hit or after Fake Out; Drampa only
 outside Trick Room. Script: job tmp `hex/recoil2.mjs` (not kept in the repo).
+
+## Re-baseline on the fixed sim (2026-11-06)
+
+After the trShare determinism fix (548ee2f) and pool beliefs (58be550). Engine vs engine, closed sheets, 480 games each,
+paired seeds 6000000, h01..h20 (results in tools/sim/results/hex2/rebase/, not tracked).
+
+| Run | Win % | Paired diff vs nC19 | Same-pick games | His Trick Room up / not |
+|---|---|---|---|---|
+| nC19, Guts Conkeldurr (Hex believes Iron Fist: game 1) | 67.3 | | | 60.7 / 70.8 |
+| xIF_rs, Iron Fist, same moves (game 1) | 63.5 | −3.8 ±4.3 | +2.7 ±4.1 (n 336) | 61.9 / 64.4 |
+| nC19-g2, Guts, Hex knows it (games 2–3) | 64.4 | −2.9 ±3.9 | same picks (n 480) | 58.9 / 67.3 |
+
+Verdict: Guts and Iron Fist are inside the noise in game 1 (the all-games and same-pick diffs disagree in sign), and
+Guts once revealed (64.4) is level with Iron Fist (63.5). The old −4.3 for Guts in games 2–3 does not reproduce.
+Roll-level calcs (app engine, items included) for what unburned Guts gives up: Drain Punch + Mach Punch Mega-Z 58% vs
+100%, Life Orb Garchomp 1% vs 100%; Mega Drampa Drain Punch OHKO 75% vs 100%; Corviknight 2x Drain Punch 3% vs 100%;
+Rotom-Heat (Sitrus) 2x Drain Punch 71% vs 100%. Burned Guts makes all of these 100% and Drain Punch OHKOs Life Orb
+Kleavor. Script: job tmp `hex/rolls2.mjs`.
