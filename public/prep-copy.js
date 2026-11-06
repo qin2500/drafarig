@@ -866,6 +866,20 @@ export const GUIDE = {
   fill: (pair) => `Guide lead for this: ${pair} ·`, fillBtn: 'Fill', differs: (pair) => `Guide differs: ${pair} ·`, useBtn: 'Use', filled: (pair) => `Guide lead placed: ${pair}`,
   searchLine: (w) => `Guide: ${w}`, fromGuide: 'From the guide:',
   none: 'No game plan for this match yet.',
+  topThreats: 'Top threats', readFull: 'Read the full guide ›', readFullAria: (c) => `Read the full guide vs ${c}`,
+};
+
+// The full matchup guide (public/prep-guide-page.js): the long-form read behind the Brief's "Game plan" card
+export const GUIDE_PAGE = {
+  tab: 'Guide', head: (c, w) => `Guide vs ${c}${w ? ` · W${w}` : ''}`, toc: 'On this page', none: 'No guide for this match yet.',
+  his: (c) => `${c}'s team`, threats: 'Threats', team: 'Our team and why', preview: 'Team preview and leads', notes: 'Matchup notes',
+  game: 'In the game', evidence: 'Assumptions and evidence',
+  archetype: 'Archetype', tiers: { core: 'Core: in almost every six', likely: 'Likely', fringe: 'Fringe: watch for it' },
+  likely: 'His likely sixes', answer: 'Answer:', theCalc: 'The calc:', rank: (n) => `${n}.`,
+  mega: (m) => `The Mega: ${m}`, megaChip: 'Mega', benched: 'Left at home', spread: 'Spread:', set: 'Showdown set', job: 'Job:', avoid: 'Avoid:',
+  ifPreview: 'If his preview shows', bring4: 'Bring 4:', lead: 'Lead:', leadsHead: 'Leads and turn 1', previewHead: 'Preview plans',
+  role: 'Role:', worst: 'Worst case:', tells: 'Read his tells', lose: 'How we lose', endgame: 'Endgame', ours: 'Our double KOs', theirs: 'His double KOs',
+  deepLink: 'Every six we tested is in the Deep dive ›', backBrief: '‹ Back to the Brief', top: 'Back to top ↑',
 };
 
 // ---------- Mocks (public/prep-mocks.js; docs/research/ux/mocks.md §10) ----------

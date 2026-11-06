@@ -8,7 +8,8 @@ import { mech } from './calc-helpers.mjs';
 import { bootApp, parseHtml, findAll } from './ui-harness.mjs';
 import { device, T, btns, flushSaves, SET_MINE, WS } from './prep-helpers.mjs';
 import { KEYS } from '../lib/prep-schema.mjs';
-import { validateGuide, staleness, guideFor, registerGuide, mergeWreck, matchCalc } from '../lib/guides/index.mjs';
+import { parseRoute, formatRoute, MATCH_TABS, READ_TABS } from '../lib/prep-route.mjs';
+import { validateGuide, staleness, guideFor, registerGuide, mergeWreck, matchCalc, GUIDES } from '../lib/guides/index.mjs';
 
 const FIXTURE = {
   version: 1, pov: 5, opp: 2, coach: 'Ning', week: 2, written: '2026-10-19',
@@ -38,7 +39,8 @@ test('validation: tolerant — a malformed entry is dropped and reported, the re
   assert.equal(guide.combos.ours.length, 1, 'the combo with an unknown mon is dropped');
   assert.ok(problems.some((p) => p.startsWith('combos.ours[1]')));
   assert.deepEqual(guide.rosters.theirs.length, 5);
-  assert.equal(validateGuide({ ...FIXTURE, version: 2 }).guide, null);
+  assert.equal(validateGuide({ ...FIXTURE, version: 3 }).guide, null);
+  assert.deepEqual([guide.overview, guide.threats, guide.team], [null, [], null], 'a v1 guide: no long-form fields');
   const partial = validateGuide({ version: 1, pov: 5, opp: 2, coach: 'Ning', remember: ['one'] }, mech).guide;
   assert.deepEqual([partial.remember, partial.leads, partial.calcs, partial.sets, partial.rosters], [['one'], [], [], '', null]);
   assert.equal(guideFor(5, 2, 'Calvin', { guides: [FIXTURE] }), null, 'matched by the coach NAME');
@@ -72,19 +74,23 @@ test('no guide for the matchup: the Brief is exactly as before', async (t) => {
   assert.equal(b.html(), without);
 });
 
-test('the Brief: Game plan card (header, remember, bring, preview → lens 4, folds), pool dot, both sheets', async (t) => {
+test('the Brief: Game plan card (header, remember, bring, preview → lens 4, Read the full guide), pool dot, both sheets', async (t) => {
   t.after(registerGuide(FIXTURE));
   const app = await brief(t);
   await app.waitFor(() => /Game plan vs Ning · W2/.test(T(app)), 'the card', 20000);
   const h = T(app);
-  for (const s of ['Guide', 'Written 19 Oct · Fixture guide for tests · numbers are illustrative', '(more)', 'Remember', 'Lead Charizard + Kangaskhan.', '+ 1 more',
-    'Bring', 'Mega: Charizard', 'Import as team', 'His preview shows…', 'Rillaboom + Gholdengo', 'Bring 4', 'Leads and turn 1 (1)', 'T1 Heat Wave', 'Use on Plan board',
-    'Read his tells (1)', 'How we lose (1)', 'Endgame', 'Our double KOs (1)', 'Total from the guide', 'His double-target KOs are in Can wreck you (1 from the guide).'])
+  assert.ok(!h.includes('Fixture guide for tests'), 'the assumptions are on the Guide tab, not the card');
+  for (const s of ['Guide', 'Written 19 Oct', 'Remember', 'Lead Charizard + Kangaskhan.', '+ 1 more',
+    'Bring', 'Mega: Charizard', 'Import as team', 'His preview shows…', 'Rillaboom + Gholdengo', 'Bring 4', 'T1 Heat Wave', 'Read the full guide ›',
+    'His double-target KOs are in Can wreck you (1 from the guide).'])
     assert.ok(h.includes(s), s);
+  // the short version: the in-game folds live on the Guide tab now
+  for (const s of ['Leads and turn 1 (1)', 'Read his tells (1)', 'How we lose (1)', 'Our double KOs (1)']) assert.ok(!h.includes(s), `not on the card: ${s}`);
+  assert.ok(btns(app, 'tab').some((b) => b.tab === 'guide'), 'the Read link and the Guide tab');
+  assert.match(app.html(), /<a href="#prep\/5v2\/guide" class="gd-read-link" data-pa="tab" data-tab="guide"/);
   assert.ok(h.indexOf('Game plan vs Ning') < h.indexOf("Ning's pool"), 'first in the Brief');
-  // numbers: a guide calc's range is a workbench link; a number without one is marked unchecked
+  // numbers: a guide calc's range is a workbench link (a number without one is marked unchecked: see the Guide tab test)
   assert.ok(btns(app, 'guide-calc').some((b) => b.i === '0'), '80–95% links to its calc');
-  assert.match(app.html(), /class="gd-unchecked"[^>]*>50–60%/);
   // the pool card's G dot
   assert.match(app.html(), /aria-label="Rillaboom[^"]*guide note[^"]*"/);
   assert.match(app.html(), /class="gdot"/);
@@ -133,6 +139,9 @@ test('workbench links: stated sets and field, the "now" line, Intimidate; a comb
   assert.match(T(app), /Guide: 80–95% · now [\d.]+–[\d.]+%( ✓| with your current Charizard-Mega-Y \(Timid 2 HP \/ 32 SpA\))/);
   assert.match(T(app), /as the guide assumed/);
   await app.click({ pa: 'wb-close' });
+  // calc 1 (in "How we lose") is on the Guide tab
+  await app.click({ pa: 'tab', tab: 'guide' });
+  await app.waitFor(() => /Guide vs Ning/.test(T(app)), 'the Guide tab', 20000);
   await app.click({ pa: 'guide-calc', ...btns(app, 'guide-calc').find((c) => c.i === '1') });
   h = app.html();
   assert.match(h, /Rock Slide: Ning&#39;s Lucario → Charizard-Mega-Y/);
@@ -274,4 +283,130 @@ test('Deep dive tab renders with the fixture\'s deep data', async (t) => {
   const all = JSON.parse(storage.getItem(KEYS.teams) ?? '{"teams":[]}').teams;
   const team = all.find((x) => x.name === 'Other six (vs Ning)');
   assert.equal(team?.slots.length, 2, 'imported as a team');
+});
+
+// ---------- schema v2: the long-form guide (overview, threats, team) and the Guide tab ----------
+const V2 = {
+  ...FIXTURE, version: 2,
+  overview: {
+    archetype: 'Grassy Terrain balance with Gholdengo',
+    summary: ['Ning plays Rillaboom Fake Out into Gholdengo Make It Rain.', 'Milotic punishes our Intimidate.'],
+    roster: [{ id: 'rillaboom', role: 'Fake Out + Grassy Glide', tier: 'core' }, { id: 'gholdengo', role: 'Make It Rain spam', tier: 'core' },
+      { id: 'lucario', role: 'Rock coverage', tier: 'fringe' }, { id: 'milotic', role: 'Competitive', tier: 'sometimes' }, { id: 'nosuchmon', role: 'x', tier: 'core' }],
+    likely: [{ label: 'Rillaboom balance', ids: ['rillaboom', 'gholdengo', 'milotic', 'lucario'], share: 'about 60%', note: 'Lead Charizard + Kangaskhan.' }, { label: 'empty', ids: ['nosuchmon'] }],
+  },
+  // calc 1 points at the Lucario calc; a dropped calc before it must not shift the index
+  calcs: [{ attacker: { id: 'nosuchmon', set: 'ours' }, defender: { id: 'gholdengo', set: 'worst' }, move: 'heatwave', range: '1–2%' }, ...FIXTURE.calcs],
+  threats: [{ id: 'lucario', title: 'Lucario: Rock Slide', why: 'Rock Slide OHKOs Charizard (200–240%).', answer: 'Protect turn 1.', calc: 2 },
+    { id: 'rillaboom', title: 'Rillaboom: Fake Out', why: 'Fake Out every game.', calc: 0 }, { id: 'gholdengo', title: '', why: 'no title' }],
+  team: {
+    summary: ['Sun Charizard with Kangaskhan Fake Out.'], evidence: '70% of 400 engine games.',
+    members: [{ id: 'charizard', role: 'Sun sweeper', why: 'Heat Wave 80–95% into Gholdengo.', spread: 'Modest 32 SpA / 32 Spe: outspeeds Rillaboom' },
+      { id: 'kangaskhan', role: 'Fake Out', why: 'Parental Bond.' }, { id: 'nosuchmon', role: 'x' }],
+  },
+};
+
+test('validation v2: overview, threats and team are normalised; bad entries dropped; threat calcs follow dropped calcs', () => {
+  const { guide, problems } = validateGuide(V2, mech);
+  assert.equal(guide.version, 2);
+  assert.equal(guide.overview.archetype, 'Grassy Terrain balance with Gholdengo');
+  assert.deepEqual(guide.overview.roster.map((r) => [r.id, r.tier]), [['rillaboom', 'core'], ['gholdengo', 'core'], ['lucario', 'fringe'], ['milotic', 'likely']], 'unknown tier → likely; unknown mon dropped');
+  assert.deepEqual(guide.overview.likely.map((l) => l.label), ['Rillaboom balance']);
+  assert.equal(guide.overview.likely[0].share, 'about 60%');
+  assert.equal(guide.calcs.length, 2, 'the calc with an unknown mon is dropped');
+  assert.deepEqual(guide.threats.map((t) => [t.id, t.calc]), [['lucario', 1], ['rillaboom', null]], 'raw calc 2 → 1; raw calc 0 was dropped → null; no title → dropped');
+  assert.equal(guide.calcs[guide.threats[0].calc].attacker.id, 'lucario');
+  assert.deepEqual(guide.team.members.map((m) => m.id), ['charizard', 'kangaskhan']);
+  assert.equal(guide.team.evidence, '70% of 400 engine games.');
+  for (const p of ['overview.roster[4] dropped', 'overview.likely[1] dropped', 'threats[2] dropped', 'threats calc 0 dropped', 'team.members[2] dropped']) assert.ok(problems.includes(p), p);
+  // empty v2 blocks read as absent
+  const bare = validateGuide({ version: 2, pov: 5, opp: 2, coach: 'Ning', overview: {}, team: { members: [] }, threats: 'no' }, mech).guide;
+  assert.deepEqual([bare.overview, bare.team, bare.threats], [null, null, []]);
+  // every real guide still validates
+  for (const g of GUIDES) assert.ok(validateGuide(g, mech).guide, g.coach);
+});
+
+test('the Guide tab: every section in order with a table of contents; threats link their calcs; our six with sets; the Brief card is the short version', async (t) => {
+  t.after(registerGuide(V2));
+  const app = await bootApp({ mode: 'prep/5v2/guide', storage: device() });
+  t.after(() => app.restore());
+  await app.waitFor(() => /Guide vs Ning · W2/.test(T(app)), 'the Guide tab', 20000);
+  const h = T(app), html = app.html();
+  assert.match(html, /id="ptab-guide" data-pa="tab" data-tab="guide" aria-current="page"/);
+  // sections in reading order, each in the table of contents
+  const heads = ['Ning&#39;s team', 'Threats', 'Our team and why', 'Team preview and leads', 'Matchup notes', 'In the game', 'Assumptions and evidence'];
+  const at = heads.map((x) => html.indexOf(`>${x}</h3>`));
+  assert.ok(at.every((i) => i > 0), 'every section heading');
+  assert.deepEqual([...at].sort((a, b) => a - b), at, 'in order');
+  assert.deepEqual(btns(app, 'gp-jump').map((b) => b.to).slice(0, 7), ['gp-his', 'gp-threats', 'gp-team', 'gp-preview', 'gp-notes', 'gp-game', 'gp-evidence']);
+  // 1) his team: archetype, summary, roster by tier, likely sixes
+  for (const s of ['Grassy Terrain balance with Gholdengo', 'Ning plays Rillaboom Fake Out into Gholdengo Make It Rain.', 'Core: in almost every six', 'Fringe: watch for it',
+    'Make It Rain spam', 'His likely sixes', 'Rillaboom balance', 'about 60%']) assert.ok(h.includes(s), s);
+  // 2) threats ranked, the first one's calc is the Lucario calc
+  assert.ok(h.indexOf('Lucario: Rock Slide') < h.indexOf('Rillaboom: Fake Out'), 'ranked');
+  assert.ok(h.includes('Answer: Protect turn 1.'));
+  const threatCalc = html.slice(html.indexOf('Lucario: Rock Slide'), html.indexOf('Rillaboom: Fake Out'));
+  assert.match(threatCalc, /The calc: <button type="button" class="linkish gd-calc" data-pa="guide-calc"[^>]*data-i="1">Lucario Rock Slide → Charizard-Mega-Y 200–240% · OHKO ›/);
+  // 3) our team: summary, evidence, members (role, why, spread, Showdown set), the Mega, the bench, Import
+  for (const s of ['Sun Charizard with Kangaskhan Fake Out.', '70% of 400 engine games.', 'Sun sweeper', 'Spread: Modest 32 SpA / 32 Spe: outspeeds Rillaboom', 'Showdown set',
+    'The Mega: Charizard sun beats Milotic', 'Left at home', 'no rain needed', 'Import as team']) assert.ok(h.includes(s), s);
+  assert.match(html, /<pre tabindex="0">Charizard @ Charizardite Y\nAbility: Blaze/);
+  assert.match(html, /<pre tabindex="0">Kangaskhan @ Kangaskhanite/);
+  assert.match(html, /<h4>Charizard <span class="chip">Mega<\/span><\/h4>/);
+  // 4) preview plans and leads; 5) their mons only; 6) in-game; 7) assumptions
+  for (const s of ['Preview plans', 'If his preview shows Rillaboom + Gholdengo', 'Leads and turn 1', 'Use on Plan board', 'Worst case: Wood Hammer 35% on Charizard',
+    'Read his tells', 'Heat Wave it turn 1', 'How we lose', 'Fix: Protect turn 1', 'Endgame', 'Keep Sinistcha for the end.', 'Our double KOs', 'His double KOs', 'third assumption'])
+    assert.ok(h.includes(s), s);
+  const notes = html.slice(html.indexOf('id="gp-notes"'), html.indexOf('id="gp-game"'));
+  assert.ok(notes.includes('Rillaboom') && notes.includes('Lucario') && !notes.includes('Sun sweeper'), 'per-mon notes: theirs, not ours');
+  assert.match(html, /class="gd-unchecked"[^>]*>50–60%/, 'a number without a calc is marked unchecked');
+  // TOC jump, then the workbench from a threat
+  await app.click({ pa: 'gp-jump', to: 'gp-threats' });
+  await app.click({ pa: 'guide-calc', ...btns(app, 'guide-calc').find((c) => c.i === '1') });
+  assert.match(app.html(), /Rock Slide: Ning&#39;s Lucario → Charizard-Mega-Y/);
+  await app.click({ pa: 'wb-close' });
+  // the Brief card: archetype, top threats, our six, remember, previews, Read the full guide
+  await app.click({ pa: 'tab', tab: 'brief' });
+  await app.waitFor(() => /Game plan vs Ning · W2/.test(T(app)), 'the card', 20000);
+  const all = T(app);
+  const card = all.slice(all.indexOf('Game plan vs Ning'), all.indexOf('His double-target KOs are in Can wreck you'));
+  for (const s of ['Grassy Terrain balance with Gholdengo', 'Top threats', 'Lucario: Rock Slide', 'Rillaboom: Fake Out', 'Bring', 'Remember', 'His preview shows…', 'Read the full guide ›']) assert.ok(card.includes(s), s);
+  assert.ok(card.indexOf('Top threats') < card.indexOf('Bring') && card.indexOf('Bring') < card.indexOf('Remember'), 'leads with archetype + threats + our six');
+  await app.click({ pa: 'tab', tab: 'guide' });
+  await app.waitFor(() => /Guide vs Ning · W2/.test(T(app)), 'back on the Guide tab', 20000);
+});
+
+test('the Guide tab: a v1 guide renders from its own fields; no Guide tab without a guide; #…/guide without one opens the Brief', async (t) => {
+  const off = registerGuide(FIXTURE);
+  const app = await bootApp({ mode: 'prep/5v2/guide', storage: device() });
+  t.after(() => app.restore());
+  await app.waitFor(() => /Guide vs Ning · W2/.test(T(app)), 'the Guide tab', 20000);
+  const h = T(app);
+  assert.ok(!h.includes('Ning\'s team') && !h.includes('Top threats'), 'no overview / threats sections for a v1 guide');
+  for (const s of ['Our team and why', 'Sun sweeper', 'Avoid: staying in vs Rock moves', 'Team preview and leads', 'Matchup notes', 'In the game']) assert.ok(h.includes(s), s);
+  off();
+  const plain = await bootApp({ mode: 'prep/5v2/guide', storage: device() });
+  t.after(() => plain.restore());
+  await plain.waitFor(() => /Ning&#39;s pool|bs-pool/.test(plain.html()) && !/Opening your prep/.test(plain.html()), 'the Brief', 20000);
+  assert.ok(!/id="ptab-guide"/.test(plain.html()), 'no Guide tab without a guide');
+  assert.match(plain.html(), /id="ptab-brief"[^>]*aria-current="page"/);
+});
+
+test('the Guide tab renders the real Hex guide (5v1)', async (t) => {
+  const raw = GUIDES.find((g) => g.pov === 5 && g.opp === 1);
+  const g = validateGuide(raw, mech).guide;
+  const app = await bootApp({ mode: 'prep/5v1/guide', storage: device() });
+  t.after(() => app.restore());
+  await app.waitFor(() => /Guide vs Hex/.test(T(app)), 'the Guide tab', 20000);
+  const h = T(app);
+  if (g.overview?.archetype) assert.ok(h.includes(g.overview.archetype), 'archetype');
+  for (const x of g.threats) assert.ok(h.includes(x.title.slice(0, 20)), x.title);
+  for (const x of g.team?.members ?? []) assert.ok(h.includes(x.role.slice(0, 20)), x.role);
+  assert.ok(h.includes('Team preview and leads') && h.includes('Assumptions and evidence'));
+});
+
+test('route: #prep/<p>v<o>/guide round-trips; guide is a read-only tab', () => {
+  assert.deepEqual(parseRoute('#prep/5v1/guide'), { view: 'ws', pov: 5, opp: 1, tab: 'guide' });
+  assert.equal(formatRoute({ view: 'ws', pov: 5, opp: 1, tab: 'guide' }), '#prep/5v1/guide');
+  assert.ok(MATCH_TABS.indexOf('guide') === 1 && READ_TABS.includes('guide'));
 });

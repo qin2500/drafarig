@@ -11,12 +11,13 @@ import { STAT_IDS } from '../lib/calc/stats.mjs';
 import * as TM from '../lib/prep-teams.mjs';
 import * as C from './prep-copy.js';
 import { esc, btn, chipBtn } from './prep-ui.js';
+import { formatRoute } from '../lib/prep-route.mjs';
 import * as WB from './prep-workbench.js';
 import { importTeamText, bringTeam } from './prep-teams.js';
 import * as MockPov from './prep-mockpov.js';
 
 const G = C.GUIDE;
-const base = (P) => (id) => P.mech?.species[id]?.mega?.from ?? id;
+export const base = (P) => (id) => P.mech?.species[id]?.mega?.from ?? id;
 /** The guide for (your perspective, opponent), validated, with staleness; null unless you view your own side. */
 export function guideOf(P, povName, oppName) {
   // in a mock (public/prep-mockpov.js) its notes are the game plan, and no real guide applies
@@ -28,27 +29,27 @@ export function guideOf(P, povName, oppName) {
   return { ...found, ...staleness(found.guide, P.coachRoster(oppName), P.coachRoster(povName), base(P)) };
 }
 const pill = (g) => `<span class="gpill" title="${esc(G.pillTip(g.written ?? ''))}">${esc(g.pillText ?? G.pill)}</span>`;
-const nm = (P, id) => P.spName(id);
-const list = (items, tag = 'ul', cls = '') => (items.length ? `<${tag} class="gd-list ${cls}">${items.map((x) => `<li>${x}</li>`).join('')}</${tag}>` : '');
+export const nm = (P, id) => P.spName(id);
+export const list = (items, tag = 'ul', cls = '') => (items.length ? `<${tag} class="gd-list ${cls}">${items.map((x) => `<li>${x}</li>`).join('')}</${tag}>` : '');
 const goneSet = (P, found) => new Set([...found.removed, ...(found.ours?.removed ?? [])].map(base(P)));
-const goneTag = (P, found, ids) => (ids.some((id) => goneSet(P, found).has(base(P)(id))) ? ` <span class="small muted">${esc(G.gone)}</span>` : '');
+export const goneTag = (P, found, ids) => (ids.some((id) => goneSet(P, found).has(base(P)(id))) ? ` <span class="small muted">${esc(G.gone)}</span>` : '');
 const short = (s) => (s.length > 32 ? `${s.slice(0, 30)}…` : s);
 // a preview row's condition as a chip label: rows all start "their 6 includes", so drop that before shortening
-const rowLabel = (s) => short(s.replace(/^their 6 includes\s+/i, ''));
+export const rowLabel = (s) => short(s.replace(/^their 6 includes\s+/i, ''));
 
 // ---------- workbench links ----------
 /** A guide calc as a link that shows the guide's stated range. */
-function calcLink(P, g, i, { label = null, draft = null } = {}) {
+export function calcLink(P, g, i, { label = null, draft = null } = {}) {
   const c = g.calcs[i];
   const text = label ?? G.calc(nm(P, c.attacker.id), P.name('moves', c.move), nm(P, c.defender.id), c.range, c.verdict);
   return `<button type="button" class="linkish gd-calc" data-pa="guide-calc" data-pov="${g.pov}" data-opp="${g.opp}" data-coach="${esc(g.coach)}" data-i="${i}"${draft ? ` data-draft="${esc(draft)}"` : ''}>${esc(text)} ›</button>`;
 }
 /** One attack (a mon, a move, a target) as a workbench link, for combo parts; their side at the ladder set. */
-function hitLink(P, g, a, move, d, oursAttack, label) {
+export function hitLink(P, g, a, move, d, oursAttack, label) {
   return `<button type="button" class="linkish gd-calc" data-pa="guide-hit" data-coach="${esc(g.coach)}" data-pov="${g.pov}" data-opp="${g.opp}" data-a="${esc(a)}" data-m="${esc(move)}" data-d="${esc(d)}" data-ours="${oursAttack ? 1 : 0}">${esc(label)} ›</button>`;
 }
 /** Text with its "a–b%" numbers as workbench links where a guide calc states that range; the others marked unchecked. */
-function linkify(P, g, text) {
+export function linkify(P, g, text) {
   const parts = String(text).split(/(\d+(?:\.\d+)?–\d+(?:\.\d+)?%)/);
   return parts.map((x, k) => {
     if (k % 2 === 0) return esc(x);
@@ -57,8 +58,54 @@ function linkify(P, g, text) {
   }).join('');
 }
 
+// ---------- shared parts (the Brief card and the full guide page, public/prep-guide-page.js) ----------
+/** A mon's face; a button that opens your detail sheet when it is one of your picks (picks: your coach's picks). */
+export function face(P, picks, id, { bench = false, mega = false, size = 'sm' } = {}) {
+  const slot = (picks ?? []).findIndex((p) => p.id === base(P)(id)) + 1;
+  const inner = `${P.pt(base(P)(id), { size })}${mega ? '<span class="megad" aria-hidden="true">M</span>' : ''}`;
+  return slot ? `<button type="button" class="gd-face${bench ? ' bench' : ''}" data-pa="brief-open" data-side="your" data-n="${slot}" aria-label="${esc(`${nm(P, id)}${mega ? ', Mega' : ''}${bench ? `, ${G.bench}` : ''}`)}">${inner}</button>` : `<span class="gd-face${bench ? ' bench' : ''}">${inner}</span>`;
+}
+/** Is id the guide's Mega (by species)? */
+export const isMega = (P, g, id) => !!g.bring?.mega && base(P)(g.bring.mega.id) === base(P)(id);
+/** Import as team / Update from guide, and Bring it (ws: this matchup's workspace, if any). */
+export function teamButtons(P, g, ws) {
+  if (!g.sets) return '';
+  const team = P.docs.teams?.teams.find((t) => t.name === G.teamName(g.coach) && t.kind !== 'holding');
+  return `<p>${btn(team ? G.updateTeam : G.importTeam, team ? 'guide-update' : 'guide-import', { pov: g.pov, opp: g.opp, coach: g.coach })} ${team && ws ? btn(G.bringIt(g.coach), 'guide-bring', { team: team.id, ws: ws.id }, { cls: 'linkish' }) : ''}</p>`;
+}
+/** Every lead: our pair vs theirs, turns 1–3, the ifs, Use on Plan board. */
+export function leadsHtml(P, g, found) {
+  return g.leads.map((l, i) => {
+    const off = goneTag(P, found, [...l.ours, ...l.vs]);
+    return `<div class="gd-lead${off ? ' gd-gone' : ''}"><p class="gd-pair">${l.ours.map((id) => P.pt(base(P)(id), { size: 'sm' })).join('')} <b>${l.ours.map((id) => esc(nm(P, id))).join(' + ')}</b>${l.vs.length ? ` <span class="muted">${esc(G.vs)}</span> ${l.vs.map((id) => P.pt(base(P)(id), { size: 'sm' })).join('')} ${l.vs.map((id) => esc(nm(P, id))).join(' + ')}` : ''}${off}</p>
+    ${['t1', 't2', 't3'].filter((k) => l[k]).map((k) => `<p class="small">${k.toUpperCase()} ${linkify(P, g, l[k])}</p>`).join('')}${l.ifs.map((x) => `<p class="small muted">${linkify(P, g, x)}</p>`).join('')}
+    <p>${btn(G.usePlan, 'guide-use-plan', { i, coach: g.coach, pov: g.pov, opp: g.opp }, { cls: 'linkish' })}</p></div>`;
+  }).join('');
+}
+export const tellsHtml = (P, g) => list(g.tells.map((t) => `<span class="small muted">${esc(G.see)}</span> ${linkify(P, g, t.see)}${t.means ? ` → <span class="small muted">${esc(G.means)}</span> ${linkify(P, g, t.means)}` : ''} → <b>${linkify(P, g, t.do)}</b>`));
+export const loseHtml = (P, g) => list(g.lose.map((l) => `${linkify(P, g, l.how)}${l.fix ? `<br><span class="small">${esc(G.fix)} ${linkify(P, g, l.fix)}</span>` : ''}`), 'ol');
+export const endgameHtml = (P, g) => list(g.endgame.map((x) => linkify(P, g, x)));
+export function oursCombosHtml(P, g, found) {
+  return g.combos.ours.length ? list(g.combos.ours.map((c) => `<span class="${goneTag(P, found, [...c.attackers.map((a) => a[0]), c.into]) ? 'gd-gone' : ''}">${c.attackers.map(([a, m]) => hitLink(P, g, a, m, c.into, true, `${nm(P, a)} ${P.name('moves', m)}`)).join(' + ')} → ${esc(nm(P, c.into))}${c.range ? ` <b>${esc(c.range)}</b>` : ''}${c.verdict ? ` · ${esc(c.verdict)}` : ''}</span>`)) + `<p class="small muted">${esc(G.comboNote)}</p>` : '';
+}
+/** The header line (pill, written, assumptions) and the stale banners. */
+export function headHtml(P, g, found, { assumptions = 2 } = {}) {
+  const head = `${pill(g)} <span class="small muted">${esc(G.written(g.written, g.assumptions.slice(0, assumptions).join(' · ')))}</span>${assumptions && g.assumptions.length > assumptions ? ` <details class="gd-more"><summary>${esc(G.moreShort)}</summary>${list(g.assumptions.map(esc), 'ul', 'small')}</details>` : ''}`;
+  const staleThem = found.added.length || found.removed.length ? `<p class="banner warn small">${esc(G.staleThem(g.coach, [...found.added.map((id) => `+ ${nm(P, id)}`), ...found.removed.map((id) => `− ${nm(P, id)}`)].join(', '), found.removed.map((id) => nm(P, id)).join(', ')))}</p>` : '';
+  const staleUs = found.ours.added.length || found.ours.removed.length ? `<p class="banner warn small">${esc(G.staleUs([...found.ours.added.map((id) => `+ ${nm(P, id)}`), ...found.ours.removed.map((id) => `− ${nm(P, id)}`)].join(', ')))}</p>` : '';
+  return `<p class="gd-head">${head}</p>${staleThem}${staleUs}`;
+}
+/** Does this matchup have a full guide page? Every real guide does; a mock's game plan (prep-mockpov.js) stays on the Brief. */
+export function hasPage(P, m) {
+  const found = m ? guideOf(P, m.pov.name, m.opp.name) : null;
+  return !!found && !found.extra;
+}
+
 // ---------- the Brief card ----------
-/** The Brief's "Game plan" section parts: { title, body }, or null without a guide (the Brief stays exactly as it is). */
+/**
+ * The Brief's "Game plan" section parts: { title, body }, or null without a guide (the Brief stays exactly as it is). With a
+ * full guide page it is the short version: archetype, top threats, our six, remember, the preview chips, "Read the full guide".
+ */
 export function card(P, ctx, st) {
   const found = guideOf(P, ctx.pov.name, ctx.opp.name);
   if (!found) {
@@ -66,19 +113,12 @@ export function card(P, ctx, st) {
     return orphan ? { title: G.head(orphan.coach), body: `<p class="small muted">${esc(G.seatMoved(orphan.opp, orphan.coach))}</p>` } : null;
   }
   const g = found.guide;
-  const head = `${pill(g)} <span class="small muted">${esc(G.written(g.written, g.assumptions.slice(0, 2).join(' · ')))}</span>${g.assumptions.length > 2 ? ` <details class="gd-more"><summary>${esc(G.moreShort)}</summary>${list(g.assumptions.map(esc), 'ul', 'small')}</details>` : ''}`;
-  const staleThem = found.added.length || found.removed.length ? `<p class="banner warn small">${esc(G.staleThem(g.coach, [...found.added.map((id) => `+ ${nm(P, id)}`), ...found.removed.map((id) => `− ${nm(P, id)}`)].join(', '), found.removed.map((id) => nm(P, id)).join(', ')))}</p>` : '';
-  const staleUs = found.ours.added.length || found.ours.removed.length ? `<p class="banner warn small">${esc(G.staleUs([...found.ours.added.map((id) => `+ ${nm(P, id)}`), ...found.ours.removed.map((id) => `− ${nm(P, id)}`)].join(', ')))}</p>` : '';
+  const page = !found.extra;
   const rem = g.remember.length ? `<h4>${esc(G.remember)}</h4><ol class="rsns gd-remember">${g.remember.slice(0, 3).map((x) => `<li>${linkify(P, g, x)}</li>`).join('')}</ol>${g.remember.length > 3 ? `<details class="gd-more"><summary>${esc(G.more(g.remember.length - 3))}</summary><ol class="rsns gd-remember" start="4">${g.remember.slice(3).map((x) => `<li>${linkify(P, g, x)}</li>`).join('')}</ol></details>` : ''}` : '';
-  const slot = (id) => ctx.pov.picks.findIndex((p) => p.id === base(P)(id)) + 1;
-  const face = (id, { bench = false, mega = false } = {}) => {
-    const inner = `${P.pt(base(P)(id), { size: 'sm' })}${mega ? '<span class="megad" aria-hidden="true">M</span>' : ''}`;
-    return slot(id) ? `<button type="button" class="gd-face${bench ? ' bench' : ''}" data-pa="brief-open" data-side="your" data-n="${slot(id)}" aria-label="${esc(`${nm(P, id)}${mega ? ', Mega' : ''}${bench ? `, ${G.bench}` : ''}`)}">${inner}</button>` : `<span class="gd-face${bench ? ' bench' : ''}">${inner}</span>`;
-  };
-  const team = P.docs.teams?.teams.find((t) => t.name === G.teamName(g.coach) && t.kind !== 'holding');
-  const bring = g.bring ? `<h4>${esc(G.bring)}</h4><p class="gd-faces">${g.bring.six.map((id) => face(id, { mega: !!g.bring.mega && base(P)(g.bring.mega.id) === base(P)(id) })).join('')}${g.bring.bench.length ? ` <span class="small muted">${esc(G.bench)}:</span> ${g.bring.bench.map((b) => face(b.id, { bench: true })).join('')}` : ''}</p>
+  const picks = ctx.pov.picks;
+  const bring = g.bring ? `<h4>${esc(G.bring)}</h4><p class="gd-faces">${g.bring.six.map((id) => face(P, picks, id, { mega: isMega(P, g, id) })).join('')}${g.bring.bench.length ? ` <span class="small muted">${esc(G.bench)}:</span> ${g.bring.bench.map((b) => face(P, picks, b.id, { bench: true })).join('')}` : ''}</p>
     ${g.bring.mega || g.bring.bench.some((b) => b.why) ? `<details class="gd-more"><summary>${esc(g.bring.mega ? G.megaWhy(nm(P, g.bring.mega.id)) : G.benchWhy)} ›</summary>${g.bring.mega?.why ? `<p class="small">${linkify(P, g, g.bring.mega.why)}</p>` : ''}${list(g.bring.bench.filter((b) => b.why).map((b) => `${esc(nm(P, b.id))}: ${linkify(P, g, b.why)}`), 'ul', 'small')}</details>` : ''}
-    <p>${g.sets ? btn(team ? G.updateTeam : G.importTeam, team ? 'guide-update' : 'guide-import', { pov: g.pov, opp: g.opp, coach: g.coach }) : ''} ${team && ctx.ws ? btn(G.bringIt(g.coach), 'guide-bring', { team: team.id, ws: ctx.ws.id }, { cls: 'linkish' }) : ''}</p>` : '';
+    ${teamButtons(P, g, ctx.ws)}` : '';
   // His preview shows…: a chip per preview; choosing one switches the whole Brief's lens to those 4
   const sel = Math.min(st.preview ?? 0, Math.max(0, g.previews.length - 1));
   const p = g.previews[sel];
@@ -87,20 +127,22 @@ export function card(P, ctx, st) {
   const previews = g.previews.length ? `<h4>${esc(G.previews)}</h4><div class="choices" role="group" aria-label="${esc(G.previews)}">${g.previews.map((x, i) => chipBtn(rowLabel(x.if), 'guide-preview', { i }, i === sel && st.lens === '4')).join('')}</div>
     ${p ? `<div class="gd-preview${pOff ? ' gd-gone' : ''}"><p class="small"><b>${esc(G.bring4)}</b> ${p.bring4.map((id) => esc(nm(P, id))).join(' · ')} &nbsp; <b>${esc(G.lead)}</b> ${p.lead.map((id) => esc(nm(P, id))).join(' + ')}${pOff}</p>
       ${p.note ? `<p class="small">${linkify(P, g, p.note)}</p>` : ''}${pLead?.t1 ? `<p class="small">T1 ${linkify(P, g, pLead.t1)}</p>` : ''}</div>` : ''}` : '';
-  const fold = (title, n, body) => (body ? `<details class="gd-fold"><summary>${esc(title)}${n ? ` (${n})` : ''}</summary>${body}</details>` : '');
-  const leads = g.leads.map((l, i) => {
-    const off = goneTag(P, found, [...l.ours, ...l.vs]);
-    return `<div class="gd-lead${off ? ' gd-gone' : ''}"><p class="gd-pair">${l.ours.map((id) => P.pt(base(P)(id), { size: 'sm' })).join('')} <b>${l.ours.map((id) => esc(nm(P, id))).join(' + ')}</b>${l.vs.length ? ` <span class="muted">${esc(G.vs)}</span> ${l.vs.map((id) => P.pt(base(P)(id), { size: 'sm' })).join('')} ${l.vs.map((id) => esc(nm(P, id))).join(' + ')}` : ''}${off}</p>
-    ${['t1', 't2', 't3'].filter((k) => l[k]).map((k) => `<p class="small">${k.toUpperCase()} ${linkify(P, g, l[k])}</p>`).join('')}${l.ifs.map((x) => `<p class="small muted">${linkify(P, g, x)}</p>`).join('')}
-    <p>${btn(G.usePlan, 'guide-use-plan', { i, coach: g.coach, pov: g.pov, opp: g.opp }, { cls: 'linkish' })}</p></div>`;
-  }).join('');
-  const tells = list(g.tells.map((t) => `<span class="small muted">${esc(G.see)}</span> ${linkify(P, g, t.see)}${t.means ? ` → <span class="small muted">${esc(G.means)}</span> ${linkify(P, g, t.means)}` : ''} → <b>${linkify(P, g, t.do)}</b>`));
-  const lose = list(g.lose.map((l) => `${linkify(P, g, l.how)}${l.fix ? `<br><span class="small">${esc(G.fix)} ${linkify(P, g, l.fix)}</span>` : ''}`), 'ol');
-  const ours = g.combos.ours.length ? list(g.combos.ours.map((c) => `<span class="${goneTag(P, found, [...c.attackers.map((a) => a[0]), c.into]) ? 'gd-gone' : ''}">${c.attackers.map(([a, m]) => hitLink(P, g, a, m, c.into, true, `${nm(P, a)} ${P.name('moves', m)}`)).join(' + ')} → ${esc(nm(P, c.into))}${c.range ? ` <b>${esc(c.range)}</b>` : ''}${c.verdict ? ` · ${esc(c.verdict)}` : ''}</span>`)) + `<p class="small muted">${esc(G.comboNote)}</p>` : '';
-  const body = `<p class="gd-head">${head}</p>${staleThem}${staleUs}${rem}${bring}${previews}
-    ${fold(G.leads, g.leads.length, leads)}${fold(G.tells, g.tells.length, tells)}${fold(G.lose, g.lose.length, lose)}${fold(G.endgame, 0, list(g.endgame.map((x) => linkify(P, g, x))))}${fold(G.ours, g.combos.ours.length, ours)}
-    ${g.combos.theirs.length ? `<p class="small">${esc(G.wreckPointer(g.combos.theirs.length))}</p>` : ''}${found.problems.length ? `<p class="small muted">${esc(G.problems(found.problems.length))}</p>` : ''}`;
-  return { title: found.title ?? G.head(g.coach) + (g.week ? ` · W${g.week}` : ''), body: body + (found.extra ? found.extra() : '') };
+  const tail = `${g.combos.theirs.length ? `<p class="small">${esc(G.wreckPointer(g.combos.theirs.length))}</p>` : ''}${found.problems.length ? `<p class="small muted">${esc(G.problems(found.problems.length))}</p>` : ''}`;
+  const title = found.title ?? G.head(g.coach) + (g.week ? ` · W${g.week}` : '');
+  if (page) {
+    // the short version: what he is, what hurts, what we bring; everything else is one tap away on the Guide tab
+    const arch = g.overview?.archetype ? `<p class="gd-arch">${linkify(P, g, g.overview.archetype)}</p>` : '';
+    const threats = g.threats.length ? `<h4>${esc(G.topThreats)}</h4><ol class="gd-threats-short">${g.threats.slice(0, 3).map((x) => `<li>${P.pt(base(P)(x.id), { size: 'xs' })} ${linkify(P, g, x.title)}</li>`).join('')}</ol>` : '';
+    const href = formatRoute({ view: 'ws', pov: ctx.pov.order, opp: ctx.opp.order, tab: 'guide' });
+    const read = `<p class="gd-read"><a href="${esc(href)}" class="gd-read-link" data-pa="tab" data-tab="guide" aria-label="${esc(G.readFullAria(g.coach))}">${esc(G.readFull)}</a></p>`;
+    // the assumptions are on the guide page (section 7): the card's header is the pill and the date only
+    return { title, body: `${headHtml(P, g, found, { assumptions: 0 })}${arch}${threats}${bring}${read}${rem}${previews}${tail}` };
+  }
+  const fold = (t, n, body) => (body ? `<details class="gd-fold"><summary>${esc(t)}${n ? ` (${n})` : ''}</summary>${body}</details>` : '');
+  const body = `${headHtml(P, g, found)}${rem}${bring}${previews}
+    ${fold(G.leads, g.leads.length, leadsHtml(P, g, found))}${fold(G.tells, g.tells.length, tellsHtml(P, g))}${fold(G.lose, g.lose.length, loseHtml(P, g))}${fold(G.endgame, 0, endgameHtml(P, g))}${fold(G.ours, g.combos.ours.length, oursCombosHtml(P, g, found))}
+    ${tail}`;
+  return { title, body: body + (found.extra ? found.extra() : '') };
 }
 
 /** Pool card: the "G" dot, or null. */
