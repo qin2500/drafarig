@@ -84,3 +84,19 @@ Roll-level calcs (app engine, items included) for what unburned Guts gives up: D
 100%, Life Orb Garchomp 1% vs 100%; Mega Drampa Drain Punch OHKO 75% vs 100%; Corviknight 2x Drain Punch 3% vs 100%;
 Rotom-Heat (Sitrus) 2x Drain Punch 71% vs 100%. Burned Guts makes all of these 100% and Drain Punch OHKOs Life Orb
 Kleavor. Script: job tmp `hex/rolls2.mjs`.
+
+### Rotom-Fan vs the alternatives (fixed sim, 2026-11-07)
+
+Same setup (480 games each, seed 6000000, paired with nC19). Anthony's question: Rotom-Fan only does speed control.
+
+| Six (nC19 with Rotom-Fan replaced by) | Win % | Diff vs nC19 | His Trick Room up / not |
+|---|---|---|---|
+| nC19 (Rotom-Fan) | 67.3 | | 60.7 / 70.8 |
+| nC04 Sinistcha | 57.7 | −9.6 ±5.3 | 39.4 / 67.3 |
+| nC16 Iron Head Aegislash | 54.4 | −12.9 ±5.5 | 31.3 / 63.0 |
+| nC04h Heatproof Sinistcha | 51.9 | −15.4 ±5.6 | 39.9 / 58.6 |
+
+The loss is concentrated in his Psychic Spam leads: Armarouge + Indeedee-F 59% with Rotom-Fan vs 22–32% without, and
+Trick Room games (61% vs 31–40%); also Armarouge + Garchomp (75 vs 55–66). None of the swaps fixes Garchomp + Kleavor
+(21% with nC19, 21–33% without, small n). Sinistcha's own Trick Room did not help in the sim; the engine's Trick Room
+play is a known weak spot, so a human Sinistcha may do better than this, but not by 10 points on this evidence.
