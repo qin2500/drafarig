@@ -100,3 +100,22 @@ The loss is concentrated in his Psychic Spam leads: Armarouge + Indeedee-F 59% w
 Trick Room games (61% vs 31–40%); also Armarouge + Garchomp (75 vs 55–66). None of the swaps fixes Garchomp + Kleavor
 (21% with nC19, 21–33% without, small n). Sinistcha's own Trick Room did not help in the sim; the engine's Trick Room
 play is a known weak spot, so a human Sinistcha may do better than this, but not by 10 points on this evidence.
+
+### Blind game-1 leads (fixed sim, 2026-11-07)
+
+nC19 with ONE fixed bring-4 and lead against every Hex six (his AI picks normally), 480 games each, seed 6000000.
+Segments by his six: Drampa (312 games) / Kleavor without Drampa (120) / neither (48).
+
+| Lead / back | All | Drampa | Kleavor, no Drampa | Neither |
+|---|---|---|---|---|
+| AI preview (adapts per six) | 67 | 63 | 77 | 71 |
+| **Morpeko + Pelipper / Kangaskhan + Conkeldurr** | **70** | **66** | **84** | 65 |
+| Kangaskhan + Rotom-Fan / Conkeldurr + Morpeko | 65 | 61 | 73 | 71 |
+| Kangaskhan + Rotom-Fan / Conkeldurr + Pelipper | 49 | 45 | 53 | 60 |
+| Kangaskhan + Pelipper / Conkeldurr + Rotom-Fan | 48 | 47 | 50 | 46 |
+| Kangaskhan + Conkeldurr / Pelipper + Rotom-Fan | 44 | 45 | 43 | 44 |
+
+Paired, Morpeko + Pelipper − Kangaskhan + Rotom-Fan (Conkeldurr + Morpeko back): +5.2 ±5.2 overall, +4.8 ±6.6 with
+Drampa. Every lead loses to his Garchomp + Kleavor lead (6–26%). The AI-preview split by Drampa (Kangaskhan + Rotom-Fan
+76% vs Morpeko + Pelipper 52%) was selection by six, not the lead. Caveats against Morpeko + Pelipper: his AI brought
+Drampa in only 14% of these games and rarely makes the predictive Indeedee-F switch into Fake Out; a human does both.
