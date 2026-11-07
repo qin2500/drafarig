@@ -850,7 +850,7 @@ export const GUIDE = {
   staleThem: (c, diff, gone) => `Written before ${c}'s roster changed (${diff}).${gone ? ` Plans that use ${gone} may be wrong.` : ''}`, staleUs: (diff) => `Written before your roster changed (${diff}).`,
   gone: '(no longer on the roster)', seatMoved: (seat, c) => `Game plan was written for seat ${seat} (${c}), who isn't on the sheet now.`,
   remember: 'Remember', bring: 'Bring', bench: 'Bench', megaWhy: (mon) => `Mega: ${mon}`, benchWhy: 'Why this six',
-  importTeam: 'Import as team', updateTeam: 'Update from guide', bringIt: (c) => `Bring it vs ${c}`, bringAsk: (c) => `Bring it vs ${c}?`, brought: (c) => `Brought vs ${c}`,
+  importTeam: 'Import as team', updateTeam: 'Update from guide', copyShowdown: 'Copy for Showdown', copiedShowdown: "Copied: in Showdown's teambuilder, New team → Import from text, paste", copyFailed: "Couldn't copy", bringIt: (c) => `Bring it vs ${c}`, bringAsk: (c) => `Bring it vs ${c}?`, brought: (c) => `Brought vs ${c}`,
   teamName: (c) => `vs ${c} (guide)`, reason: (c, d) => `from the ${c} guide${d ? ` (${fmtDate(d)})` : ''}`,
   previews: 'His preview shows…', bring4: 'Bring 4', lead: 'Lead', leads: 'Leads and turn 1', vs: 'vs', usePlan: 'Use on Plan board',
   tells: 'Read his tells', see: 'You see', means: 'It means', lose: 'How we lose', fix: 'Fix:', endgame: 'Endgame', ours: 'Our double KOs',

@@ -89,7 +89,7 @@ export const isMega = (P, g, id) => !!g.bring?.mega && base(P)(g.bring.mega.id) 
 export function teamButtons(P, g, ws) {
   if (!g.sets) return '';
   const team = P.docs.teams?.teams.find((t) => t.name === G.teamName(g.coach) && t.kind !== 'holding');
-  return `<p>${btn(team ? G.updateTeam : G.importTeam, team ? 'guide-update' : 'guide-import', { pov: g.pov, opp: g.opp, coach: g.coach })} ${team && ws ? btn(G.bringIt(g.coach), 'guide-bring', { team: team.id, ws: ws.id }, { cls: 'linkish' }) : ''}</p>`;
+  return `<p>${btn(team ? G.updateTeam : G.importTeam, team ? 'guide-update' : 'guide-import', { pov: g.pov, opp: g.opp, coach: g.coach })} ${btn(G.copyShowdown, 'guide-copy', { pov: g.pov, opp: g.opp, coach: g.coach })} ${team && ws ? btn(G.bringIt(g.coach), 'guide-bring', { team: team.id, ws: ws.id }, { cls: 'linkish' }) : ''}</p>`;
 }
 /** Every lead: our pair vs theirs, turns 1–3, the ifs, Use on Plan board. */
 export function leadsHtml(P, g, found) {
@@ -334,6 +334,12 @@ export const actions = {
     st.four = g.previews[i].bring4.map(base(P)).filter((id) => m.pov.picks.some((p) => p.id === id));
     if (st.four.length) st.lens = '4';
     P.saveUi(); P.app.rerender();
+  },
+  // the guide's six as Showdown export text, for Showdown's teambuilder (Import from text)
+  'guide-copy': async (t, P) => {
+    const g = guideFromData(P, t);
+    if (!g?.sets) return;
+    try { await P.app.copyText(g.sets.trim() + '\n'); P.toast(G.copiedShowdown); } catch { P.toast(G.copyFailed); }
   },
   'guide-import': (t, P) => {
     const g = guideFromData(P, t);

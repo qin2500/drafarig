@@ -403,6 +403,11 @@ test('the Guide tab renders the real Hex guide (5v1)', async (t) => {
   for (const x of g.threats) assert.ok(h.includes(x.title.slice(0, 20)), x.title);
   for (const x of g.team?.members ?? []) assert.ok(h.includes(x.role.slice(0, 20)), x.role);
   assert.ok(h.includes('Team preview and leads') && h.includes('Assumptions and evidence'));
+  // Copy for Showdown: the guide's six as Showdown export text, straight to the clipboard
+  await app.click({ pa: 'guide-copy', ...btns(app, 'guide-copy')[0] });
+  await app.waitFor(() => app.clipboard.length > 0, 'copied', 5000);
+  assert.equal(app.clipboard.at(-1), g.sets.trim() + '\n');
+  assert.match(app.clipboard.at(-1), /^Charizard @ Charizardite Y[\s\S]*Conkeldurr @ Life Orb\nAbility: Guts/);
 });
 
 test('route: #prep/<p>v<o>/guide round-trips; guide is a read-only tab', () => {
