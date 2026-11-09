@@ -39,3 +39,22 @@ each, seed 7500000): we win 76.0% overall; worst q007 Golisopod / Incineroar / F
 (his Trick Room up in 34 of 48, we win 35% of those) and q052 Golisopod / Incineroar / Torkoal / Mr. Rime / Rotom /
 Appletun 54% (Trick Room in 47 of 48). The others 77-92%. His plan to fear: lead Incineroar + a Trick Room setter
 (Mimikyu or Mr. Rime), Fake Out our answer, set Trick Room, sun Eruption behind it.
+
+## 4. Blind game-1 leads (yJ10, 240 games each, seed 7300000, paired with the AI-preview run)
+
+One fixed bring-4 and lead against every Jacky six (his AI picks normally).
+
+| Lead / back | All | His TR up | No TR | Lycanroc in six |
+|---|---|---|---|---|
+| AI preview (adapts per six) | 80 | 80 | 79 | 64 |
+| **Charizard + Rotom-Fan / Pelipper + Conkeldurr** | **78** | **77** | 80 | 69 |
+| Charizard + Conkeldurr / Pelipper + Rotom-Fan | 78 | 68 | 89 | 67 |
+| Charizard + Morpeko / Pelipper + Conkeldurr | 70 | 68 | 75 | 68 |
+| Charizard + Morpeko / Sinistcha + Conkeldurr | 61 | 48 | 82 | 54 |
+| Morpeko + Sinistcha / Charizard + Conkeldurr | 43 | 31 | 64 | 58 |
+
+Paired vs AI preview: −2 ±7, −2 ±6, −9 ±8, −19 ±7, −37 ±8. The default blind lead is Charizard + Rotom-Fan with Pelipper
++ Conkeldurr behind: level with the adaptive AI and the steadiest when his Trick Room goes up. The anti-Trick-Room lead
+(Taunt Morpeko + Sinistcha) is the worst (31% when Trick Room still goes up; 9% into Farigiraf + Torkoal). Sinistcha and
+Morpeko are rarely brought by the best fours; their value in the six is preview pressure and specific sixes. Soft spot
+for every lead: his Lycanroc-Midnight + Torkoal lead (35-55%).
