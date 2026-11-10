@@ -173,15 +173,15 @@ test('storage: the pilot document with mocks validates; without them (older buil
   assert.ok(validate('pilot', { ...base, mocks: [{ ...ok.mocks[0], useMyGuesses: 'yes' }] }).length);
 });
 
-test('a generated mock (W5 Hex): built from his 10, labelled sets, copy keeps it on the record; Edit saves on the mock; Regenerate asks first; own guesses opt-in', async (t) => {
+test('a generated mock (W3 Hex vs Jacky): built from his 10, labelled sets, copy keeps it on the record; Edit saves on the mock; Regenerate asks first; own guesses opt-in', async (t) => {
   const storage = device();
   const app = await mocks(t, 'prep/mocks', storage);
-  await app.changeData({ pc: 'mk-friend' }, { value: 'Calvin' });
-  await app.click({ pa: 'mk-week', friend: 'Calvin', week: '5' });
+  await app.changeData({ pc: 'mk-friend' }, { value: 'Jacky' });
+  await app.click({ pa: 'mk-week', friend: 'Jacky', week: '3' });
   await app.click({ pa: 'mk-play', ...btns(app, 'mk-play')[0] });
   await app.waitFor(() => /Generated from Hex/.test(T(app)), 'the generated team', 30000);
   const h = T(app);
-  for (const s of ['Play Hex(法拉) vs Calvin', 'A: best six', 'Item clause ok', 'Regenerate', "Use my saved guesses of Hex(法拉)'s sets", 'Calvin will see these sets']) assert.ok(h.includes(s), s);
+  for (const s of ['Play Hex(法拉) vs Jacky', 'A: best six', 'Item clause ok', 'Regenerate', "Use my saved guesses of Hex(法拉)'s sets", 'Jacky will see these sets']) assert.ok(h.includes(s), s);
   assert.match(h, /ladder|worst case|matchup-tuned/);
   // Copy for Showdown: exact export, no header; the generated team is kept on the running record
   await app.click({ pa: 'mk-copy', ...btns(app, 'mk-copy')[0] }); await flushSaves(app);
@@ -213,19 +213,19 @@ test('a generated mock (W5 Hex): built from his 10, labelled sets, copy keeps it
   assert.equal(rec().variants, undefined);
   await app.waitFor(() => /Generated from Hex/.test(T(app)) && !/edited/.test(T(app)), 'rebuilt', 30000);
   // the guesses toggle is opt-in and stored on the record
-  await app.changeData({ pc: 'mk-guesses', friend: 'Calvin', pilot: 'Hex(法拉)' }, { checked: true }); await flushSaves(app);
+  await app.changeData({ pc: 'mk-guesses', friend: 'Jacky', pilot: 'Hex(法拉)' }, { checked: true }); await flushSaves(app);
   assert.equal(rec().useMyGuesses, true);
   await app.waitFor(() => /Generated from Hex/.test(T(app)), 'rebuilt with guesses', 30000);
 });
 
-test('W5 Hex: a generated mock too, with the clauses checked and nothing saved until you use it', async (t) => {
+test('W3 Hex vs Jacky: a generated mock too, with the clauses checked and nothing saved until you use it', async (t) => {
   const storage = device();
   const app = await mocks(t, 'prep/mocks', storage);
-  await app.changeData({ pc: 'mk-friend' }, { value: 'Calvin' });
-  await app.click({ pa: 'mk-week', friend: 'Calvin', week: '5' });
+  await app.changeData({ pc: 'mk-friend' }, { value: 'Jacky' });
+  await app.click({ pa: 'mk-week', friend: 'Jacky', week: '3' });
   await app.click({ pa: 'mk-play', ...btns(app, 'mk-play')[0] });
   await app.waitFor(() => /Generated from Hex/.test(T(app)), 'the generated team', 30000);
-  assert.match(T(app), /Play Hex\(法拉\) vs Calvin · W5/);
+  assert.match(T(app), /Play Hex\(法拉\) vs Jacky · W3/);
   assert.match(T(app), /Item clause ok/);
   assert.equal(JSON.parse(storage.getItem(KEYS.pilot) ?? '{}').mocks, undefined, 'viewing saves nothing');
 });
