@@ -81,6 +81,11 @@ CT = [
     ('c10', 'Bulk Up Corviknight + Trick Room', 1, ['indee', 'corv_bulk', 'chompZ', 'rotomh', 'kleavor', 'arma_tr'], 'Corviknight walls Tsareena / Grimmsnarl / Mamoswine'),
     ('c11', 'Electroweb Rotom-Heat + Sash Kleavor', 1, ['chompZ', 'kleavor', 'rotomh_web', 'indee_fo', 'arma_tr', 'corv_tw'], 'Speed control on both modes'),
     ('c12', 'Forretress Trick Room, Mega Drampa', 1, ['indee', 'forre', 'arma_tr', 'drampaM', 'chomp_lo', 'rotomh'], 'Cheapest picks as TR abusers'),
+    # one-change variants of the stage-2 leader c08 (2026-11-09), for the engine confirm
+    ('c13', 'c08 with Rock Slide Kleavor', 1, ['chompZ', 'corv_tw', 'rotomh', 'arma_hw', 'kleavor_rs', 'drampa_b'], 'Spread Rock Slide (Volcarona 4x) instead of X-Scissor'),
+    ('c14', 'c08 with Electroweb Rotom-Heat', 1, ['chompZ', 'corv_tw', 'rotomh_web', 'arma_hw', 'kleavor', 'drampa_b'], 'Electroweb instead of Will-O-Wisp'),
+    ('c15', 'c08 with Fake Out Indeedee-F for Drampa', 1, ['chompZ', 'corv_tw', 'rotomh', 'arma_tr', 'kleavor', 'indee_fo'], 'Terrain + Fake Out + Trick Room option'),
+    ('c16', 'c08 with Mega Banette for Drampa (two stones)', 1, ['chompZ', 'corv_tw', 'rotomh', 'arma_hw', 'kleavor', 'banM'], 'Prankster Trick Room / Will-O-Wisp as the sixth'),
 ]
 # what Calvin expects Hex's sets to be (he piloted our Week 4 Hex model in the mock): every species, modal sets
 BELIEF = [('b01', 'belief: Hex core (Week 4 model)', 0, ['chompZ', 'indee', 'arma_tr', 'corv_tw', 'rotomh', 'kleavor'], 'beliefRef'),

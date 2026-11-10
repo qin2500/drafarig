@@ -365,7 +365,7 @@
    {
     "id": "c01",
     "label": "Psychic Terrain Trick Room + Sash Kleavor",
-    "weight": 0.0775,
+    "weight": 0.0592,
     "why": "His core with the two attackers that beat Anthony | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -388,7 +388,7 @@
    {
     "id": "c02",
     "label": "Kleavor + Rotom-Heat offense, Wide Guard Armarouge",
-    "weight": 0.0775,
+    "weight": 0.0592,
     "why": "Wide Guard vs Rock Slide / Muddy Water / Heat Wave | Armarouge: Focus Sash -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -411,7 +411,7 @@
    {
     "id": "c03",
     "label": "Tailwind vs Tailwind",
-    "weight": 0.0775,
+    "weight": 0.0592,
     "why": "Fast mode, double speed control | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "corv_tw",
@@ -434,7 +434,7 @@
    {
     "id": "c04",
     "label": "Fake Out Indeedee Trick Room, Mega Banette",
-    "weight": 0.0775,
+    "weight": 0.0592,
     "why": "Two Trick Room setters, Fake Out vs turn-1 Tailwind | Drampa: Life Orb -> Expert Belt (item clause); Garchomp: Life Orb -> Choice Scarf (item clause)",
     "sets": [
      "indee_fo",
@@ -457,7 +457,7 @@
    {
     "id": "c05",
     "label": "Mega Banette Prankster TR + Will-O-Wisp",
-    "weight": 0.0775,
+    "weight": 0.0592,
     "why": "Priority Trick Room | Garchomp: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "banM",
@@ -480,7 +480,7 @@
    {
     "id": "c06",
     "label": "Mega Drampa Trick Room",
-    "weight": 0.0775,
+    "weight": 0.0592,
     "why": "Mega on Drampa, Life Orb rocks on Garchomp | Garchomp: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -503,7 +503,7 @@
    {
     "id": "c07",
     "label": "Rock spam vs Volcarona / Staraptor",
-    "weight": 0.0775,
+    "weight": 0.0592,
     "why": "Rock Slide Kleavor, Sturdy Forretress | Indeedee-F: Rocky Helmet -> Sitrus Berry (item clause); Rotom-Heat: Sitrus Berry -> Leftovers (item clause); Corviknight: Leftovers -> Life Orb (item clause)",
     "sets": [
      "chompZ",
@@ -526,7 +526,7 @@
    {
     "id": "c08",
     "label": "No Indeedee: fast Mega-Z + Tailwind",
-    "weight": 0.0775,
+    "weight": 0.0592,
     "why": "Leaves the terrain home | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -549,7 +549,7 @@
    {
     "id": "c09",
     "label": "Core + Ditto",
-    "weight": 0.0775,
+    "weight": 0.0592,
     "why": "Scarf Ditto copies Mega Staraptor",
     "sets": [
      "chompZ",
@@ -572,7 +572,7 @@
    {
     "id": "c10",
     "label": "Bulk Up Corviknight + Trick Room",
-    "weight": 0.0775,
+    "weight": 0.0592,
     "why": "Corviknight walls Tsareena / Grimmsnarl / Mamoswine",
     "sets": [
      "indee",
@@ -595,7 +595,7 @@
    {
     "id": "c11",
     "label": "Electroweb Rotom-Heat + Sash Kleavor",
-    "weight": 0.0775,
+    "weight": 0.0592,
     "why": "Speed control on both modes",
     "sets": [
      "chompZ",
@@ -618,7 +618,7 @@
    {
     "id": "c12",
     "label": "Forretress Trick Room, Mega Drampa",
-    "weight": 0.0775,
+    "weight": 0.0592,
     "why": "Cheapest picks as TR abusers | Forretress: Rocky Helmet -> Leftovers (item clause); Garchomp: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -639,9 +639,101 @@
     "team": "Indeedee-F @ Rocky Helmet\nAbility: Psychic Surge\nLevel: 50\nEVs: 32 HP / 32 Def / 2 SpD\nRelaxed Nature\n- Follow Me\n- Helping Hand\n- Trick Room\n- Psychic\n\nForretress @ Leftovers\nAbility: Sturdy\nLevel: 50\nEVs: 32 HP / 32 Def / 2 SpD\nRelaxed Nature\n- Gyro Ball\n- Rock Slide\n- Body Press\n- Protect\n\nArmarouge @ Life Orb\nAbility: Flash Fire\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Expanding Force\n- Armor Cannon\n- Trick Room\n- Protect\n\nDrampa @ Drampanite\nAbility: Berserk\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpA\nQuiet Nature\n- Hyper Voice\n- Draco Meteor\n- Earth Power\n- Protect\n\nGarchomp @ Expert Belt\nAbility: Rough Skin\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Dragon Claw\n- Rock Slide\n- Earthquake\n- Protect\n\nRotom-Heat @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Overheat\n- Thunderbolt\n- Will-O-Wisp\n- Protect\n"
    },
    {
+    "id": "c13",
+    "label": "c08 with Rock Slide Kleavor",
+    "weight": 0.0592,
+    "why": "Spread Rock Slide (Volcarona 4x) instead of X-Scissor | Drampa: Life Orb -> Expert Belt (item clause)",
+    "sets": [
+     "chompZ",
+     "corv_tw",
+     "rotomh",
+     "arma_hw",
+     "kleavor_rs",
+     "drampa_b"
+    ],
+    "notes": {
+     "chompZ": "L: Mega-Z modal (Power Gem 82%)",
+     "corv_tw": "L: Tailwind 41%",
+     "rotomh": "L: Sitrus 43%",
+     "arma_hw": "L: fast spread attacker (Heat Wave 25%, Aura Sphere 16%) vs Kangaskhan",
+     "kleavor_rs": "C: Sash + spread Rock Slide (Volcarona 4x, Mega Staraptor neutral); Close Combat for Tauros / Mamoswine / Empoleon",
+     "drampa_b": "C: Berserk (Cloud Nine does nothing vs Calvin); Thunderbolt 2x into Staraptor / Basculegion-F / Empoleon"
+    },
+    "team": "Garchomp @ Garchompite Z\nAbility: Rough Skin\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Draco Meteor\n- Earth Power\n- Power Gem\n- Protect\n\nCorviknight @ Leftovers\nAbility: Mirror Armor\nLevel: 50\nEVs: 32 HP / 2 Atk / 32 SpD\nCareful Nature\n- Brave Bird\n- Tailwind\n- Roost\n- Bulk Up\n\nRotom-Heat @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Overheat\n- Thunderbolt\n- Will-O-Wisp\n- Protect\n\nArmarouge @ Life Orb\nAbility: Flash Fire\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Expanding Force\n- Heat Wave\n- Aura Sphere\n- Protect\n\nKleavor @ Focus Sash\nAbility: Sharpness\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Stone Axe\n- Rock Slide\n- Close Combat\n- Protect\n\nDrampa @ Expert Belt\nAbility: Berserk\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Hyper Voice\n- Draco Meteor\n- Thunderbolt\n- Protect\n"
+   },
+   {
+    "id": "c14",
+    "label": "c08 with Electroweb Rotom-Heat",
+    "weight": 0.0592,
+    "why": "Electroweb instead of Will-O-Wisp | Drampa: Life Orb -> Expert Belt (item clause)",
+    "sets": [
+     "chompZ",
+     "corv_tw",
+     "rotomh_web",
+     "arma_hw",
+     "kleavor",
+     "drampa_b"
+    ],
+    "notes": {
+     "chompZ": "L: Mega-Z modal (Power Gem 82%)",
+     "corv_tw": "L: Tailwind 41%",
+     "rotomh_web": "C: Electroweb speed control vs his Tailwind",
+     "arma_hw": "L: fast spread attacker (Heat Wave 25%, Aura Sphere 16%) vs Kangaskhan",
+     "kleavor": "L: Sash 45%",
+     "drampa_b": "C: Berserk (Cloud Nine does nothing vs Calvin); Thunderbolt 2x into Staraptor / Basculegion-F / Empoleon"
+    },
+    "team": "Garchomp @ Garchompite Z\nAbility: Rough Skin\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Draco Meteor\n- Earth Power\n- Power Gem\n- Protect\n\nCorviknight @ Leftovers\nAbility: Mirror Armor\nLevel: 50\nEVs: 32 HP / 2 Atk / 32 SpD\nCareful Nature\n- Brave Bird\n- Tailwind\n- Roost\n- Bulk Up\n\nRotom-Heat @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Overheat\n- Thunderbolt\n- Electroweb\n- Protect\n\nArmarouge @ Life Orb\nAbility: Flash Fire\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Expanding Force\n- Heat Wave\n- Aura Sphere\n- Protect\n\nKleavor @ Focus Sash\nAbility: Sharpness\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Stone Axe\n- X-Scissor\n- Close Combat\n- Protect\n\nDrampa @ Expert Belt\nAbility: Berserk\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Hyper Voice\n- Draco Meteor\n- Thunderbolt\n- Protect\n"
+   },
+   {
+    "id": "c15",
+    "label": "c08 with Fake Out Indeedee-F for Drampa",
+    "weight": 0.0592,
+    "why": "Terrain + Fake Out + Trick Room option",
+    "sets": [
+     "chompZ",
+     "corv_tw",
+     "rotomh",
+     "arma_tr",
+     "kleavor",
+     "indee_fo"
+    ],
+    "notes": {
+     "chompZ": "L: Mega-Z modal (Power Gem 82%)",
+     "corv_tw": "L: Tailwind 41%",
+     "rotomh": "L: Sitrus 43%",
+     "arma_tr": "L: Life Orb 49%, Quiet TR spread",
+     "kleavor": "L: Sash 45%",
+     "indee_fo": "C: Fake Out (stops a turn-1 Tailwind); Psychic 2x into Mega Staraptor"
+    },
+    "team": "Garchomp @ Garchompite Z\nAbility: Rough Skin\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Draco Meteor\n- Earth Power\n- Power Gem\n- Protect\n\nCorviknight @ Leftovers\nAbility: Mirror Armor\nLevel: 50\nEVs: 32 HP / 2 Atk / 32 SpD\nCareful Nature\n- Brave Bird\n- Tailwind\n- Roost\n- Bulk Up\n\nRotom-Heat @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Overheat\n- Thunderbolt\n- Will-O-Wisp\n- Protect\n\nArmarouge @ Life Orb\nAbility: Flash Fire\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Expanding Force\n- Armor Cannon\n- Trick Room\n- Protect\n\nKleavor @ Focus Sash\nAbility: Sharpness\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Stone Axe\n- X-Scissor\n- Close Combat\n- Protect\n\nIndeedee-F @ Rocky Helmet\nAbility: Psychic Surge\nLevel: 50\nEVs: 32 HP / 32 Def / 2 SpD\nRelaxed Nature\n- Fake Out\n- Follow Me\n- Trick Room\n- Psychic\n"
+   },
+   {
+    "id": "c16",
+    "label": "c08 with Mega Banette for Drampa (two stones)",
+    "weight": 0.0592,
+    "why": "Prankster Trick Room / Will-O-Wisp as the sixth",
+    "sets": [
+     "chompZ",
+     "corv_tw",
+     "rotomh",
+     "arma_hw",
+     "kleavor",
+     "banM"
+    ],
+    "notes": {
+     "chompZ": "L: Mega-Z modal (Power Gem 82%)",
+     "corv_tw": "L: Tailwind 41%",
+     "rotomh": "L: Sitrus 43%",
+     "arma_hw": "L: fast spread attacker (Heat Wave 25%, Aura Sphere 16%) vs Kangaskhan",
+     "kleavor": "L: Sash 45%",
+     "banM": "L: Mega Prankster TR (ladder 0.04%)"
+    },
+    "team": "Garchomp @ Garchompite Z\nAbility: Rough Skin\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Draco Meteor\n- Earth Power\n- Power Gem\n- Protect\n\nCorviknight @ Leftovers\nAbility: Mirror Armor\nLevel: 50\nEVs: 32 HP / 2 Atk / 32 SpD\nCareful Nature\n- Brave Bird\n- Tailwind\n- Roost\n- Bulk Up\n\nRotom-Heat @ Sitrus Berry\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Overheat\n- Thunderbolt\n- Will-O-Wisp\n- Protect\n\nArmarouge @ Life Orb\nAbility: Flash Fire\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Expanding Force\n- Heat Wave\n- Aura Sphere\n- Protect\n\nKleavor @ Focus Sash\nAbility: Sharpness\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Stone Axe\n- X-Scissor\n- Close Combat\n- Protect\n\nBanette @ Banettite\nAbility: Insomnia\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nAdamant Nature\n- Poltergeist\n- Trick Room\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
     "id": "h01",
     "label": "Core + Drampa (ladder sets)",
-    "weight": 0.0078,
+    "weight": 0.0059,
     "why": "His five big picks + Cloud Nine Drampa: the most likely single six | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -664,7 +756,7 @@
    {
     "id": "h02",
     "label": "Core + Kleavor",
-    "weight": 0.0062,
+    "weight": 0.0047,
     "why": "Core + his next physical attacker",
     "sets": [
      "chompZ",
@@ -687,7 +779,7 @@
    {
     "id": "h03",
     "label": "Psychic Terrain Trick Room, Mega Drampa",
-    "weight": 0.0047,
+    "weight": 0.0036,
     "why": "Full TR mode around Indeedee + Armarouge | Garchomp: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -710,7 +802,7 @@
    {
     "id": "h04",
     "label": "Anti-Charizard rocks, no Mega",
-    "weight": 0.0054,
+    "weight": 0.0041,
     "why": "Every answer to Charizard: Rock Slide x2, Wide Guard, Cloud Nine | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chomp_scarf",
@@ -733,7 +825,7 @@
    {
     "id": "h05",
     "label": "Tailwind offense",
-    "weight": 0.0047,
+    "weight": 0.0036,
     "why": "Double Tailwind, fast mode instead of TR | Armarouge: Focus Sash -> Expert Belt (item clause)",
     "sets": [
      "corv_tw",
@@ -756,7 +848,7 @@
    {
     "id": "h06",
     "label": "Mega Banette Prankster Trick Room",
-    "weight": 0.0031,
+    "weight": 0.0024,
     "why": "Priority TR; Garchomp loses its Mega | Drampa: Life Orb -> Expert Belt (item clause); Garchomp: Life Orb -> Choice Scarf (item clause)",
     "sets": [
      "banM",
@@ -779,7 +871,7 @@
    {
     "id": "h07",
     "label": "TR + Imprison (anti-Sinistcha)",
-    "weight": 0.0031,
+    "weight": 0.0024,
     "why": "Stops Sinistcha undoing his Trick Room | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "indee_imp",
@@ -802,7 +894,7 @@
    {
     "id": "h08",
     "label": "Sand Force Mega Garchomp",
-    "weight": 0.0023,
+    "weight": 0.0018,
     "why": "The other Garchomp Mega (bulky, works in TR)",
     "sets": [
      "chompM",
@@ -825,7 +917,7 @@
    {
     "id": "h09",
     "label": "No Corviknight: Kleavor + Drampa",
-    "weight": 0.0039,
+    "weight": 0.003,
     "why": "Corviknight benched for both cheap attackers | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -848,7 +940,7 @@
    {
     "id": "h10",
     "label": "Scarf Garchomp + Mega Drampa",
-    "weight": 0.0031,
+    "weight": 0.0024,
     "why": "Mega on Drampa, Scarf rocks on Garchomp",
     "sets": [
      "chomp_scarf",
@@ -871,7 +963,7 @@
    {
     "id": "h11",
     "label": "Human: Ditto",
-    "weight": 0.0023,
+    "weight": 0.0018,
     "why": "Comfort pick: Scarf Ditto copies Charizard / Kangaskhan",
     "sets": [
      "chompZ",
@@ -894,7 +986,7 @@
    {
     "id": "h12",
     "label": "Bulk Up Corviknight balance",
-    "weight": 0.0031,
+    "weight": 0.0024,
     "why": "Bulky Corviknight + Wide Guard Armarouge",
     "sets": [
      "chompZ",
@@ -917,7 +1009,7 @@
    {
     "id": "h13",
     "label": "Scarf Rotom-Heat offense",
-    "weight": 0.0023,
+    "weight": 0.0018,
     "why": "Scarf Rotom-Heat | Kleavor: Focus Sash -> Life Orb (item clause)",
     "sets": [
      "chompZ",
@@ -940,7 +1032,7 @@
    {
     "id": "h14",
     "label": "Full anti-Anthony",
-    "weight": 0.0039,
+    "weight": 0.003,
     "why": "Rock Slide x2, Cloud Nine, Wide Guard, Imprison | Drampa: Life Orb -> Expert Belt (item clause); Armarouge: Focus Sash -> Leftovers (item clause)",
     "sets": [
      "chomp_lo",
@@ -963,7 +1055,7 @@
    {
     "id": "h15",
     "label": "Forretress Trick Room",
-    "weight": 0.0016,
+    "weight": 0.0012,
     "why": "Cheapest pick as a Sturdy TR abuser | Forretress: Rocky Helmet -> Leftovers (item clause); Garchomp: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -986,7 +1078,7 @@
    {
     "id": "h16",
     "label": "Prankster Taunt / Encore, fast",
-    "weight": 0.0023,
+    "weight": 0.0018,
     "why": "Banette stops our Trick Room with priority | Armarouge: Focus Sash -> Expert Belt (item clause)",
     "sets": [
      "banM_enc",
@@ -1009,7 +1101,7 @@
    {
     "id": "h17",
     "label": "No Indeedee: fast Garchomp-Z",
-    "weight": 0.0031,
+    "weight": 0.0024,
     "why": "Leaves the terrain home; Heat Wave Armarouge | Drampa: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "chompZ",
@@ -1032,7 +1124,7 @@
    {
     "id": "h18",
     "label": "Mega Drampa TR + rocks",
-    "weight": 0.0031,
+    "weight": 0.0024,
     "why": "TR mode with Rock Slide backups | Garchomp: Life Orb -> Expert Belt (item clause)",
     "sets": [
      "indee",
@@ -1055,7 +1147,7 @@
    {
     "id": "h19",
     "label": "Human: Banette + Ditto",
-    "weight": 0.0016,
+    "weight": 0.0012,
     "why": "Low-cost comfort picks | Garchomp: Choice Scarf -> Expert Belt (item clause)",
     "sets": [
      "banM",
@@ -1078,7 +1170,7 @@
    {
     "id": "h20",
     "label": "Special Garchomp-Z, Bulk Up Corviknight",
-    "weight": 0.0023,
+    "weight": 0.0018,
     "why": "Flamethrower Mega-Z for Aegislash | Armarouge: Focus Sash -> Expert Belt (item clause)",
     "sets": [
      "chompZ_fire",
