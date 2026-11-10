@@ -14,6 +14,7 @@ function side(x) {
 export function run(c) {
   const a = side(c.attacker), d = side(c.defender);
   a.set.moves = [c.move]; d.set.moves = ['protect'];
+  if (c.field?.intimidate) a.state.intimidated = Number(c.field.intimidate); // as verify_curated.mjs seeds it
   const r = calc.run({ attacker: a, defender: d, move: { id: c.move }, field: { weather: c.field?.weather ?? '', ...(c.field?.terrain ? { terrain: c.field.terrain } : {}) } });
   if (r.class !== 'exact') return { ...c, range: `${r.class}${r.code ? ' ' + r.code : ''}` };
   return { ...c, range: `${(100 * r.range.min / r.maxHP).toFixed(1)}–${(100 * r.range.max / r.maxHP).toFixed(1)}%` };
