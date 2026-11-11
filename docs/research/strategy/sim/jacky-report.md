@@ -58,3 +58,44 @@ Paired vs AI preview: −2 ±7, −2 ±6, −9 ±8, −19 ±7, −37 ±8. The de
 (Taunt Morpeko + Sinistcha) is the worst (31% when Trick Room still goes up; 9% into Farigiraf + Torkoal). Sinistcha and
 Morpeko are rarely brought by the best fours; their value in the six is preview pressure and specific sixes. Soft spot
 for every lead: his Lycanroc-Midnight + Torkoal lead (35-55%).
+
+## 5. Follow-up tests (2026-11-11, engine, paired vs yJ10 79.6%)
+
+| Change | Paired | Verdict |
+|---|---|---|
+| Fire Punch for Ice Punch on Conkeldurr | −2.1 ±4.4 | tie, keep Ice Punch |
+| Inner Focus Silk Scarf Kangaskhan (no Mega) for Morpeko | −8.8 ±7.6 | worse |
+| Same Kangaskhan for Rotom-Fan | −5.8 ±6.7 | worse |
+| Aegislash for Rotom-Fan (yJ07) | −20.0 ±7.4 | worse; his Trick Room up 50% to 82% |
+
+Lycanroc sixes (seed 7600000, 96 games each): Charizard + Rotom-Fan / Pelipper + Conkeldurr 69%; **Sinistcha +
+Conkeldurr / Pelipper + Charizard 78%** (+9 ±10; 84% when his Trick Room goes up); Pelipper + Conkeldurr / Charizard +
+Sinistcha 71%. Into his Lycanroc + Torkoal lead: 43 / 52 / 62%. Pivoting Charizard into Pelipper on turn 1 costs Pelipper
+86-103% and Rotom-Fan 81-98% from Rock Slide + Eruption: the guide forbids it.
+
+Trick Room sixes (j01, j02, j05, q007, q052, j20; seed 7700000): default lead 78%; Charizard + Conkeldurr / Sinistcha +
+Pelipper 80% (+2 ±11); Sinistcha + Conkeldurr / Pelipper + Charizard 69% (−9). Default kept. Under Trick Room, Torkoal
+(36) and Brave Golisopod (54) still move before Conkeldurr (58).
+
+## 6. Adversarial set search: his worst tuned team (2026-11-11)
+
+Sections 2-3 searched his sixes with default sets and weighted the anti-Anthony six (j07) at 6%. Here his three best
+sixes vs yJ10 (q007, q052, j07) get every one-set change from his library (`gen_jacky_adv.py`, pool
+`tools/sim/candidates/jacky-adv.json`), engine both sides, closed sheets.
+
+- Stage 1 (50 variants x 24 games, our AI preview, seed 7800000): the j07 family is the danger, 21-42% (base 42%); the
+  Trick Room bases q007 / q052 stay 54-100% under every set change. Changes did not stack (stage 2).
+- Stage 2 (96 games each, guide preview, seed 7900000): **j07 as built is his worst team: 39% ±10** (29% into his
+  Farigiraf + Lycanroc lead). Helping Hand Farigiraf 49%; adding Yawn Torkoal / other Golisopod sets 54-59%; his best tuned
+  Trick Room sixes 69-79% (Sinistcha's Trick Room and rain hold).
+- Stage 3, our four vs j07 + its Helping Hand variant (192 paired games, seed 8000000): Sinistcha + Conkeldurr /
+  Pelipper + Rotom-Fan (no Charizard) **64%**, +13.5 ±8.8 over the guide's Lycanroc four (50%); Charizard + Rotom-Fan lead
+  39%; every four without Pelipper 19-23%.
+- The no-Charizard four is not a general Lycanroc answer: vs his default Lycanroc sixes (seed 7600000) 71% vs 78%
+  (−7 ±12), and 44% vs 88% into Lycanroc + Mr. Rime (j03). It is the answer when Lycanroc and Rotom-Mow are both in his
+  six: vs three default-set Lycanroc + Rotom-Mow sixes (288 paired games, seed 8100000) 80% vs 70%, +10.4 ±6.7 (Sash
+  Lycanroc +19, Life Orb Brave Lycanroc −6 ±10).
+
+Guide change: new first preview row `Lycanroc-Midnight+Rotom-Mow` brings Sinistcha, Conkeldurr, Pelipper, Rotom-Fan
+(lead Sinistcha + Conkeldurr). Headline: his worst tuned team is ~40% for the old plan, ~64% with the new row. Rotom-Fan
+holds its slot here: it is in the best four against his worst team.
