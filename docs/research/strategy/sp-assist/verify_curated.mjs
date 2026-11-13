@@ -23,7 +23,8 @@ const sources = only.length
 for (const [dir, files] of sources) {
   for (const f of files) {
     const g = (await import(new URL(`${dir}/${f}`, ROOT))).default;
-    for (const [i, c] of [...(g.calcs ?? []), ...(g.deep?.calcs ?? [])].entries()) {
+    // alternatives' calcs and addCalcs (lib/guides/index.mjs applyAlt) count too
+    for (const [i, c] of [...(g.calcs ?? []), ...(g.deep?.calcs ?? []), ...(g.alternatives ?? []).flatMap((a) => [...(a.calcs ?? []), ...(a.addCalcs ?? [])])].entries()) {
       const a = side(c.attacker), d = side(c.defender);
       a.set.moves = [c.move];
       d.set.moves = ['protect'];

@@ -851,7 +851,7 @@ export const GUIDE = {
   gone: '(no longer on the roster)', seatMoved: (seat, c) => `Game plan was written for seat ${seat} (${c}), who isn't on the sheet now.`,
   remember: 'Remember', bring: 'Bring', bench: 'Bench', megaWhy: (mon) => `Mega: ${mon}`, benchWhy: 'Why this six',
   importTeam: 'Import as team', updateTeam: 'Update from guide', copyShowdown: 'Copy for Showdown', copiedShowdown: "Copied: in Showdown's teambuilder, New team → Import from text, paste", copyFailed: "Couldn't copy", bringIt: (c) => `Bring it vs ${c}`, bringAsk: (c) => `Bring it vs ${c}?`, brought: (c) => `Brought vs ${c}`,
-  teamName: (c) => `vs ${c} (guide)`, reason: (c, d) => `from the ${c} guide${d ? ` (${fmtDate(d)})` : ''}`,
+  teamName: (c, a) => `vs ${c} (guide${a ? `: ${a}` : ''})`, alts: 'Alternative teams', reason: (c, d) => `from the ${c} guide${d ? ` (${fmtDate(d)})` : ''}`,
   previews: 'His preview shows…', bring4: 'Bring 4', lead: 'Lead', leads: 'Leads and turn 1', vs: 'vs', usePlan: 'Use on Plan board',
   tells: 'Read his tells', see: 'You see', means: 'It means', lose: 'How we lose', fix: 'Fix:', endgame: 'Endgame', ours: 'Our double KOs',
   comboNote: 'Total from the guide (two hits on the same target). Open each part to check it.',

@@ -2,7 +2,7 @@
 // is not a page: each field lands where Anthony already makes that decision — the Brief's "Game plan" card, notes on the
 // pool cards and detail sheets, the teambuilder, workbench links for every guide number, "Can wreck you", Teams, the Plan
 // board, Move search. Only for your own side (P.ownSide() is the guide's pov coach). Everything it adds wears a "Guide" pill.
-import { guideFor, staleness, matchCalc, orphanAt, GUIDES, validateGuide } from '../lib/guides/index.mjs';
+import { guideFor, applyAlt, staleness, matchCalc, orphanAt, GUIDES, validateGuide } from '../lib/guides/index.mjs';
 import { parseTeamQuick } from '../lib/paste.mjs';
 import { legalAbilities, toID, learnset } from '../lib/calc/mech.mjs';
 import { currentVersion, addVersion, newLineage, cleanSetData } from '../lib/prep-model.mjs';
@@ -24,10 +24,11 @@ export function guideOf(P, povName, oppName) {
   const mock = MockPov.guideFor(P, povName, oppName);
   if (mock !== undefined) return mock;
   if (!P.mech || !povName || !oppName || povName !== P.ownSide()) return null;
-  const found = guideFor(P.seatOf(povName), P.seatOf(oppName), oppName, { mech: P.mech });
+  const found = guideFor(P.seatOf(povName), P.seatOf(oppName), oppName, { mech: P.mech, alt: P.ui.guideAlt?.[oppName] });
   if (!found) return null;
   return { ...found, ...staleness(found.guide, P.coachRoster(oppName), P.coachRoster(povName), base(P)) };
 }
+const tname = (g) => G.teamName(g.coach, g.alt !== 'main' ? g.alts.find((a) => a.key === g.alt)?.name : '');
 const pill = (g) => `<span class="gpill" title="${esc(G.pillTip(g.written ?? ''))}">${esc(g.pillText ?? G.pill)}</span>`;
 export const nm = (P, id) => P.spName(id);
 export const list = (items, tag = 'ul', cls = '') => (items.length ? `<${tag} class="gd-list ${cls}">${items.map((x) => `<li>${x}</li>`).join('')}</${tag}>` : '');
@@ -88,7 +89,7 @@ export const isMega = (P, g, id) => !!g.bring?.mega && base(P)(g.bring.mega.id) 
 /** Import as team / Update from guide, and Bring it (ws: this matchup's workspace, if any). */
 export function teamButtons(P, g, ws) {
   if (!g.sets) return '';
-  const team = P.docs.teams?.teams.find((t) => t.name === G.teamName(g.coach) && t.kind !== 'holding');
+  const team = P.docs.teams?.teams.find((t) => t.name === tname(g) && t.kind !== 'holding');
   return `<p>${btn(team ? G.updateTeam : G.importTeam, team ? 'guide-update' : 'guide-import', { pov: g.pov, opp: g.opp, coach: g.coach })} ${btn(G.copyShowdown, 'guide-copy', { pov: g.pov, opp: g.opp, coach: g.coach })} ${team && ws ? btn(G.bringIt(g.coach), 'guide-bring', { team: team.id, ws: ws.id }, { cls: 'linkish' }) : ''}</p>`;
 }
 /** Every lead: our pair vs theirs, turns 1–3, the ifs, Use on Plan board. */
@@ -111,7 +112,8 @@ export function headHtml(P, g, found, { assumptions = 2 } = {}) {
   const head = `${pill(g)} <span class="small muted">${esc(G.written(g.written, g.assumptions.slice(0, assumptions).join(' · ')))}</span>${assumptions && g.assumptions.length > assumptions ? ` <details class="gd-more"><summary>${esc(G.moreShort)}</summary>${list(g.assumptions.map(esc), 'ul', 'small')}</details>` : ''}`;
   const staleThem = found.added.length || found.removed.length ? `<p class="banner warn small">${esc(G.staleThem(g.coach, [...found.added.map((id) => `+ ${nm(P, id)}`), ...found.removed.map((id) => `− ${nm(P, id)}`)].join(', '), found.removed.map((id) => nm(P, id)).join(', ')))}</p>` : '';
   const staleUs = found.ours.added.length || found.ours.removed.length ? `<p class="banner warn small">${esc(G.staleUs([...found.ours.added.map((id) => `+ ${nm(P, id)}`), ...found.ours.removed.map((id) => `− ${nm(P, id)}`)].join(', ')))}</p>` : '';
-  return `<p class="gd-head">${head}</p>${staleThem}${staleUs}`;
+  const alts = g.alts?.length > 1 ? `<div class="choices" role="group" aria-label="${esc(G.alts)}">${g.alts.map((a) => chipBtn(a.name, 'guide-alt', { coach: g.coach, k: a.key }, a.key === g.alt)).join('')}</div>${g.alts.find((a) => a.key === g.alt)?.note ? `<p class="small muted">${esc(g.alts.find((a) => a.key === g.alt).note)}</p>` : ''}` : '';
+  return `<p class="gd-head">${head}</p>${alts}${staleThem}${staleUs}`;
 }
 /** Does this matchup have a full guide page? Every real guide does; a mock's game plan (prep-mockpov.js) stays on the Brief. */
 export function hasPage(P, m) {
@@ -212,7 +214,7 @@ export function setDiff(P, mine, theirs) {
 /** The guide whose team this is ("vs <coach> (guide)"), validated, or null. */
 export function guideOfTeam(P, team) {
   if (!team || !P.mech) return null;
-  for (const raw of GUIDES) { const v = validateGuide(raw, P.mech).guide; if (v && team.name === G.teamName(v.coach)) return v; }
+  for (const raw of GUIDES) for (const k of ['main', ...(raw.alternatives ?? []).map((a) => a.key)]) { const v = validateGuide(applyAlt(raw, k), P.mech).guide; if (v && team.name === tname(v)) return v; }
   return null;
 }
 /** A slot of the guide's team whose set differs from the guide's: "Guide differs · Use guide version", or ''. */
@@ -344,13 +346,13 @@ export const actions = {
   'guide-import': (t, P) => {
     const g = guideFromData(P, t);
     if (!g?.sets) return;
-    importTeamText(P, `=== [gen9championsvgc2026regmc] ${G.teamName(g.coach)} ===\n\n${g.sets}`, null, { reason: G.reason(g.coach, g.written), bringFor: g.coach });
+    importTeamText(P, `=== [gen9championsvgc2026regmc] ${tname(g)} ===\n\n${g.sets}`, null, { reason: G.reason(g.coach, g.written), bringFor: g.coach });
   },
   // Update from guide (lead decision 2): adds the missing species; a set you have is never overwritten (its slot offers
   // "Use guide version", which adds a version)
   'guide-update': (t, P) => {
     const g = guideFromData(P, t);
-    const team = g ? P.docs.teams?.teams.find((x) => x.name === G.teamName(g.coach) && x.kind !== 'holding') : null;
+    const team = g ? P.docs.teams?.teams.find((x) => x.name === tname(g) && x.kind !== 'holding') : null;
     if (!g || !team) return;
     const sets = guideSetFor(P, g, '');
     const inTeam = team.slots.map((id) => P.lineage(id)).filter(Boolean);
@@ -389,5 +391,16 @@ export const actions = {
     P.ui.guidePlan = { coach: g.coach, vs: lead.vs };
     P.go({ view: 'ws', pov: m.pov.order, opp: m.opp.order, tab: 'plan' }, { push: true });
   },
+  'guide-alt': (t, P) => {
+    (P.ui.guideAlt ??= {})[t.dataset.coach] = t.dataset.k;
+    for (const [key, st] of Object.entries(P.ui.brief ?? {})) {
+      const [pov, opp] = key.split('|');
+      if (opp !== t.dataset.coach) continue;
+      const six = (guideOf(P, pov, opp)?.guide.bring?.six ?? []).map(base(P));
+      if (st.four?.some((id) => !six.includes(id))) { st.four = []; if (st.lens === '4') st.lens = '10'; }
+      st.preview = 0;
+    }
+    if (P.ui.guidePlan?.coach === t.dataset.coach) P.ui.guidePlan = null;
+    P.saveUi(); P.app.rerender(); },
   'guide-sheet': (t, P) => { P.ui.guideSheet = !t.dataset.key || P.ui.guideSheet === t.dataset.key ? null : t.dataset.key; P.app.rerender(); },
 };
