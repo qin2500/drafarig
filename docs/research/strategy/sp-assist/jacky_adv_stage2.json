@@ -7,5 +7,11 @@
  "sF": ["goliM_fi", "incin_chople", "tork", "rime", "rotomb", "apple"],
  "lm1": ["goliM", "incin", "fari", "tork", "mow", "lyc"],
  "lm2": ["goliM", "incin", "fari", "tork", "mow", "lyc_fast"],
- "lm3": ["goliM", "incin", "fari", "tork", "mow_wisp", "lyc_fast"]
+ "lm3": ["goliM", "incin", "fari", "tork", "mow_wisp", "lyc_fast"],
+ "rs07": ["goliM_rs", "incin_chople", "fari_tb", "tork", "mow_wisp", "lyc_fast"],
+ "rsTR": ["goliM_rs", "incin", "fari", "tork", "mow", "mimi_tr"],
+ "rsTR2": ["goliM_rs", "incin", "fari", "tork", "mimi_tr", "rime"],
+ "t01": ["goliM", "incin", "fari", "tork", "mow", "mimi_tr"],
+ "t05": ["goliM", "incin", "fari", "tork", "mimi_tr", "rime"],
+ "t06": ["goliM_sp", "incin", "fari", "tork", "rime", "lyc"]
 }

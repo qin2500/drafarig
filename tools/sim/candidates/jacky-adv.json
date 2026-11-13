@@ -11,7 +11,7 @@
    {
     "id": "aq007",
     "label": "q007 base",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "base | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -34,7 +34,7 @@
    {
     "id": "aq007-goliM_sd",
     "label": "q007: goliM -> goliM_sd",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM_sd",
@@ -57,7 +57,7 @@
    {
     "id": "aq007-goliM_cc",
     "label": "q007: goliM -> goliM_cc",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM_cc",
@@ -80,7 +80,7 @@
    {
     "id": "aq007-goliM_aj",
     "label": "q007: goliM -> goliM_aj",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM_aj",
@@ -103,7 +103,7 @@
    {
     "id": "aq007-goliM_fi",
     "label": "q007: goliM -> goliM_fi",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM_fi",
@@ -126,7 +126,7 @@
    {
     "id": "aq007-goliM_sp",
     "label": "q007: goliM -> goliM_sp",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM_sp",
@@ -147,9 +147,32 @@
     "team": "Golisopod @ Golisopite\nAbility: Emergency Exit\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Leech Life\n- Iron Head\n- Sucker Punch\n- Protect\n\nIncineroar @ Sitrus Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nCareful Nature\n- Fake Out\n- Parting Shot\n- Flare Blitz\n- Darkest Lariat\n\nFarigiraf @ Focus Sash\nAbility: Armor Tail\nLevel: 50\nEVs: 27 HP / 20 Def / 19 SpD\nBold Nature\n- Trick Room\n- Psychic\n- Thunderbolt\n- Helping Hand\n\nTorkoal @ Charcoal\nAbility: Drought\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Eruption\n- Weather Ball\n- Earth Power\n- Protect\n\nMimikyu @ Mental Herb\nAbility: Disguise\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Trick Room\n- Play Rough\n- Shadow Sneak\n- Will-O-Wisp\n\nRotom @ Leftovers\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n"
    },
    {
+    "id": "aq007-goliM_rs",
+    "label": "q007: goliM -> goliM_rs",
+    "weight": 0.0147,
+    "why": "one-set change | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom: Sitrus Berry -> Leftovers (item clause)",
+    "sets": [
+     "goliM_rs",
+     "incin",
+     "fari",
+     "tork",
+     "mimi_tr",
+     "rotomb"
+    ],
+    "notes": {
+     "goliM_rs": "W: Rock Slide into Charizard under Trick Room",
+     "incin": "L: modal (Lariat 42% > Throat Chop 29%)",
+     "fari": "L: modal (TR 98, Psychic 81, Thunderbolt 70, HH 42)",
+     "tork": "L: modal",
+     "mimi_tr": "L: TR setter (Mental Herb 14%, Wisp 20%)",
+     "rotomb": "H: no ladder data; Wisp + coverage"
+    },
+    "team": "Golisopod @ Golisopite\nAbility: Emergency Exit\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nAdamant Nature\n- Leech Life\n- Rock Slide\n- Sucker Punch\n- Protect\n\nIncineroar @ Sitrus Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nCareful Nature\n- Fake Out\n- Parting Shot\n- Flare Blitz\n- Darkest Lariat\n\nFarigiraf @ Focus Sash\nAbility: Armor Tail\nLevel: 50\nEVs: 27 HP / 20 Def / 19 SpD\nBold Nature\n- Trick Room\n- Psychic\n- Thunderbolt\n- Helping Hand\n\nTorkoal @ Charcoal\nAbility: Drought\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Eruption\n- Weather Ball\n- Earth Power\n- Protect\n\nMimikyu @ Mental Herb\nAbility: Disguise\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Trick Room\n- Play Rough\n- Shadow Sneak\n- Will-O-Wisp\n\nRotom @ Leftovers\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n"
+   },
+   {
     "id": "aq007-incin_wisp",
     "label": "q007: incin -> incin_wisp",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -172,7 +195,7 @@
    {
     "id": "aq007-incin_snarl",
     "label": "q007: incin -> incin_snarl",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -195,7 +218,7 @@
    {
     "id": "aq007-incin_chople",
     "label": "q007: incin -> incin_chople",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -218,7 +241,7 @@
    {
     "id": "aq007-incin_lariat",
     "label": "q007: incin -> incin_lariat",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -241,7 +264,7 @@
    {
     "id": "aq007-fari_hh",
     "label": "q007: fari -> fari_hh",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -264,7 +287,7 @@
    {
     "id": "aq007-fari_tb",
     "label": "q007: fari -> fari_tb",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -287,7 +310,7 @@
    {
     "id": "aq007-fari_colbur",
     "label": "q007: fari -> fari_colbur",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -310,7 +333,7 @@
    {
     "id": "aq007-tork_hh",
     "label": "q007: tork -> tork_hh",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -333,7 +356,7 @@
    {
     "id": "aq007-tork_yawn",
     "label": "q007: tork -> tork_yawn",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -356,7 +379,7 @@
    {
     "id": "aq007-tork_sb",
     "label": "q007: tork -> tork_sb",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -379,7 +402,7 @@
    {
     "id": "aq007-mimi",
     "label": "q007: mimi_tr -> mimi",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -402,7 +425,7 @@
    {
     "id": "aq007-mimi_sun",
     "label": "q007: mimi_tr -> mimi_sun",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -425,7 +448,7 @@
    {
     "id": "aq052",
     "label": "q052 base",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "base | Rotom: Sitrus Berry -> Leftovers (item clause); Appletun: Sitrus Berry -> Rocky Helmet (item clause)",
     "sets": [
      "goliM",
@@ -448,7 +471,7 @@
    {
     "id": "aq052-goliM_sd",
     "label": "q052: goliM -> goliM_sd",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom: Sitrus Berry -> Leftovers (item clause); Appletun: Sitrus Berry -> Rocky Helmet (item clause)",
     "sets": [
      "goliM_sd",
@@ -471,7 +494,7 @@
    {
     "id": "aq052-goliM_cc",
     "label": "q052: goliM -> goliM_cc",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom: Sitrus Berry -> Leftovers (item clause); Appletun: Sitrus Berry -> Rocky Helmet (item clause)",
     "sets": [
      "goliM_cc",
@@ -494,7 +517,7 @@
    {
     "id": "aq052-goliM_aj",
     "label": "q052: goliM -> goliM_aj",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom: Sitrus Berry -> Leftovers (item clause); Appletun: Sitrus Berry -> Rocky Helmet (item clause)",
     "sets": [
      "goliM_aj",
@@ -517,7 +540,7 @@
    {
     "id": "aq052-goliM_fi",
     "label": "q052: goliM -> goliM_fi",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom: Sitrus Berry -> Leftovers (item clause); Appletun: Sitrus Berry -> Rocky Helmet (item clause)",
     "sets": [
      "goliM_fi",
@@ -540,7 +563,7 @@
    {
     "id": "aq052-goliM_sp",
     "label": "q052: goliM -> goliM_sp",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom: Sitrus Berry -> Leftovers (item clause); Appletun: Sitrus Berry -> Rocky Helmet (item clause)",
     "sets": [
      "goliM_sp",
@@ -561,9 +584,32 @@
     "team": "Golisopod @ Golisopite\nAbility: Emergency Exit\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Leech Life\n- Iron Head\n- Sucker Punch\n- Protect\n\nIncineroar @ Sitrus Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nCareful Nature\n- Fake Out\n- Parting Shot\n- Flare Blitz\n- Darkest Lariat\n\nTorkoal @ Charcoal\nAbility: Drought\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Eruption\n- Weather Ball\n- Earth Power\n- Protect\n\nMr. Rime @ Twisted Spoon\nAbility: Screen Cleaner\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpA\nQuiet Nature\n- Fake Out\n- Trick Room\n- Freeze-Dry\n- Psychic\n\nRotom @ Leftovers\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n\nAppletun @ Rocky Helmet\nAbility: Thick Fat\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Apple Acid\n- Draco Meteor\n- Recover\n- Protect\n"
    },
    {
+    "id": "aq052-goliM_rs",
+    "label": "q052: goliM -> goliM_rs",
+    "weight": 0.0147,
+    "why": "one-set change | Rotom: Sitrus Berry -> Leftovers (item clause); Appletun: Sitrus Berry -> Rocky Helmet (item clause)",
+    "sets": [
+     "goliM_rs",
+     "incin",
+     "tork",
+     "rime",
+     "rotomb",
+     "apple"
+    ],
+    "notes": {
+     "goliM_rs": "W: Rock Slide into Charizard under Trick Room",
+     "incin": "L: modal (Lariat 42% > Throat Chop 29%)",
+     "tork": "L: modal",
+     "rime": "L/H: modal + mock",
+     "rotomb": "H: no ladder data; Wisp + coverage",
+     "apple": "H: no ladder data; Thick Fat vs Charizard"
+    },
+    "team": "Golisopod @ Golisopite\nAbility: Emergency Exit\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nAdamant Nature\n- Leech Life\n- Rock Slide\n- Sucker Punch\n- Protect\n\nIncineroar @ Sitrus Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nCareful Nature\n- Fake Out\n- Parting Shot\n- Flare Blitz\n- Darkest Lariat\n\nTorkoal @ Charcoal\nAbility: Drought\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Eruption\n- Weather Ball\n- Earth Power\n- Protect\n\nMr. Rime @ Twisted Spoon\nAbility: Screen Cleaner\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpA\nQuiet Nature\n- Fake Out\n- Trick Room\n- Freeze-Dry\n- Psychic\n\nRotom @ Leftovers\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Thunderbolt\n- Shadow Ball\n- Will-O-Wisp\n- Protect\n\nAppletun @ Rocky Helmet\nAbility: Thick Fat\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Apple Acid\n- Draco Meteor\n- Recover\n- Protect\n"
+   },
+   {
     "id": "aq052-incin_wisp",
     "label": "q052: incin -> incin_wisp",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom: Sitrus Berry -> Leftovers (item clause); Appletun: Sitrus Berry -> Rocky Helmet (item clause)",
     "sets": [
      "goliM",
@@ -586,7 +632,7 @@
    {
     "id": "aq052-incin_snarl",
     "label": "q052: incin -> incin_snarl",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom: Sitrus Berry -> Leftovers (item clause); Appletun: Sitrus Berry -> Rocky Helmet (item clause)",
     "sets": [
      "goliM",
@@ -609,7 +655,7 @@
    {
     "id": "aq052-incin_chople",
     "label": "q052: incin -> incin_chople",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Appletun: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -632,7 +678,7 @@
    {
     "id": "aq052-incin_lariat",
     "label": "q052: incin -> incin_lariat",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom: Sitrus Berry -> Leftovers (item clause); Appletun: Sitrus Berry -> Rocky Helmet (item clause)",
     "sets": [
      "goliM",
@@ -655,7 +701,7 @@
    {
     "id": "aq052-tork_hh",
     "label": "q052: tork -> tork_hh",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom: Sitrus Berry -> Leftovers (item clause); Appletun: Sitrus Berry -> Rocky Helmet (item clause)",
     "sets": [
      "goliM",
@@ -678,7 +724,7 @@
    {
     "id": "aq052-tork_yawn",
     "label": "q052: tork -> tork_yawn",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom: Sitrus Berry -> Leftovers (item clause); Appletun: Sitrus Berry -> Rocky Helmet (item clause)",
     "sets": [
      "goliM",
@@ -701,7 +747,7 @@
    {
     "id": "aq052-tork_sb",
     "label": "q052: tork -> tork_sb",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom: Sitrus Berry -> Leftovers (item clause); Appletun: Sitrus Berry -> Rocky Helmet (item clause)",
     "sets": [
      "goliM",
@@ -724,7 +770,7 @@
    {
     "id": "aq052-rime_iw",
     "label": "q052: rime -> rime_iw",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom: Sitrus Berry -> Leftovers (item clause); Appletun: Sitrus Berry -> Rocky Helmet (item clause)",
     "sets": [
      "goliM",
@@ -747,7 +793,7 @@
    {
     "id": "aj07",
     "label": "j07 base",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "base | Rotom-Mow: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -770,7 +816,7 @@
    {
     "id": "aj07-goliM_sd",
     "label": "j07: goliM -> goliM_sd",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom-Mow: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM_sd",
@@ -793,7 +839,7 @@
    {
     "id": "aj07-goliM_cc",
     "label": "j07: goliM -> goliM_cc",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom-Mow: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM_cc",
@@ -816,7 +862,7 @@
    {
     "id": "aj07-goliM_aj",
     "label": "j07: goliM -> goliM_aj",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom-Mow: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM_aj",
@@ -839,7 +885,7 @@
    {
     "id": "aj07-goliM_fi",
     "label": "j07: goliM -> goliM_fi",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom-Mow: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM_fi",
@@ -862,7 +908,7 @@
    {
     "id": "aj07-goliM_sp",
     "label": "j07: goliM -> goliM_sp",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom-Mow: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM_sp",
@@ -883,9 +929,32 @@
     "team": "Golisopod @ Golisopite\nAbility: Emergency Exit\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Leech Life\n- Iron Head\n- Sucker Punch\n- Protect\n\nIncineroar @ Chople Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nCareful Nature\n- Fake Out\n- Parting Shot\n- Flare Blitz\n- Throat Chop\n\nFarigiraf @ Sitrus Berry\nAbility: Armor Tail\nLevel: 50\nEVs: 32 HP / 2 SpA / 32 SpD\nSassy Nature\n- Trick Room\n- Psychic\n- Thunderbolt\n- Protect\n\nTorkoal @ Charcoal\nAbility: Drought\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Eruption\n- Weather Ball\n- Earth Power\n- Protect\n\nRotom-Mow @ Leftovers\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Leaf Storm\n- Thunderbolt\n- Will-O-Wisp\n- Protect\n\nLycanroc-Midnight @ Focus Sash\nAbility: No Guard\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Rock Slide\n- Close Combat\n- Sucker Punch\n- Protect\n"
    },
    {
+    "id": "aj07-goliM_rs",
+    "label": "j07: goliM -> goliM_rs",
+    "weight": 0.0147,
+    "why": "one-set change | Rotom-Mow: Sitrus Berry -> Leftovers (item clause)",
+    "sets": [
+     "goliM_rs",
+     "incin_chople",
+     "fari_tb",
+     "tork",
+     "mow_wisp",
+     "lyc_fast"
+    ],
+    "notes": {
+     "goliM_rs": "W: Rock Slide into Charizard under Trick Room",
+     "incin_chople": "H/W: our Week 2 mock set; Chople vs Conkeldurr / Mega Kangaskhan",
+     "fari_tb": "L/W: Thunderbolt 40% (4x Pelipper)",
+     "tork": "L: modal",
+     "mow_wisp": "L: Sitrus 13%, Wisp 13% (vs Kangaskhan / Conkeldurr)",
+     "lyc_fast": "W: fast No Guard Rock Slide vs Charizard"
+    },
+    "team": "Golisopod @ Golisopite\nAbility: Emergency Exit\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nAdamant Nature\n- Leech Life\n- Rock Slide\n- Sucker Punch\n- Protect\n\nIncineroar @ Chople Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nCareful Nature\n- Fake Out\n- Parting Shot\n- Flare Blitz\n- Throat Chop\n\nFarigiraf @ Sitrus Berry\nAbility: Armor Tail\nLevel: 50\nEVs: 32 HP / 2 SpA / 32 SpD\nSassy Nature\n- Trick Room\n- Psychic\n- Thunderbolt\n- Protect\n\nTorkoal @ Charcoal\nAbility: Drought\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Eruption\n- Weather Ball\n- Earth Power\n- Protect\n\nRotom-Mow @ Leftovers\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Leaf Storm\n- Thunderbolt\n- Will-O-Wisp\n- Protect\n\nLycanroc-Midnight @ Focus Sash\nAbility: No Guard\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Rock Slide\n- Close Combat\n- Sucker Punch\n- Protect\n"
+   },
+   {
     "id": "aj07-incin",
     "label": "j07: incin_chople -> incin",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom-Mow: Sitrus Berry -> Leftovers (item clause); Lycanroc-Midnight: Focus Sash -> Expert Belt (item clause)",
     "sets": [
      "goliM",
@@ -908,7 +977,7 @@
    {
     "id": "aj07-incin_wisp",
     "label": "j07: incin_chople -> incin_wisp",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom-Mow: Sitrus Berry -> Leftovers (item clause); Lycanroc-Midnight: Focus Sash -> Expert Belt (item clause)",
     "sets": [
      "goliM",
@@ -931,7 +1000,7 @@
    {
     "id": "aj07-incin_snarl",
     "label": "j07: incin_chople -> incin_snarl",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom-Mow: Sitrus Berry -> Leftovers (item clause); Lycanroc-Midnight: Focus Sash -> Expert Belt (item clause)",
     "sets": [
      "goliM",
@@ -954,7 +1023,7 @@
    {
     "id": "aj07-incin_lariat",
     "label": "j07: incin_chople -> incin_lariat",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom-Mow: Sitrus Berry -> Leftovers (item clause); Lycanroc-Midnight: Focus Sash -> Expert Belt (item clause)",
     "sets": [
      "goliM",
@@ -977,7 +1046,7 @@
    {
     "id": "aj07-fari",
     "label": "j07: fari_tb -> fari",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom-Mow: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -1000,7 +1069,7 @@
    {
     "id": "aj07-fari_hh",
     "label": "j07: fari_tb -> fari_hh",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom-Mow: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -1023,7 +1092,7 @@
    {
     "id": "aj07-fari_colbur",
     "label": "j07: fari_tb -> fari_colbur",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change",
     "sets": [
      "goliM",
@@ -1046,7 +1115,7 @@
    {
     "id": "aj07-tork_hh",
     "label": "j07: tork -> tork_hh",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom-Mow: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -1069,7 +1138,7 @@
    {
     "id": "aj07-tork_yawn",
     "label": "j07: tork -> tork_yawn",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom-Mow: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -1092,7 +1161,7 @@
    {
     "id": "aj07-tork_sb",
     "label": "j07: tork -> tork_sb",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom-Mow: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -1115,7 +1184,7 @@
    {
     "id": "aj07-mow",
     "label": "j07: mow_wisp -> mow",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change",
     "sets": [
      "goliM",
@@ -1138,7 +1207,7 @@
    {
     "id": "aj07-lyc",
     "label": "j07: lyc_fast -> lyc",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "one-set change | Rotom-Mow: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -1161,7 +1230,7 @@
    {
     "id": "sA",
     "label": "combined: goliM, incin_chople, fari_hh, tork_yawn, mow_wisp, lyc_fast",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "stage 2 | Rotom-Mow: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -1184,7 +1253,7 @@
    {
     "id": "sB",
     "label": "combined: goliM_aj, incin_chople, fari_hh, tork_yawn, mow_wisp, lyc_fast",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "stage 2 | Rotom-Mow: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM_aj",
@@ -1207,7 +1276,7 @@
    {
     "id": "sC",
     "label": "combined: goliM_fi, incin_chople, fari_hh, tork_yawn, mow_wisp, lyc_fast",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "stage 2 | Rotom-Mow: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM_fi",
@@ -1230,7 +1299,7 @@
    {
     "id": "sD",
     "label": "combined: goliM, incin_chople, fari_hh, tork, mow_wisp, lyc_fast",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "stage 2 | Rotom-Mow: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -1253,7 +1322,7 @@
    {
     "id": "sE",
     "label": "combined: goliM, incin, fari_tb, tork_yawn, mimi_tr, rotomb",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "stage 2 | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM",
@@ -1276,7 +1345,7 @@
    {
     "id": "sF",
     "label": "combined: goliM_fi, incin_chople, tork, rime, rotomb, apple",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "stage 2 | Appletun: Sitrus Berry -> Leftovers (item clause)",
     "sets": [
      "goliM_fi",
@@ -1299,7 +1368,7 @@
    {
     "id": "lm1",
     "label": "combined: goliM, incin, fari, tork, mow, lyc",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "stage 2 | Farigiraf: Sitrus Berry -> Focus Sash (item clause)",
     "sets": [
      "goliM",
@@ -1322,7 +1391,7 @@
    {
     "id": "lm2",
     "label": "combined: goliM, incin, fari, tork, mow, lyc_fast",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "stage 2 | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Lycanroc-Midnight: Focus Sash -> Expert Belt (item clause)",
     "sets": [
      "goliM",
@@ -1345,7 +1414,7 @@
    {
     "id": "lm3",
     "label": "combined: goliM, incin, fari, tork, mow_wisp, lyc_fast",
-    "weight": 0.0169,
+    "weight": 0.0147,
     "why": "stage 2 | Farigiraf: Sitrus Berry -> Focus Sash (item clause); Rotom-Mow: Sitrus Berry -> Leftovers (item clause); Lycanroc-Midnight: Focus Sash -> Expert Belt (item clause)",
     "sets": [
      "goliM",
@@ -1364,6 +1433,144 @@
      "lyc_fast": "W: fast No Guard Rock Slide vs Charizard"
     },
     "team": "Golisopod @ Golisopite\nAbility: Emergency Exit\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nAdamant Nature\n- Leech Life\n- Iron Head\n- Sucker Punch\n- Protect\n\nIncineroar @ Sitrus Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nCareful Nature\n- Fake Out\n- Parting Shot\n- Flare Blitz\n- Darkest Lariat\n\nFarigiraf @ Focus Sash\nAbility: Armor Tail\nLevel: 50\nEVs: 27 HP / 20 Def / 19 SpD\nBold Nature\n- Trick Room\n- Psychic\n- Thunderbolt\n- Helping Hand\n\nTorkoal @ Charcoal\nAbility: Drought\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Eruption\n- Weather Ball\n- Earth Power\n- Protect\n\nRotom-Mow @ Leftovers\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Leaf Storm\n- Thunderbolt\n- Will-O-Wisp\n- Protect\n\nLycanroc-Midnight @ Expert Belt\nAbility: No Guard\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Rock Slide\n- Close Combat\n- Sucker Punch\n- Protect\n"
+   },
+   {
+    "id": "rs07",
+    "label": "combined: goliM_rs, incin_chople, fari_tb, tork, mow_wisp, lyc_fast",
+    "weight": 0.0147,
+    "why": "stage 2 | Rotom-Mow: Sitrus Berry -> Leftovers (item clause)",
+    "sets": [
+     "goliM_rs",
+     "incin_chople",
+     "fari_tb",
+     "tork",
+     "mow_wisp",
+     "lyc_fast"
+    ],
+    "notes": {
+     "goliM_rs": "W: Rock Slide into Charizard under Trick Room",
+     "incin_chople": "H/W: our Week 2 mock set; Chople vs Conkeldurr / Mega Kangaskhan",
+     "fari_tb": "L/W: Thunderbolt 40% (4x Pelipper)",
+     "tork": "L: modal",
+     "mow_wisp": "L: Sitrus 13%, Wisp 13% (vs Kangaskhan / Conkeldurr)",
+     "lyc_fast": "W: fast No Guard Rock Slide vs Charizard"
+    },
+    "team": "Golisopod @ Golisopite\nAbility: Emergency Exit\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nAdamant Nature\n- Leech Life\n- Rock Slide\n- Sucker Punch\n- Protect\n\nIncineroar @ Chople Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nCareful Nature\n- Fake Out\n- Parting Shot\n- Flare Blitz\n- Throat Chop\n\nFarigiraf @ Sitrus Berry\nAbility: Armor Tail\nLevel: 50\nEVs: 32 HP / 2 SpA / 32 SpD\nSassy Nature\n- Trick Room\n- Psychic\n- Thunderbolt\n- Protect\n\nTorkoal @ Charcoal\nAbility: Drought\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Eruption\n- Weather Ball\n- Earth Power\n- Protect\n\nRotom-Mow @ Leftovers\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Leaf Storm\n- Thunderbolt\n- Will-O-Wisp\n- Protect\n\nLycanroc-Midnight @ Focus Sash\nAbility: No Guard\nLevel: 50\nEVs: 2 HP / 32 Atk / 32 Spe\nJolly Nature\n- Rock Slide\n- Close Combat\n- Sucker Punch\n- Protect\n"
+   },
+   {
+    "id": "rsTR",
+    "label": "combined: goliM_rs, incin, fari, tork, mow, mimi_tr",
+    "weight": 0.0147,
+    "why": "stage 2 | Farigiraf: Sitrus Berry -> Focus Sash (item clause)",
+    "sets": [
+     "goliM_rs",
+     "incin",
+     "fari",
+     "tork",
+     "mow",
+     "mimi_tr"
+    ],
+    "notes": {
+     "goliM_rs": "W: Rock Slide into Charizard under Trick Room",
+     "incin": "L: modal (Lariat 42% > Throat Chop 29%)",
+     "fari": "L: modal (TR 98, Psychic 81, Thunderbolt 70, HH 42)",
+     "tork": "L: modal",
+     "mow": "L: Scarf modal (Leaf Storm 100, Volt Switch 87, Trick 75, Electroweb 74)",
+     "mimi_tr": "L: TR setter (Mental Herb 14%, Wisp 20%)"
+    },
+    "team": "Golisopod @ Golisopite\nAbility: Emergency Exit\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nAdamant Nature\n- Leech Life\n- Rock Slide\n- Sucker Punch\n- Protect\n\nIncineroar @ Sitrus Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nCareful Nature\n- Fake Out\n- Parting Shot\n- Flare Blitz\n- Darkest Lariat\n\nFarigiraf @ Focus Sash\nAbility: Armor Tail\nLevel: 50\nEVs: 27 HP / 20 Def / 19 SpD\nBold Nature\n- Trick Room\n- Psychic\n- Thunderbolt\n- Helping Hand\n\nTorkoal @ Charcoal\nAbility: Drought\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Eruption\n- Weather Ball\n- Earth Power\n- Protect\n\nRotom-Mow @ Choice Scarf\nAbility: Levitate\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nTimid Nature\n- Leaf Storm\n- Volt Switch\n- Trick\n- Electroweb\n\nMimikyu @ Mental Herb\nAbility: Disguise\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Trick Room\n- Play Rough\n- Shadow Sneak\n- Will-O-Wisp\n"
+   },
+   {
+    "id": "rsTR2",
+    "label": "combined: goliM_rs, incin, fari, tork, mimi_tr, rime",
+    "weight": 0.0147,
+    "why": "stage 2 | Farigiraf: Sitrus Berry -> Focus Sash (item clause)",
+    "sets": [
+     "goliM_rs",
+     "incin",
+     "fari",
+     "tork",
+     "mimi_tr",
+     "rime"
+    ],
+    "notes": {
+     "goliM_rs": "W: Rock Slide into Charizard under Trick Room",
+     "incin": "L: modal (Lariat 42% > Throat Chop 29%)",
+     "fari": "L: modal (TR 98, Psychic 81, Thunderbolt 70, HH 42)",
+     "tork": "L: modal",
+     "mimi_tr": "L: TR setter (Mental Herb 14%, Wisp 20%)",
+     "rime": "L/H: modal + mock"
+    },
+    "team": "Golisopod @ Golisopite\nAbility: Emergency Exit\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nAdamant Nature\n- Leech Life\n- Rock Slide\n- Sucker Punch\n- Protect\n\nIncineroar @ Sitrus Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nCareful Nature\n- Fake Out\n- Parting Shot\n- Flare Blitz\n- Darkest Lariat\n\nFarigiraf @ Focus Sash\nAbility: Armor Tail\nLevel: 50\nEVs: 27 HP / 20 Def / 19 SpD\nBold Nature\n- Trick Room\n- Psychic\n- Thunderbolt\n- Helping Hand\n\nTorkoal @ Charcoal\nAbility: Drought\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Eruption\n- Weather Ball\n- Earth Power\n- Protect\n\nMimikyu @ Mental Herb\nAbility: Disguise\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Trick Room\n- Play Rough\n- Shadow Sneak\n- Will-O-Wisp\n\nMr. Rime @ Twisted Spoon\nAbility: Screen Cleaner\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpA\nQuiet Nature\n- Fake Out\n- Trick Room\n- Freeze-Dry\n- Psychic\n"
+   },
+   {
+    "id": "t01",
+    "label": "combined: goliM, incin, fari, tork, mow, mimi_tr",
+    "weight": 0.0147,
+    "why": "stage 2 | Farigiraf: Sitrus Berry -> Focus Sash (item clause)",
+    "sets": [
+     "goliM",
+     "incin",
+     "fari",
+     "tork",
+     "mow",
+     "mimi_tr"
+    ],
+    "notes": {
+     "goliM": "L: Mega modal",
+     "incin": "L: modal (Lariat 42% > Throat Chop 29%)",
+     "fari": "L: modal (TR 98, Psychic 81, Thunderbolt 70, HH 42)",
+     "tork": "L: modal",
+     "mow": "L: Scarf modal (Leaf Storm 100, Volt Switch 87, Trick 75, Electroweb 74)",
+     "mimi_tr": "L: TR setter (Mental Herb 14%, Wisp 20%)"
+    },
+    "team": "Golisopod @ Golisopite\nAbility: Emergency Exit\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nAdamant Nature\n- Leech Life\n- Iron Head\n- Sucker Punch\n- Protect\n\nIncineroar @ Sitrus Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nCareful Nature\n- Fake Out\n- Parting Shot\n- Flare Blitz\n- Darkest Lariat\n\nFarigiraf @ Focus Sash\nAbility: Armor Tail\nLevel: 50\nEVs: 27 HP / 20 Def / 19 SpD\nBold Nature\n- Trick Room\n- Psychic\n- Thunderbolt\n- Helping Hand\n\nTorkoal @ Charcoal\nAbility: Drought\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Eruption\n- Weather Ball\n- Earth Power\n- Protect\n\nRotom-Mow @ Choice Scarf\nAbility: Levitate\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nTimid Nature\n- Leaf Storm\n- Volt Switch\n- Trick\n- Electroweb\n\nMimikyu @ Mental Herb\nAbility: Disguise\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Trick Room\n- Play Rough\n- Shadow Sneak\n- Will-O-Wisp\n"
+   },
+   {
+    "id": "t05",
+    "label": "combined: goliM, incin, fari, tork, mimi_tr, rime",
+    "weight": 0.0147,
+    "why": "stage 2 | Farigiraf: Sitrus Berry -> Focus Sash (item clause)",
+    "sets": [
+     "goliM",
+     "incin",
+     "fari",
+     "tork",
+     "mimi_tr",
+     "rime"
+    ],
+    "notes": {
+     "goliM": "L: Mega modal",
+     "incin": "L: modal (Lariat 42% > Throat Chop 29%)",
+     "fari": "L: modal (TR 98, Psychic 81, Thunderbolt 70, HH 42)",
+     "tork": "L: modal",
+     "mimi_tr": "L: TR setter (Mental Herb 14%, Wisp 20%)",
+     "rime": "L/H: modal + mock"
+    },
+    "team": "Golisopod @ Golisopite\nAbility: Emergency Exit\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nAdamant Nature\n- Leech Life\n- Iron Head\n- Sucker Punch\n- Protect\n\nIncineroar @ Sitrus Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nCareful Nature\n- Fake Out\n- Parting Shot\n- Flare Blitz\n- Darkest Lariat\n\nFarigiraf @ Focus Sash\nAbility: Armor Tail\nLevel: 50\nEVs: 27 HP / 20 Def / 19 SpD\nBold Nature\n- Trick Room\n- Psychic\n- Thunderbolt\n- Helping Hand\n\nTorkoal @ Charcoal\nAbility: Drought\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Eruption\n- Weather Ball\n- Earth Power\n- Protect\n\nMimikyu @ Mental Herb\nAbility: Disguise\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Trick Room\n- Play Rough\n- Shadow Sneak\n- Will-O-Wisp\n\nMr. Rime @ Twisted Spoon\nAbility: Screen Cleaner\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpA\nQuiet Nature\n- Fake Out\n- Trick Room\n- Freeze-Dry\n- Psychic\n"
+   },
+   {
+    "id": "t06",
+    "label": "combined: goliM_sp, incin, fari, tork, rime, lyc",
+    "weight": 0.0147,
+    "why": "stage 2 | Farigiraf: Sitrus Berry -> Focus Sash (item clause)",
+    "sets": [
+     "goliM_sp",
+     "incin",
+     "fari",
+     "tork",
+     "rime",
+     "lyc"
+    ],
+    "notes": {
+     "goliM_sp": "L: Sucker Punch 27%, Brave TR spread",
+     "incin": "L: modal (Lariat 42% > Throat Chop 29%)",
+     "fari": "L: modal (TR 98, Psychic 81, Thunderbolt 70, HH 42)",
+     "tork": "L: modal",
+     "rime": "L/H: modal + mock",
+     "lyc": "H/W: mock set, TR attacker"
+    },
+    "team": "Golisopod @ Golisopite\nAbility: Emergency Exit\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Leech Life\n- Iron Head\n- Sucker Punch\n- Protect\n\nIncineroar @ Sitrus Berry\nAbility: Intimidate\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nCareful Nature\n- Fake Out\n- Parting Shot\n- Flare Blitz\n- Darkest Lariat\n\nFarigiraf @ Focus Sash\nAbility: Armor Tail\nLevel: 50\nEVs: 27 HP / 20 Def / 19 SpD\nBold Nature\n- Trick Room\n- Psychic\n- Thunderbolt\n- Helping Hand\n\nTorkoal @ Charcoal\nAbility: Drought\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nQuiet Nature\n- Eruption\n- Weather Ball\n- Earth Power\n- Protect\n\nMr. Rime @ Twisted Spoon\nAbility: Screen Cleaner\nLevel: 50\nEVs: 32 HP / 2 Def / 32 SpA\nQuiet Nature\n- Fake Out\n- Trick Room\n- Freeze-Dry\n- Psychic\n\nLycanroc-Midnight @ Life Orb\nAbility: No Guard\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Rock Slide\n- Stone Edge\n- Close Combat\n- Protect\n"
    }
   ],
   "personas": {
@@ -1388,6 +1595,10 @@
     0.3
    ],
    "aq007-goliM_sp": [
+    "tr",
+    0.3
+   ],
+   "aq007-goliM_rs": [
     "tr",
     0.3
    ],
@@ -1463,6 +1674,10 @@
     "tr",
     0.3
    ],
+   "aq052-goliM_rs": [
+    "tr",
+    0.3
+   ],
    "aq052-incin_wisp": [
     "tr",
     0.3
@@ -1516,6 +1731,10 @@
     0.6
    ],
    "aj07-goliM_sp": [
+    "rock",
+    0.6
+   ],
+   "aj07-goliM_rs": [
     "rock",
     0.6
    ],
@@ -1602,6 +1821,30 @@
    "lm3": [
     "rock",
     0.6
+   ],
+   "rs07": [
+    "rock",
+    0.6
+   ],
+   "rsTR": [
+    "tr",
+    0.3
+   ],
+   "rsTR2": [
+    "tr",
+    0.3
+   ],
+   "t01": [
+    "tr",
+    0.3
+   ],
+   "t05": [
+    "tr",
+    0.3
+   ],
+   "t06": [
+    "rock",
+    0.6
    ]
   },
   "rows": [
@@ -1638,6 +1881,29 @@
   "coach": "Anthony",
   "seat": 5,
   "teams": [
+   {
+    "id": "yJ09",
+    "label": "Charizard+Sinistcha+Pelipper+Aegislash+Conkeldurr+Rotom-Fan [J]",
+    "weight": 0.0179,
+    "why": "package J",
+    "sets": [
+     "zardY",
+     "sinis",
+     "pel_wg",
+     "aegis_wg",
+     "conk",
+     "rotom_web"
+    ],
+    "notes": {
+     "zardY": "c1",
+     "sinis": "c1",
+     "pel_wg": "Rain halves his Fire; Wide Guard vs Eruption",
+     "aegis_wg": "Wide Guard vs Eruption / Rock Slide / Electroweb; Iron Head into Mimikyu / Mr. Rime",
+     "conk": "c1; Ice Punch 4x into Garchomp",
+     "rotom_web": "Electroweb speed control"
+    },
+    "team": "Charizard @ Charizardite Y\nAbility: Blaze\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Heat Wave\n- Weather Ball\n- Solar Beam\n- Protect\n\nSinistcha @ Sitrus Berry\nAbility: Hospitality\nLevel: 50\nEVs: 32 HP / 14 Def / 20 SpD\nBold Nature\n- Matcha Gotcha\n- Rage Powder\n- Trick Room\n- Life Dew\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nEVs: 2 HP / 32 SpA / 32 Spe\nModest Nature\n- Hurricane\n- Weather Ball\n- Tailwind\n- Wide Guard\n\nAegislash @ Kasib Berry\nAbility: Stance Change\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 Def\nBrave Nature\n- Poltergeist\n- Iron Head\n- King's Shield\n- Wide Guard\n\nConkeldurr @ Life Orb\nAbility: Iron Fist\nLevel: 50\nEVs: 32 HP / 32 Atk / 2 SpD\nBrave Nature\n- Drain Punch\n- Mach Punch\n- Ice Punch\n- Protect\n\nRotom-Fan @ Expert Belt\nAbility: Levitate\nLevel: 50\nEVs: 32 HP / 32 SpA / 2 SpD\nModest Nature\n- Electroweb\n- Thunderbolt\n- Air Slash\n- Protect\n"
+   },
    {
     "id": "yJ10",
     "label": "Charizard+Sinistcha+Pelipper+Morpeko+Conkeldurr+Rotom-Fan [J]",

@@ -99,3 +99,38 @@ sixes vs yJ10 (q007, q052, j07) get every one-set change from his library (`gen_
 Guide change: new first preview row `Lycanroc-Midnight+Rotom-Mow` brings Sinistcha, Conkeldurr, Pelipper, Rotom-Fan
 (lead Sinistcha + Conkeldurr). Headline: his worst tuned team is ~40% for the old plan, ~64% with the new row. Rotom-Fan
 holds its slot here: it is in the best four against his worst team.
+
+## 7. The last two slots (2026-11-12)
+
+Scouting: Klein (Calvin) says Jacky went hard Trick Room against him. Anthony and Klein judged Morpeko dead weight:
+when the engine brought it, we won 34%, vs 65% when not (480 AI-preview games vs his worst teams).
+- **Aegislash for Morpeko** is a tie: −1.7 ±5.4 (AI preview, worst teams); +2.1 ±5.4 vs six hard Trick Room teams (guide
+  preview, seed 8300000). Bringing it over the default four costs 9-22 points: −10 for Rotom-Fan, −9 for Conkeldurr,
+  −22 for Pelipper. The sim AI used Wide Guard 10 times in 411 chances, so Aegislash's Eruption block is undersold.
+- **Rock Slide Mega Golisopod** is legal in Champions (9M) and was missing from his library. It does 104-123% to Mega
+  Charizard Y and was added as `goliM_rs` in gen_jacky_adv.py. Mega Golisopod is Bug/Steel, so Electric is neutral on it.
+- **Rotom-Fan in practice** (40 replayed games): about 3 turns on the field, about 52% damage dealt per game, mostly
+  Thunderbolt finishing blows. It fainted in 17 of 40 games. Air Slash is its weakest move (16% per use).
+- **Last-two-slots test.** 480 games per six vs 10 of his teams: aj07, sD, three Rock Slide Golisopod sixes (rs07,
+  rsTR, rsTR2), aq007, aq052, and the hard Trick Room sixes t01, t05, t06. Guide preview, seed 8400000, paired:
+
+| Six | Win % | Paired vs current | His TR up |
+|---|---|---|---|
+| Current yJ10 (Morpeko, Rotom-Fan) | 62 | — | 347 |
+| Aegislash for Morpeko | 66 | +3.5 ±4.9 | 283 |
+| + Will-O-Wisp Rotom-Fan (for Air Slash) | 71 | +9.0 ±5.2 | 285 |
+| + Inner Focus Kangaskhan for Rotom-Fan | 74 | +11.7 ±5.4 | 239 |
+| **+ Scrappy Kangaskhan for Rotom-Fan** | **78** | **+15.8 ±5.2** | **208** |
+| Kangaskhan for Morpeko (keeps Rotom-Fan) | 63 | +1.0 ±5.2 | 318 |
+
+Scrappy Kangaskhan vs Will-O-Wisp Rotom-Fan: +6.9 ±5.0. Scrappy lets Fake Out hit Mimikyu, so his Trick Room goes up
+less often. It wins 92% vs the Rock Slide Golisopod + Mimikyu + Mr. Rime team, where Will-O-Wisp Rotom-Fan wins 23%;
+vs the hard Trick Room sixes it wins 85-92%, against 88-98% for Will-O-Wisp Rotom-Fan. Kangaskhan's set: Silk Scarf,
+Adamant, Fake Out / Double-Edge / Drain Punch / Protect. Never leave it facing Mega Golisopod: Close Combat does 121-143%.
+
+## 8. Standings (league sheet, 2026-11-12)
+
+Before Week 5: Calvin 3-0, Jacky 2-1, Hex 2-1 (beat Anthony 1-2), Anthony 1-2, ZhuZi 0-4. Assuming top 2 per pool
+(Anthony is about 80% sure the playoffs are a top 4) and game +/- as the tiebreak, as the sheet's columns order it:
+Anthony advances only if he beats Jacky **2-0** and Calvin beats Hex. That gives a three-way 2-2 tie with circular
+head-to-head, and game diff Anthony +1, Jacky 0, Hex ≤ 0. A 2-1 win leaves Jacky +1 ahead of Anthony at 0.

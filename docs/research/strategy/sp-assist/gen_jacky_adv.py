@@ -6,8 +6,11 @@ search plays from his side as a human who has scouted Anthony would. Writes tool
   python3 docs/research/strategy/sp-assist/gen_jacky_adv.py [stage2 keys json]"""
 import json, os, sys
 from gen_jacky import J, ROOT
-from gen_candidates import build
+from gen_candidates import build, S
 
+# 2026-11-12: Rock Slide Mega Golisopod (legal in Champions, 9M; 104-123% to Mega Charizard Y), missing from the ladder library
+J['goliM_rs'] = S('Golisopod', 'golisopod', 'Golisopite', 'Emergency Exit', 'Adamant', [32, 32, 0, 0, 2, 0],
+                  ['Leech Life', 'Rock Slide', 'Sucker Punch', 'Protect'], 'W: Rock Slide into Charizard under Trick Room')
 BY_SPECIES = {}
 for k, s in J.items():
     BY_SPECIES.setdefault(s['species'], []).append(k)
@@ -35,7 +38,7 @@ if __name__ == '__main__':
     for t, p in je:
         print('PROBLEM', t, p)
     src = json.load(open(os.path.join(ROOT, 'tools', 'sim', 'candidates', 'jacky.json')))
-    ours = {**src['ours'], 'teams': [t for t in src['ours']['teams'] if t['id'] in ('yJ10', 'b01', 'b02')]}
+    ours = {**src['ours'], 'teams': [t for t in src['ours']['teams'] if t['id'] in ('yJ10', 'yJ09', 'b01', 'b02')]}
     personas = {t[0]: (['rock', 0.6] if 'lyc' in ' '.join(t[3]) else ['tr', 0.3]) for t in teams}
     json.dump({'version': 1, 'written': '2026-11-11', 'format': src['format'], 'level': 50,
                'notes': 'Adversarial set search vs yJ10 (gen_jacky_adv.py).',
